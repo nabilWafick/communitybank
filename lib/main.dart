@@ -1,0 +1,44 @@
+import 'package:communitybank/utils/utils.dart';
+import 'package:communitybank/views/pages/home/home.page.dart';
+import 'package:communitybank/views/pages/login/login.page.dart';
+import 'package:desktop_window/desktop_window.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final windowSizeProvider =
+    StateProvider.family<Size, BuildContext>((ref, context) {
+  return MediaQuery.of(context).size;
+});
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DesktopWindow.setMinWindowSize(
+    const Size(1280.0, 700.0),
+  );
+  runApp(
+    const ProviderScope(
+      child: MainApp(),
+    ),
+  );
+}
+
+class MainApp extends ConsumerWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(windowSizeProvider(context), (previous, next) async {
+      if (next.width < 1280.0) {
+        await DesktopWindow.setWindowSize(Size(1280.0, next.height));
+      }
+    });
+
+    return MaterialApp(
+      theme: CBThemeData.lightTheme,
+      debugShowCheckedModeBanner: false,
+      home: const Scaffold(
+        body: HomePage(),
+      ),
+    );
+  }
+}
