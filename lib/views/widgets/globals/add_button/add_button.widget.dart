@@ -15,7 +15,7 @@ class CBAddButton extends ConsumerWidget {
     return Container(
       alignment: Alignment.centerRight,
       margin: const EdgeInsets.symmetric(
-        vertical: 15.0,
+        vertical: 20.0,
       ),
       child: InkWell(
         onTap: onTap,

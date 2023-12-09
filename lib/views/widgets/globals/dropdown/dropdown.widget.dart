@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final selectedDropdownItemProvider =
     StateProvider.family<String, String>((ref, dropdown) {
-  return dropdown;
+  return '*';
 });
 
 class CBDropdown extends ConsumerWidget {
@@ -26,7 +26,40 @@ class CBDropdown extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
       ),
-      child: DropdownMenu(
+      // width: 100.0,
+      child: /* DropdownButtonFormField<String>(
+          hint: CBText(
+            text: label,
+          ),
+          value: selectedDropdownItem,
+          dropdownColor: CBColors.backgroundColor,
+          items: dropdownMenuEntriesLabels
+              .map(
+                (dropdownMenuEntryLabel) => DropdownMenuItem(
+                  value: dropdownMenuEntriesValues[dropdownMenuEntriesLabels
+                      .indexOf(dropdownMenuEntryLabel)],
+                  child: CBText(
+                    text: dropdownMenuEntryLabel,
+                    fontSize: 12.0,
+                  ),
+                  //  key: dropdownMenuEntryLabel,
+                  /*   style: const ButtonStyle(
+                  textStyle: MaterialStatePropertyAll(
+                    TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),*/
+                ),
+              )
+              .toList(),
+          onChanged: (value) {
+            ref.read(selectedDropdownItemProvider(label).notifier).state =
+                value!;
+          },
+        )*/
+
+          DropdownMenu(
         label: CBText(
           text: label,
         ),

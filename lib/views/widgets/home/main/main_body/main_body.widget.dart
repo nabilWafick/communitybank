@@ -1,6 +1,4 @@
-import 'package:communitybank/views/pages/customers/customers.page.dart';
-import 'package:communitybank/views/pages/products/products.page.dart';
-import 'package:communitybank/views/pages/types/types.page.dart';
+import 'package:communitybank/views/pages/home/definitions/customers/customers.page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +26,9 @@ class _MainBodyState extends ConsumerState<MainBody> {
     // final currentPage = ref.watch(selectedSidebarOptionProvider);
 
     return SizedBox(
-      height: screenSize.height * 9 / 10,
+      // padding: const EdgeInsets.only(bottom: 200.0),
+
+      height: screenSize.height * 6 / 7,
       child: const CustomersPage(),
       //    const ProductsPage(),
       // const TypesPage(),

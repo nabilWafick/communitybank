@@ -3,6 +3,7 @@ import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final windowSizeProvider =
@@ -10,8 +11,13 @@ final windowSizeProvider =
   return MediaQuery.of(context).size;
 });
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPrint('Hello World');
+  await dotenv.load(fileName: '.env');
+  debugPrint('simple access: ${dotenv.env['SUPABASE_URL']}');
+  debugPrint('get access: ${dotenv.get('SUPABASE_URL')}');
+
   await DesktopWindow.setMinWindowSize(
     const Size(1280.0, 700.0),
   );

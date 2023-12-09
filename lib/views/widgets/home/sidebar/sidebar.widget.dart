@@ -43,48 +43,23 @@ class Sidebar extends ConsumerWidget {
                     ),
                     SidebarOption(
                       index: 1,
-                      icon: Icons.group,
-                      name: 'Clients',
+                      icon: Icons.dataset,
+                      name: 'Définitions',
                     ),
                     SidebarOption(
                       index: 2,
-                      icon: Icons.card_giftcard,
-                      name: 'Produits',
+                      icon: Icons.keyboard,
+                      name: 'Saisie',
                     ),
                     SidebarOption(
                       index: 3,
-                      icon: Icons.card_giftcard,
-                      name: 'Types',
-                    ),
-                    SidebarOption(
-                      index: 4,
-                      icon: Icons.credit_card,
-                      name: 'Cartes',
-                    ),
-                    SidebarOption(
-                      index: 5,
-                      icon: Icons.inventory,
-                      name: 'Inventaire',
-                    ),
-                    SidebarOption(
-                      index: 6,
-                      icon: Icons.store,
-                      name: 'Stock',
-                    ),
-                    SidebarOption(
-                      index: 7,
-                      icon: Icons.supervised_user_circle,
-                      name: 'Collaborateurs',
-                    ),
-                    SidebarOption(
-                      index: 8,
-                      icon: Icons.settings,
-                      name: 'Paramètre',
+                      icon: Icons.file_present,
+                      name: 'Fichier',
                     ),
                   ],
                 ),
                 SidebarOption(
-                  index: 9,
+                  index: 4,
                   icon: Icons.logout,
                   name: 'Déconnexion',
                 )

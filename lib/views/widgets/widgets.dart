@@ -1,11 +1,5 @@
 export 'globals/global.widgets.dart';
-export 'cards/cards.widgets.dart';
-export 'customers/customers.widgets.dart';
-export 'daily_inventory/daily_inventory.widgets.dart';
+export 'definitions/customers/customers.widgets.dart';
 export 'dashboard/dashboard.widgets.dart';
-export 'employee/employee.widgets.dart';
-export 'employees/employees.widgets.dart';
 export 'home/home.widgets.dart';
 export 'login/login.widgets.dart';
-export 'products/products.widgets.dart';
-export 'stock/stock.widgets.dart';
