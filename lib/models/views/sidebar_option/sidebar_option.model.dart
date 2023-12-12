@@ -6,47 +6,48 @@ import 'package:flutter/material.dart';
 import 'package:communitybank/models/views/sidear_suboption/sidebar_suboption.model.dart';
 
 class SidebarOptionModel {
-  final int index;
   final IconData icon;
   final String name;
   final List<SidebarSubOptionModel> subOptions;
+  final bool
+      showSubOptions; //In the case where the suboptions won't be showed like dashboard otion, because the suboption is one. In other case, the unique suoptions should have been show like guide in File
   SidebarOptionModel({
-    required this.index,
     required this.icon,
     required this.name,
     required this.subOptions,
+    required this.showSubOptions,
   });
 
   SidebarOptionModel copyWith({
-    int? index,
     IconData? icon,
     String? name,
     List<SidebarSubOptionModel>? subOptions,
+    bool? showSubOptions,
   }) {
     return SidebarOptionModel(
-      index: index ?? this.index,
       icon: icon ?? this.icon,
       name: name ?? this.name,
       subOptions: subOptions ?? this.subOptions,
+      showSubOptions: showSubOptions ?? this.showSubOptions,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'index': index,
       'icon': icon.codePoint,
       'name': name,
       'subOptions': subOptions.map((x) => x.toMap()).toList(),
+      'showSubOptions': showSubOptions,
     };
   }
 
   factory SidebarOptionModel.fromMap(Map<String, dynamic> map) {
     return SidebarOptionModel(
-      index: map['index']?.toInt() ?? 0,
       icon: IconData(map['icon'], fontFamily: 'MaterialIcons'),
       name: map['name'] ?? '',
       subOptions: List<SidebarSubOptionModel>.from(
           map['subOptions']?.map((x) => SidebarSubOptionModel.fromMap(x))),
+      showSubOptions: map['showSubOptions'] ?? false,
     );
   }
 
@@ -57,7 +58,7 @@ class SidebarOptionModel {
 
   @override
   String toString() {
-    return 'SidebarOptionModel(index: $index, icon: $icon, name: $name, subOptions: $subOptions)';
+    return 'SidebarOptionModel(icon: $icon, name: $name, subOptions: $subOptions, showSubOptions: $showSubOptions)';
   }
 
   @override
@@ -65,14 +66,17 @@ class SidebarOptionModel {
     if (identical(this, other)) return true;
 
     return other is SidebarOptionModel &&
-        other.index == index &&
         other.icon == icon &&
         other.name == name &&
-        listEquals(other.subOptions, subOptions);
+        listEquals(other.subOptions, subOptions) &&
+        other.showSubOptions == showSubOptions;
   }
 
   @override
   int get hashCode {
-    return index.hashCode ^ icon.hashCode ^ name.hashCode ^ subOptions.hashCode;
+    return icon.hashCode ^
+        name.hashCode ^
+        subOptions.hashCode ^
+        showSubOptions.hashCode;
   }
 }

@@ -121,7 +121,7 @@ class CustomersList extends ConsumerWidget {
                       ),
                     ),
                     DataCell(
-                      CBText(text: 'USER 1 User ${i + 1}'),
+                      CBText(text: 'USER User ${i + 1}'),
                     ),
                     DataCell(
                       CBText(text: 'Téléphone ${i + 1}'),

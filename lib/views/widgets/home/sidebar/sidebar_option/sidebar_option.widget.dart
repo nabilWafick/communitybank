@@ -1,3 +1,4 @@
+import 'package:communitybank/models/views/sidebar_option/sidebar_option.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/home/home.widgets.dart';
@@ -5,15 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SidebarOption extends ConsumerWidget {
-  final int index;
-  final IconData icon;
-  final String name;
+  final SidebarOptionModel sidebarOptionData;
 
   const SidebarOption({
     super.key,
-    required this.index,
-    required this.icon,
-    required this.name,
+    required this.sidebarOptionData,
   });
 
   @override
@@ -21,7 +18,10 @@ class SidebarOption extends ConsumerWidget {
     final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
     return InkWell(
       onTap: () {
-        ref.read(selectedSidebarOptionProvider.notifier).state = index;
+        ref.read(selectedSidebarOptionProvider.notifier).state =
+            sidebarOptionData;
+        ref.read(selectedSidebarSubOptionProvider.notifier).state =
+            sidebarOptionData.subOptions[0];
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 12.0),
@@ -33,8 +33,10 @@ class SidebarOption extends ConsumerWidget {
           shape: BoxShape.rectangle,
           border: Border(
             left: BorderSide(
-              width: selectedSidebarOption == index ? 5.0 : 0,
-              color: selectedSidebarOption == index
+              width: selectedSidebarOption.name == sidebarOptionData.name
+                  ? 5.0
+                  : 0,
+              color: selectedSidebarOption.name == sidebarOptionData.name
                   ? CBColors.primaryColor
                   : CBColors.sidebarTextColor,
             ),
@@ -43,9 +45,11 @@ class SidebarOption extends ConsumerWidget {
         child: Row(
           children: [
             Icon(
-              icon,
-              size: selectedSidebarOption == index ? 25.0 : 20.0,
-              color: selectedSidebarOption == index
+              sidebarOptionData.icon,
+              size: selectedSidebarOption.name == sidebarOptionData.name
+                  ? 25.0
+                  : 20.0,
+              color: selectedSidebarOption.name == sidebarOptionData.name
                   ? CBColors.primaryColor
                   : CBColors.sidebarTextColor,
             ),
@@ -53,12 +57,12 @@ class SidebarOption extends ConsumerWidget {
               width: 10.0,
             ),
             CBText(
-              text: name,
+              text: sidebarOptionData.name,
               fontSize: 15.0,
-              fontWeight: selectedSidebarOption == index
+              fontWeight: selectedSidebarOption.name == sidebarOptionData.name
                   ? FontWeight.bold
                   : FontWeight.normal,
-              color: selectedSidebarOption == index
+              color: selectedSidebarOption.name == sidebarOptionData.name
                   ? CBColors.primaryColor
                   : CBColors.sidebarTextColor,
             )

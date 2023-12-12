@@ -32,6 +32,7 @@ class ProductsSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Prix',
                     dropdownMenuEntriesLabels: [
+                      'Tous',
                       '1000f',
                       '1500f',
                       '2000f',
@@ -39,6 +40,7 @@ class ProductsSortOptions extends ConsumerWidget {
                       '3000f',
                     ],
                     dropdownMenuEntriesValues: [
+                      '*',
                       '1000',
                       '1500',
                       '2000',

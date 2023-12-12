@@ -11,9 +11,11 @@ class CBDropdown extends ConsumerWidget {
   final String label;
   final List<String> dropdownMenuEntriesLabels;
   final List<String> dropdownMenuEntriesValues;
+  final double? width;
 
   const CBDropdown({
     super.key,
+    this.width,
     required this.label,
     required this.dropdownMenuEntriesLabels,
     required this.dropdownMenuEntriesValues,
@@ -60,6 +62,7 @@ class CBDropdown extends ConsumerWidget {
         )*/
 
           DropdownMenu(
+        width: width,
         label: CBText(
           text: label,
         ),

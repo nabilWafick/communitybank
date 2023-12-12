@@ -12,22 +12,14 @@ class MainAppbar extends ConsumerStatefulWidget {
 }
 
 class _MainAppbarState extends ConsumerState<MainAppbar> {
-  final pages = [
-    'Dashbaord',
-    'Définitions',
-    'Saisie',
-    'Fichier',
-    'Déconnexion',
-  ];
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final currentPage = ref.watch(selectedSidebarOptionProvider);
+    final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
     return Container(
       height: screenSize.height / 7,
       padding: const EdgeInsets.only(top: 25.0),
-      //  color: Colors.grey,
+      // color: Colors.grey,
       child: Column(
         children: [
           Row(
@@ -35,7 +27,7 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CBText(
-                text: pages[currentPage],
+                text: selectedSidebarOption.name,
                 //   color: CBColors.sidebarTextColor,
                 fontSize: 25.0,
                 fontWeight: FontWeight.w600,
@@ -72,60 +64,19 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
             ],
           ),
           const SizedBox(
-            height: 15.0,
+            height: 12.0,
           ),
-          const SingleChildScrollView(
+          SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children: [
-                /* SidebarSubOption(
-                  index: 25,
-                  icon: Icons.account_balance,
-                  name: 'Agences',
-                ),*/
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.square_outlined,
-                  name: 'Produits',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.cases_rounded,
-                  name: 'Types',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.supervised_user_circle,
-                  name: 'Chargé de comptes',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.group,
-                  name: 'Catégorie de clients',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.work,
-                  name: 'Activités économiques',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.account_box,
-                  name: 'Statut Personnel',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.location_city,
-                  name: 'Localités',
-                ),
-                SidebarSubOption(
-                  index: 25,
-                  icon: Icons.account_circle,
-                  name: 'Clients',
-                ),
-              ],
+              children: selectedSidebarOption.subOptions
+                  .map(
+                    (subOption) =>
+                        SidebarSubOption(sidebarSubOptionData: subOption),
+                  )
+                  .toList(),
             ),
           ),
         ],

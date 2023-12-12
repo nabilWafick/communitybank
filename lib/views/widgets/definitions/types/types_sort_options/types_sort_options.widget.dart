@@ -34,6 +34,7 @@ class TypesSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Mise',
                     dropdownMenuEntriesLabels: [
+                      'Toutes',
                       '100f/Jour',
                       '150f/Jour',
                       '200f/Jour',
@@ -41,6 +42,7 @@ class TypesSortOptions extends ConsumerWidget {
                       '300f/Jour',
                     ],
                     dropdownMenuEntriesValues: [
+                      '*',
                       '100',
                       '150',
                       '200',
@@ -51,6 +53,7 @@ class TypesSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Produit',
                     dropdownMenuEntriesLabels: [
+                      'Tous',
                       'Produit 1',
                       'Produit 2',
                       'Produit 3',
@@ -58,6 +61,7 @@ class TypesSortOptions extends ConsumerWidget {
                       'Produit 5',
                     ],
                     dropdownMenuEntriesValues: [
+                      '*',
                       'Produit 1',
                       'Produit 2',
                       'Produit 3',

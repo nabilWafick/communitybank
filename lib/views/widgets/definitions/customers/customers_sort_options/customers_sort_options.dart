@@ -32,7 +32,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Catégorie',
                     dropdownMenuEntriesLabels: [
-                      'Catégories',
+                      'Toutes',
                       'Particulier Homme',
                       'Particulier Femme',
                     ],
@@ -45,7 +45,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Activité économique',
                     dropdownMenuEntriesLabels: [
-                      'Activités',
+                      'Toutes',
                       'Commerce',
                       'Enseignement',
                       'Artisanat',
@@ -60,7 +60,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Statut Personnel',
                     dropdownMenuEntriesLabels: [
-                      'Statuts',
+                      'Tous',
                       'Micro-Entrepreneur',
                       'Commerçant',
                       'Artisant',
@@ -75,7 +75,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   CBDropdown(
                     label: 'Localité',
                     dropdownMenuEntriesLabels: [
-                      'Localités',
+                      'Toutes',
                       'Aitchédji',
                       'Zogbadjè',
                       'Plateau',

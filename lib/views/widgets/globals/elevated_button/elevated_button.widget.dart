@@ -29,7 +29,7 @@ class CBElevatedButton extends StatelessWidget {
         child: CBText(
           text: text,
           textAlign: TextAlign.center,
-          fontSize: 15.0,
+          fontSize: 12.0,
           fontWeight: FontWeight.w500,
           color: textColor,
         ),
