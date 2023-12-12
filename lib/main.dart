@@ -1,6 +1,7 @@
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
+import 'package:communitybank/views/widgets/globals/elevated_button/elevated_button.widget.dart';
 import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
@@ -48,10 +49,8 @@ class MainApp extends ConsumerWidget {
     return MaterialApp(
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: FormCard(),
-        //  HomePage(),
-      ),
+      home: const WidgetTest(),
+      // const HomePage(),
     );
   }
 }

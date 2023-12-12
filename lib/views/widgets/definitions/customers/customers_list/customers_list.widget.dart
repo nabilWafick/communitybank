@@ -58,6 +58,22 @@ class CustomersList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
+                  text: 'Profession',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              DataColumn(
+                label: CBText(
+                  text: 'Numéro CNI',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              DataColumn(
+                label: CBText(
                   text: 'Catégorie',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
@@ -128,6 +144,16 @@ class CustomersList extends ConsumerWidget {
                     ),
                     DataCell(
                       CBText(text: 'Adresse ${i + 1}'),
+                    ),
+                    DataCell(
+                      CBText(
+                        text: 'Profession ${i + 1}',
+                      ),
+                    ),
+                    DataCell(
+                      CBText(
+                        text: 'Numéro CNI ${i + 1}',
+                      ),
                     ),
                     DataCell(
                       CBText(

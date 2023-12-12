@@ -7,8 +7,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: Row(
+    return const Scaffold(
+      body: Row(
         children: [
           Sidebar(),
           Main(),

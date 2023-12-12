@@ -3,19 +3,19 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 
 class CBThemeData {
   static final lightTheme = ThemeData(
-    primarySwatch: Colors.blue,
+    // primarySwatch: Colors.blue,
     scrollbarTheme: ScrollbarThemeData(
       thumbVisibility: MaterialStateProperty.all(true),
     ),
     unselectedWidgetColor: CBColors.primaryColor,
     colorScheme: ColorScheme.fromSeed(
-        seedColor: CBColors.primaryColor,
-        primary: CBColors.primaryColor,
-        secondary: CBColors.primaryColor,
-        background: CBColors.primaryColor,
-        surface: CBColors.primaryColor,
-        primaryContainer: CBColors.primaryColor,
-        brightness: Brightness.light),
+      seedColor: CBColors.primaryColor,
+      primary: CBColors.primaryColor,
+      secondary: CBColors.primaryColor,
+      surface: CBColors.primaryColor,
+      primaryContainer: CBColors.primaryColor,
+      brightness: Brightness.light,
+    ),
     primaryColor: CBColors.primaryColor,
     fontFamily: 'Poppins',
     cardTheme: CardTheme(
@@ -41,6 +41,7 @@ class CBThemeData {
         color: CBColors.secondaryColor,
       ),
     ),
+
     appBarTheme: const AppBarTheme(
       backgroundColor: CBColors.backgroundColor,
       foregroundColor: CBColors.secondaryColor,
