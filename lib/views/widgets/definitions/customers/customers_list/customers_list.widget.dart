@@ -50,7 +50,7 @@ class CustomersList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
-                  text: 'Addresse',
+                  text: 'Adresse',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w600,

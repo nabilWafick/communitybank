@@ -49,8 +49,9 @@ class MainApp extends ConsumerWidget {
     return MaterialApp(
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const WidgetTest(),
-      // const HomePage(),
+      home:
+          // const WidgetTest(),
+          const HomePage(),
     );
   }
 }

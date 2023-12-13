@@ -1,5 +1,4 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/forms/customers/customers_form.widget.dart';
 import 'package:communitybank/views/widgets/forms/types/types_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
