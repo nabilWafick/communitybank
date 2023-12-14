@@ -1,3 +1,4 @@
+import 'package:communitybank/views/widgets/forms/customers_categories/customers_categories_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +15,22 @@ class CustomersCategoriesSortOptions extends ConsumerWidget {
       width: double.maxFinite,
       child: Column(
         children: [
-          CBAddButton(onTap: () {}),
+          CBAddButton(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => const AlertDialog(
+                  contentPadding: EdgeInsetsDirectional.symmetric(
+                    vertical: 20.0,
+                    horizontal: 10.0,
+                  ),
+                  content: CustomersCategoriesForm(),
+                  // CustomersForm(),
+                  // FormCard(),
+                ),
+              );
+            },
+          ),
           Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

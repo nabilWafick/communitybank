@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 
 class Product {
@@ -6,6 +7,7 @@ class Product {
   final String nom;
   final double purchasePrice;
   final String photo;
+  final int? number;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   Product({
@@ -13,6 +15,7 @@ class Product {
     required this.nom,
     required this.purchasePrice,
     required this.photo,
+    this.number,
     this.createdAt,
     this.updatedAt,
   });
@@ -22,6 +25,7 @@ class Product {
     String? nom,
     double? purchasePrice,
     String? photo,
+    ValueGetter<int?>? number,
     ValueGetter<DateTime?>? createdAt,
     ValueGetter<DateTime?>? updatedAt,
   }) {
@@ -30,6 +34,7 @@ class Product {
       nom: nom ?? this.nom,
       purchasePrice: purchasePrice ?? this.purchasePrice,
       photo: photo ?? this.photo,
+      number: number?.call() ?? this.number,
       createdAt: createdAt?.call() ?? this.createdAt,
       updatedAt: updatedAt?.call() ?? this.updatedAt,
     );
@@ -41,6 +46,7 @@ class Product {
       'nom': nom,
       'purchasePrice': purchasePrice,
       'photo': photo,
+      'number': number,
       'createdAt': createdAt?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
     };
@@ -52,6 +58,7 @@ class Product {
       nom: map['nom'] ?? '',
       purchasePrice: map['purchasePrice']?.toDouble() ?? 0.0,
       photo: map['photo'] ?? '',
+      number: map['number']?.toInt(),
       createdAt: map['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
           : null,
@@ -68,7 +75,7 @@ class Product {
 
   @override
   String toString() {
-    return 'Product(id: $id, nom: $nom, purchasePrice: $purchasePrice, photo: $photo, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Product(id: $id, nom: $nom, purchasePrice: $purchasePrice, photo: $photo, number: $number, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -80,6 +87,7 @@ class Product {
         other.nom == nom &&
         other.purchasePrice == purchasePrice &&
         other.photo == photo &&
+        other.number == number &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -90,6 +98,7 @@ class Product {
         nom.hashCode ^
         purchasePrice.hashCode ^
         photo.hashCode ^
+        number.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }
