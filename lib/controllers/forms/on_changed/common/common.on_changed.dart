@@ -20,7 +20,7 @@ bool hasSpecialCharactersOrLettersForDouble(String value) {
   return hasSpecialCharacters || hasLetters;
 }
 
-class CBCommonOnChangedFunction {
+class CommonOnChangedFunction {
   static void onIntTextInputValueChanged(
       String? value, WidgetRef ref, StateProvider provider) {
     if (value == null ||

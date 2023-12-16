@@ -2,9 +2,9 @@ import 'package:communitybank/controllers/forms/on_changed/common/common.on_chan
 import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CBPersonalStatusOnChanged {
+class PersonalStatusOnChanged {
   static personalStatusName(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         productNameProvider,

@@ -17,3 +17,21 @@ final productPictureProvider = StateProvider<String?>(
     return '';
   },
 );
+
+class ProductValidators {
+  static String? productName(String? value, WidgetRef ref) {
+    if (ref.watch(productNameProvider) == '') {
+      return 'Entrez le nom d\'un produit';
+    } else if (ref.watch(productNameProvider).length < 3) {
+      return "Le nom du produit doit contenir au moins 3 lettres";
+    }
+    return null;
+  }
+
+  static String? productPurchasePrice(String? value, WidgetRef ref) {
+    if (ref.watch(productPurchasePriceProvider) == .0) {
+      return 'Entrez une valeur';
+    }
+    return null;
+  }
+}

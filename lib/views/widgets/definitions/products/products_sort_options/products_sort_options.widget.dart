@@ -24,7 +24,7 @@ class ProductsSortOptions extends ConsumerWidget {
                     vertical: 20.0,
                     horizontal: 10.0,
                   ),
-                  content: ProductsForm(),
+                  content: ProductForm(),
                   // CustomersForm(),
                   // FormCard(),
                 ),

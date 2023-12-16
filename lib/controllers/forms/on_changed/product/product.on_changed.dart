@@ -2,16 +2,16 @@ import 'package:communitybank/controllers/forms/on_changed/common/common.on_chan
 import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CBProductOnChanged {
+class ProductOnChanged {
   static productName(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         productNameProvider,
       );
 
   static productPurchasePrice(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onDoubleTextInputValueChanged(
+      CommonOnChangedFunction.onDoubleTextInputValueChanged(
         value,
         ref,
         productPurchasePriceProvider,

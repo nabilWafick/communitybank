@@ -2,16 +2,16 @@ import 'package:communitybank/controllers/forms/on_changed/common/common.on_chan
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CBTypeOnChanged {
+class TypeOnChanged {
   static typeName(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         typeNameProvider,
       );
 
   static typeStake(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onDoubleTextInputValueChanged(
+      CommonOnChangedFunction.onDoubleTextInputValueChanged(
         value,
         ref,
         typeStakeProvider,

@@ -2,44 +2,44 @@ import 'package:communitybank/controllers/forms/on_changed/common/common.on_chan
 import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CBCustomerOnChanged {
+class CustomerOnChanged {
   static customerName(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         customerNameProvider,
       );
 
   static customerFirstnames(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         customerFirstnamesProvider,
       );
 
   static customerPhoneNumber(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         customerPhoneNumberProvider,
       );
 
   static customerAddress(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         customerAddressProvider,
       );
 
   static customerProfession(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onStringTextInputValueChanged(
         value,
         ref,
         customerProfessionProvider,
       );
 
   static customerNciNumber(String? value, WidgetRef ref) =>
-      CBCommonOnChangedFunction.onStringTextInputValueChanged(
+      CommonOnChangedFunction.onIntTextInputValueChanged(
         value,
         ref,
         customerNciNumberProvider,

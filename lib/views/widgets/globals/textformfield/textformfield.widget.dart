@@ -20,19 +20,20 @@ class CBTextFormField extends ConsumerWidget {
   final TextInputType textInputType;
   final String? Function(String?, WidgetRef) validator;
   final void Function(String, WidgetRef) onChanged;
-  const CBTextFormField(
-      {this.textEditingController,
-      super.key,
-      this.label,
-      this.initialValue,
-      this.enabled,
-      required this.hintText,
-      required this.isMultilineTextForm,
-      required this.obscureText,
-      this.suffixIcon,
-      required this.textInputType,
-      required this.validator,
-      required this.onChanged});
+  const CBTextFormField({
+    this.textEditingController,
+    super.key,
+    this.label,
+    this.initialValue,
+    this.enabled,
+    required this.hintText,
+    required this.isMultilineTextForm,
+    required this.obscureText,
+    this.suffixIcon,
+    required this.textInputType,
+    required this.validator,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +50,7 @@ class CBTextFormField extends ConsumerWidget {
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 15.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
@@ -89,9 +90,10 @@ class CBTextFormField extends ConsumerWidget {
               obscureText: showPassword ? false : obscureText,
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w400),
+                fontFamily: 'Poppins',
+                fontSize: 12.0,
+                fontWeight: FontWeight.w400,
+              ),
               decoration: InputDecoration(
                 label: label != null
                     ? CBText(

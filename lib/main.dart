@@ -1,12 +1,11 @@
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
-import 'package:communitybank/views/pages/login/login.page.dart';
-import 'package:communitybank/views/widgets/globals/elevated_button/elevated_button.widget.dart';
 import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final windowSizeProvider =
     StateProvider.family<Size, BuildContext>((ref, context) {
@@ -15,8 +14,12 @@ final windowSizeProvider =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // debugPrint('Hello World');
   await dotenv.load(fileName: '.env');
+  await Supabase.initialize(
+    url: CBConstants.supabaseUrl ?? '',
+    anonKey: CBConstants.supabaseKey ?? '',
+  );
+
   // debugPrint('simple access: ${dotenv.env['SUPABASE_URL']}');
   // debugPrint('get access: ${dotenv.get('SUPABASE_URL')}');
 
@@ -49,9 +52,8 @@ class MainApp extends ConsumerWidget {
     return MaterialApp(
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home:
-          // const WidgetTest(),
-          const HomePage(),
+      home: const WidgetTest(),
+      // const HomePage(),
     );
   }
 }

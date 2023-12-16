@@ -95,7 +95,7 @@ class CBThemeData {
         ),
         foregroundColor: CBColors.primaryColor,
         backgroundColor: CBColors.backgroundColor,
-        minimumSize: const Size(50.0, 45.0),
+        minimumSize: const Size(double.maxFinite, 45.0),
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
@@ -173,7 +173,8 @@ class CBThemeData {
       ),
     ),
   );
-  static final darkTheme = ThemeData(
+
+  /* static final darkTheme = ThemeData(
     primarySwatch: Colors.blue,
     scrollbarTheme: ScrollbarThemeData(
       thumbVisibility: MaterialStateProperty.all(true),
@@ -313,4 +314,5 @@ class CBThemeData {
       ),
     ),
   );
+*/
 }

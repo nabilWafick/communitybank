@@ -30,3 +30,21 @@ final typeProductNumberProvider = StateProvider.family<int, int>(
     return 1;
   },
 );
+
+class TypeValidators {
+  static String? typeName(String? value, WidgetRef ref) {
+    if (ref.watch(typeNameProvider) == '') {
+      return 'Entrez le nom d\'un produit';
+    } else if (ref.watch(typeNameProvider).length < 3) {
+      return "Le nom du produit doit contenir au moins 3 lettres";
+    }
+    return null;
+  }
+
+  static String? typeStack(String? value, WidgetRef ref) {
+    if (ref.watch(typeStakeProvider) == .0) {
+      return 'Entrez une valeur';
+    }
+    return null;
+  }
+}

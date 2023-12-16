@@ -3,34 +3,63 @@ import 'package:communitybank/views/widgets/forms/types/types_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WidgetTest extends ConsumerWidget {
   const WidgetTest({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CBElevatedButton(
-            text: 'Show dialog',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => const AlertDialog(
-                  contentPadding: EdgeInsetsDirectional.symmetric(
-                    vertical: 20.0,
-                    horizontal: 10.0,
-                  ),
-                  content: TypesForm(),
-                  // CustomersForm(),
-                  // FormCard(),
-                ),
-              );
-            },
-          ),
-          /* FormCard(),*/
-        ],
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              alignment: Alignment.center,
+              width: 500.0,
+              child: CBElevatedButton(
+                text: 'Show dialog',
+                onPressed: () async {
+                  final supabase = Supabase.instance.client;
+                  final response = await supabase.from('produits').insert(
+                    {
+                      'nom': 'Produit Test',
+                      'prix_achat': 554,
+                      'photo': null,
+                      'created_at': DateTime.now().toUtc().toIso8601String(),
+                      'updated_at': DateTime.now().toUtc().toIso8601String(),
+                    },
+                  ).select();
+
+                  /*   if (response.error != null) {
+                    debugPrint(
+                        'Erreur lors de la création: ${response.error!.message}');
+                  } else {
+                    debugPrint('Données crées avec succès: ${response.data}');
+                  }*/
+                  debugPrint('Insertion response: $response');
+
+                  /*  showDialog(
+                    context: context,
+                    builder: (context) => const AlertDialog(
+                      contentPadding: EdgeInsetsDirectional.symmetric(
+                        vertical: 20.0,
+                        horizontal: 10.0,
+                      ),
+                      content: TypesForm(),
+                      // CustomersForm(),
+                      // FormCard(),
+                    ),
+                  );
+                */
+                },
+              ),
+            ),
+            /* FormCard(),*/
+          ],
+        ),
       ),
     );
   }
