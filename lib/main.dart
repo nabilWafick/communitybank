@@ -18,6 +18,11 @@ Future<void> main() async {
   await Supabase.initialize(
     url: CBConstants.supabaseUrl ?? '',
     anonKey: CBConstants.supabaseKey ?? '',
+    authFlowType: AuthFlowType.pkce,
+    storageRetryAttempts: 10,
+    realtimeClientOptions: const RealtimeClientOptions(
+      logLevel: RealtimeLogLevel.info,
+    ),
   );
 
   // debugPrint('simple access: ${dotenv.env['SUPABASE_URL']}');
@@ -52,8 +57,9 @@ class MainApp extends ConsumerWidget {
     return MaterialApp(
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const WidgetTest(),
-      // const HomePage(),
+      home:
+          // const WidgetTest(),
+          const HomePage(),
     );
   }
 }

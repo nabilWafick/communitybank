@@ -1,3 +1,6 @@
+import 'package:communitybank/controllers/products/products.controller.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/services/products/products.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/forms/types/types_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -22,24 +25,19 @@ class WidgetTest extends ConsumerWidget {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  final supabase = Supabase.instance.client;
-                  final response = await supabase.from('produits').insert(
-                    {
-                      'nom': 'Produit Test',
-                      'prix_achat': 554,
-                      'photo': null,
-                      'created_at': DateTime.now().toUtc().toIso8601String(),
-                      'updated_at': DateTime.now().toUtc().toIso8601String(),
-                    },
-                  ).select();
+                  /*   final product = Product(
+                    name: 'Product 1',
+                    purchasePrice: 150,
+                    picture: null,
+                    createdAt: DateTime(2015),
+                    updatedAt: DateTime(2017),
+                  );
+*/
+                  await ProductsService.delete(id: 2);
 
-                  /*   if (response.error != null) {
-                    debugPrint(
-                        'Erreur lors de la création: ${response.error!.message}');
-                  } else {
-                    debugPrint('Données crées avec succès: ${response.data}');
-                  }*/
-                  debugPrint('Insertion response: $response');
+                  //     await ProductsService.getAll();
+
+                  // debugPrint('ge: $response');
 
                   /*  showDialog(
                     context: context,

@@ -1,9 +1,18 @@
+import 'dart:io';
+
 import 'package:communitybank/controllers/forms/on_changed/product/product.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
+import 'package:communitybank/controllers/functions/functions.contoller.dart';
+import 'package:communitybank/controllers/products/products.controller.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProductForm extends ConsumerStatefulWidget {
   const ProductForm({super.key});
@@ -16,6 +25,7 @@ class _ProductFormState extends ConsumerState<ProductForm> {
   @override
   Widget build(BuildContext context) {
     const formCardWidth = 700.0;
+    final productPicture = ref.watch(productPictureProvider);
     return Container(
       // color: Colors.blueGrey,
       padding: const EdgeInsets.all(20.0),
@@ -74,18 +84,27 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                           borderRadius: BorderRadius.circular(15.0),
                           shape: BoxShape.rectangle,
                         ),
-                        child: const Center(
-                            child: Icon(
-                          Icons.photo,
-                          size: 150.0,
-                          color: CBColors.primaryColor,
-                        )
-                            /*Image.asset(
-                              '',
-                              height: 200.0,
-                              width: 200.0,
-                            ),*/
-                            ),
+                        child: Center(
+                          child: InkWell(
+                            onTap: () async {
+                              final imageFromGallery =
+                                  await FunctionsController.pickFile();
+                              ref.read(productPictureProvider.notifier).state =
+                                  imageFromGallery;
+                            },
+                            child: productPicture == null
+                                ? const Icon(
+                                    Icons.photo,
+                                    size: 150.0,
+                                    color: CBColors.primaryColor,
+                                  )
+                                : Image.asset(
+                                    productPicture,
+                                    height: 200.0,
+                                    width: 200.0,
+                                  ),
+                          ),
+                        ),
                       ),
                       const CBText(
                         text: 'Produit',
@@ -154,25 +173,53 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                   width: 170.0,
                   child: CBElevatedButton(
                     text: 'Valider',
-                    onPressed: () {
+                    onPressed: () async {
                       final isFormValid = formKey.currentState!.validate();
                       if (isFormValid) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            contentPadding:
-                                const EdgeInsetsDirectional.symmetric(
-                              vertical: 20.0,
-                              horizontal: 10.0,
-                            ),
-                            content: Container(
-                              padding: const EdgeInsets.all(20.0),
-                              child: const CBText(text: 'Validated Form'),
-                            ),
-                            // CustomersForm(),
-                            // FormCard(),
-                          ),
-                        );
+                        final productName = ref.watch(productNameProvider);
+                        final productPrice =
+                            ref.watch(productPurchasePriceProvider);
+
+                        final supabase = Supabase.instance.client;
+
+                        if (productPicture == null) {
+                          final product = Product(
+                            name: productName,
+                            purchasePrice: productPrice,
+                            picture: productPicture,
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          );
+
+                          final newProduct =
+                              await ProductsController.create(product: product);
+
+                          debugPrint('new product: $newProduct');
+                        } else {
+                          final String productRemotePath = await supabase
+                              .storage
+                              .from(ProductTable.tableName)
+                              .upload(
+                                'photos/produit-${DateTime.now().millisecondsSinceEpoch}.png',
+                                File(productPicture),
+                                fileOptions: const FileOptions(
+                                    cacheControl: '3600', upsert: false),
+                              );
+
+                          final product = Product(
+                            name: productName,
+                            purchasePrice: productPrice,
+                            picture:
+                                '${CBConstants.supabaseStorageLink}/$productRemotePath',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          );
+
+                          final newProduct =
+                              await ProductsController.create(product: product);
+
+                          debugPrint('new product: $newProduct');
+                        }
                       }
                     },
                   ),

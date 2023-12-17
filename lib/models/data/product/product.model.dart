@@ -1,70 +1,67 @@
 import 'dart:convert';
 
+import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:flutter/widgets.dart';
 
 class Product {
   final int? id;
-  final String nom;
+  final String name;
   final double purchasePrice;
-  final String photo;
+  final String? picture;
   final int? number;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Product({
     this.id,
-    required this.nom,
+    required this.name,
     required this.purchasePrice,
-    required this.photo,
+    this.picture,
     this.number,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Product copyWith({
     ValueGetter<int?>? id,
-    String? nom,
+    String? name,
     double? purchasePrice,
-    String? photo,
+    ValueGetter<String?>? picture,
     ValueGetter<int?>? number,
-    ValueGetter<DateTime?>? createdAt,
-    ValueGetter<DateTime?>? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Product(
       id: id?.call() ?? this.id,
-      nom: nom ?? this.nom,
+      name: name ?? this.name,
       purchasePrice: purchasePrice ?? this.purchasePrice,
-      photo: photo ?? this.photo,
+      picture: picture?.call() ?? this.picture,
       number: number?.call() ?? this.number,
-      createdAt: createdAt?.call() ?? this.createdAt,
-      updatedAt: updatedAt?.call() ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nom': nom,
+      'name': name,
       'purchasePrice': purchasePrice,
-      'photo': photo,
+      'picture': picture,
       'number': number,
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
     return Product(
-      id: map['id']?.toInt(),
-      nom: map['nom'] ?? '',
-      purchasePrice: map['purchasePrice']?.toDouble() ?? 0.0,
-      photo: map['photo'] ?? '',
+      id: map[ProductTable.id]?.toInt(),
+      name: map[ProductTable.name] ?? '',
+      purchasePrice: map[ProductTable.purchasePrice]?.toDouble() ?? 0.0,
+      picture: map[ProductTable.picture],
       number: map['number']?.toInt(),
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
-          : null,
+      createdAt: DateTime.parse(map[ProductTable.createdAt]),
+      updatedAt: DateTime.parse(map[ProductTable.updatedAt]),
     );
   }
 
@@ -75,7 +72,7 @@ class Product {
 
   @override
   String toString() {
-    return 'Product(id: $id, nom: $nom, purchasePrice: $purchasePrice, photo: $photo, number: $number, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Product(id: $id, name: $name, purchasePrice: $purchasePrice, picture: $picture, number: $number, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -84,9 +81,9 @@ class Product {
 
     return other is Product &&
         other.id == id &&
-        other.nom == nom &&
+        other.name == name &&
         other.purchasePrice == purchasePrice &&
-        other.photo == photo &&
+        other.picture == picture &&
         other.number == number &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -95,9 +92,9 @@ class Product {
   @override
   int get hashCode {
     return id.hashCode ^
-        nom.hashCode ^
+        name.hashCode ^
         purchasePrice.hashCode ^
-        photo.hashCode ^
+        picture.hashCode ^
         number.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;

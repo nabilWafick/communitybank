@@ -1,24 +1,39 @@
 import 'package:communitybank/models/data/product/product.model.dart';
-import 'package:communitybank/models/response/response.model.dart';
+import 'package:communitybank/services/products/products.service.dart';
 
 class ProductsController {
-  static Response create({required Product product}) {
-    return Response.success;
+  static Future<Product> create({required Product product}) async {
+    final response = await ProductsService.create(product: product);
+    // return the inserted product
+    return Product.fromMap(response);
   }
 
-  static Product? getOne({required int id}) {
-    return null;
+  static Future<Product?> getOne({required int id}) async {
+    final response = await ProductsService.getOne(id: id);
+    // return the specific product data
+    return response == null ? null : Product.fromMap(response);
   }
 
-  static List<Product>? getAll() {
-    return null;
+  static Future<List<Product>> getAll() async {
+    final response = await ProductsService.getAll();
+    // return all products data
+    return response
+        .map(
+          (productMap) => Product.fromMap(productMap),
+        )
+        .toList();
   }
 
-  static Response update({required int id, required Product product}) {
-    return Response.success;
+  static Future<Product> update(
+      {required int id, required Product product}) async {
+    final response = await ProductsService.update(id: id, product: product);
+    // return the updated product
+    return Product.fromMap(response);
   }
 
-  static Response delete({required int id}) {
-    return Response.success;
+  static Future<Product> delete({required int id}) async {
+    final response = await ProductsService.delete(id: id);
+    // return the updated product
+    return Product.fromMap(response);
   }
 }

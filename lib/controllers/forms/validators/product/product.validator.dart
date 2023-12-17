@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final productNameProvider = StateProvider<String>(
@@ -14,7 +16,7 @@ final productPurchasePriceProvider = StateProvider<double>(
 
 final productPictureProvider = StateProvider<String?>(
   (ref) {
-    return '';
+    return;
   },
 );
 

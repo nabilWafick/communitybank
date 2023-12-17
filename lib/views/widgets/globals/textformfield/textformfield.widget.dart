@@ -50,7 +50,7 @@ class CBTextFormField extends ConsumerWidget {
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 12.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
@@ -91,7 +91,7 @@ class CBTextFormField extends ConsumerWidget {
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 12.0,
+                fontSize: 14.0,
                 fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
