@@ -19,15 +19,9 @@ class EconomicalActivitiesSortOptions extends ConsumerWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const AlertDialog(
-                  contentPadding: EdgeInsetsDirectional.symmetric(
-                    vertical: 20.0,
-                    horizontal: 10.0,
-                  ),
-                  content: EconomicalActivitiesForm(),
-                  // CustomersForm(),
-                  // FormCard(),
-                ),
+                builder: (context) => const EconomicalActivitiesForm(),
+                // CustomersForm(),
+                // FormCard(),
               );
             },
           ),

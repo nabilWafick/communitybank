@@ -1,9 +1,17 @@
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class FunctionsController {
+  static showAlertDialog({
+    required BuildContext context,
+    required Widget alertDialog,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) => alertDialog,
+    );
+  }
+
   static Future<String?> pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,

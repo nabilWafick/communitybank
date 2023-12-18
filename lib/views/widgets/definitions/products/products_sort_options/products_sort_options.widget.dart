@@ -1,3 +1,4 @@
+import 'package:communitybank/controllers/functions/functions.contoller.dart';
 import 'package:communitybank/views/widgets/forms/products/products_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -17,17 +18,9 @@ class ProductsSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
-              showDialog(
+              FunctionsController.showAlertDialog(
                 context: context,
-                builder: (context) => const AlertDialog(
-                  contentPadding: EdgeInsetsDirectional.symmetric(
-                    vertical: 20.0,
-                    horizontal: 10.0,
-                  ),
-                  content: ProductForm(),
-                  // CustomersForm(),
-                  // FormCard(),
-                ),
+                alertDialog: const ProductForm(),
               );
             },
           ),

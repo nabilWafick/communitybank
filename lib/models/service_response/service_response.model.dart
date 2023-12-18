@@ -1,4 +1,4 @@
-enum Response {
+enum ServiceResponse {
   success,
   waiting,
   failed,

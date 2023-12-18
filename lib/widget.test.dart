@@ -1,12 +1,8 @@
-import 'package:communitybank/controllers/products/products.controller.dart';
-import 'package:communitybank/models/data/product/product.model.dart';
-import 'package:communitybank/services/products/products.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/forms/types/types_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WidgetTest extends ConsumerWidget {
   const WidgetTest({super.key});
@@ -25,33 +21,12 @@ class WidgetTest extends ConsumerWidget {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  /*   final product = Product(
-                    name: 'Product 1',
-                    purchasePrice: 150,
-                    picture: null,
-                    createdAt: DateTime(2015),
-                    updatedAt: DateTime(2017),
-                  );
-*/
-                  await ProductsService.delete(id: 2);
-
-                  //     await ProductsService.getAll();
-
-                  // debugPrint('ge: $response');
-
-                  /*  showDialog(
-                    context: context,
-                    builder: (context) => const AlertDialog(
-                      contentPadding: EdgeInsetsDirectional.symmetric(
-                        vertical: 20.0,
-                        horizontal: 10.0,
-                      ),
-                      content: TypesForm(),
+                  showDialog(
+                      context: context,
+                      builder: (context) => const ResponseDialog()
                       // CustomersForm(),
                       // FormCard(),
-                    ),
-                  );
-                */
+                      );
                 },
               ),
             ),
@@ -68,127 +43,72 @@ class FormCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const formCardWidth = 500.0;
-    return Container(
-      // color: Colors.blueGrey,
-      padding: const EdgeInsets.all(20.0),
-      width: formCardWidth,
-      child: Column(
+    return AlertDialog(
+      contentPadding: const EdgeInsetsDirectional.symmetric(
+        vertical: 20.0,
+        horizontal: 10.0,
+      ),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const CBText(
-                    text: 'Type',
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Icons.close_rounded,
-                      color: CBColors.primaryColor,
-                      size: 30.0,
+          Container(
+            // color: Colors.blueGrey,
+            padding: const EdgeInsets.all(20.0),
+            width: formCardWidth,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const CBText(
+                          text: 'Status',
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: CBColors.primaryColor,
+                            size: 30.0,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15.0,
-              ),
-              CBAddButton(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const AlertDialog(
-                      contentPadding: EdgeInsetsDirectional.symmetric(
-                        vertical: 20.0,
-                        horizontal: 10.0,
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 25.0,
                       ),
-                      content:
-                          // CustomersForm(),
-                          TypeProductSelection(),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-              Wrap(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                    width: formCardWidth,
-                    child: CBTextFormField(
-                      label: 'Nom',
-                      hintText: 'Nom',
-                      isMultilineTextForm: false,
-                      obscureText: false,
-                      textInputType: TextInputType.name,
-                      validator: (val, ref) {
-                        return null;
-                      },
-                      onChanged: (val, ref) {},
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 10.0,
-                    ),
-                    width: formCardWidth,
-                    child: CBTextFormField(
-                      label: 'Mise',
-                      hintText: 'Mise',
-                      isMultilineTextForm: false,
-                      obscureText: false,
-                      textInputType: TextInputType.name,
-                      validator: (val, ref) {
-                        return null;
-                      },
-                      onChanged: (val, ref) {},
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 35.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: 170.0,
-                child: CBElevatedButton(
-                  text: 'Fermer',
-                  backgroundColor: CBColors.sidebarTextColor,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                      child: const Row(
+                        children: [
+                          Icon(
+                            Icons.info,
+                            color: CBColors.primaryColor,
+                            size: 30.0,
+                          ),
+                          SizedBox(
+                            width: 25.0,
+                          ),
+                          CBText(
+                            text: 'Opération réussie',
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-              ),
-              const SizedBox(
-                width: 20.0,
-              ),
-              SizedBox(
-                width: 170.0,
-                child: CBElevatedButton(
-                  text: 'Valider',
-                  onPressed: () {},
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

@@ -19,15 +19,9 @@ class CustomersCategoriesSortOptions extends ConsumerWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const AlertDialog(
-                  contentPadding: EdgeInsetsDirectional.symmetric(
-                    vertical: 20.0,
-                    horizontal: 10.0,
-                  ),
-                  content: CustomersCategoriesForm(),
-                  // CustomersForm(),
-                  // FormCard(),
-                ),
+                builder: (context) => const CustomersCategoriesForm(),
+                // CustomersForm(),
+                // FormCard(),
               );
             },
           ),
