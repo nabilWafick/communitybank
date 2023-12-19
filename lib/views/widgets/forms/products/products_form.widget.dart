@@ -1,18 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:communitybank/controllers/forms/on_changed/product/product.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
-import 'package:communitybank/controllers/functions/functions.contoller.dart';
-import 'package:communitybank/controllers/products/products.controller.dart';
-import 'package:communitybank/models/data/product/product.model.dart';
-import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
-import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/products/products_crud.function.dart';
 import 'package:communitybank/utils/utils.dart';
-import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ProductForm extends StatefulHookConsumerWidget {
@@ -183,6 +176,13 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
+                              ProductCRUDFunction.create(
+                                context: context,
+                                formKey: formKey,
+                                ref: ref,
+                                showValidatedButton: showValidatedButton,
+                              );
+                              /*
                               showValidatedButton.value = false;
                               final isFormValid =
                                   formKey.currentState!.validate();
@@ -255,6 +255,7 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                                   alertDialog: const ResponseDialog(),
                                 );
                               }
+                            */
                             },
                           ),
                         )
