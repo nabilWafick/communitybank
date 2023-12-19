@@ -22,5 +22,5 @@ class ResponseDialogModel {
 
 final responseDialogProvider = StateProvider<ResponseDialogModel>((ref) {
   return ResponseDialogModel(
-      serviceResponse: ServiceResponse.waiting, response: '');
+      serviceResponse: ServiceResponse.waiting, response: 'Info');
 });

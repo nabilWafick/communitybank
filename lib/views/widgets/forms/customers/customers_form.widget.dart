@@ -13,349 +13,344 @@ class CustomersForm extends ConsumerWidget {
         vertical: 20.0,
         horizontal: 10.0,
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            // color: Colors.blueGrey,
-            padding: const EdgeInsets.all(20.0),
-            width: formCardWidth,
-            child: Column(
+      content: Container(
+        // color: Colors.blueGrey,
+        padding: const EdgeInsets.all(20.0),
+        width: formCardWidth,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const CBText(
-                          text: 'Client',
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: const Icon(
-                            Icons.close_rounded,
-                            color: CBColors.primaryColor,
-                            size: 30.0,
-                          ),
-                        ),
-                      ],
+                    const CBText(
+                      text: 'Client',
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w600,
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 15.0,
+                    IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: CBColors.primaryColor,
+                        size: 30.0,
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 15.0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 25.0,
-                                  horizontal: 55.0,
-                                ),
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 15.0),
-                                //width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: CBColors.sidebarTextColor,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: const Center(
-                                    child: Icon(
-                                  Icons.photo,
-                                  size: 150.0,
-                                  color: CBColors.primaryColor,
-                                )
-                                    /*Image.asset(
-                                      '',
-                                      height: 200.0,
-                                      width: 200.0,
-                                    ),*/
-                                    ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 25.0,
+                              horizontal: 55.0,
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 15.0),
+                            //width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: CBColors.sidebarTextColor,
+                                width: 2.0,
                               ),
-                              const CBText(
-                                text: 'Profil',
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ],
+                              borderRadius: BorderRadius.circular(15.0),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: const Center(
+                                child: Icon(
+                              Icons.photo,
+                              size: 150.0,
+                              color: CBColors.primaryColor,
+                            )
+                                /*Image.asset(
+                                  '',
+                                  height: 200.0,
+                                  width: 200.0,
+                                ),*/
+                                ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 25.0,
-                                  horizontal: 55.0,
-                                ),
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 15.0),
-                                //width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: CBColors.sidebarTextColor,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  shape: BoxShape.rectangle,
-                                ),
-                                child: const Center(
-                                    child: Icon(
-                                  Icons.photo,
-                                  size: 150.0,
-                                  color: CBColors.primaryColor,
-                                )
-                                    /*Image.asset(
-                                      '',
-                                      height: 200.0,
-                                      width: 200.0,
-                                    ),*/
-                                    ),
-                              ),
-                              const CBText(
-                                text: 'Signature',
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.w500,
-                              )
-                            ],
+                          const CBText(
+                            text: 'Profil',
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w500,
                           ),
                         ],
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 25.0,
+                              horizontal: 55.0,
+                            ),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 15.0),
+                            //width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: CBColors.sidebarTextColor,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(15.0),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: const Center(
+                                child: Icon(
+                              Icons.photo,
+                              size: 150.0,
+                              color: CBColors.primaryColor,
+                            )
+                                /*Image.asset(
+                                  '',
+                                  height: 200.0,
+                                  width: 200.0,
+                                ),*/
+                                ),
+                          ),
+                          const CBText(
+                            text: 'Signature',
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w500,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Wrap(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      width: formCardWidth / 2.3,
+                      child: CBTextFormField(
+                        label: 'Nom',
+                        hintText: 'Nom',
+                        isMultilineTextForm: false,
+                        obscureText: false,
+                        textInputType: TextInputType.name,
+                        validator: (val, ref) {
+                          return null;
+                        },
+                        onChanged: (val, ref) {},
+                      ),
                     ),
-                    Wrap(
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: formCardWidth / 2.3,
-                          child: CBTextFormField(
-                            label: 'Nom',
-                            hintText: 'Nom',
-                            isMultilineTextForm: false,
-                            obscureText: false,
-                            textInputType: TextInputType.name,
-                            validator: (val, ref) {
-                              return null;
-                            },
-                            onChanged: (val, ref) {},
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: formCardWidth / 2.3,
-                          child: CBTextFormField(
-                            label: 'Prénoms',
-                            hintText: 'Prénoms',
-                            isMultilineTextForm: false,
-                            obscureText: false,
-                            textInputType: TextInputType.name,
-                            validator: (val, ref) {
-                              return null;
-                            },
-                            onChanged: (val, ref) {},
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: formCardWidth / 2.3,
-                          child: CBTextFormField(
-                            label: 'Téléphone',
-                            hintText: 'Téléphone',
-                            isMultilineTextForm: false,
-                            obscureText: false,
-                            textInputType: TextInputType.name,
-                            validator: (val, ref) {
-                              return null;
-                            },
-                            onChanged: (val, ref) {},
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: formCardWidth / 2.3,
-                          child: CBTextFormField(
-                            label: 'Adresse',
-                            hintText: 'Adresse',
-                            isMultilineTextForm: false,
-                            obscureText: false,
-                            textInputType: TextInputType.name,
-                            validator: (val, ref) {
-                              return null;
-                            },
-                            onChanged: (val, ref) {},
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: formCardWidth / 2.3,
-                          child: CBTextFormField(
-                            label: 'Profession',
-                            hintText: 'Profession',
-                            isMultilineTextForm: false,
-                            obscureText: false,
-                            textInputType: TextInputType.name,
-                            validator: (val, ref) {
-                              return null;
-                            },
-                            onChanged: (val, ref) {},
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: formCardWidth / 2.3,
-                          child: CBTextFormField(
-                            label: 'Numéro CNI',
-                            hintText: 'Numéro CNI',
-                            isMultilineTextForm: false,
-                            obscureText: false,
-                            textInputType: TextInputType.name,
-                            validator: (val, ref) {
-                              return null;
-                            },
-                            onChanged: (val, ref) {},
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 5.0,
-                          ),
-                          child: const CBDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Catégorie',
-                            dropdownMenuEntriesLabels: [
-                              'Particulier Homme',
-                              'Particulier Femme',
-                            ],
-                            dropdownMenuEntriesValues: [
-                              'Particulier Homme',
-                              'Particulier Femme',
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 5.0,
-                          ),
-                          child: const CBDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Activité économique',
-                            dropdownMenuEntriesLabels: [
-                              'Commerce',
-                              'Enseignement',
-                              'Artisanat',
-                            ],
-                            dropdownMenuEntriesValues: [
-                              'Commerce',
-                              'Enseignement',
-                              'Artisanat',
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 5.0,
-                          ),
-                          child: const CBDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Statut Personnel',
-                            dropdownMenuEntriesLabels: [
-                              'Micro-Entrepreneur',
-                              'Commerçant',
-                              'Artisant',
-                            ],
-                            dropdownMenuEntriesValues: [
-                              'Micro-Entrepreneur',
-                              'Commerçant',
-                              'Artisant',
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            vertical: 10.0,
-                            horizontal: 5.0,
-                          ),
-                          child: const CBDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Localité',
-                            dropdownMenuEntriesLabels: [
-                              'Aitchédji',
-                              'Zogbadjè',
-                              'Plateau',
-                              'Tankpè'
-                            ],
-                            dropdownMenuEntriesValues: [
-                              'Aitchédji',
-                              'Zogbadjè',
-                              'Plateau',
-                              'Tankpè'
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      width: formCardWidth / 2.3,
+                      child: CBTextFormField(
+                        label: 'Prénoms',
+                        hintText: 'Prénoms',
+                        isMultilineTextForm: false,
+                        obscureText: false,
+                        textInputType: TextInputType.name,
+                        validator: (val, ref) {
+                          return null;
+                        },
+                        onChanged: (val, ref) {},
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      width: formCardWidth / 2.3,
+                      child: CBTextFormField(
+                        label: 'Téléphone',
+                        hintText: 'Téléphone',
+                        isMultilineTextForm: false,
+                        obscureText: false,
+                        textInputType: TextInputType.name,
+                        validator: (val, ref) {
+                          return null;
+                        },
+                        onChanged: (val, ref) {},
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      width: formCardWidth / 2.3,
+                      child: CBTextFormField(
+                        label: 'Adresse',
+                        hintText: 'Adresse',
+                        isMultilineTextForm: false,
+                        obscureText: false,
+                        textInputType: TextInputType.name,
+                        validator: (val, ref) {
+                          return null;
+                        },
+                        onChanged: (val, ref) {},
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      width: formCardWidth / 2.3,
+                      child: CBTextFormField(
+                        label: 'Profession',
+                        hintText: 'Profession',
+                        isMultilineTextForm: false,
+                        obscureText: false,
+                        textInputType: TextInputType.name,
+                        validator: (val, ref) {
+                          return null;
+                        },
+                        onChanged: (val, ref) {},
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                      ),
+                      width: formCardWidth / 2.3,
+                      child: CBTextFormField(
+                        label: 'Numéro CNI',
+                        hintText: 'Numéro CNI',
+                        isMultilineTextForm: false,
+                        obscureText: false,
+                        textInputType: TextInputType.name,
+                        validator: (val, ref) {
+                          return null;
+                        },
+                        onChanged: (val, ref) {},
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 5.0,
+                      ),
+                      child: const CBDropdown(
+                        width: formCardWidth / 2.3,
+                        label: 'Catégorie',
+                        dropdownMenuEntriesLabels: [
+                          'Particulier Homme',
+                          'Particulier Femme',
+                        ],
+                        dropdownMenuEntriesValues: [
+                          'Particulier Homme',
+                          'Particulier Femme',
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 5.0,
+                      ),
+                      child: const CBDropdown(
+                        width: formCardWidth / 2.3,
+                        label: 'Activité économique',
+                        dropdownMenuEntriesLabels: [
+                          'Commerce',
+                          'Enseignement',
+                          'Artisanat',
+                        ],
+                        dropdownMenuEntriesValues: [
+                          'Commerce',
+                          'Enseignement',
+                          'Artisanat',
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 5.0,
+                      ),
+                      child: const CBDropdown(
+                        width: formCardWidth / 2.3,
+                        label: 'Statut Personnel',
+                        dropdownMenuEntriesLabels: [
+                          'Micro-Entrepreneur',
+                          'Commerçant',
+                          'Artisant',
+                        ],
+                        dropdownMenuEntriesValues: [
+                          'Micro-Entrepreneur',
+                          'Commerçant',
+                          'Artisant',
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 5.0,
+                      ),
+                      child: const CBDropdown(
+                        width: formCardWidth / 2.3,
+                        label: 'Localité',
+                        dropdownMenuEntriesLabels: [
+                          'Aitchédji',
+                          'Zogbadjè',
+                          'Plateau',
+                          'Tankpè'
+                        ],
+                        dropdownMenuEntriesValues: [
+                          'Aitchédji',
+                          'Zogbadjè',
+                          'Plateau',
+                          'Tankpè'
+                        ],
+                      ),
+                    ),
                   ],
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 35.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 170.0,
+                  child: CBElevatedButton(
+                    text: 'Fermer',
+                    backgroundColor: CBColors.sidebarTextColor,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
                 const SizedBox(
-                  height: 35.0,
+                  width: 20.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      width: 170.0,
-                      child: CBElevatedButton(
-                        text: 'Fermer',
-                        backgroundColor: CBColors.sidebarTextColor,
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20.0,
-                    ),
-                    SizedBox(
-                      width: 170.0,
-                      child: CBElevatedButton(
-                        text: 'Valider',
-                        onPressed: () {},
-                      ),
-                    ),
-                  ],
+                SizedBox(
+                  width: 170.0,
+                  child: CBElevatedButton(
+                    text: 'Valider',
+                    onPressed: () {},
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
