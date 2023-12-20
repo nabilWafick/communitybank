@@ -78,4 +78,12 @@ class ProductCRUDFunction {
       );
     }
   }
+
+  static Future<void> update() async {
+    return;
+  }
+
+  static Future<void> delete() async {
+    return;
+  }
 }

@@ -15,16 +15,16 @@ class ProductsController {
     return response == null ? null : Product.fromMap(response);
   }
 
-  static Future<List<Product>> getAll() async {
-    final response = await ProductsService.getAll();
-    // return all products data or an empty list
-    return response == null
-        ? []
-        : response
-            .map(
-              (productMap) => Product.fromMap(productMap),
-            )
-            .toList();
+  static Stream<List<Product>> getAll() async* {
+    final productMapListStream = ProductsService.getAll();
+
+    // yield all products data or an empty list
+    yield* productMapListStream.map((productMapList) => productMapList
+        .map(
+          (productMap) => Product.fromMap(productMap),
+        )
+        .toList());
+    //.asBroadcastStream();
   }
 
   static Future<ServiceResponse> update(

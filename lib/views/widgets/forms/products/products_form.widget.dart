@@ -176,86 +176,12 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              ProductCRUDFunction.create(
+                              await ProductCRUDFunction.create(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
                                 showValidatedButton: showValidatedButton,
                               );
-                              /*
-                              showValidatedButton.value = false;
-                              final isFormValid =
-                                  formKey.currentState!.validate();
-                              if (isFormValid) {
-                                final productName =
-                                    ref.watch(productNameProvider);
-                                final productPrice =
-                                    ref.watch(productPurchasePriceProvider);
-
-                                ServiceResponse newProductStatus;
-
-                                if (productPicture == null) {
-                                  final product = Product(
-                                    name: productName,
-                                    purchasePrice: productPrice,
-                                    picture: productPicture,
-                                    createdAt: DateTime.now(),
-                                    updatedAt: DateTime.now(),
-                                  );
-
-                                  newProductStatus =
-                                      await ProductsController.create(
-                                          product: product);
-
-                                  // debugPrint('new product: $newProductStatus');
-                                } else {
-                                  final productRemotePath =
-                                      await ProductsController.uploadPicture(
-                                          productPicturePath: productPicture);
-
-                                  if (productRemotePath != null) {
-                                    final product = Product(
-                                      name: productName,
-                                      purchasePrice: productPrice,
-                                      picture:
-                                          '${CBConstants.supabaseStorageLink}/$productRemotePath',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    );
-
-                                    newProductStatus =
-                                        await ProductsController.create(
-                                            product: product);
-
-                                    //  debugPrint('new product: $newProductStatus');
-                                  } else {
-                                    newProductStatus = ServiceResponse.failed;
-                                  }
-                                }
-                                if (newProductStatus ==
-                                    ServiceResponse.success) {
-                                  ref
-                                      .read(responseDialogProvider.notifier)
-                                      .state = ResponseDialogModel(
-                                    serviceResponse: newProductStatus,
-                                    response: 'Opération réussie',
-                                  );
-                                  Navigator.of(context).pop();
-                                } else {
-                                  ref
-                                      .read(responseDialogProvider.notifier)
-                                      .state = ResponseDialogModel(
-                                    serviceResponse: newProductStatus,
-                                    response: 'Opération échouée',
-                                  );
-                                  showValidatedButton.value = true;
-                                }
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog: const ResponseDialog(),
-                                );
-                              }
-                            */
                             },
                           ),
                         )

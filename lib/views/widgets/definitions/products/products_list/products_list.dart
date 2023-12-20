@@ -1,7 +1,13 @@
+import 'package:communitybank/controllers/products/products.controller.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final productsListProvider = StreamProvider<List<Product>>((ref) async* {
+  yield* ProductsController.getAll();
+});
 
 class ProductsList extends ConsumerWidget {
   const ProductsList({super.key});

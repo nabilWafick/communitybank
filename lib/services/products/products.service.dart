@@ -49,23 +49,24 @@ class ProductsService {
     return null;
   }
 
-  static Future<List<Map<String, dynamic>>?> getAll() async {
-    List<Map<String, dynamic>>? response;
+  static Stream<List<Map<String, dynamic>>> getAll() async* {
+    // List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
-      // get a specific line
-      response = await supabase
+      // get a stream of all products
+      yield* supabase
           .from(ProductTable.tableName)
-          .select<List<Map<String, dynamic>>>();
-      debugPrint('Get All:  $response');
+          .select<List<Map<String, dynamic>>>()
+          .asStream();
+
+      ///    debugPrint('Get All:  $response');
       // return the result data
-      return response;
     } catch (error) {
       debugPrint(error.toString());
     }
 
-    return null;
+    yield [];
   }
 
   static Future<Map<String, dynamic>?> update(
