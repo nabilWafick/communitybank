@@ -1,4 +1,4 @@
-import 'package:communitybank/views/widgets/forms/economical_activities/economical_activities_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/economical_activities/economical_activities_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +19,7 @@ class EconomicalActivitiesSortOptions extends ConsumerWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const EconomicalActivitiesForm(),
+                builder: (context) => const EconomicalActivitiesAddingForm(),
                 // CustomersForm(),
                 // FormCard(),
               );

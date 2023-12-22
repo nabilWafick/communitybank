@@ -1,4 +1,4 @@
-import 'package:communitybank/views/widgets/forms/customers/customers_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,7 +19,7 @@ class CustomersSortOptions extends ConsumerWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const CustomersForm(),
+                builder: (context) => const CustomersAddingForm(),
                 // CustomersForm(),
                 // FormCard(),
               );

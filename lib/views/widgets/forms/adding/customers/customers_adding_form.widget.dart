@@ -3,8 +3,8 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomersForm extends ConsumerWidget {
-  const CustomersForm({super.key});
+class CustomersAddingForm extends ConsumerWidget {
+  const CustomersAddingForm({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const formCardWidth = 700.0;

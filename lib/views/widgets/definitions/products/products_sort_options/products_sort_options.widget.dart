@@ -1,5 +1,6 @@
+import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/views/widgets/forms/products/products_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/products/products_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,9 +19,10 @@ class ProductsSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
+              ref.read(productPictureProvider.notifier).state = null;
               FunctionsController.showAlertDialog(
                 context: context,
-                alertDialog: const ProductForm(),
+                alertDialog: const ProductAddingForm(),
               );
             },
           ),

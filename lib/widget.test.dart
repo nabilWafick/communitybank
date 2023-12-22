@@ -1,5 +1,4 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,8 +21,7 @@ class WidgetTest extends ConsumerWidget {
                 text: 'Show dialog',
                 onPressed: () async {
                   showDialog(
-                      context: context,
-                      builder: (context) => const ResponseDialog()
+                      context: context, builder: (context) => const FormCard()
                       // CustomersForm(),
                       // FormCard(),
                       );

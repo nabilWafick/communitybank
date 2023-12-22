@@ -29,7 +29,10 @@ class ProductsController {
 
   static Future<ServiceResponse> update(
       {required int id, required Product product}) async {
-    final response = await ProductsService.update(id: id, product: product);
+    final response = await ProductsService.update(
+      id: id,
+      product: product,
+    );
     // return the response status
     return response != null ? ServiceResponse.success : ServiceResponse.failed;
   }
@@ -44,6 +47,18 @@ class ProductsController {
       {required String productPicturePath}) async {
     final response = await ProductsService.uploadPicture(
         productPicturePath: productPicturePath);
+    // return the remote path or null
+    return response;
+  }
+
+  static Future<String?> updateUploadedPicture({
+    required String productPictureLink,
+    required String newProductPicturePath,
+  }) async {
+    final response = await ProductsService.updateUploadedPicture(
+      productPictureLink: productPictureLink,
+      newProductPicturePath: newProductPicturePath,
+    );
     // return the remote path or null
     return response;
   }

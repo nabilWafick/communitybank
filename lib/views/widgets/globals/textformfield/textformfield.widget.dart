@@ -1,14 +1,11 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 //import 'package:yaru_icons/yaru_icons.dart';
 
-final showPasswordProvider = StateProvider<bool>((ref) {
-  return false;
-});
-
-class CBTextFormField extends ConsumerWidget {
+class CBTextFormField extends HookConsumerWidget {
   final TextEditingController? textEditingController;
   final String? label;
   final String? hintText;
@@ -19,7 +16,7 @@ class CBTextFormField extends ConsumerWidget {
   final IconData? suffixIcon;
   final TextInputType textInputType;
   final String? Function(String?, WidgetRef) validator;
-  final void Function(String, WidgetRef) onChanged;
+  final void Function(String?, WidgetRef) onChanged;
   const CBTextFormField({
     this.textEditingController,
     super.key,
@@ -37,7 +34,7 @@ class CBTextFormField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final showPassword = ref.watch(showPasswordProvider);
+    final showPassword = useState<bool>(false);
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       child: obscureText
@@ -46,7 +43,7 @@ class CBTextFormField extends ConsumerWidget {
               enabled: enabled,
               initialValue: initialValue,
               keyboardType: textInputType,
-              obscureText: showPassword ? false : obscureText,
+              obscureText: showPassword.value ? false : obscureText,
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
@@ -64,12 +61,11 @@ class CBTextFormField extends ConsumerWidget {
                 suffixIcon: suffixIcon != null
                     ? IconButton(
                         onPressed: () {
-                          ref
-                              .read(showPasswordProvider.notifier)
-                              .update((state) => !state);
+                          showPassword.value = !showPassword.value;
                         },
-                        icon:
-                            Icon(showPassword ? Icons.visibility : suffixIcon),
+                        icon: Icon(
+                          showPassword.value ? Icons.visibility : suffixIcon,
+                        ),
                       )
                     : null,
               ),
@@ -77,6 +73,9 @@ class CBTextFormField extends ConsumerWidget {
                 return validator(value, ref);
               },
               onChanged: (newValue) {
+                onChanged(newValue, ref);
+              },
+              onSaved: (newValue) {
                 onChanged(newValue, ref);
               },
               enableSuggestions: true,
@@ -87,7 +86,7 @@ class CBTextFormField extends ConsumerWidget {
               initialValue: initialValue,
               maxLines: isMultilineTextForm ? 5 : null,
               keyboardType: textInputType,
-              obscureText: showPassword ? false : obscureText,
+              obscureText: showPassword.value ? false : obscureText,
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
@@ -105,12 +104,13 @@ class CBTextFormField extends ConsumerWidget {
                 suffixIcon: suffixIcon != null
                     ? IconButton(
                         onPressed: () {
-                          ref
-                              .read(showPasswordProvider.notifier)
-                              .update((state) => !state);
+                          showPassword.value = !showPassword.value;
                         },
                         icon: Icon(
-                            showPassword ? Icons.visibility_off : suffixIcon),
+                          showPassword.value
+                              ? Icons.visibility_off
+                              : suffixIcon,
+                        ),
                       )
                     : null,
               ),
@@ -118,6 +118,9 @@ class CBTextFormField extends ConsumerWidget {
                 return validator(value, ref);
               },
               onChanged: (newValue) {
+                onChanged(newValue, ref);
+              },
+              onSaved: (newValue) {
                 onChanged(newValue, ref);
               },
               enableSuggestions: true,

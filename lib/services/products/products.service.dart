@@ -50,23 +50,37 @@ class ProductsService {
   }
 
   static Stream<List<Map<String, dynamic>>> getAll() async* {
-    // List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
-      // get a stream of all products
+      List<Map<String, dynamic>> productsMapList = [];
+
+      // listen to products table change
       yield* supabase
           .from(ProductTable.tableName)
-          .select<List<Map<String, dynamic>>>()
-          .asStream();
+          .stream(primaryKey: [ProductTable.id])
+          .order(
+            ProductTable.id,
+            ascending: true,
+          )
+          .asBroadcastStream();
+      /* .listen((List<Map<String, dynamic>> data) {
+            // store the data
+        // return   data;
+          });*/
+/*
+      // get a  all products
+      final productMapList = await supabase
+          .from(ProductTable.tableName)
+          .select<List<Map<String, dynamic>>>();
+          */
+      // send the products data as stream
 
-      ///    debugPrint('Get All:  $response');
-      // return the result data
+      yield productsMapList;
     } catch (error) {
       debugPrint(error.toString());
+      yield [];
     }
-
-    yield [];
   }
 
   static Future<Map<String, dynamic>?> update(
@@ -134,6 +148,46 @@ class ProductsService {
               );
 
       return productPictureRemotePath;
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+
+    return null;
+  }
+
+  static Future<String?> updateUploadedPicture({
+    required String productPictureLink,
+    required String newProductPicturePath,
+  }) async {
+    // will contain the remote path of the product picture
+    String? newProductPictureRemotePath;
+    final supabase = Supabase.instance.client;
+
+    // substract the remote path of the last picture
+    final lastProductPictureRemotePath =
+        productPictureLink.split('${ProductTable.tableName}/')[1];
+
+    debugPrint('lastProductPictureRemotePath: $lastProductPictureRemotePath');
+    try {
+      // delete last object
+      final List<FileObject> objects = await supabase.storage
+          .from(ProductTable.tableName)
+          .remove([lastProductPictureRemotePath]);
+      debugPrint('Deleted objects $objects');
+
+      newProductPictureRemotePath =
+          await supabase.storage.from(ProductTable.tableName).upload(
+                lastProductPictureRemotePath,
+                File(newProductPicturePath),
+                fileOptions: const FileOptions(
+                  cacheControl: '3600',
+                  upsert: false,
+                ),
+              );
+
+      debugPrint('newProductPictureRemotePath: $newProductPictureRemotePath');
+
+      return newProductPictureRemotePath;
     } catch (error) {
       debugPrint(error.toString());
     }

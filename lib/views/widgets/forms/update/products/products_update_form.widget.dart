@@ -2,19 +2,26 @@ import 'package:communitybank/controllers/forms/on_changed/product/product.on_ch
 import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/products/products_crud.function.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ProductForm extends StatefulHookConsumerWidget {
-  const ProductForm({super.key});
+class ProductUpdateForm extends StatefulHookConsumerWidget {
+  final Product product;
+
+  const ProductUpdateForm({
+    super.key,
+    required this.product,
+  });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProductFormState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ProductUpdateFormState();
 }
 
-class _ProductFormState extends ConsumerState<ProductForm> {
+class _ProductUpdateFormState extends ConsumerState<ProductUpdateForm> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -93,17 +100,24 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                                     .read(productPictureProvider.notifier)
                                     .state = imageFromGallery;
                               },
-                              child: productPicture == null
-                                  ? const Icon(
-                                      Icons.photo,
-                                      size: 150.0,
-                                      color: CBColors.primaryColor,
-                                    )
-                                  : Image.asset(
-                                      productPicture,
+                              child: productPicture == null &&
+                                      widget.product.picture != null
+                                  ? Image.network(
+                                      widget.product.picture!,
                                       height: 200.0,
                                       width: 200.0,
-                                    ),
+                                    )
+                                  : productPicture == null
+                                      ? const Icon(
+                                          Icons.photo,
+                                          size: 150.0,
+                                          color: CBColors.primaryColor,
+                                        )
+                                      : Image.asset(
+                                          productPicture,
+                                          height: 200.0,
+                                          width: 200.0,
+                                        ),
                             ),
                           ),
                         ),
@@ -122,9 +136,10 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                           horizontal: 10.0,
                         ),
                         width: formCardWidth / 2.3,
-                        child: const CBTextFormField(
+                        child: CBTextFormField(
                           label: 'Nom',
                           hintText: 'Nom',
+                          initialValue: widget.product.name,
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,
@@ -137,9 +152,10 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                           horizontal: 10.0,
                         ),
                         width: formCardWidth / 2.3,
-                        child: const CBTextFormField(
+                        child: CBTextFormField(
                           label: 'Prix d\'achat',
                           hintText: 'Prix d\'achat',
+                          initialValue: widget.product.purchasePrice.toString(),
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,
@@ -176,10 +192,11 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              await ProductCRUDFunction.create(
+                              await ProductCRUDFunctions.update(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
+                                product: widget.product,
                                 showValidatedButton: showValidatedButton,
                               );
                             },

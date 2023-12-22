@@ -11,17 +11,17 @@ class CBUnderlinedTextFormField extends ConsumerStatefulWidget {
   final String? Function(String?) validator;
   final TextInputType textInputType;
   final void Function(String) onChanged;
-  const CBUnderlinedTextFormField(
-      {Key? key,
-      this.icon,
-      this.suffixIcon,
-      this.maxLine,
-      required this.hintText,
-      required this.obscureText,
-      required this.validator,
-      required this.textInputType,
-      required this.onChanged})
-      : super(key: key);
+  const CBUnderlinedTextFormField({
+    super.key,
+    this.icon,
+    this.suffixIcon,
+    this.maxLine,
+    required this.hintText,
+    required this.obscureText,
+    required this.validator,
+    required this.textInputType,
+    required this.onChanged,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
