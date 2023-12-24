@@ -3,6 +3,10 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final searchedCustomersProvider = StateProvider<String>((ref) {
+  return '';
+});
+
 class CustomersSortOptions extends ConsumerWidget {
   const CustomersSortOptions({super.key});
 
@@ -31,7 +35,7 @@ class CustomersSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un client',
-                onChanged: (value, ref) {},
+                searchProvider: searchedCustomersProvider,
               ),
               const Row(
                 children: [

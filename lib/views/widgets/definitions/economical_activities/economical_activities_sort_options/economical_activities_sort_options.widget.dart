@@ -3,6 +3,10 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final searchedEconomicalActivityProvider = StateProvider<String>((ref) {
+  return '';
+});
+
 class EconomicalActivitiesSortOptions extends ConsumerWidget {
   const EconomicalActivitiesSortOptions({super.key});
 
@@ -31,7 +35,7 @@ class EconomicalActivitiesSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher une activité économique',
-                onChanged: (value, ref) {},
+                searchProvider: searchedEconomicalActivityProvider,
               ),
               const SizedBox(
                 width: 10.0,

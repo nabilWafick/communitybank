@@ -1,5 +1,6 @@
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:communitybank/services/products/products.service.dart';
 
 class ProductsController {
@@ -25,6 +26,28 @@ class ProductsController {
         )
         .toList());
     //.asBroadcastStream();
+  }
+
+  static Future<List<Product>> searchProduct({required String name}) async {
+    final searchedProducts = await ProductsService.searchProduct(name: name);
+
+    return searchedProducts
+        .map(
+          (productMap) => Product.fromMap(productMap),
+        )
+        .toList();
+  }
+
+  static Stream<List<double>> getAllProductsPurchasePrices() async* {
+    final productsPurchasePricesStream =
+        ProductsService.getAllProductsPurchasePrices();
+
+    yield* productsPurchasePricesStream.map(
+      (productsPurchasePrices) => productsPurchasePrices
+          .map((productPurchase) =>
+              productPurchase[ProductTable.purchasePrice] as double)
+          .toList(),
+    );
   }
 
   static Future<ServiceResponse> update(

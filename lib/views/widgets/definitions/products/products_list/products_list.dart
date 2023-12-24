@@ -5,6 +5,7 @@ import 'package:communitybank/functions/crud/products/products_crud.function.dar
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/images_shower/single_image_shower.widget.dart';
+import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/delete_confirmation_dialog/delete_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/products/products_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
@@ -12,7 +13,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final productsListProvider = StreamProvider<List<Product>>((ref) async* {
-  yield* ProductsController.getAll();
+  String searchedProduct =
+      ref.watch(searchedProductProvider); // for storing the name searching
+  bool isSearching =
+      false; // for switching between search results and all products list stream
+  ref.listen(searchedProductProvider, (previous, next) {
+    if (previous != next && next != '' && next.trim() != '') {
+      isSearching = true;
+      searchedProduct = next;
+    } else {
+      isSearching = false;
+    }
+  });
+
+  yield* !isSearching
+      ? ProductsController.getAll()
+      : ProductsController.searchProduct(name: searchedProduct).asStream();
 });
 
 class ProductsList extends ConsumerWidget {

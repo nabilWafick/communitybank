@@ -3,6 +3,10 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final searchedLocalityProvider = StateProvider<String>((ref) {
+  return '';
+});
+
 class LocalitiesSortOptions extends ConsumerWidget {
   const LocalitiesSortOptions({super.key});
 
@@ -31,7 +35,7 @@ class LocalitiesSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher une localité',
-                onChanged: (value, ref) {},
+                searchProvider: searchedLocalityProvider,
               ),
               const SizedBox(
                 width: 10.0,

@@ -3,6 +3,10 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final searchedTypeProvider = StateProvider<String>((ref) {
+  return '';
+});
+
 class TypesSortOptions extends ConsumerWidget {
   const TypesSortOptions({super.key});
 
@@ -31,7 +35,7 @@ class TypesSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un type',
-                onChanged: (value, ref) {},
+                searchProvider: searchedTypeProvider,
               ),
               const Row(
                 children: [

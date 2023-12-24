@@ -3,6 +3,10 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final searchedCollectorProvider = StateProvider<String>((ref) {
+  return '';
+});
+
 class CollectorsSortOptions extends ConsumerWidget {
   const CollectorsSortOptions({super.key});
 
@@ -31,7 +35,7 @@ class CollectorsSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un chargé de clientèle',
-                onChanged: (value, ref) {},
+                searchProvider: searchedCollectorProvider,
               ),
               const SizedBox(
                 width: 10.0,

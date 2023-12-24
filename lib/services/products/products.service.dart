@@ -39,7 +39,7 @@ class ProductsService {
       response = await supabase
           .from(ProductTable.tableName)
           .select<List<Map<String, dynamic>>>()
-          .match({ProductTable.id: id});
+          .eq(ProductTable.id, id);
       // return the result data
       return response.isEmpty ? null : response[0];
     } catch (error) {
@@ -53,9 +53,7 @@ class ProductsService {
     final supabase = Supabase.instance.client;
 
     try {
-      List<Map<String, dynamic>> productsMapList = [];
-
-      // listen to products table change
+      // listen to products table change and return a stream of all products data
       yield* supabase
           .from(ProductTable.tableName)
           .stream(primaryKey: [ProductTable.id])
@@ -64,19 +62,47 @@ class ProductsService {
             ascending: true,
           )
           .asBroadcastStream();
-      /* .listen((List<Map<String, dynamic>> data) {
-            // store the data
-        // return   data;
-          });*/
-/*
-      // get a  all products
-      final productMapList = await supabase
-          .from(ProductTable.tableName)
-          .select<List<Map<String, dynamic>>>();
-          */
-      // send the products data as stream
+    } catch (error) {
+      debugPrint(error.toString());
+      yield [];
+    }
+  }
 
-      yield productsMapList;
+  static Future<List<Map<String, dynamic>>> searchProduct(
+      {required String name}) async {
+    List<Map<String, dynamic>>? response;
+    final supabase = Supabase.instance.client;
+
+    try {
+      // get a specific line
+      response = await supabase
+          .from(ProductTable.tableName)
+          .select<List<Map<String, dynamic>>>()
+          .ilike(ProductTable.name, '%$name%');
+
+      // return the result data
+      return response;
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+
+    return [];
+  }
+
+  static Stream<List<Map<String, dynamic>>>
+      getAllProductsPurchasePrices() async* {
+    final supabase = Supabase.instance.client;
+
+    try {
+      // listen to products table change and return a stream of all products data
+      yield* supabase
+          .from(ProductTable.tableName)
+          .stream(primaryKey: [ProductTable.id])
+          .order(
+            ProductTable.purchasePrice,
+            ascending: true,
+          )
+          .asBroadcastStream();
     } catch (error) {
       debugPrint(error.toString());
       yield [];
