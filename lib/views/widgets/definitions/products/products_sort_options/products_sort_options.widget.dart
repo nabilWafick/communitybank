@@ -6,7 +6,7 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchedProductProvider = StateProvider<String>((ref) {
+final searchProvider = StateProvider.family<String, String>((ref, name) {
   return '';
 });
 
@@ -43,7 +43,7 @@ class ProductsSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un produit',
-                searchProvider: searchedProductProvider,
+                searchProvider: searchProvider('products'),
               ),
               Row(
                 children: [
@@ -55,6 +55,7 @@ class ProductsSortOptions extends ConsumerWidget {
                   ),
                   CBDropdown(
                       label: 'Prix',
+                      providerName: 'products-price',
                       dropdownMenuEntriesLabels: productsPurchasePrices.when(
                         data: (data) {
                           // parse data list to set for getting only unique data

@@ -45,6 +45,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBDropdown(
                     label: 'Catégorie',
+                    providerName: 'customers-list-category',
                     dropdownMenuEntriesLabels: [
                       'Toutes',
                       'Particulier Homme',
@@ -58,6 +59,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBDropdown(
                     label: 'Activité économique',
+                    providerName: 'customers-list-economical-activity',
                     dropdownMenuEntriesLabels: [
                       'Toutes',
                       'Commerce',
@@ -73,6 +75,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBDropdown(
                     label: 'Statut Personnel',
+                    providerName: 'customers-list-personal-status',
                     dropdownMenuEntriesLabels: [
                       'Tous',
                       'Micro-Entrepreneur',
@@ -88,6 +91,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBDropdown(
                     label: 'Localité',
+                    providerName: 'customers-list-locality',
                     dropdownMenuEntriesLabels: [
                       'Toutes',
                       'Aitchédji',

@@ -49,19 +49,27 @@ class ProductsService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll() async* {
+  static Stream<List<Map<String, dynamic>>> getAll(
+      {required String selectedProductPrice}) async* {
     final supabase = Supabase.instance.client;
 
     try {
       // listen to products table change and return a stream of all products data
-      yield* supabase
+
+      var query = supabase
           .from(ProductTable.tableName)
-          .stream(primaryKey: [ProductTable.id])
-          .order(
-            ProductTable.id,
-            ascending: true,
-          )
-          .asBroadcastStream();
+          .stream(primaryKey: [ProductTable.id]).order(
+        ProductTable.id,
+        ascending: true,
+      );
+
+      // filter le list and return only products which purchase prices are equal to selectedProductPrice
+      if (selectedProductPrice != '*') {
+        query.eq(ProductTable.purchasePrice, selectedProductPrice);
+      }
+
+      // return the result as stream
+      yield* query.asBroadcastStream();
     } catch (error) {
       debugPrint(error.toString());
       yield [];

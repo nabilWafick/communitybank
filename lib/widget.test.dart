@@ -157,8 +157,10 @@ class TypeProductSelection extends ConsumerWidget {
               Wrap(
                 children: [
                   const CBDropdown(
-                    width: formCardWidth,
+                    //  width: formCardWidth,
+
                     label: 'Produit',
+                    providerName: 'product-selection-ui-test-product',
                     dropdownMenuEntriesLabels: [
                       '',
                       'Produit 1',

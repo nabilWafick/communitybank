@@ -2,7 +2,7 @@ import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'types_product_selection_form.widget.dart';
+import 'types_product_selection_adding_form.widget.dart';
 
 class TypesAddingForm extends ConsumerWidget {
   const TypesAddingForm({super.key});

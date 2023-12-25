@@ -16,15 +16,19 @@ class ProductsController {
     return response == null ? null : Product.fromMap(response);
   }
 
-  static Stream<List<Product>> getAll() async* {
-    final productMapListStream = ProductsService.getAll();
+  static Stream<List<Product>> getAll(
+      {required String selectedProductPrice}) async* {
+    final productMapListStream =
+        ProductsService.getAll(selectedProductPrice: selectedProductPrice);
 
     // yield all products data or an empty list
-    yield* productMapListStream.map((productMapList) => productMapList
-        .map(
-          (productMap) => Product.fromMap(productMap),
-        )
-        .toList());
+    yield* productMapListStream.map(
+      (productMapList) => productMapList
+          .map(
+            (productMap) => Product.fromMap(productMap),
+          )
+          .toList(),
+    );
     //.asBroadcastStream();
   }
 

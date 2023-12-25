@@ -51,8 +51,9 @@ class TypeProductSelection extends ConsumerWidget {
                       vertical: 5.0,
                     ),
                     child: const CBDropdown(
-                      width: formCardWidth / 1.2,
+                      //  width: formCardWidth / 1.2,
                       label: 'Produit',
+                      providerName: 'types-selection-update-product',
                       dropdownMenuEntriesLabels: [
                         //      '',
                         'Produit 1',

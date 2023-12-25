@@ -9,60 +9,28 @@ final selectedDropdownItemProvider =
 
 class CBDropdown extends ConsumerWidget {
   final String label;
+  final String providerName;
   final List<String> dropdownMenuEntriesLabels;
   final List<String> dropdownMenuEntriesValues;
-  final double? width;
 
   const CBDropdown({
     super.key,
-    this.width,
     required this.label,
+    required this.providerName,
     required this.dropdownMenuEntriesLabels,
     required this.dropdownMenuEntriesValues,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedDropdownItem = ref.watch(selectedDropdownItemProvider(label));
+    final selectedDropdownItem =
+        ref.watch(selectedDropdownItemProvider(providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
       ),
       // width: 100.0,
-      child: /* DropdownButtonFormField<String>(
-          hint: CBText(
-            text: label,
-          ),
-          value: selectedDropdownItem,
-          dropdownColor: CBColors.backgroundColor,
-          items: dropdownMenuEntriesLabels
-              .map(
-                (dropdownMenuEntryLabel) => DropdownMenuItem(
-                  value: dropdownMenuEntriesValues[dropdownMenuEntriesLabels
-                      .indexOf(dropdownMenuEntryLabel)],
-                  child: CBText(
-                    text: dropdownMenuEntryLabel,
-                    fontSize: 12.0,
-                  ),
-                  //  key: dropdownMenuEntryLabel,
-                  /*   style: const ButtonStyle(
-                  textStyle: MaterialStatePropertyAll(
-                    TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),*/
-                ),
-              )
-              .toList(),
-          onChanged: (value) {
-            ref.read(selectedDropdownItemProvider(label).notifier).state =
-                value!;
-          },
-        )*/
-
-          DropdownMenu(
-        width: width,
+      child: DropdownMenu(
         label: CBText(
           text: label,
         ),
@@ -86,7 +54,8 @@ class CBDropdown extends ConsumerWidget {
             .toList(),
         trailingIcon: const Icon(Icons.arrow_drop_down),
         onSelected: (value) {
-          ref.read(selectedDropdownItemProvider(label).notifier).state = value!;
+          ref.read(selectedDropdownItemProvider(providerName).notifier).state =
+              value!;
         },
       ),
     );

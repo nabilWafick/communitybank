@@ -243,13 +243,17 @@ class CustomersAddingForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        width: formCardWidth / 2.3,
+                        // width: formCardWidth / 2.3,
+
                         label: 'Catégorie',
+                        providerName: 'customers-adding-category',
                         dropdownMenuEntriesLabels: [
+                          'Tous',
                           'Particulier Homme',
                           'Particulier Femme',
                         ],
                         dropdownMenuEntriesValues: [
+                          '*',
                           'Particulier Homme',
                           'Particulier Femme',
                         ],
@@ -261,14 +265,17 @@ class CustomersAddingForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        width: formCardWidth / 2.3,
+                        //  width: formCardWidth / 2.3,
                         label: 'Activité économique',
+                        providerName: 'customers-adding-economical-activity',
                         dropdownMenuEntriesLabels: [
+                          'Tous',
                           'Commerce',
                           'Enseignement',
                           'Artisanat',
                         ],
                         dropdownMenuEntriesValues: [
+                          '*',
                           'Commerce',
                           'Enseignement',
                           'Artisanat',
@@ -281,14 +288,17 @@ class CustomersAddingForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        width: formCardWidth / 2.3,
+                        //  width: formCardWidth / 2.3,
                         label: 'Statut Personnel',
+                        providerName: 'customers-adding-personal-status',
                         dropdownMenuEntriesLabels: [
+                          'Tous',
                           'Micro-Entrepreneur',
                           'Commerçant',
                           'Artisant',
                         ],
                         dropdownMenuEntriesValues: [
+                          '*',
                           'Micro-Entrepreneur',
                           'Commerçant',
                           'Artisant',
@@ -301,15 +311,18 @@ class CustomersAddingForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        width: formCardWidth / 2.3,
+                        //  width: formCardWidth / 2.3,
                         label: 'Localité',
+                        providerName: 'customers-adding-locality',
                         dropdownMenuEntriesLabels: [
+                          'Tous',
                           'Aitchédji',
                           'Zogbadjè',
                           'Plateau',
                           'Tankpè'
                         ],
                         dropdownMenuEntriesValues: [
+                          '*',
                           'Aitchédji',
                           'Zogbadjè',
                           'Plateau',
