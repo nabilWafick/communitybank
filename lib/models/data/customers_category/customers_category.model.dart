@@ -1,51 +1,49 @@
 import 'dart:convert';
+
+import 'package:communitybank/models/tables/customers_category/customers_category_table.model.dart';
 import 'package:flutter/widgets.dart';
 
 class CustomerCategory {
   final int? id;
-  final String nom;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String name;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   CustomerCategory({
     this.id,
-    required this.nom,
-    this.createdAt,
-    this.updatedAt,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   CustomerCategory copyWith({
     ValueGetter<int?>? id,
-    String? nom,
-    ValueGetter<DateTime?>? createdAt,
-    ValueGetter<DateTime?>? updatedAt,
+    String? name,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return CustomerCategory(
       id: id?.call() ?? this.id,
-      nom: nom ?? this.nom,
-      createdAt: createdAt?.call() ?? this.createdAt,
-      updatedAt: updatedAt?.call() ?? this.updatedAt,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nom': nom,
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      'name': name,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory CustomerCategory.fromMap(Map<String, dynamic> map) {
     return CustomerCategory(
-      id: map['id']?.toInt(),
-      nom: map['nom'] ?? '',
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
-          : null,
+      id: map[CustomerCategoryTable.id]?.toInt(),
+      name: map[CustomerCategoryTable.name] ?? '',
+      createdAt: DateTime.parse(map[CustomerCategoryTable.createdAt]),
+      updatedAt: DateTime.parse(map[CustomerCategoryTable.updatedAt]),
     );
   }
 
@@ -56,7 +54,7 @@ class CustomerCategory {
 
   @override
   String toString() {
-    return 'CustomerCategory(id: $id, nom: $nom, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerCategory(id: $id, name: $name, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -65,13 +63,16 @@ class CustomerCategory {
 
     return other is CustomerCategory &&
         other.id == id &&
-        other.nom == nom &&
+        other.name == name &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ nom.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
+    return id.hashCode ^
+        name.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

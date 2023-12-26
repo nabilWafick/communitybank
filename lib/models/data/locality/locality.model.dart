@@ -1,51 +1,51 @@
 import 'dart:convert';
+
+import 'package:communitybank/models/tables/locality/locality_table.model.dart';
 import 'package:flutter/widgets.dart';
 
 class Locality {
   final int? id;
-  final String nom;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String name;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Locality({
     this.id,
-    required this.nom,
-    this.createdAt,
-    this.updatedAt,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Locality copyWith({
     ValueGetter<int?>? id,
-    String? nom,
-    ValueGetter<DateTime?>? createdAt,
-    ValueGetter<DateTime?>? updatedAt,
+    String? name,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Locality(
       id: id?.call() ?? this.id,
-      nom: nom ?? this.nom,
-      createdAt: createdAt?.call() ?? this.createdAt,
-      updatedAt: updatedAt?.call() ?? this.updatedAt,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nom': nom,
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      'name': name,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory Locality.fromMap(Map<String, dynamic> map) {
     return Locality(
-      id: map['id']?.toInt(),
-      nom: map['nom'] ?? '',
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
-          : null,
+      id: map[LocalityTable.id]?.toInt(),
+      name: map[LocalityTable.name] ?? '',
+      createdAt:
+          DateTime.fromMillisecondsSinceEpoch(map[LocalityTable.createdAt]),
+      updatedAt:
+          DateTime.fromMillisecondsSinceEpoch(map[LocalityTable.updatedAt]),
     );
   }
 
@@ -56,7 +56,7 @@ class Locality {
 
   @override
   String toString() {
-    return 'Locality(id: $id, nom: $nom, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Locality(id: $id, name: $name, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -65,13 +65,16 @@ class Locality {
 
     return other is Locality &&
         other.id == id &&
-        other.nom == nom &&
+        other.name == name &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ nom.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
+    return id.hashCode ^
+        name.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 
 class CBTextButton extends CBText {
   final Function() onPressed;
-  const CBTextButton(
-      {super.key,
-      required super.text,
-      super.textAlign,
-      super.fontSize,
-      super.fontWeight,
-      super.color,
-      required this.onPressed});
+  const CBTextButton({
+    super.key,
+    required super.text,
+    super.textAlign,
+    super.fontSize,
+    super.fontWeight,
+    super.color,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

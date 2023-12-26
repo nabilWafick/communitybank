@@ -26,14 +26,14 @@ final collectorAddressProvider = StateProvider<String>(
 
 final collectorPictureProvider = StateProvider<String?>(
   (ref) {
-    return '';
+    return;
   },
 );
 
 class CollectorValidors {
   static String? collectorName(String? value, WidgetRef ref) {
     if (ref.watch(collectorNameProvider) == '') {
-      return 'Entrez le nom du client';
+      return 'Entrez le nom du collecteur';
     } else if (ref.watch(collectorNameProvider).length < 3) {
       return "Le nom doit contenir au moins 3 lettres";
     }
@@ -42,7 +42,7 @@ class CollectorValidors {
 
   static String? collectorFirstnames(String? value, WidgetRef ref) {
     if (ref.watch(collectorFirstnamesProvider) == '') {
-      return 'Entrez le(s) prénom(s) nom du client';
+      return 'Entrez le(s) prénom(s) du collecteur';
     } else if (ref.watch(collectorFirstnamesProvider).length < 3) {
       return "Le(s) prénom(s) doit contenir au moins 3 lettres";
     }
@@ -61,7 +61,7 @@ class CollectorValidors {
 
   static String? collectorAddress(String? value, WidgetRef ref) {
     if (ref.watch(collectorAddressProvider) == '') {
-      return 'Entrez l\'adresse du client';
+      return 'Entrez l\'adresse du collecteur';
     } else if (ref.watch(collectorAddressProvider).length < 3) {
       return "L'adresse doit contenir au moins 3 lettres";
     }

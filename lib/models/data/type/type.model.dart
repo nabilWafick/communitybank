@@ -1,65 +1,63 @@
 import 'dart:convert';
+
+import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 
 class Type {
   final int? id;
-  final String nom;
+  final String name;
   final double stake;
   final List<Product> products;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Type({
     this.id,
-    required this.nom,
+    required this.name,
     required this.stake,
     required this.products,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Type copyWith({
     ValueGetter<int?>? id,
-    String? nom,
+    String? name,
     double? stake,
     List<Product>? products,
-    ValueGetter<DateTime?>? createdAt,
-    ValueGetter<DateTime?>? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Type(
       id: id?.call() ?? this.id,
-      nom: nom ?? this.nom,
+      name: name ?? this.name,
       stake: stake ?? this.stake,
       products: products ?? this.products,
-      createdAt: createdAt?.call() ?? this.createdAt,
-      updatedAt: updatedAt?.call() ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nom': nom,
+      'name': name,
       'stake': stake,
       'products': products.map((x) => x.toMap()).toList(),
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory Type.fromMap(Map<String, dynamic> map) {
     return Type(
-      id: map['id']?.toInt(),
-      nom: map['nom'] ?? '',
-      stake: map['stake']?.toDouble() ?? 0.0,
-      products:
-          List<Product>.from(map['products']?.map((x) => Product.fromMap(x))),
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
-          : null,
+      id: map[TypeTable.id]?.toInt(),
+      name: map[TypeTable.name] ?? '',
+      stake: map[TypeTable.stake]?.toDouble() ?? 0.0,
+      products: List<Product>.from(
+          map[TypeTable.products]?.map((x) => Product.fromMap(x))),
+      createdAt: DateTime.parse(map[TypeTable.createdAt]),
+      updatedAt: DateTime.parse(map[TypeTable.updatedAt]),
     );
   }
 
@@ -69,7 +67,7 @@ class Type {
 
   @override
   String toString() {
-    return 'Type(id: $id, nom: $nom, stake: $stake, products: $products, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Type(id: $id, name: $name, stake: $stake, products: $products, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -78,7 +76,7 @@ class Type {
 
     return other is Type &&
         other.id == id &&
-        other.nom == nom &&
+        other.name == name &&
         other.stake == stake &&
         listEquals(other.products, products) &&
         other.createdAt == createdAt &&
@@ -88,7 +86,7 @@ class Type {
   @override
   int get hashCode {
     return id.hashCode ^
-        nom.hashCode ^
+        name.hashCode ^
         stake.hashCode ^
         products.hashCode ^
         createdAt.hashCode ^

@@ -1,4 +1,5 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/forms/adding/types/types_product_selection_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,14 +21,21 @@ class WidgetTest extends ConsumerWidget {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
+                  /*
                   showDialog(
-                      context: context, builder: (context) => const FormCard()
+                      context: context,
+                      builder: (context) => const 
+                   //   TypeProductSelection()
                       // CustomersForm(),
                       // FormCard(),
                       );
+
+                      */
                 },
               ),
             ),
+
+            /// const TypeProductSelection()
             /* FormCard(),*/
           ],
         ),
@@ -114,6 +122,7 @@ class FormCard extends ConsumerWidget {
   }
 }
 
+/*
 class TypeProductSelection extends ConsumerWidget {
   const TypeProductSelection({super.key});
   @override
@@ -228,3 +237,4 @@ class TypeProductSelection extends ConsumerWidget {
     );
   }
 }
+*/

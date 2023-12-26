@@ -1,3 +1,4 @@
+import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/forms/adding/collectors/collectors_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,9 @@ class CollectorsSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
-              showDialog(
+              FunctionsController.showAlertDialog(
                 context: context,
-                builder: (context) => const CollectorsAddingForm(),
-                // CustomersForm(),
-                // FormCard(),
+                alertDialog: const CollectorsAddingForm(),
               );
             },
           ),

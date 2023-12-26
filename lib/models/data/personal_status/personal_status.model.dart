@@ -1,51 +1,49 @@
 import 'dart:convert';
+
+import 'package:communitybank/models/tables/personal_status/personal_status_table.model.dart';
 import 'package:flutter/widgets.dart';
 
 class PersonalStatus {
   final int? id;
-  final String nom;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final String name;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   PersonalStatus({
     this.id,
-    required this.nom,
-    this.createdAt,
-    this.updatedAt,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   PersonalStatus copyWith({
     ValueGetter<int?>? id,
-    String? nom,
-    ValueGetter<DateTime?>? createdAt,
-    ValueGetter<DateTime?>? updatedAt,
+    String? name,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return PersonalStatus(
       id: id?.call() ?? this.id,
-      nom: nom ?? this.nom,
-      createdAt: createdAt?.call() ?? this.createdAt,
-      updatedAt: updatedAt?.call() ?? this.updatedAt,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nom': nom,
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      'name': name,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'updatedAt': updatedAt.millisecondsSinceEpoch,
     };
   }
 
   factory PersonalStatus.fromMap(Map<String, dynamic> map) {
     return PersonalStatus(
-      id: map['id']?.toInt(),
-      nom: map['nom'] ?? '',
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
-          : null,
+      id: map[PersonalStatusTable.id]?.toInt(),
+      name: map[PersonalStatusTable.name] ?? '',
+      createdAt: DateTime.parse(map[PersonalStatusTable.createdAt]),
+      updatedAt: DateTime.parse(map[PersonalStatusTable.updatedAt]),
     );
   }
 
@@ -56,7 +54,7 @@ class PersonalStatus {
 
   @override
   String toString() {
-    return 'PersonalStatus(id: $id, nom: $nom, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'PersonalStatus(id: $id, name: $name, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -65,13 +63,16 @@ class PersonalStatus {
 
     return other is PersonalStatus &&
         other.id == id &&
-        other.nom == nom &&
+        other.name == name &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ nom.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
+    return id.hashCode ^
+        name.hashCode ^
+        createdAt.hashCode ^
+        updatedAt.hashCode;
   }
 }

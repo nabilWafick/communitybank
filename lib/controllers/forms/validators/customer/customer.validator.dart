@@ -66,13 +66,13 @@ final customerLocalityProvider = StateProvider<Locality?>(
 
 final customerSignatureProvider = StateProvider<String?>(
   (ref) {
-    return '';
+    return;
   },
 );
 
 final customerPictureProvider = StateProvider<String?>(
   (ref) {
-    return '';
+    return;
   },
 );
 
