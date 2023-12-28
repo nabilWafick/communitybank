@@ -10,6 +10,10 @@ final searchProvider = StateProvider.family<String, String>((ref, name) {
   return '';
 });
 
+final isSearchingProvider = StateProvider.family<bool, String>((ref, name) {
+  return false;
+});
+
 final productsPurchasePricesProvider =
     StreamProvider<List<double>>((ref) async* {
   yield* ProductsController.getAllProductsPurchasePrices();

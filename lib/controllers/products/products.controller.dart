@@ -18,12 +18,12 @@ class ProductsController {
 
   static Stream<List<Product>> getAll(
       {required String selectedProductPrice}) async* {
-    final productMapListStream =
+    final productsMapListStream =
         ProductsService.getAll(selectedProductPrice: selectedProductPrice);
 
     // yield all products data or an empty list
-    yield* productMapListStream.map(
-      (productMapList) => productMapList
+    yield* productsMapListStream.map(
+      (productsMapList) => productsMapList
           .map(
             (productMap) => Product.fromMap(productMap),
           )

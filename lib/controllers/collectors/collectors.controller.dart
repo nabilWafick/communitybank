@@ -1,90 +1,76 @@
-import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
-import 'package:communitybank/models/tables/product/product_table.model.dart';
-import 'package:communitybank/services/products/products.service.dart';
+import 'package:communitybank/services/collectors/collectors.service.dart';
 
-class ProductsController {
-  static Future<ServiceResponse> create({required Product product}) async {
-    final response = await ProductsService.create(product: product);
+class CollectorsController {
+  static Future<ServiceResponse> create({required Collector collector}) async {
+    final response = await CollectorsService.create(collector: collector);
     // return response status
     return response != null ? ServiceResponse.success : ServiceResponse.failed;
   }
 
-  static Future<Product?> getOne({required int id}) async {
-    final response = await ProductsService.getOne(id: id);
-    // return the specific product data or null
-    return response == null ? null : Product.fromMap(response);
+  static Future<Collector?> getOne({required int id}) async {
+    final response = await CollectorsService.getOne(id: id);
+    // return the specific collector data or null
+    return response == null ? null : Collector.fromMap(response);
   }
 
-  static Stream<List<Product>> getAll(
-      {required String selectedProductPrice}) async* {
-    final productMapListStream =
-        ProductsService.getAll(selectedProductPrice: selectedProductPrice);
+  static Stream<List<Collector>> getAll() async* {
+    final collectorsMapListStream = CollectorsService.getAll();
 
-    // yield all products data or an empty list
-    yield* productMapListStream.map(
-      (productMapList) => productMapList
+    // yield all collectors data or an empty list
+    yield* collectorsMapListStream.map(
+      (collectorsMapList) => collectorsMapList
           .map(
-            (productMap) => Product.fromMap(productMap),
+            (collectorMap) => Collector.fromMap(collectorMap),
           )
           .toList(),
     );
     //.asBroadcastStream();
   }
 
-  static Future<List<Product>> searchProduct({required String name}) async {
-    final searchedProducts = await ProductsService.searchProduct(name: name);
+  static Future<List<Collector>> searchCollector({required String name}) async {
+    final searchedCollectors =
+        await CollectorsService.searchCollector(name: name);
 
-    return searchedProducts
+    return searchedCollectors
         .map(
-          (productMap) => Product.fromMap(productMap),
+          (collectorMap) => Collector.fromMap(collectorMap),
         )
         .toList();
   }
 
-  static Stream<List<double>> getAllProductsPurchasePrices() async* {
-    final productsPurchasePricesStream =
-        ProductsService.getAllProductsPurchasePrices();
-
-    yield* productsPurchasePricesStream.map(
-      (productsPurchasePrices) => productsPurchasePrices
-          .map((productPurchase) =>
-              productPurchase[ProductTable.purchasePrice] as double)
-          .toList(),
-    );
-  }
-
   static Future<ServiceResponse> update(
-      {required int id, required Product product}) async {
-    final response = await ProductsService.update(
+      {required int id, required Collector collector}) async {
+    final response = await CollectorsService.update(
       id: id,
-      product: product,
+      collector: collector,
     );
     // return the response status
     return response != null ? ServiceResponse.success : ServiceResponse.failed;
   }
 
-  static Future<ServiceResponse> delete({required int id}) async {
-    final response = await ProductsService.delete(id: id);
+  static Future<ServiceResponse> delete({required Collector collector}) async {
+    final response = await CollectorsService.delete(collector: collector);
     // return the response status
     return response != null ? ServiceResponse.success : ServiceResponse.failed;
   }
 
   static Future<String?> uploadPicture(
-      {required String productPicturePath}) async {
-    final response = await ProductsService.uploadPicture(
-        productPicturePath: productPicturePath);
+      {required String collectorPicturePath}) async {
+    final response = await CollectorsService.uploadPicture(
+        collectorPicturePath: collectorPicturePath);
     // return the remote path or null
     return response;
   }
 
   static Future<String?> updateUploadedPicture({
-    required String productPictureLink,
-    required String newProductPicturePath,
+    required String collectorPictureLink,
+    required String newCollectorPicturePath,
   }) async {
-    final response = await ProductsService.updateUploadedPicture(
-      productPictureLink: productPictureLink,
-      newProductPicturePath: newProductPicturePath,
+    final response = await CollectorsService.updateUploadedPicture(
+      collectorPictureLink: collectorPictureLink,
+      newCollectorPicturePath: newCollectorPicturePath,
     );
     // return the remote path or null
     return response;

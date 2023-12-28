@@ -1,22 +1,22 @@
-import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class DeleteConfirmationDialog extends HookConsumerWidget {
-  final Product product;
+class CollectorDeletionConfirmationDialog extends HookConsumerWidget {
+  final Collector collector;
   final Future<void> Function({
     required BuildContext context,
     required WidgetRef ref,
-    required Product product,
+    required Collector collector,
     required ValueNotifier<bool> showConfirmationButton,
   }) confirmToDelete;
 
-  const DeleteConfirmationDialog({
+  const CollectorDeletionConfirmationDialog({
     super.key,
-    required this.product,
+    required this.collector,
     required this.confirmToDelete,
   });
   @override
@@ -75,7 +75,8 @@ class DeleteConfirmationDialog extends HookConsumerWidget {
                         width: 25.0,
                       ),
                       const CBText(
-                        text: 'Êtes-vous sûr ?',
+                        text:
+                            'Êtes-vous sûr de vouloir supprimer ce chargé de compte ?',
                         fontSize: 15.0,
                         fontWeight: FontWeight.w500,
                       ),
@@ -112,7 +113,7 @@ class DeleteConfirmationDialog extends HookConsumerWidget {
                             confirmToDelete(
                               context: context,
                               ref: ref,
-                              product: product,
+                              collector: collector,
                               showConfirmationButton: showConfirmationButton,
                             );
                           },

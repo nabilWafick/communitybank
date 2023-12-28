@@ -104,8 +104,8 @@ class _ProductUpdateFormState extends ConsumerState<ProductUpdateForm> {
                                       widget.product.picture != null
                                   ? Image.network(
                                       widget.product.picture!,
-                                      height: 200.0,
-                                      width: 200.0,
+                                      height: 250.0,
+                                      width: 250.0,
                                     )
                                   : productPicture == null
                                       ? const Icon(
@@ -115,8 +115,8 @@ class _ProductUpdateFormState extends ConsumerState<ProductUpdateForm> {
                                         )
                                       : Image.asset(
                                           productPicture,
-                                          height: 200.0,
-                                          width: 200.0,
+                                          height: 250.0,
+                                          width: 250.0,
                                         ),
                             ),
                           ),

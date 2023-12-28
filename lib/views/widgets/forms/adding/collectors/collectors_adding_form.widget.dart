@@ -1,27 +1,28 @@
 import 'package:communitybank/controllers/forms/on_changed/collector/collector.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/collectors/collectors_crud.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CollectorsAddingForm extends StatefulHookConsumerWidget {
-  const CollectorsAddingForm({super.key});
+class CollectorAddingForm extends StatefulHookConsumerWidget {
+  const CollectorAddingForm({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CollectorsAddingFormState();
+      _CollectorAddingFormState();
 }
 
-class _CollectorsAddingFormState extends ConsumerState<CollectorsAddingForm> {
+class _CollectorAddingFormState extends ConsumerState<CollectorAddingForm> {
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     const formCardWidth = 700.0;
-    //  final showValidatedButton = useState<bool>(true);
+    final showValidatedButton = useState<bool>(true);
     final collectorPicture = ref.watch(collectorPictureProvider);
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
@@ -170,8 +171,8 @@ class _CollectorsAddingFormState extends ConsumerState<CollectorsAddingForm> {
                         ),
                         width: formCardWidth / 2.3,
                         child: const CBTextFormField(
-                          label: 'Addresse',
-                          hintText: 'Addresse',
+                          label: 'Adresse',
+                          hintText: 'Adresse',
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,
@@ -202,16 +203,22 @@ class _CollectorsAddingFormState extends ConsumerState<CollectorsAddingForm> {
                   const SizedBox(
                     width: 20.0,
                   ),
-                  SizedBox(
-                    width: 170.0,
-                    child: CBElevatedButton(
-                      text: 'Valider',
-                      onPressed: () {
-                        final isFormaValid = formKey.currentState!.validate();
-                        if (isFormaValid) {}
-                      },
-                    ),
-                  ),
+                  showValidatedButton.value
+                      ? SizedBox(
+                          width: 170.0,
+                          child: CBElevatedButton(
+                            text: 'Valider',
+                            onPressed: () {
+                              CollectorCRUDFunctions.create(
+                                context: context,
+                                formKey: formKey,
+                                ref: ref,
+                                showValidatedButton: showValidatedButton,
+                              );
+                            },
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ],

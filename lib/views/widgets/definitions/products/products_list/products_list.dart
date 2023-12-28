@@ -6,18 +6,14 @@ import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/images_shower/single_image_shower.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
-import 'package:communitybank/views/widgets/forms/delete_confirmation_dialog/delete_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/products/products_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/products/products_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/dropdown/dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final isSearchingProvider = StateProvider.family<bool, String>((ref, name) {
-  return false;
-});
-
-final productsListSearchedProvider =
+final searchedProductsListProvider =
     StreamProvider<List<Product>>((ref) async* {
   String searchedProduct = ref.watch(searchProvider('products'));
   ref.listen(searchProvider('products'), (previous, next) {
@@ -42,8 +38,8 @@ class ProductsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSearching = ref.watch(isSearchingProvider('products'));
-    final productListStream = ref.watch(productsListStreamProvider);
-    final productListSearched = ref.watch(productsListSearchedProvider);
+    final productssListStream = ref.watch(productsListStreamProvider);
+    final searchedProductsList = ref.watch(searchedProductsListProvider);
     return SizedBox(
       height: 640.0,
       // width: MediaQuery.of(context).size.width,
@@ -88,7 +84,7 @@ class ProductsList extends ConsumerWidget {
               DataColumn(label: SizedBox()),
             ],
             rows: isSearching
-                ? productListSearched.when(
+                ? searchedProductsList.when(
                     data: (data) {
                       //  debugPrint('Product Stream Data: $data');
                       return data
@@ -153,7 +149,8 @@ class ProductsList extends ConsumerWidget {
                                   onTap: () async {
                                     FunctionsController.showAlertDialog(
                                       context: context,
-                                      alertDialog: DeleteConfirmationDialog(
+                                      alertDialog:
+                                          ProductDeletionConfirmationDialog(
                                         product: product,
                                         confirmToDelete:
                                             ProductCRUDFunctions.delete,
@@ -182,7 +179,7 @@ class ProductsList extends ConsumerWidget {
                       return [];
                     },
                   )
-                : productListStream.when(
+                : productssListStream.when(
                     data: (data) {
                       //  debugPrint('Product Stream Data: $data');
                       return data
@@ -247,7 +244,8 @@ class ProductsList extends ConsumerWidget {
                                   onTap: () async {
                                     FunctionsController.showAlertDialog(
                                       context: context,
-                                      alertDialog: DeleteConfirmationDialog(
+                                      alertDialog:
+                                          ProductDeletionConfirmationDialog(
                                         product: product,
                                         confirmToDelete:
                                             ProductCRUDFunctions.delete,

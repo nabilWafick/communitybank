@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/tables/collector/collector_table.model.dart';
 import 'package:communitybank/models/tables/collector/collector_table.model.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,6 +17,13 @@ class CollectorsService {
           .from(CollectorTable.tableName)
           .insert(
             collector.toMap(),
+            /* {
+          CollectorTable.name: collector.name,
+          CollectorTable.purchasePrice: collector.purchasePrice,
+          CollectorTable.picture: collector.picture,
+          CollectorTable.createdAt: collector.createdAt.toIso8601String(),
+          CollectorTable.updatedAt: collector.updatedAt.toIso8601String(),
+        },*/
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -48,8 +53,7 @@ class CollectorsService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll(
-      /*{required String selectedcollectorPrice}*/) async* {
+  static Stream<List<Map<String, dynamic>>> getAll() async* {
     final supabase = Supabase.instance.client;
 
     try {
@@ -61,11 +65,6 @@ class CollectorsService {
         CollectorTable.id,
         ascending: true,
       );
-
-      /*  // filter le list and return only collectors which purchase prices are equal to selectedcollectorPrice
-      if (selectedcollectorPrice != '*') {
-        query.eq(CollectorTable.firstnames, selectedcollectorPrice);
-      }*/
 
       // return the result as stream
       yield* query.asBroadcastStream();
@@ -81,12 +80,13 @@ class CollectorsService {
     final supabase = Supabase.instance.client;
 
     try {
-      // get a specific line
+      // get all collectors which name contain "name"
       response = await supabase
-          .from(CollectorTable.tableName)
-          .select<List<Map<String, dynamic>>>()
-          .ilike(CollectorTable.name, '%$name%')
-          .ilike(CollectorTable.firstnames, '%$name');
+              .from(CollectorTable.tableName)
+              .select<List<Map<String, dynamic>>>()
+              .ilike(CollectorTable.name, '%$name%')
+          // .ilike(CollectorTable.firstnames, '%$name%');
+          ;
 
       // return the result data
       return response;
@@ -106,12 +106,7 @@ class CollectorsService {
       // update a specific line
       response = await supabase.from(CollectorTable.tableName).update(
         {
-          CollectorTable.name: collector.name,
-          CollectorTable.firstnames: collector.firstnames,
-          CollectorTable.phoneNumber: collector.phoneNumber,
-          CollectorTable.address: collector.address,
-          CollectorTable.profile: collector.profile,
-          CollectorTable.createdAt: collector.createdAt.toIso8601String(),
+          ...collector.toMap(),
           CollectorTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
@@ -128,17 +123,23 @@ class CollectorsService {
     return null;
   }
 
-  static Future<Map<String, dynamic>?> delete({required int id}) async {
+  static Future<Map<String, dynamic>?> delete(
+      {required Collector collector}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
-      // get a specific line
-      response = await supabase
-          .from(CollectorTable.tableName)
-          .delete()
-          .match({CollectorTable.id: id}).select<List<Map<String, dynamic>>>();
-      // return the result data
+      // delete a specific line
+      response = await supabase.from(CollectorTable.tableName).delete().match({
+        CollectorTable.id: collector.id!
+      }).select<List<Map<String, dynamic>>>();
+
+      // delete the collector's picture if it had before a picture
+      if (collector.profile != null) {
+        deleteUploadedPicture(collectorPictureLink: collector.profile!);
+      }
+
+      // return the delete line
       return response[0];
     } catch (error) {
       debugPrint(error.toString());
@@ -155,7 +156,7 @@ class CollectorsService {
     try {
       collectorPictureRemotePath =
           await supabase.storage.from(CollectorTable.tableName).upload(
-                'profils/Collecteur-${DateTime.now().millisecondsSinceEpoch}.png',
+                'profils/collecteur-${DateTime.now().millisecondsSinceEpoch}.png',
                 File(collectorPicturePath),
                 fileOptions: const FileOptions(
                   cacheControl: '3600',
@@ -176,33 +177,64 @@ class CollectorsService {
     required String newCollectorPicturePath,
   }) async {
     // will contain the remote path of the collector picture
-    String? newCollectorPictureRemotePath;
+    String? newcollectorPictureRemotePath;
     final supabase = Supabase.instance.client;
-
+    /*
     // substract the remote path of the last picture
-    final lastCollectorPictureRemotePath =
+    final lastcollectorPictureRemotePath =
         collectorPictureLink.split('${CollectorTable.tableName}/')[1];
-
+*/
     try {
+      /*
       // delete last object
       await supabase.storage
           .from(CollectorTable.tableName)
-          .remove([lastCollectorPictureRemotePath]);
+          .remove([lastcollectorPictureRemotePath]);
+*/
+      // delete the previous picture of the collector and get the remote path
+      String? lastcollectorPictureRemotePath = await deleteUploadedPicture(
+          collectorPictureLink: collectorPictureLink);
 
-      newCollectorPictureRemotePath =
-          await supabase.storage.from(CollectorTable.tableName).upload(
-                lastCollectorPictureRemotePath,
-                File(newCollectorPicturePath),
-                fileOptions: const FileOptions(
-                  cacheControl: '3600',
-                  upsert: false,
-                ),
-              );
+      // return the remote path of the new picture after uploading it if the last picture remote path getted is not null, else  null is returned
+      if (lastcollectorPictureRemotePath != null) {
+        newcollectorPictureRemotePath =
+            await supabase.storage.from(CollectorTable.tableName).upload(
+                  '$lastcollectorPictureRemotePath-${DateTime.now().millisecondsSinceEpoch}.png',
+                  File(newCollectorPicturePath),
+                  fileOptions: const FileOptions(
+                    cacheControl: '3600',
+                    upsert: false,
+                  ),
+                );
 
-      debugPrint(
-          'newCollectorPictureRemotePath: $newCollectorPictureRemotePath');
+        return newcollectorPictureRemotePath;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
 
-      return newCollectorPictureRemotePath;
+    return null;
+  }
+
+  static Future<String?> deleteUploadedPicture({
+    required String collectorPictureLink,
+  }) async {
+    String? lastcollectorPictureRemotePath;
+    final supabase = Supabase.instance.client;
+
+    try {
+      // substract the remote path of the last picture
+      lastcollectorPictureRemotePath =
+          collectorPictureLink.split('${CollectorTable.tableName}/')[1];
+
+      // delete the object
+      await supabase.storage
+          .from(CollectorTable.tableName)
+          .remove([lastcollectorPictureRemotePath]);
+
+      return lastcollectorPictureRemotePath.split('-')[0];
     } catch (error) {
       debugPrint(error.toString());
     }

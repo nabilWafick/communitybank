@@ -45,13 +45,14 @@ class CollectorCRUDFunctions {
 
         // debugPrint('new collector: $collectorStatus');
       } else {
-        final collectorRemotePath = await collectorsController.uploadPicture(
+        final collectorRemotePath = await CollectorsController.uploadPicture(
           collectorPicturePath: collectorPicture,
         );
 
         if (collectorRemotePath != null) {
           final collector = Collector(
             name: collectorName,
+            firstnames: collectorFirstnames,
             phoneNumber: collectorPhoneNumber,
             address: collectorAddress,
             profile: '${CBConstants.supabaseStorageLink}/$collectorRemotePath',
@@ -60,7 +61,7 @@ class CollectorCRUDFunctions {
           );
 
           collectorStatus =
-              await collectorsController.create(collector: collector);
+              await CollectorsController.create(collector: collector);
 
           //  debugPrint('new collector: $collectorStatus');
         } else {
@@ -92,7 +93,7 @@ class CollectorCRUDFunctions {
     required BuildContext context,
     required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required collector collector,
+    required Collector collector,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
     final collectorPicture = ref.watch(collectorPictureProvider);
@@ -101,21 +102,24 @@ class CollectorCRUDFunctions {
     if (isFormValid) {
       showValidatedButton.value = false;
       final collectorName = ref.watch(collectorNameProvider);
-      final collectorPhoneNumber = ref.watch(collectorPhophoneNumberProvider);
+      final collectorFirstnames = ref.watch(collectorFirstnamesProvider);
+      final collectorPhoneNumber = ref.watch(collectorPhoneNumberProvider);
+      final collectorAddress = ref.watch(collectorAddressProvider);
 
-      ServiceResponse lastcollectorStatus;
+      ServiceResponse lastCollectorStatus;
 
       if (collectorPicture == null) {
         final newcollector = Collector(
           name: collectorName,
+          firstnames: collectorFirstnames,
           phoneNumber: collectorPhoneNumber,
           address: collectorAddress,
-          profile: collector.picture,
+          profile: collector.profile,
           createdAt: collector.createdAt,
           updatedAt: DateTime.now(),
         );
 
-        lastcollectorStatus = await collectorsController.update(
+        lastCollectorStatus = await CollectorsController.update(
           id: collector.id!,
           collector: newcollector,
         );
@@ -124,19 +128,20 @@ class CollectorCRUDFunctions {
       } else {
         String? collectorRemotePath;
         // if the collector haven't a picture before
-        if (collector.picture == null) {
-          collectorRemotePath = await collectorsController.uploadPicture(
+        if (collector.profile == null) {
+          collectorRemotePath = await CollectorsController.uploadPicture(
               collectorPicturePath: collectorPicture);
         } else {
           collectorRemotePath =
-              await collectorsController.updateUploadedPicture(
-            collectorPictureLink: collector.picture!,
-            newcollectorPicturePath: collectorPicture,
+              await CollectorsController.updateUploadedPicture(
+            collectorPictureLink: collector.profile!,
+            newCollectorPicturePath: collectorPicture,
           );
         }
 
         final newcollector = Collector(
           name: collectorName,
+          firstnames: collectorFirstnames,
           phoneNumber: collectorPhoneNumber,
           address: collectorAddress,
           profile: '${CBConstants.supabaseStorageLink}/$collectorRemotePath',
@@ -144,23 +149,23 @@ class CollectorCRUDFunctions {
           updatedAt: DateTime.now(),
         );
 
-        lastcollectorStatus = await collectorsController.update(
+        lastCollectorStatus = await CollectorsController.update(
           id: collector.id!,
           collector: newcollector,
         );
 
         //  debugPrint('new collector: $collectorStatus');
       }
-      if (lastcollectorStatus == ServiceResponse.success) {
+      if (lastCollectorStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastcollectorStatus,
+          serviceResponse: lastCollectorStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastcollectorStatus,
+          serviceResponse: lastCollectorStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -175,14 +180,14 @@ class CollectorCRUDFunctions {
   static Future<void> delete({
     required BuildContext context,
     required WidgetRef ref,
-    required int collectorId,
+    required Collector collector,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
 
     ServiceResponse collectorStatus;
 
-    collectorStatus = await collectorsController.delete(id: collectorId);
+    collectorStatus = await CollectorsController.delete(collector: collector);
 
     if (collectorStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(

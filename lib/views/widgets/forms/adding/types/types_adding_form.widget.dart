@@ -3,7 +3,7 @@ import 'package:communitybank/controllers/forms/validators/type/type.validator.d
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+//import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'types_product_selection_adding_form.widget.dart';
 
@@ -20,7 +20,7 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
 
   @override
   Widget build(BuildContext context) {
-    final showValidatedButton = useState<bool>(true);
+    //  final showValidatedButton = useState<bool>(true);
 
     const formCardWidth = 500.0;
     return AlertDialog(
