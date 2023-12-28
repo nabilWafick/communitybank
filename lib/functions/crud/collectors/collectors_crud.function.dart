@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
-import 'package:communitybank/controllers/products/products.controller.dart';
+import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
+import 'package:communitybank/controllers/collectors/collectors.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/constants/constants.util.dart';
@@ -18,58 +18,65 @@ class CollectorCRUDFunctions {
     required WidgetRef ref,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
-    final productPicture = ref.watch(productPictureProvider);
+    final collectorPicture = ref.watch(collectorPictureProvider);
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final productName = ref.watch(productNameProvider);
-      final productPrice = ref.watch(productPurchasePriceProvider);
+      final collectorName = ref.watch(collectorNameProvider);
+      final collectorFirstnames = ref.watch(collectorFirstnamesProvider);
+      final collectorPhoneNumber = ref.watch(collectorPhoneNumberProvider);
+      final collectorAddress = ref.watch(collectorAddressProvider);
 
-      ServiceResponse productStatus;
+      ServiceResponse collectorStatus;
 
-      if (productPicture == null) {
-        final product = Product(
-          name: productName,
-          purchasePrice: productPrice,
-          picture: productPicture,
+      if (collectorPicture == null) {
+        final collector = Collector(
+          name: collectorName,
+          firstnames: collectorFirstnames,
+          phoneNumber: collectorPhoneNumber,
+          address: collectorAddress,
+          profile: collectorPicture,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
 
-        productStatus = await ProductsController.create(product: product);
+        collectorStatus =
+            await CollectorsController.create(collector: collector);
 
-        // debugPrint('new product: $productStatus');
+        // debugPrint('new collector: $collectorStatus');
       } else {
-        final productRemotePath = await ProductsController.uploadPicture(
-          productPicturePath: productPicture,
+        final collectorRemotePath = await collectorsController.uploadPicture(
+          collectorPicturePath: collectorPicture,
         );
 
-        if (productRemotePath != null) {
-          final product = Product(
-            name: productName,
-            purchasePrice: productPrice,
-            picture: '${CBConstants.supabaseStorageLink}/$productRemotePath',
+        if (collectorRemotePath != null) {
+          final collector = Collector(
+            name: collectorName,
+            phoneNumber: collectorPhoneNumber,
+            address: collectorAddress,
+            profile: '${CBConstants.supabaseStorageLink}/$collectorRemotePath',
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
 
-          productStatus = await ProductsController.create(product: product);
+          collectorStatus =
+              await collectorsController.create(collector: collector);
 
-          //  debugPrint('new product: $productStatus');
+          //  debugPrint('new collector: $collectorStatus');
         } else {
-          productStatus = ServiceResponse.failed;
+          collectorStatus = ServiceResponse.failed;
         }
       }
-      if (productStatus == ServiceResponse.success) {
+      if (collectorStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: productStatus,
+          serviceResponse: collectorStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: productStatus,
+          serviceResponse: collectorStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -85,76 +92,75 @@ class CollectorCRUDFunctions {
     required BuildContext context,
     required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required Product product,
+    required collector collector,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
-    final productPicture = ref.watch(productPictureProvider);
+    final collectorPicture = ref.watch(collectorPictureProvider);
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final productName = ref.watch(productNameProvider);
-      final productPrice = ref.watch(productPurchasePriceProvider);
+      final collectorName = ref.watch(collectorNameProvider);
+      final collectorPhoneNumber = ref.watch(collectorPhophoneNumberProvider);
 
-      ServiceResponse lastProductStatus;
+      ServiceResponse lastcollectorStatus;
 
-      if (productPicture == null) {
-        final newProduct = Product(
-          name: productName,
-          purchasePrice: productPrice,
-          picture: product.picture,
-          createdAt: product.createdAt,
+      if (collectorPicture == null) {
+        final newcollector = Collector(
+          name: collectorName,
+          phoneNumber: collectorPhoneNumber,
+          address: collectorAddress,
+          profile: collector.picture,
+          createdAt: collector.createdAt,
           updatedAt: DateTime.now(),
         );
 
-        lastProductStatus = await ProductsController.update(
-          id: product.id!,
-          product: newProduct,
+        lastcollectorStatus = await collectorsController.update(
+          id: collector.id!,
+          collector: newcollector,
         );
 
-        // debugPrint('new product: $productStatus');
+        // debugPrint('new collector: $collectorStatus');
       } else {
-        String? productRemotePath;
-        // if the product haven't a picture before
-        if (product.picture == null) {
-          productRemotePath = await ProductsController.uploadPicture(
-              productPicturePath: productPicture);
+        String? collectorRemotePath;
+        // if the collector haven't a picture before
+        if (collector.picture == null) {
+          collectorRemotePath = await collectorsController.uploadPicture(
+              collectorPicturePath: collectorPicture);
         } else {
-          productRemotePath = await ProductsController.updateUploadedPicture(
-            productPictureLink: product.picture!,
-            newProductPicturePath: productPicture,
+          collectorRemotePath =
+              await collectorsController.updateUploadedPicture(
+            collectorPictureLink: collector.picture!,
+            newcollectorPicturePath: collectorPicture,
           );
         }
 
-        if (productRemotePath != null) {
-          final newProduct = Product(
-            name: productName,
-            purchasePrice: productPrice,
-            picture: '${CBConstants.supabaseStorageLink}/$productRemotePath',
-            createdAt: product.createdAt,
-            updatedAt: DateTime.now(),
-          );
+        final newcollector = Collector(
+          name: collectorName,
+          phoneNumber: collectorPhoneNumber,
+          address: collectorAddress,
+          profile: '${CBConstants.supabaseStorageLink}/$collectorRemotePath',
+          createdAt: collector.createdAt,
+          updatedAt: DateTime.now(),
+        );
 
-          lastProductStatus = await ProductsController.update(
-            id: product.id!,
-            product: newProduct,
-          );
+        lastcollectorStatus = await collectorsController.update(
+          id: collector.id!,
+          collector: newcollector,
+        );
 
-          //  debugPrint('new product: $productStatus');
-        } else {
-          lastProductStatus = ServiceResponse.failed;
-        }
+        //  debugPrint('new collector: $collectorStatus');
       }
-      if (lastProductStatus == ServiceResponse.success) {
+      if (lastcollectorStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastProductStatus,
+          serviceResponse: lastcollectorStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastProductStatus,
+          serviceResponse: lastcollectorStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -169,24 +175,24 @@ class CollectorCRUDFunctions {
   static Future<void> delete({
     required BuildContext context,
     required WidgetRef ref,
-    required int productId,
+    required int collectorId,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
 
-    ServiceResponse productStatus;
+    ServiceResponse collectorStatus;
 
-    productStatus = await ProductsController.delete(id: productId);
+    collectorStatus = await collectorsController.delete(id: collectorId);
 
-    if (productStatus == ServiceResponse.success) {
+    if (collectorStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: productStatus,
+        serviceResponse: collectorStatus,
         response: 'Opération réussie',
       );
       Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: productStatus,
+        serviceResponse: collectorStatus,
         response: 'Opération échouée',
       );
       showConfirmationButton.value = true;

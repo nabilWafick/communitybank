@@ -48,14 +48,14 @@ class Collector {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'firstnames': firstnames,
-      'phoneNumber': phoneNumber,
-      'address': address,
-      'profile': profile,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      //  CollectorTable.id: id,
+      CollectorTable.name: name,
+      CollectorTable.firstnames: firstnames,
+      CollectorTable.phoneNumber: phoneNumber,
+      CollectorTable.address: address,
+      CollectorTable.profile: profile,
+      CollectorTable.createdAt: createdAt.toIso8601String(),
+      CollectorTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 

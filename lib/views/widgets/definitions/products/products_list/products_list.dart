@@ -154,7 +154,7 @@ class ProductsList extends ConsumerWidget {
                                     FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog: DeleteConfirmationDialog(
-                                        productId: product.id!,
+                                        product: product,
                                         confirmToDelete:
                                             ProductCRUDFunctions.delete,
                                       ),
@@ -248,7 +248,7 @@ class ProductsList extends ConsumerWidget {
                                     FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog: DeleteConfirmationDialog(
-                                        productId: product.id!,
+                                        product: product,
                                         confirmToDelete:
                                             ProductCRUDFunctions.delete,
                                       ),

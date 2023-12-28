@@ -43,13 +43,13 @@ class Product {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'purchasePrice': purchasePrice,
-      'picture': picture,
-      'number': number,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      // ProductTable.id: id,
+      ProductTable.name: name,
+      ProductTable.purchasePrice: purchasePrice,
+      ProductTable.picture: picture,
+      //   'number': number,
+      ProductTable.createdAt: createdAt.toIso8601String(),
+      ProductTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 

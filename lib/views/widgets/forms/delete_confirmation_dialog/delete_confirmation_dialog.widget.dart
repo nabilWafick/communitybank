@@ -1,3 +1,4 @@
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -5,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DeleteConfirmationDialog extends HookConsumerWidget {
-  final int productId;
+  final Product product;
   final Future<void> Function({
     required BuildContext context,
     required WidgetRef ref,
-    required int productId,
+    required Product product,
     required ValueNotifier<bool> showConfirmationButton,
   }) confirmToDelete;
 
   const DeleteConfirmationDialog({
     super.key,
-    required this.productId,
+    required this.product,
     required this.confirmToDelete,
   });
   @override
@@ -111,7 +112,7 @@ class DeleteConfirmationDialog extends HookConsumerWidget {
                             confirmToDelete(
                               context: context,
                               ref: ref,
-                              productId: productId,
+                              product: product,
                               showConfirmationButton: showConfirmationButton,
                             );
                           },

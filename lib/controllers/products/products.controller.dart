@@ -64,8 +64,8 @@ class ProductsController {
     return response != null ? ServiceResponse.success : ServiceResponse.failed;
   }
 
-  static Future<ServiceResponse> delete({required int id}) async {
-    final response = await ProductsService.delete(id: id);
+  static Future<ServiceResponse> delete({required Product product}) async {
+    final response = await ProductsService.delete(product: product);
     // return the response status
     return response != null ? ServiceResponse.success : ServiceResponse.failed;
   }

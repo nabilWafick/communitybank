@@ -169,14 +169,14 @@ class ProductCRUDFunctions {
   static Future<void> delete({
     required BuildContext context,
     required WidgetRef ref,
-    required int productId,
+    required Product product,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
 
     ServiceResponse productStatus;
 
-    productStatus = await ProductsController.delete(id: productId);
+    productStatus = await ProductsController.delete(product: product);
 
     if (productStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
