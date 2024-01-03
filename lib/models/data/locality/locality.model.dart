@@ -31,10 +31,10 @@ class Locality {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      //  LocalityTable.id: id,
+      LocalityTable.name: name,
+      LocalityTable.createdAt: createdAt.toIso8601String(),
+      LocalityTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 
@@ -42,10 +42,8 @@ class Locality {
     return Locality(
       id: map[LocalityTable.id]?.toInt(),
       name: map[LocalityTable.name] ?? '',
-      createdAt:
-          DateTime.fromMillisecondsSinceEpoch(map[LocalityTable.createdAt]),
-      updatedAt:
-          DateTime.fromMillisecondsSinceEpoch(map[LocalityTable.updatedAt]),
+      createdAt: DateTime.parse(map[LocalityTable.createdAt]),
+      updatedAt: DateTime.parse(map[LocalityTable.updatedAt]),
     );
   }
 

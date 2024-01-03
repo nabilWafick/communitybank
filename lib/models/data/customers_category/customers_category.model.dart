@@ -31,10 +31,10 @@ class CustomerCategory {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      //  CustomerCategoryTable.id: id,
+      CustomerCategoryTable.name: name,
+      CustomerCategoryTable.createdAt: createdAt.toIso8601String(),
+      CustomerCategoryTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 

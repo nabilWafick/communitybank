@@ -31,10 +31,10 @@ class PersonalStatus {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      //   PersonalStatusTable.id: id,
+      PersonalStatusTable.name: name,
+      PersonalStatusTable.createdAt: createdAt.toIso8601String(),
+      PersonalStatusTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 

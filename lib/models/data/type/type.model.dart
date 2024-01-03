@@ -40,12 +40,12 @@ class Type {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'stake': stake,
-      'products': products.map((x) => x.toMap()).toList(),
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      //   TypeTable.id: id,
+      TypeTable.name: name,
+      TypeTable.stake: stake,
+      TypeTable.products: products.map((x) => x.toMap()).toList(),
+      TypeTable.createdAt: createdAt.toIso8601String(),
+      TypeTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 

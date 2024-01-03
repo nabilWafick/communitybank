@@ -31,10 +31,10 @@ class EconomicalActivity {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      //  EconomicalActivityTable.id: id,
+      EconomicalActivityTable.name: name,
+      EconomicalActivityTable.createdAt: createdAt.toIso8601String(),
+      EconomicalActivityTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 

@@ -85,6 +85,8 @@ class CollectorsService {
               .from(CollectorTable.tableName)
               .select<List<Map<String, dynamic>>>()
               .ilike(CollectorTable.name, '%$name%')
+
+          //.or(filters)
           // .ilike(CollectorTable.firstnames, '%$name%');
           ;
 

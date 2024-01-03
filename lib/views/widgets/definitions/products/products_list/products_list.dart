@@ -38,7 +38,7 @@ class ProductsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSearching = ref.watch(isSearchingProvider('products'));
-    final productssListStream = ref.watch(productsListStreamProvider);
+    final productsListStream = ref.watch(productsListStreamProvider);
     final searchedProductsList = ref.watch(searchedProductsListProvider);
     return SizedBox(
       height: 640.0,
@@ -179,7 +179,7 @@ class ProductsList extends ConsumerWidget {
                       return [];
                     },
                   )
-                : productssListStream.when(
+                : productsListStream.when(
                     data: (data) {
                       //  debugPrint('Product Stream Data: $data');
                       return data

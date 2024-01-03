@@ -17,13 +17,6 @@ class ProductsService {
           .from(ProductTable.tableName)
           .insert(
             product.toMap(),
-            /* {
-          ProductTable.name: product.name,
-          ProductTable.purchasePrice: product.purchasePrice,
-          ProductTable.picture: product.picture,
-          ProductTable.createdAt: product.createdAt.toIso8601String(),
-          ProductTable.updatedAt: product.updatedAt.toIso8601String(),
-        },*/
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>

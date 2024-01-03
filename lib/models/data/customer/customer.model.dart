@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:communitybank/models/tables/customer/customer_table.model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
@@ -19,8 +20,8 @@ class Customer {
   final Locality locality;
   final String? profile;
   final String? signature;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Customer({
     this.id,
     required this.name,
@@ -35,8 +36,8 @@ class Customer {
     required this.locality,
     this.profile,
     this.signature,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   Customer copyWith({
@@ -53,8 +54,8 @@ class Customer {
     Locality? locality,
     ValueGetter<String?>? profile,
     ValueGetter<String?>? signature,
-    ValueGetter<DateTime?>? createdAt,
-    ValueGetter<DateTime?>? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return Customer(
       id: id?.call() ?? this.id,
@@ -70,52 +71,49 @@ class Customer {
       locality: locality ?? this.locality,
       profile: profile?.call() ?? this.profile,
       signature: signature?.call() ?? this.signature,
-      createdAt: createdAt?.call() ?? this.createdAt,
-      updatedAt: updatedAt?.call() ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'name': name,
-      'firstnames': firstnames,
-      'phoneNumber': phoneNumber,
-      'address': address,
-      'profession': profession,
-      'nicNumber': nicNumber,
-      'category': category.toMap(),
-      'economicalActivity': economicalActivity.toMap(),
-      'personalStatus': personalStatus.toMap(),
-      'locality': locality.toMap(),
-      'profile': profile,
-      'signature': signature,
-      'createdAt': createdAt?.millisecondsSinceEpoch,
-      'updatedAt': updatedAt?.millisecondsSinceEpoch,
+      //  CustomerTable.id: id,
+      CustomerTable.name: name,
+      CustomerTable.firstnames: firstnames,
+      CustomerTable.phoneNumber: phoneNumber,
+      CustomerTable.address: address,
+      CustomerTable.profession: profession,
+      CustomerTable.nciNumber: nicNumber,
+      CustomerTable.category: category.toMap(),
+      CustomerTable.economicalActivity: economicalActivity.toMap(),
+      CustomerTable.personalStatus: personalStatus.toMap(),
+      CustomerTable.locality: locality.toMap(),
+      CustomerTable.profile: profile,
+      CustomerTable.signature: signature,
+      CustomerTable.createdAt: createdAt.toIso8601String(),
+      CustomerTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 
   factory Customer.fromMap(Map<String, dynamic> map) {
     return Customer(
-      id: map['id']?.toInt(),
-      name: map['name'] ?? '',
-      firstnames: map['firstnames'] ?? '',
-      phoneNumber: map['phoneNumber'] ?? '',
-      address: map['address'] ?? '',
-      profession: map['profession'] ?? '',
-      nicNumber: map['nicNumber']?.toInt() ?? 0,
-      category: CustomerCategory.fromMap(map['category']),
-      economicalActivity: EconomicalActivity.fromMap(map['economicalActivity']),
-      personalStatus: PersonalStatus.fromMap(map['personalStatus']),
-      locality: Locality.fromMap(map['locality']),
-      profile: map['profile'],
-      signature: map['signature'],
-      createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['updatedAt'])
-          : null,
+      id: map[CustomerTable.id]?.toInt(),
+      name: map[CustomerTable.name] ?? '',
+      firstnames: map[CustomerTable.firstnames] ?? '',
+      phoneNumber: map[CustomerTable.phoneNumber] ?? '',
+      address: map[CustomerTable.address] ?? '',
+      profession: map[CustomerTable.profession] ?? '',
+      nicNumber: map[CustomerTable.nciNumber]?.toInt() ?? 0,
+      category: CustomerCategory.fromMap(map[CustomerTable.category]),
+      economicalActivity:
+          EconomicalActivity.fromMap(map[CustomerTable.economicalActivity]),
+      personalStatus: PersonalStatus.fromMap(map[CustomerTable.personalStatus]),
+      locality: Locality.fromMap(map[CustomerTable.locality]),
+      profile: map[CustomerTable.profile],
+      signature: map[CustomerTable.signature],
+      createdAt: DateTime.parse(map[CustomerTable.createdAt]),
+      updatedAt: DateTime.parse(map[CustomerTable.updatedAt]),
     );
   }
 
