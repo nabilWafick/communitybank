@@ -6,6 +6,7 @@ class CBText extends StatelessWidget {
   final FontWeight? fontWeight;
   final TextAlign? textAlign;
   final Color? color;
+  final TextOverflow? textOverflow;
 
   const CBText({
     super.key,
@@ -14,6 +15,7 @@ class CBText extends StatelessWidget {
     this.fontSize,
     this.fontWeight,
     this.color,
+    this.textOverflow,
   });
 
   @override
@@ -21,11 +23,14 @@ class CBText extends StatelessWidget {
     return Text(
       text,
       textAlign: textAlign,
+      overflow: textOverflow,
+      maxLines: 2,
       style: TextStyle(
-          fontSize: fontSize,
-          fontFamily: 'Poppins',
-          fontWeight: fontWeight,
-          color: color),
+        fontSize: fontSize,
+        fontFamily: 'Poppins',
+        fontWeight: fontWeight,
+        color: color,
+      ),
     );
   }
 }

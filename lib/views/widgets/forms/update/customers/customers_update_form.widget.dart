@@ -243,8 +243,7 @@ class CustomersUpdateForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        // width: formCardWidth / 2.3,
-
+                        width: formCardWidth / 2.3,
                         label: 'Catégorie',
                         providerName: 'customers-update-category',
                         dropdownMenuEntriesLabels: [
@@ -265,7 +264,7 @@ class CustomersUpdateForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        //  width: formCardWidth / 2.3,
+                        width: formCardWidth / 2.3,
                         label: 'Activité économique',
                         providerName: 'customers-update-economical-activity',
                         dropdownMenuEntriesLabels: [
@@ -288,7 +287,7 @@ class CustomersUpdateForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        //  width: formCardWidth / 2.3,
+                        width: formCardWidth / 2.3,
                         label: 'Statut Personnel',
                         providerName: 'customers-update-personal-status',
                         dropdownMenuEntriesLabels: [
@@ -311,7 +310,7 @@ class CustomersUpdateForm extends ConsumerWidget {
                         horizontal: 5.0,
                       ),
                       child: const CBDropdown(
-                        //  width: formCardWidth / 2.3,
+                        width: formCardWidth / 2.3,
                         label: 'Localité',
                         providerName: 'customers-update-locality',
                         dropdownMenuEntriesLabels: [

@@ -1,11 +1,8 @@
+import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/personal_status/personal_status_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final searchedPersonalStatusProvider = StateProvider<String>((ref) {
-  return '';
-});
 
 class PersonalStatusSortOptions extends ConsumerWidget {
   const PersonalStatusSortOptions({super.key});
@@ -35,7 +32,7 @@ class PersonalStatusSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un statut personnel',
-                searchProvider: searchedPersonalStatusProvider,
+                searchProvider: searchProvider('personal-status'),
               ),
               const SizedBox(
                 width: 10.0,

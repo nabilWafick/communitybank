@@ -74,11 +74,14 @@ class EconomicalActivityDeletionConfirmationDialog extends HookConsumerWidget {
                       const SizedBox(
                         width: 25.0,
                       ),
-                      const CBText(
-                        text:
-                            'Êtes-vous sûr de vouloir supprimer cette catégorie de client ?',
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
+                      const Flexible(
+                        child: CBText(
+                          text:
+                              'Êtes-vous sûr de vouloir supprimer cette catégorie de client ?',
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                          textOverflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

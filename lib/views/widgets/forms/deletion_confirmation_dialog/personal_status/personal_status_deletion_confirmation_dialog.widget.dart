@@ -1,4 +1,3 @@
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -75,11 +74,14 @@ class PersonalStatusDeletionConfirmationDialog extends HookConsumerWidget {
                       const SizedBox(
                         width: 25.0,
                       ),
-                      const CBText(
-                        text:
-                            'Êtes-vous sûr de vouloir supprimer cette catégorie de client ?',
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w500,
+                      const Flexible(
+                        child: CBText(
+                          text:
+                              'Êtes-vous sûr de vouloir supprimer cette catégorie de client ?',
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                          textOverflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

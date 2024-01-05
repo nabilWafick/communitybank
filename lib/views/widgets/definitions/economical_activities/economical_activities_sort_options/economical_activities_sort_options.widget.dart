@@ -1,11 +1,8 @@
+import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/economical_activities/economical_activities_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final searchedEconomicalActivityProvider = StateProvider<String>((ref) {
-  return '';
-});
 
 class EconomicalActivitiesSortOptions extends ConsumerWidget {
   const EconomicalActivitiesSortOptions({super.key});
@@ -23,7 +20,7 @@ class EconomicalActivitiesSortOptions extends ConsumerWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => const EconomicalActivitiesAddingForm(),
+                builder: (context) => const EconomicalActivityAddingForm(),
                 // CustomersForm(),
                 // FormCard(),
               );
@@ -35,7 +32,7 @@ class EconomicalActivitiesSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher une activité économique',
-                searchProvider: searchedEconomicalActivityProvider,
+                searchProvider: searchProvider('economical-actvities'),
               ),
               const SizedBox(
                 width: 10.0,
