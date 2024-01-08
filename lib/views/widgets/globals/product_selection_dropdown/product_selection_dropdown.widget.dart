@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CBProductSelectionDropdown extends CBDropdown {
-  final double? width;
+  // final double? width;
   const CBProductSelectionDropdown({
     super.key,
     required super.label,
     required super.providerName,
     required super.dropdownMenuEntriesLabels,
     required super.dropdownMenuEntriesValues,
-    this.width,
+    super.width,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDropdownItem =
-        ref.watch(selectedDropdownItemProvider(providerName));
+        ref.watch(dropdownSelectedItemProvider(providerName));
     return DropdownMenu(
       inputDecorationTheme: const InputDecorationTheme(
         enabledBorder: OutlineInputBorder(

@@ -13,21 +13,29 @@ final typeStakeProvider = StateProvider<double>(
   },
 );
 
-final typeProductsProvider = StateProvider<List<Product>>(
+final availableProductsProvider = StateProvider<List<Product>>((ref) {
+  return [];
+});
+
+final addedInputsProvider = StateProvider<List<int>>((ref) {
+  return [];
+});
+
+final typeSelectedProductsProvider = StateProvider<List<Product>>(
   (ref) {
     return [];
   },
 );
 
-final typeProductProvider = StateProvider.family<Product?, String>(
-  (ref, productName) {
-    return;
+final typeUnselectedProductsProvider = StateProvider<List<Product>>(
+  (ref) {
+    return [];
   },
 );
 
 final typeProductNumberProvider = StateProvider.family<int, int>(
   (ref, productName) {
-    return 1;
+    return 0;
   },
 );
 
@@ -43,6 +51,14 @@ class TypeValidators {
 
   static String? typeStack(String? value, WidgetRef ref) {
     if (ref.watch(typeStakeProvider) == .0) {
+      return 'Entrez une valeur';
+    }
+    return null;
+  }
+
+  static String? typeProductNumber(
+      String? value, int productIndex, WidgetRef ref) {
+    if (ref.watch(typeProductNumberProvider(productIndex)) == 0) {
       return 'Entrez une valeur';
     }
     return null;

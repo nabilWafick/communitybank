@@ -16,4 +16,11 @@ class TypeOnChanged {
         ref,
         typeStakeProvider,
       );
+
+  static typeProductNumber(String? value, int productIndex, WidgetRef ref) =>
+      CommonOnChangedFunction.onIntTextInputValueChanged(
+        value,
+        ref,
+        typeProductNumberProvider(productIndex),
+      );
 }

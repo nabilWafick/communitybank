@@ -1,57 +1,97 @@
+import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.dart';
+import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
+import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/globals/product_selection_dropdown/product_selection_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/product_selection_textformfield/product_selection_textformfield.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TypeProductSelection extends ConsumerWidget {
+class TypeProductSelection extends StatefulHookConsumerWidget {
+  final int index;
   final double formCardWidth;
   const TypeProductSelection({
     super.key,
+    required this.index,
     required this.formCardWidth,
   });
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _TypeProductSelectionState();
+}
+
+class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
+  @override
+  Widget build(BuildContext context) {
     const formCardWidth = 450.0;
-    return Row(
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(
-            // horizontal: 5.0,
-            vertical: 10.0,
-          ),
-          child: const CBProductSelectionDropdown(
-            width: formCardWidth / 2.05,
-            label: 'Produit',
-            providerName: 'types-selection-adding-product',
-            dropdownMenuEntriesLabels: [
-              //  '',
-              'Produit 1',
-              'Produit 2',
-              'Produit 3',
-            ],
-            dropdownMenuEntriesValues: [
-              //     '',
-              'Produit 1',
-              'Produit 2',
-              'Produit 3',
-            ],
-          ),
-        ),
-        SizedBox(
-          width: formCardWidth / 2.05,
-          child: CBProductSelectionTextFormField(
-            label: 'Nombre',
-            hintText: 'Nombre de produit',
-            isMultilineTextForm: false,
-            obscureText: false,
-            textInputType: TextInputType.number,
-            validator: (val, ref) {
-              return null;
-            },
-            onChanged: (val, ref) {},
-          ),
-        ),
-      ],
-    );
+    final showWidget = useState(true);
+    final productsListStream = ref.watch(productsListStreamProvider);
+    return showWidget.value
+        ? Container(
+            margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7.0),
+            width: formCardWidth,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    CBProductSelectionDropdown(
+                      width: formCardWidth / 2.3,
+                      label: 'Produit',
+                      providerName:
+                          'type-selection-adding-product-${widget.index}',
+                      dropdownMenuEntriesLabels: const [
+                        //  '',
+                        'Produit 1',
+                        'Produit 2',
+                        'Produit 3',
+                      ],
+                      dropdownMenuEntriesValues: const [
+                        //     '',
+                        'Produit 1',
+                        'Produit 2',
+                        'Produit 3',
+                      ],
+                    ),
+                    SizedBox(
+                      width: formCardWidth / 2.3,
+                      child: CBProductSelectionTextFormField(
+                        inputIndex: widget.index,
+                        label: 'Nombre',
+                        hintText: 'Nombre de produit',
+                        textInputType: TextInputType.number,
+                        validator: TypeValidators.typeProductNumber,
+                        onChanged: TypeOnChanged.typeProductNumber,
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {});
+                    ref.read(addedInputsProvider.notifier).update((state) {
+                      /*  state.removeWhere(
+                          (inputIndex) => widget.index == inputIndex);*/
+                      state.remove(widget.index);
+                      //state.clear();
+                      return state;
+                    });
+                    showWidget.value = false;
+                    // setState(() {});
+                    debugPrint(
+                        'remain: ${ref.watch(addedInputsProvider).length.toString()}');
+                  },
+                  icon: const Icon(
+                    Icons.close_rounded,
+                    color: CBColors.primaryColor,
+                    size: 30.0,
+                  ),
+                ),
+              ],
+            ),
+          )
+        : const SizedBox();
   }
 }

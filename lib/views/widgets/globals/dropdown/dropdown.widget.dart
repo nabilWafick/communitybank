@@ -2,7 +2,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final selectedDropdownItemProvider =
+final dropdownSelectedItemProvider =
     StateProvider.family<String, String>((ref, dropdown) {
   return '*';
 });
@@ -26,7 +26,7 @@ class CBDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDropdownItem =
-        ref.watch(selectedDropdownItemProvider(providerName));
+        ref.watch(dropdownSelectedItemProvider(providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -54,9 +54,11 @@ class CBDropdown extends ConsumerWidget {
               ),
             )
             .toList(),
-        trailingIcon: const Icon(Icons.arrow_drop_down),
+        trailingIcon: const Icon(
+          Icons.arrow_drop_down,
+        ),
         onSelected: (value) {
-          ref.read(selectedDropdownItemProvider(providerName).notifier).state =
+          ref.read(dropdownSelectedItemProvider(providerName).notifier).state =
               value!;
         },
       ),
