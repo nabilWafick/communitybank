@@ -229,7 +229,7 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                             final typeStack = ref.watch(typeStakeProvider);
                             final typeProducts = addedInputs
                                 .map((input) => ref.watch(
-                                    selectedDropdownItemProvider(
+                                    dropdownSelectedItemProvider(
                                         'type-selection-adding-product-$input')))
                                 .toList();
                             final typeProductsNumber = addedInputs

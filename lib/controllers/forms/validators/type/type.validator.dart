@@ -21,15 +21,9 @@ final addedInputsProvider = StateProvider<List<int>>((ref) {
   return [];
 });
 
-final typeSelectedProductsProvider = StateProvider<List<Product>>(
+final typeSelectedProductsProvider = StateProvider<Map<String, Product>>(
   (ref) {
-    return [];
-  },
-);
-
-final typeUnselectedProductsProvider = StateProvider<List<Product>>(
-  (ref) {
-    return [];
+    return {};
   },
 );
 

@@ -28,6 +28,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
     const formCardWidth = 450.0;
     final showWidget = useState(true);
     final productsListStream = ref.watch(productsListStreamProvider);
+    final typeSelectedProducts = ref.watch(typeSelectedProductsProvider);
     return showWidget.value
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7.0),
@@ -42,18 +43,24 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                       label: 'Produit',
                       providerName:
                           'type-selection-adding-product-${widget.index}',
-                      dropdownMenuEntriesLabels: const [
-                        //  '',
-                        'Produit 1',
-                        'Produit 2',
-                        'Produit 3',
-                      ],
-                      dropdownMenuEntriesValues: const [
-                        //     '',
-                        'Produit 1',
-                        'Produit 2',
-                        'Produit 3',
-                      ],
+                      dropdownMenuEntriesLabels: productsListStream.when(
+                        data: (data) => data
+                            .where((product) =>
+                                typeSelectedProducts.containsValue(product) ==
+                                false)
+                            .toList(),
+                        error: (error, stackTrace) => [],
+                        loading: () => [],
+                      ),
+                      dropdownMenuEntriesValues: productsListStream.when(
+                        data: (data) => data
+                            .where((product) =>
+                                typeSelectedProducts.containsValue(product) ==
+                                false)
+                            .toList(),
+                        error: (error, stackTrace) => [],
+                        loading: () => [],
+                      ),
                     ),
                     SizedBox(
                       width: formCardWidth / 2.3,
