@@ -1,6 +1,8 @@
 import 'package:communitybank/controllers/products/products.controller.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:communitybank/services/types/types.service.dart';
 import 'package:flutter/material.dart';
@@ -20,23 +22,56 @@ class TypesController {
 
   static Stream<List<Type>> getAll(
       {required String selectedTypeStake /*, required int productId*/}) async* {
-    //  final products = ProductsController.getAll(selectedProductPrice: '*');
-    debugPrint('In Controller');
+    //  debugPrint('In Controller');
     final typesMapListStream = TypesService.getAll(
       selectedTypeStake: selectedTypeStake, /* productId: productId*/
     );
-
+    // final productsList =
+    //    await ProductsController.getAll(selectedProductPrice: '*').first;
     // yield all types data or an empty list
     yield* typesMapListStream.map(
       (typesMapList) => typesMapList.map(
         (typeMap) {
-          debugPrint('types Map: $typeMap');
+          /*
+          // will store types products ids
+          List<int> typesProductsIds = [];
+          // will store types products numbers
+          List<int> typesProductsNumber = [];
 
+          for (int i = 0; i < typeMap[TypeTable.products].length; i++) {
+            typesProductsIds
+                .add(typeMap[TypeTable.products][i][ProductTable.id].toInt());
+            typesProductsNumber.add(
+                typeMap[TypeTable.products][i][ProductTable.number].toInt());
+          }
+
+          List<Product> typeProducts = productsList.where(
+            (product) {
+              // check if products id is in types product ids
+              if (typesProductsIds.contains(product.id)) {
+                //  if true set the product number to it number containing by typesProductsNumber
+                product.number =
+                    typesProductsNumber[typesProductsIds.indexOf(product.id!)];
+              }
+              return typesProductsIds.contains(product.id);
+            },
+          ).toList();
+
+          debugPrint('types Map: $typeMap');
+          debugPrint('types products ids: ${typesProductsIds.toString()}');
+          debugPrint(
+              'types products numbers: ${typesProductsNumber.toString()}');
+*/
           return Type(
             id: typeMap[TypeTable.id]?.toInt() ?? 0,
             name: typeMap[TypeTable.name],
             stake: typeMap[TypeTable.stake]?.toDouble() ?? .0,
-            products: [],
+            products: [] /*typeProducts.map((product) {
+              int productNumberIndex = typesProductsIds.indexOf(product.id!);
+              product.number = typesProductsNumber[productNumberIndex];
+              return product;
+            }).toList()*/
+            ,
             createdAt: DateTime.parse(typeMap[TypeTable.createdAt]),
             updatedAt: DateTime.parse(typeMap[TypeTable.createdAt]),
           );
