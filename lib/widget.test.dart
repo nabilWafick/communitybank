@@ -1,3 +1,4 @@
+import 'package:communitybank/services/types/types.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/forms/adding/types/types_product_selection_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -21,16 +22,11 @@ class WidgetTest extends ConsumerWidget {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  /*
-                  showDialog(
-                      context: context,
-                      builder: (context) => const 
-                   //   TypeProductSelection()
-                      // CustomersForm(),
-                      // FormCard(),
-                      );
-
-                      */
+                  TypesService.getAll(selectedTypeStake: 100, productId: 14)
+                      .first
+                      .then((value) {
+                    debugPrint('types: ${value.toString()}');
+                  });
                 },
               ),
             ),

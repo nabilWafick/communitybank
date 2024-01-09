@@ -14,7 +14,7 @@ final typeStakeProvider = StateProvider<double>(
 );
 
 // for managing products inputs
-final addedInputsProvider = StateProvider<List<int>>((ref) {
+final typeAddedInputsProvider = StateProvider<List<int>>((ref) {
   return [];
 });
 

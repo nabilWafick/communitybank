@@ -1,11 +1,10 @@
 import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
-import 'package:communitybank/models/data/product/product.model.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:communitybank/functions/crud/types/types_crud.function.dart';
 import 'package:communitybank/utils/utils.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'types_product_selection_adding_form.widget.dart';
 
@@ -18,36 +17,12 @@ class TypesAddingForm extends StatefulHookConsumerWidget {
 }
 
 class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
-  @override
-  /*
-  void initState() {
-    ref.watch(productsListStreamProvider).when(
-        data: (data) {
-          ref.read(availableProductsProvider.notifier).state = data;
-        },
-        error: (error, stackTrace) {},
-        loading: () {});
-    super.initState();
-  }
-*/
-
-/*
-  void onRemoveInput({required int inputIndex}) {
-    ref.read(addedInputsProvider.notifier).update((state) {
-      state.remove((index) => index == inputIndex);
-      //state.clear();
-      return state;
-    });
-    // showWidget.value = false;
-    setState(() {});
-  }*/
-
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    //  final showValidatedButton = useState<bool>(true);
-    final addedInputs = ref.watch(addedInputsProvider);
+    final showValidatedButton = useState<bool>(true);
+    final typeAddedInputs = ref.watch(typeAddedInputsProvider);
     const formCardWidth = 500.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
@@ -147,7 +122,7 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                           onTap: () {
                             setStatef(() {});
                             ref
-                                .read(addedInputsProvider.notifier)
+                                .read(typeAddedInputsProvider.notifier)
                                 .update((state) {
                               return [
                                 ...state,
@@ -161,7 +136,7 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                             }*/
                                     );
                             setStatef(() {});
-                            debugPrint('added: ${addedInputs.length}');
+                            debugPrint('added: ${typeAddedInputs.length}');
                             setState(() {});
                           },
                         );
@@ -177,7 +152,7 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                     ),*/
 
                 Consumer(builder: (context, ref, child) {
-                  final inputs = ref.watch(addedInputsProvider);
+                  final inputs = ref.watch(typeAddedInputsProvider);
                   return Column(
                     children: inputs
                         .map(
@@ -218,53 +193,22 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                     const SizedBox(
                       width: 20.0,
                     ),
-                    SizedBox(
-                      width: 170.0,
-                      child: CBElevatedButton(
-                        text: 'Valider',
-                        onPressed: () {
-                          setState(() {});
-                          formKey.currentState!.save();
-                          final isFormValid = formKey.currentState!.validate();
-                          if (isFormValid) {
-                            final typeName = ref.watch(typeNameProvider);
-                            final typeStack = ref.watch(typeStakeProvider);
-                            final typeSelectedProducts =
-                                ref.watch(typeSelectedProductsProvider);
-                            // store the selected products
-                            List<Product> typeProducts = [];
-                            typeSelectedProducts.forEach((key, product) {
-                              typeProducts.add(product);
-                            });
-                            // get the number of each selected product
-                            final typeProductsNumber = addedInputs
-                                .map((input) =>
-                                    ref.watch(typeProductNumberProvider(input)))
-                                .toList();
-
-                            debugPrint('typeName: $typeName');
-                            debugPrint('typeStack: $typeStack');
-
-                            for (int i = 0;
-                                i < typeProductsNumber.length;
-                                ++i) {
-                              typeProducts[i].number = typeProductsNumber[i];
-
-                              debugPrint(
-                                  'typeProductNumber $i-${typeProducts[i].name}: ${typeProducts[i].number}');
-
-                              final type = Type(
-                                name: typeName,
-                                stake: typeStack,
-                                products: typeProducts,
-                                createdAt: DateTime.now(),
-                                updatedAt: DateTime.now(),
-                              );
-                            }
-                          }
-                        },
-                      ),
-                    ),
+                    showValidatedButton.value
+                        ? SizedBox(
+                            width: 170.0,
+                            child: CBElevatedButton(
+                              text: 'Valider',
+                              onPressed: () async {
+                                await TypeCRUDFunctions.create(
+                                  context: context,
+                                  formKey: formKey,
+                                  ref: ref,
+                                  showValidatedButton: showValidatedButton,
+                                );
+                              },
+                            ),
+                          )
+                        : const SizedBox(),
                   ],
                 ),
               ],

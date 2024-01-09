@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
@@ -43,7 +44,14 @@ class Type {
       //   TypeTable.id: id,
       TypeTable.name: name,
       TypeTable.stake: stake,
-      TypeTable.products: products.map((x) => x.toMap()).toList(),
+      TypeTable.products: products
+          .map(
+            (product) => {
+              ProductTable.id: product.id,
+              ProductTable.number: product.number ?? 1,
+            },
+          )
+          .toList(),
       TypeTable.createdAt: createdAt.toIso8601String(),
       TypeTable.updatedAt: updatedAt.toIso8601String(),
     };

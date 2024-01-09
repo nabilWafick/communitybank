@@ -78,7 +78,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                 IconButton(
                   onPressed: () {
                     setState(() {});
-                    ref.read(addedInputsProvider.notifier).update((state) {
+                    ref.read(typeAddedInputsProvider.notifier).update((state) {
                       /*  state.removeWhere(
                           (inputIndex) => widget.index == inputIndex);*/
                       state.remove(widget.index);
@@ -88,7 +88,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                     showWidget.value = false;
                     // setState(() {});
                     debugPrint(
-                        'remain: ${ref.watch(addedInputsProvider).length.toString()}');
+                        'remain: ${ref.watch(typeAddedInputsProvider).length.toString()}');
                   },
                   icon: const Icon(
                     Icons.close_rounded,
