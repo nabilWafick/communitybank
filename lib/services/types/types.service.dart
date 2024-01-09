@@ -44,9 +44,10 @@ class TypesService {
   }
 
   static Stream<List<Map<String, dynamic>>> getAll(
-      {required double selectedTypeStake, required int productId}) async* {
+      {required String selectedTypeStake /*, required int productId*/}) async* {
     final supabase = Supabase.instance.client;
-
+    //  debugPrint('In Service');
+    //  debugPrint('selectedTypeStake: $selectedTypeStake');
     try {
       // listen to Types table change and return a stream of all Types data
 
@@ -58,7 +59,7 @@ class TypesService {
       );
 
       // filter le list and return only Types which stakes are equal to selectedTypeStake
-      if (selectedTypeStake != .0) {
+      if (selectedTypeStake != '*') {
         query.eq(TypeTable.stake, selectedTypeStake);
       }
 

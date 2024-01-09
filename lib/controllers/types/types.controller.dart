@@ -1,7 +1,9 @@
+import 'package:communitybank/controllers/products/products.controller.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:communitybank/services/types/types.service.dart';
+import 'package:flutter/material.dart';
 
 class TypesController {
   static Future<ServiceResponse> create({required Type type}) async {
@@ -17,17 +19,29 @@ class TypesController {
   }
 
   static Stream<List<Type>> getAll(
-      {required double selectedTypeStake, required int productId}) async* {
+      {required String selectedTypeStake /*, required int productId*/}) async* {
+    //  final products = ProductsController.getAll(selectedProductPrice: '*');
+    debugPrint('In Controller');
     final typesMapListStream = TypesService.getAll(
-        selectedTypeStake: selectedTypeStake, productId: productId);
+      selectedTypeStake: selectedTypeStake, /* productId: productId*/
+    );
 
     // yield all types data or an empty list
     yield* typesMapListStream.map(
-      (typesMapList) => typesMapList
-          .map(
-            (typeMap) => Type.fromMap(typeMap),
-          )
-          .toList(),
+      (typesMapList) => typesMapList.map(
+        (typeMap) {
+          debugPrint('types Map: $typeMap');
+
+          return Type(
+            id: typeMap[TypeTable.id]?.toInt() ?? 0,
+            name: typeMap[TypeTable.name],
+            stake: typeMap[TypeTable.stake]?.toDouble() ?? .0,
+            products: [],
+            createdAt: DateTime.parse(typeMap[TypeTable.createdAt]),
+            updatedAt: DateTime.parse(typeMap[TypeTable.createdAt]),
+          );
+        },
+      ).toList(),
     );
     //.asBroadcastStream();
   }

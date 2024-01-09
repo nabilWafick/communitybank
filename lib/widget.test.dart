@@ -22,7 +22,8 @@ class WidgetTest extends ConsumerWidget {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  TypesService.getAll(selectedTypeStake: 100, productId: 14)
+                  TypesService.getAll(
+                          selectedTypeStake: '100' /*, productId: 14*/)
                       .first
                       .then((value) {
                     debugPrint('types: ${value.toString()}');

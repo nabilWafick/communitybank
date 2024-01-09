@@ -1,10 +1,12 @@
+import 'package:communitybank/controllers/types/types.controller.dart';
+import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/types/types_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchedTypeProvider = StateProvider<String>((ref) {
-  return '';
+final typesStakesProvider = StreamProvider<List<double>>((ref) async* {
+  yield* TypesController.getAllTypesStakes();
 });
 
 class TypesSortOptions extends ConsumerWidget {
@@ -12,6 +14,7 @@ class TypesSortOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final typesStakes = ref.watch(typesStakesProvider);
     return Container(
       margin: const EdgeInsets.only(
         bottom: 40.0,
@@ -35,37 +38,65 @@ class TypesSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un type',
-                searchProvider: searchedTypeProvider,
+                searchProvider: searchProvider('types'),
               ),
-              const Row(
+              Row(
                 children: [
-                  CBText(
+                  const CBText(
                     text: 'Trier par',
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15.0,
                   ),
                   CBDropdown(
                     label: 'Mise',
-                    providerName: 'types-stack',
-                    dropdownMenuEntriesLabels: [
+                    providerName: 'types-stackes',
+                    dropdownMenuEntriesLabels: typesStakes.when(
+                      data: (data) {
+                        // parse data list to set for getting only unique data
+                        data = data.toSet().toList();
+                        List<String> stakes = ['Toutes'];
+                        for (double stake in data) {
+                          stakes.add('${stake.ceil().toString()} f/Jour');
+                        }
+
+                        return stakes;
+                      },
+                      error: (data, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                    /*[
                       'Toutes',
                       '100f/Jour',
                       '150f/Jour',
                       '200f/Jour',
                       '250f/Jour',
                       '300f/Jour',
-                    ],
-                    dropdownMenuEntriesValues: [
+                    ]*/
+                    dropdownMenuEntriesValues: typesStakes.when(
+                      data: (data) {
+                        // parse data list to set for getting only unique data
+                        data = data.toSet().toList();
+                        List<String> stakes = ['*'];
+                        for (double stake in data) {
+                          stakes.add(stake.ceil().toString());
+                        }
+
+                        return stakes;
+                      },
+                      error: (data, stackTrace) => [],
+                      loading: () => [],
+                    ) /* [
                       '*',
                       '100',
                       '150',
                       '200',
                       '250',
                       '300',
-                    ],
+                    ]*/
+                    ,
                   ),
-                  CBDropdown(
+                  const CBDropdown(
                     label: 'Produit',
                     providerName: 'types-product',
                     dropdownMenuEntriesLabels: [
