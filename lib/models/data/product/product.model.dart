@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 import 'package:communitybank/models/tables/product/product_table.model.dart';
-import 'package:flutter/widgets.dart';
 
 class Product {
   final int? id;
   final String name;
   final double purchasePrice;
   final String? picture;
-  final int? number;
+  int? number;
   final DateTime createdAt;
   final DateTime updatedAt;
   Product({
@@ -22,20 +21,20 @@ class Product {
   });
 
   Product copyWith({
-    ValueGetter<int?>? id,
+    int? id,
     String? name,
     double? purchasePrice,
-    ValueGetter<String?>? picture,
-    ValueGetter<int?>? number,
+    String? picture,
+    int? number,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Product(
-      id: id?.call() ?? this.id,
+      id: id ?? this.id,
       name: name ?? this.name,
       purchasePrice: purchasePrice ?? this.purchasePrice,
-      picture: picture?.call() ?? this.picture,
-      number: number?.call() ?? this.number,
+      picture: picture ?? this.picture,
+      number: number ?? this.number,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

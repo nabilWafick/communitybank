@@ -1,5 +1,7 @@
 import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -227,11 +229,14 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                           if (isFormValid) {
                             final typeName = ref.watch(typeNameProvider);
                             final typeStack = ref.watch(typeStakeProvider);
-                            final typeProducts = addedInputs
-                                .map((input) => ref.watch(
-                                    dropdownSelectedItemProvider(
-                                        'type-selection-adding-product-$input')))
-                                .toList();
+                            final typeSelectedProducts =
+                                ref.watch(typeSelectedProductsProvider);
+                            // store the selected products
+                            List<Product> typeProducts = [];
+                            typeSelectedProducts.forEach((key, product) {
+                              typeProducts.add(product);
+                            });
+                            // get the number of each selected product
                             final typeProductsNumber = addedInputs
                                 .map((input) =>
                                     ref.watch(typeProductNumberProvider(input)))
@@ -243,8 +248,18 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                             for (int i = 0;
                                 i < typeProductsNumber.length;
                                 ++i) {
+                              typeProducts[i].number = typeProductsNumber[i];
+
                               debugPrint(
-                                  'typeProductNumber $i-${typeProducts[i]}: ${typeProductsNumber[i]}');
+                                  'typeProductNumber $i-${typeProducts[i].name}: ${typeProducts[i].number}');
+
+                              final type = Type(
+                                name: typeName,
+                                stake: typeStack,
+                                products: typeProducts,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              );
                             }
                           }
                         },

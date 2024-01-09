@@ -40,15 +40,18 @@ class _CBProductSelectionDropdownState
     extends ConsumerState<CBProductSelectionDropdown> {
   @override
   void initState() {
+    // future because for avoiding error due to ref.read in initState function
     Future.delayed(
         const Duration(
           milliseconds: 100,
         ), () {
+// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
             .read(typeDropdownSelectedProductProvider(widget.providerName)
                 .notifier)
             .state = widget.dropdownMenuEntriesValues[0];
+        // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
         ref.read(typeSelectedProductsProvider.notifier).update((state) {
           state[widget.providerName] = widget.dropdownMenuEntriesValues[0];
           return state;
@@ -109,11 +112,12 @@ class _CBProductSelectionDropdownState
           .toList(),
       trailingIcon: const Icon(Icons.arrow_drop_down),
       onSelected: (value) {
+        // set the selected product
         ref
             .read(typeDropdownSelectedProductProvider(widget.providerName)
                 .notifier)
             .state = value!;
-
+        // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
         ref.read(typeSelectedProductsProvider.notifier).update((state) {
           state[widget.providerName] = value;
           return state;

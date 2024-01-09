@@ -13,14 +13,12 @@ final typeStakeProvider = StateProvider<double>(
   },
 );
 
-final availableProductsProvider = StateProvider<List<Product>>((ref) {
-  return [];
-});
-
+// for managing products inputs
 final addedInputsProvider = StateProvider<List<int>>((ref) {
   return [];
 });
 
+// store selected items so as to reduce items for the remain dropdowns
 final typeSelectedProductsProvider = StateProvider<Map<String, Product>>(
   (ref) {
     return {};
