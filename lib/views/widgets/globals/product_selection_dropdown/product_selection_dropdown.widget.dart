@@ -5,7 +5,7 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final typeDropdownSelectedProductProvider =
+final typeSelectedProductDropdownProvider =
     StateProvider.family<Product, String>((ref, providerName) {
   return Product(
     name: '',
@@ -40,7 +40,7 @@ class _CBProductSelectionDropdownState
     extends ConsumerState<CBProductSelectionDropdown> {
   @override
   void initState() {
-    // future because for avoiding error due to ref.read in initState function
+    // future used for avoiding error due to ref.read in initState function
     Future.delayed(
         const Duration(
           milliseconds: 100,
@@ -48,7 +48,7 @@ class _CBProductSelectionDropdownState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(typeDropdownSelectedProductProvider(widget.providerName)
+            .read(typeSelectedProductDropdownProvider(widget.providerName)
                 .notifier)
             .state = widget.dropdownMenuEntriesValues[0];
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
@@ -65,7 +65,7 @@ class _CBProductSelectionDropdownState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownProduct =
-        ref.watch(typeDropdownSelectedProductProvider(widget.providerName));
+        ref.watch(typeSelectedProductDropdownProvider(widget.providerName));
     return DropdownMenu(
       inputDecorationTheme: const InputDecorationTheme(
         enabledBorder: OutlineInputBorder(
@@ -114,7 +114,7 @@ class _CBProductSelectionDropdownState
       onSelected: (value) {
         // set the selected product
         ref
-            .read(typeDropdownSelectedProductProvider(widget.providerName)
+            .read(typeSelectedProductDropdownProvider(widget.providerName)
                 .notifier)
             .state = value!;
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns

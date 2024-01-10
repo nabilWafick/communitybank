@@ -40,18 +40,20 @@ class Type {
   }
 
   Map<String, dynamic> toMap() {
+    List<int> productsIds = [];
+    List<int> productsNumbers = [];
+
+    for (int i = 0; i < products.length; i++) {
+      productsIds.add(products[i].id!);
+      productsNumbers.add(products[i].number!);
+    }
+
     return {
       //   TypeTable.id: id,
       TypeTable.name: name,
       TypeTable.stake: stake,
-      TypeTable.products: products
-          .map(
-            (product) => {
-              ProductTable.id: product.id,
-              ProductTable.number: product.number ?? 1,
-            },
-          )
-          .toList(),
+      TypeTable.productsIds: productsIds,
+      TypeTable.productsNumbers: productsNumbers,
       TypeTable.createdAt: createdAt.toIso8601String(),
       TypeTable.updatedAt: updatedAt.toIso8601String(),
     };
@@ -63,7 +65,7 @@ class Type {
       name: map[TypeTable.name] ?? '',
       stake: map[TypeTable.stake]?.toDouble() ?? 0.0,
       products: List<Product>.from(
-          map[TypeTable.products]?.map((x) => Product.fromMap(x))),
+          map[TypeTable.productsIds]?.map((x) => Product.fromMap(x))),
       createdAt: DateTime.parse(map[TypeTable.createdAt]),
       updatedAt: DateTime.parse(map[TypeTable.updatedAt]),
     );

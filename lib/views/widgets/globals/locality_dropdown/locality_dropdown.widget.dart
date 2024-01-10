@@ -1,20 +1,25 @@
+import 'package:communitybank/models/data/locality/locality.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dropdownSelectedItemProvider =
-    StateProvider.family<String, String>((ref, dropdown) {
-  return '*';
+    StateProvider.family<Locality, String>((ref, dropdown) {
+  return Locality(
+    name: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 });
 
-class CBDropdown extends ConsumerStatefulWidget {
+class CBSortDropdownLocality extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<String> dropdownMenuEntriesLabels;
-  final List<String> dropdownMenuEntriesValues;
+  final List<Locality> dropdownMenuEntriesLabels;
+  final List<Locality> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBDropdown({
+  const CBSortDropdownLocality({
     super.key,
     this.width,
     required this.label,
@@ -23,10 +28,12 @@ class CBDropdown extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CBDropdownState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CBSortDropdownLocalityState();
 }
 
-class _CBDropdownState extends ConsumerState<CBDropdown> {
+class _CBSortDropdownLocalityState
+    extends ConsumerState<CBSortDropdownLocality> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -66,7 +73,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel,
+                label: dropdownMenuEntryLabel.name,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(

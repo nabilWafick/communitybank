@@ -2,10 +2,8 @@ import 'package:communitybank/controllers/products/products.controller.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
-import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:communitybank/services/types/types.service.dart';
-import 'package:flutter/material.dart';
 
 class TypesController {
   static Future<ServiceResponse> create({required Type type}) async {
@@ -26,12 +24,48 @@ class TypesController {
     final typesMapListStream = TypesService.getAll(
       selectedTypeStake: selectedTypeStake, /* productId: productId*/
     );
-    // final productsList =
-    //    await ProductsController.getAll(selectedProductPrice: '*').first;
+    final productsStreamList =
+        ProductsController.getAll(selectedProductPrice: '*');
+
+    List<Product> typeProducts = [];
+
+    productsStreamList.map(
+      (productsList) => productsList.map(
+        (product) {
+          // return Product.fromMap(productMap);
+        },
+      ).toList(),
+    );
+
     // yield all types data or an empty list
     yield* typesMapListStream.map(
       (typesMapList) => typesMapList.map(
         (typeMap) {
+// map the products list stream form getting products data in real time
+          productsStreamList.map(
+            // access to products list
+            (productsList) => productsList.map(
+              // access to product
+              (product) {
+                // check if product's id is in types products ids
+                if (typeMap[TypeTable.productsIds]
+                    .toList()
+                    .contains(product.id)) {
+                  //  if true set the product number to it number containing by types products numbers
+                  product.number = typeMap[TypeTable.productsNumbers].toList()[
+                      // since the product number is unknowed
+                      // get the index by getting the the product's id index in type products ids
+                      typeMap[TypeTable.productsIds]
+                          .toList()
+                          .indexOf(product.id!)];
+
+                  // add the product to typeProducts
+                  typeProducts.add(product);
+                }
+              },
+            ).toList(),
+          );
+
           /*
           // will store types products ids
           List<int> typesProductsIds = [];
@@ -66,7 +100,8 @@ class TypesController {
             id: typeMap[TypeTable.id]?.toInt() ?? 0,
             name: typeMap[TypeTable.name],
             stake: typeMap[TypeTable.stake]?.toDouble() ?? .0,
-            products: [] /*typeProducts.map((product) {
+            products:
+                typeProducts /*typeProducts.map((product) {
               int productNumberIndex = typesProductsIds.indexOf(product.id!);
               product.number = typesProductsNumber[productNumberIndex];
               return product;

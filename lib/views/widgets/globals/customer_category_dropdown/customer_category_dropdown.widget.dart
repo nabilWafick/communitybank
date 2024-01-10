@@ -1,20 +1,25 @@
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dropdownSelectedItemProvider =
-    StateProvider.family<String, String>((ref, dropdown) {
-  return '*';
+    StateProvider.family<CustomerCategory, String>((ref, dropdown) {
+  return CustomerCategory(
+    name: '',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 });
 
-class CBDropdown extends ConsumerStatefulWidget {
+class CBSortDropdownCustomerCategory extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<String> dropdownMenuEntriesLabels;
-  final List<String> dropdownMenuEntriesValues;
+  final List<CustomerCategory> dropdownMenuEntriesLabels;
+  final List<CustomerCategory> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBDropdown({
+  const CBSortDropdownCustomerCategory({
     super.key,
     this.width,
     required this.label,
@@ -23,10 +28,12 @@ class CBDropdown extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CBDropdownState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CBSortDropdownCustomerCategoryState();
 }
 
-class _CBDropdownState extends ConsumerState<CBDropdown> {
+class _CBSortDropdownCustomerCategoryState
+    extends ConsumerState<CBSortDropdownCustomerCategory> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -66,7 +73,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel,
+                label: dropdownMenuEntryLabel.name,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(

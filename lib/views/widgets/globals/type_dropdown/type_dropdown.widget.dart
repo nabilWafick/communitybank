@@ -1,20 +1,27 @@
+import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final dropdownSelectedItemProvider =
-    StateProvider.family<String, String>((ref, dropdown) {
-  return '*';
+    StateProvider.family<Type, String>((ref, dropdown) {
+  return Type(
+    name: '',
+    stake: 0,
+    products: [],
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 });
 
-class CBDropdown extends ConsumerStatefulWidget {
+class CBSortDropdownType extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<String> dropdownMenuEntriesLabels;
-  final List<String> dropdownMenuEntriesValues;
+  final List<Type> dropdownMenuEntriesLabels;
+  final List<Type> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBDropdown({
+  const CBSortDropdownType({
     super.key,
     this.width,
     required this.label,
@@ -23,10 +30,11 @@ class CBDropdown extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CBDropdownState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CBSortDropdownTypeState();
 }
 
-class _CBDropdownState extends ConsumerState<CBDropdown> {
+class _CBSortDropdownTypeState extends ConsumerState<CBSortDropdownType> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -66,7 +74,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel,
+                label: dropdownMenuEntryLabel.name,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(
