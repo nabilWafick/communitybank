@@ -1,17 +1,34 @@
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
+import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/customer_category_dropdown/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/locality_dropdown/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/personal_status_dropdown/personal_status_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final searchedCustomersProvider = StateProvider<String>((ref) {
-  return '';
-});
 
 class CustomersSortOptions extends ConsumerWidget {
   const CustomersSortOptions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final economicalActivitiesListStream =
+        ref.watch(economicalActivityListStreamProvider);
+    final customersCategoriesListStream =
+        ref.watch(custumersCategoriesListStreamProvider);
+    final localitiesListStream = ref.watch(localityListStreamProvider);
+    final personalStatusListStream =
+        ref.watch(personalStatusListStreamProvider);
     return Container(
       margin: const EdgeInsets.only(
         bottom: 40.0,
@@ -21,11 +38,9 @@ class CustomersSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
-              showDialog(
+              FunctionsController.showAlertDialog(
                 context: context,
-                builder: (context) => const CustomersAddingForm(),
-                // CustomersForm(),
-                // FormCard(),
+                alertDialog: const CustomerAddingForm(),
               );
             },
           ),
@@ -35,77 +50,197 @@ class CustomersSortOptions extends ConsumerWidget {
             children: [
               CBSearchInput(
                 hintText: 'Rechercher un client',
-                searchProvider: searchedCustomersProvider,
+                searchProvider: searchProvider('customers'),
               ),
-              const Row(
+              Row(
                 children: [
-                  CBText(text: 'Trier par'),
-                  SizedBox(
+                  const CBText(text: 'Trier par'),
+                  const SizedBox(
                     width: 15.0,
                   ),
-                  CBDropdown(
+                  CBCustomerCategoryDropdown(
+                    // width: formCardWidth / 2.3,
                     label: 'Catégorie',
-                    providerName: 'customers-list-category',
-                    dropdownMenuEntriesLabels: [
-                      'Toutes',
-                      'Particulier Homme',
-                      'Particulier Femme',
-                    ],
-                    dropdownMenuEntriesValues: [
-                      '*',
-                      'Particulier Homme',
-                      'Particulier Femme',
-                    ],
+                    providerName: 'customer-adding-form-category',
+                    dropdownMenuEntriesLabels:
+                        customersCategoriesListStream.when(
+                      data: (data) {
+                        return [
+                          CustomerCategory(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          CustomerCategory(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                    dropdownMenuEntriesValues:
+                        customersCategoriesListStream.when(
+                      data: (data) {
+                        return [
+                          CustomerCategory(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          CustomerCategory(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
                   ),
-                  CBDropdown(
+                  CBEconomicalActivityDropdown(
+                    //   width: formCardWidth / 2.3,
                     label: 'Activité économique',
-                    providerName: 'customers-list-economical-activity',
-                    dropdownMenuEntriesLabels: [
-                      'Toutes',
-                      'Commerce',
-                      'Enseignement',
-                      'Artisanat',
-                    ],
-                    dropdownMenuEntriesValues: [
-                      '*',
-                      'Commerce',
-                      'Enseignement',
-                      'Artisanat',
-                    ],
+                    providerName: 'customer-adding-form-economical-activity',
+                    dropdownMenuEntriesLabels:
+                        economicalActivitiesListStream.when(
+                      data: (data) {
+                        return [
+                          EconomicalActivity(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          EconomicalActivity(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                    dropdownMenuEntriesValues:
+                        economicalActivitiesListStream.when(
+                      data: (data) {
+                        return [
+                          EconomicalActivity(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          EconomicalActivity(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
                   ),
-                  CBDropdown(
+                  CBPersonalStatusDropdown(
+                    //     width: formCardWidth / 2.3,
                     label: 'Statut Personnel',
-                    providerName: 'customers-list-personal-status',
-                    dropdownMenuEntriesLabels: [
-                      'Tous',
-                      'Micro-Entrepreneur',
-                      'Commerçant',
-                      'Artisant',
-                    ],
-                    dropdownMenuEntriesValues: [
-                      '*',
-                      'Micro-Entrepreneur',
-                      'Commerçant',
-                      'Artisant',
-                    ],
+                    providerName: 'customer-adding-form-personal-status',
+                    dropdownMenuEntriesLabels: personalStatusListStream.when(
+                      data: (data) {
+                        return [
+                          PersonalStatus(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          PersonalStatus(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                    dropdownMenuEntriesValues: personalStatusListStream.when(
+                      data: (data) {
+                        return [
+                          PersonalStatus(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          PersonalStatus(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
                   ),
-                  CBDropdown(
+                  CBLocalityDropdown(
+                    //  width: formCardWidth / 2.3,
                     label: 'Localité',
-                    providerName: 'customers-list-locality',
-                    dropdownMenuEntriesLabels: [
-                      'Toutes',
-                      'Aitchédji',
-                      'Zogbadjè',
-                      'Plateau',
-                      'Tankpè'
-                    ],
-                    dropdownMenuEntriesValues: [
-                      '*',
-                      'Aitchédji',
-                      'Zogbadjè',
-                      'Plateau',
-                      'Tankpè'
-                    ],
+                    providerName: 'customer-adding-form-locality',
+                    dropdownMenuEntriesLabels: localitiesListStream.when(
+                      data: (data) {
+                        return [
+                          Locality(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          Locality(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                    dropdownMenuEntriesValues: localitiesListStream.when(
+                      data: (data) {
+                        return [
+                          Locality(
+                            id: 0,
+                            name: 'Tous',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          Locality(
+                            name: 'Aucun',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
                   ),
                 ],
               ),
