@@ -4,7 +4,6 @@ import 'package:communitybank/models/service_response/service_response.model.dar
 import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:communitybank/services/types/types.service.dart';
-import 'package:flutter/material.dart';
 
 class TypesController {
   static Future<ServiceResponse> create({required Type type}) async {

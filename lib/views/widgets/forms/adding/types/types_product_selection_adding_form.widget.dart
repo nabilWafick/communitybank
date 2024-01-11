@@ -2,7 +2,7 @@ import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
-import 'package:communitybank/views/widgets/globals/type_product_selection_dropdown/type_product_selection_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/type_product_selection_dropdown/product_selection_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/type_product_selection_textformfield/type_product_selection_textformfield.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

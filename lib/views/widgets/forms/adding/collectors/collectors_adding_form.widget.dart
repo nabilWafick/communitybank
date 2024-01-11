@@ -157,7 +157,7 @@ class _CollectorAddingFormState extends ConsumerState<CollectorAddingForm> {
                         width: formCardWidth / 2.3,
                         child: const CBTextFormField(
                           label: 'Téléphone',
-                          hintText: '+229|00229________',
+                          hintText: '+229|00229--------',
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,

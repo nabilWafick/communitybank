@@ -38,10 +38,10 @@ class CustomerOnChanged {
         customerProfessionProvider,
       );
 
-  static customerNciNumber(String? value, WidgetRef ref) =>
+  static customerNicNumber(String? value, WidgetRef ref) =>
       CommonOnChangedFunction.onIntTextInputValueChanged(
         value,
         ref,
-        customerNciNumberProvider,
+        customerNicNumberProvider,
       );
 }

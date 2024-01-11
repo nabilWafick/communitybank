@@ -1,7 +1,3 @@
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final customerNameProvider = StateProvider<String>(
@@ -34,43 +30,19 @@ final customerProfessionProvider = StateProvider<String>(
   },
 );
 
-final customerNciNumberProvider = StateProvider<int>(
+final customerNicNumberProvider = StateProvider<int>(
   (ref) {
     return 0;
   },
 );
 
-final customerCategorieProvider = StateProvider<CustomerCategory?>(
+final customerSignaturePictureProvider = StateProvider<String?>(
   (ref) {
     return;
   },
 );
 
-final customerEconomicalActivityProvider = StateProvider<EconomicalActivity?>(
-  (ref) {
-    return;
-  },
-);
-
-final customerPersonalStatusProvider = StateProvider<PersonalStatus?>(
-  (ref) {
-    return;
-  },
-);
-
-final customerLocalityProvider = StateProvider<Locality?>(
-  (ref) {
-    return;
-  },
-);
-
-final customerSignatureProvider = StateProvider<String?>(
-  (ref) {
-    return;
-  },
-);
-
-final customerPictureProvider = StateProvider<String?>(
+final customerProfilePictureProvider = StateProvider<String?>(
   (ref) {
     return;
   },
@@ -123,10 +95,10 @@ class CustomerValidators {
     return null;
   }
 
-  static String? customerNciNumber(String? value, WidgetRef ref) {
-    if (ref.watch(customerNciNumberProvider) == 0) {
+  static String? customerNicNumber(String? value, WidgetRef ref) {
+    if (ref.watch(customerNicNumberProvider) == 0) {
       return 'Entrez le numéro de la CNI du client';
-    } else if (ref.watch(customerNciNumberProvider).toString().length < 10) {
+    } else if (ref.watch(customerNicNumberProvider).toString().length < 10) {
       return 'Entrez un numéro NCI valide';
     }
     return null;
