@@ -1,7 +1,10 @@
 import 'package:communitybank/controllers/types/types.controller.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/types/types_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/product_dropdown/product_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,6 +18,8 @@ class TypesSortOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final typesStakes = ref.watch(typesStakesProvider);
+    final productsListStream = ref.watch(productsListStreamProvider);
+
     return Container(
       margin: const EdgeInsets.only(
         bottom: 40.0,
@@ -49,6 +54,7 @@ class TypesSortOptions extends ConsumerWidget {
                     width: 15.0,
                   ),
                   CBDropdown(
+                    width: 120.0,
                     label: 'Mise',
                     providerName: 'types-stackes',
                     dropdownMenuEntriesLabels: typesStakes.when(
@@ -96,7 +102,42 @@ class TypesSortOptions extends ConsumerWidget {
                     ]*/
                     ,
                   ),
-                  const CBDropdown(
+                  CBProductDropdown(
+                    width: 150.0,
+                    label: 'Produit',
+                    providerName: 'type-products',
+                    dropdownMenuEntriesLabels: productsListStream.when(
+                      data: (data) {
+                        return [
+                          Product(
+                            name: 'Tous',
+                            purchasePrice: 1,
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                    dropdownMenuEntriesValues: productsListStream.when(
+                      data: (data) {
+                        return [
+                          Product(
+                            name: 'Tous',
+                            purchasePrice: 1,
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                          ...data
+                        ];
+                      },
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    ),
+                  ),
+                  /*  const CBDropdown(
                     label: 'Produit',
                     providerName: 'types-product',
                     dropdownMenuEntriesLabels: [
@@ -116,6 +157,7 @@ class TypesSortOptions extends ConsumerWidget {
                       'Produit 5',
                     ],
                   ),
+                */
                 ],
               ),
             ],

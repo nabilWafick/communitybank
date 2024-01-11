@@ -6,7 +6,7 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 //import 'package:yaru_icons/yaru_icons.dart';
 
-class CBProductSelectionTextFormField extends HookConsumerWidget {
+class CBTypeProductSelectionTextFormField extends HookConsumerWidget {
   final int inputIndex;
   final TextEditingController? textEditingController;
   final String? label;
@@ -18,7 +18,7 @@ class CBProductSelectionTextFormField extends HookConsumerWidget {
   final String? Function(String?, int, WidgetRef) validator;
   final void Function(String?, int, WidgetRef) onChanged;
 
-  const CBProductSelectionTextFormField({
+  const CBTypeProductSelectionTextFormField({
     super.key,
     required this.inputIndex,
     this.textEditingController,

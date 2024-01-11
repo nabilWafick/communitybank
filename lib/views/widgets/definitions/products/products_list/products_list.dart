@@ -28,7 +28,7 @@ final searchedProductsListProvider =
 
 final productsListStreamProvider = StreamProvider<List<Product>>((ref) async* {
   final selectedProductPrice =
-      ref.watch(dropdownSelectedItemProvider('products-price'));
+      ref.watch(stringDropdownProvider('products-price'));
   yield* ProductsController.getAll(selectedProductPrice: selectedProductPrice);
 });
 

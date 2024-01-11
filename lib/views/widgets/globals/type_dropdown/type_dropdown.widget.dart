@@ -3,7 +3,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final typeDropdownProvider =
     StateProvider.family<Type, String>((ref, dropdown) {
   return Type(
     name: '',
@@ -14,14 +14,14 @@ final dropdownSelectedItemProvider =
   );
 });
 
-class CBSortDropdownType extends ConsumerStatefulWidget {
+class CBTypeDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<Type> dropdownMenuEntriesLabels;
   final List<Type> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBSortDropdownType({
+  const CBTypeDropdown({
     super.key,
     this.width,
     required this.label,
@@ -30,11 +30,10 @@ class CBSortDropdownType extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBSortDropdownTypeState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CBTypeDropdownState();
 }
 
-class _CBSortDropdownTypeState extends ConsumerState<CBSortDropdownType> {
+class _CBTypeDropdownState extends ConsumerState<CBTypeDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -44,9 +43,8 @@ class _CBSortDropdownTypeState extends ConsumerState<CBSortDropdownType> {
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
+        ref.read(typeDropdownProvider(widget.providerName).notifier).state =
+            widget.dropdownMenuEntriesValues[0];
       }
     });
 
@@ -56,7 +54,7 @@ class _CBSortDropdownTypeState extends ConsumerState<CBSortDropdownType> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(typeDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -89,9 +87,8 @@ class _CBSortDropdownTypeState extends ConsumerState<CBSortDropdownType> {
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
-              .state = value!;
+          ref.read(typeDropdownProvider(widget.providerName).notifier).state =
+              value!;
         },
       ),
     );

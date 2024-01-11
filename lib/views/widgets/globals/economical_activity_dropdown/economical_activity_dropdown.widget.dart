@@ -3,7 +3,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final economicalActivityDropdownProvider =
     StateProvider.family<EconomicalActivity, String>((ref, dropdown) {
   return EconomicalActivity(
     name: '',
@@ -12,14 +12,14 @@ final dropdownSelectedItemProvider =
   );
 });
 
-class CBSortDropdownEconomicalActivity extends ConsumerStatefulWidget {
+class CBEconomicalActivityDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<EconomicalActivity> dropdownMenuEntriesLabels;
   final List<EconomicalActivity> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBSortDropdownEconomicalActivity({
+  const CBEconomicalActivityDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,11 +29,11 @@ class CBSortDropdownEconomicalActivity extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBSortDropdownEconomicalActivityState();
+      _CBEconomicalActivityDropdownState();
 }
 
-class _CBSortDropdownEconomicalActivityState
-    extends ConsumerState<CBSortDropdownEconomicalActivity> {
+class _CBEconomicalActivityDropdownState
+    extends ConsumerState<CBEconomicalActivityDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -44,7 +44,8 @@ class _CBSortDropdownEconomicalActivityState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+            .read(economicalActivityDropdownProvider(widget.providerName)
+                .notifier)
             .state = widget.dropdownMenuEntriesValues[0];
       }
     });
@@ -55,7 +56,7 @@ class _CBSortDropdownEconomicalActivityState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(economicalActivityDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -89,7 +90,8 @@ class _CBSortDropdownEconomicalActivityState
         ),
         onSelected: (value) {
           ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+              .read(economicalActivityDropdownProvider(widget.providerName)
+                  .notifier)
               .state = value!;
         },
       ),

@@ -7,7 +7,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final customerDropdownProvider =
     StateProvider.family<Customer, String>((ref, dropdown) {
   return Customer(
     name: '',
@@ -41,14 +41,14 @@ final dropdownSelectedItemProvider =
   );
 });
 
-class CBSortDropdownCustomer extends ConsumerStatefulWidget {
+class CBCustomerDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<Customer> dropdownMenuEntriesLabels;
   final List<Customer> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBSortDropdownCustomer({
+  const CBCustomerDropdown({
     super.key,
     this.width,
     required this.label,
@@ -58,11 +58,10 @@ class CBSortDropdownCustomer extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBSortDropdownCustomerState();
+      _CBCustomerDropdownState();
 }
 
-class _CBSortDropdownCustomerState
-    extends ConsumerState<CBSortDropdownCustomer> {
+class _CBCustomerDropdownState extends ConsumerState<CBCustomerDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -72,9 +71,8 @@ class _CBSortDropdownCustomerState
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
+        ref.read(customerDropdownProvider(widget.providerName).notifier).state =
+            widget.dropdownMenuEntriesValues[0];
       }
     });
 
@@ -84,7 +82,7 @@ class _CBSortDropdownCustomerState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(customerDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -118,7 +116,7 @@ class _CBSortDropdownCustomerState
         ),
         onSelected: (value) {
           ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+              .read(customerDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),

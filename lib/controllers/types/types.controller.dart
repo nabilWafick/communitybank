@@ -4,6 +4,7 @@ import 'package:communitybank/models/service_response/service_response.model.dar
 import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:communitybank/services/types/types.service.dart';
+import 'package:flutter/material.dart';
 
 class TypesController {
   static Future<ServiceResponse> create({required Type type}) async {
@@ -18,53 +19,110 @@ class TypesController {
     return response == null ? null : Type.fromMap(response);
   }
 
-  static Stream<List<Type>> getAll(
-      {required String selectedTypeStake /*, required int productId*/}) async* {
+  static Stream<List<Type>> getAll({
+    required String selectedTypeStake,
+    required int? selectedProductId,
+  }) async* {
     //  debugPrint('In Controller');
-    final typesMapListStream = TypesService.getAll(
-      selectedTypeStake: selectedTypeStake, /* productId: productId*/
+    Stream<List<Map<String, dynamic>>> typesMapListStream = TypesService.getAll(
+      selectedTypeStake:
+          selectedTypeStake, /* selectedProductId: selectedProductId*/
     );
-    final productsStreamList =
+
+// filter the stream when selectedProductId is null in order to get only types containing selectedProductId in productsIds
+    if (selectedProductId != null) {
+      typesMapListStream = typesMapListStream.map(
+        (typesMapList) => typesMapList
+            .where(
+              (typeMap) =>
+                  typeMap[TypeTable.productsIds].contains(selectedProductId),
+            )
+            .toList(),
+      );
+    }
+
+    final productsListStream =
         ProductsController.getAll(selectedProductPrice: '*');
 
-    List<Product> typeProducts = [];
+    await for (List<Product> productsList in productsListStream) {
+      // debugPrint('In Stream');
+      // debugPrint(productsList.toString());
 
-    productsStreamList.map(
-      (productsList) => productsList.map(
-        (product) {
-          // return Product.fromMap(productMap);
-        },
-      ).toList(),
-    );
+      List<Product> typeProducts = [];
+
+      yield* typesMapListStream.map(
+        (typesMapList) => typesMapList.map(
+          (typeMap) {
+            typeProducts = [];
+
+            for (Product product in productsList) {
+              if (typeMap[TypeTable.productsIds].contains(product.id)) {
+                //  debugPrint('Found');
+                product.number = typeMap[TypeTable.productsNumbers]
+                    .toList()[typeMap[TypeTable.productsIds]
+                        .toList()
+                        .indexOf(product.id!)]
+                    .toInt();
+                typeProducts.add(product);
+              }
+            }
+
+            return Type(
+              id: typeMap[TypeTable.id]?.toInt() ?? 0,
+              name: typeMap[TypeTable.name],
+              stake: typeMap[TypeTable.stake]?.toDouble() ?? .0,
+              products: typeProducts,
+              createdAt: DateTime.parse(typeMap[TypeTable.createdAt]),
+              updatedAt: DateTime.parse(typeMap[TypeTable.createdAt]),
+            );
+          },
+        ).toList(),
+      );
+    }
+
+    /*  productsListStream.listen((productsListS) {
+      productsList = productsListS;
+      debugPrint('In Stream');
+      debugPrint(productsList.toString());
+    });
+
+    debugPrint('Out Stream');
+    debugPrint(productsList.toString());
+
+    List<Product> typeProducts = [];
 
     // yield all types data or an empty list
     yield* typesMapListStream.map(
       (typesMapList) => typesMapList.map(
         (typeMap) {
-// map the products list stream form getting products data in real time
-          productsStreamList.map(
-            // access to products list
-            (productsList) => productsList.map(
-              // access to product
-              (product) {
-                // check if product's id is in types products ids
-                if (typeMap[TypeTable.productsIds]
-                    .toList()
-                    .contains(product.id)) {
-                  //  if true set the product number to it number containing by types products numbers
-                  product.number = typeMap[TypeTable.productsNumbers].toList()[
-                      // since the product number is unknowed
-                      // get the index by getting the the product's id index in type products ids
-                      typeMap[TypeTable.productsIds]
-                          .toList()
-                          .indexOf(product.id!)];
+          typeProducts = [];
+          // map the products list stream form getting products data in real time
+          productsList.map(
+            // access to product
+            (product) {
+              debugPrint(typeMap[TypeTable.productsIds].toString());
+              // check if product's id is in types products ids
+              if (typeMap[TypeTable.productsIds]
+                  //.toList()
+                  .contains(product.id)) {
+                debugPrint('Found');
+                //  if true set the product number to it number containing by types products numbers
+                product.number = typeMap[TypeTable.productsNumbers]
+                    .toList()[
+                        // since the product number is unknowed
+                        // get the index by getting the the product's id index in type products ids
+                        typeMap[TypeTable.productsIds]
+                            .toList()
+                            .indexOf(product.id!)]
+                    .toInt();
 
-                  // add the product to typeProducts
-                  typeProducts.add(product);
-                }
-              },
-            ).toList(),
-          );
+                // add the product to typeProducts
+                typeProducts.add(product);
+              }
+            },
+          ).toList();
+
+          // );
 
           /*
           // will store types products ids
@@ -114,16 +172,52 @@ class TypesController {
       ).toList(),
     );
     //.asBroadcastStream();
+  */
   }
 
   static Future<List<Type>> searchType({required String name}) async {
-    final searchedTypes = await TypesService.searchType(name: name);
+    List<Map<String, dynamic>> searchedTypesMap =
+        await TypesService.searchType(name: name);
 
-    return searchedTypes
-        .map(
-          (typeMap) => Type.fromMap(typeMap),
-        )
-        .toList();
+    final productsList =
+        await ProductsController.getAll(selectedProductPrice: '*').first;
+
+    List<Type> searchedTypes = [];
+
+    // debugPrint('In Stream');
+    // debugPrint(productsList.toString());
+
+    List<Product> typeProducts = [];
+
+    searchedTypes = searchedTypesMap.map(
+      (typeMap) {
+        typeProducts = [];
+
+        for (Product product in productsList) {
+          if (typeMap[TypeTable.productsIds].contains(product.id)) {
+            //  debugPrint('Found');
+            product.number = typeMap[TypeTable.productsNumbers]
+                .toList()[typeMap[TypeTable.productsIds]
+                    .toList()
+                    .indexOf(product.id!)]
+                .toInt();
+            typeProducts.add(product);
+          }
+        }
+
+        return Type(
+          id: typeMap[TypeTable.id]?.toInt() ?? 0,
+          name: typeMap[TypeTable.name],
+          stake: typeMap[TypeTable.stake]?.toDouble() ?? .0,
+          products: typeProducts,
+          createdAt: DateTime.parse(typeMap[TypeTable.createdAt]),
+          updatedAt: DateTime.parse(typeMap[TypeTable.createdAt]),
+        );
+      },
+    ).toList();
+    // debugPrint('In Controller');
+    // debugPrint('searchedTypes: $searchedTypes');
+    return searchedTypes;
   }
 
   static Stream<List<double>> getAllTypesStakes() async* {

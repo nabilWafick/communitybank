@@ -3,7 +3,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final productDropdownProvider =
     StateProvider.family<Product, String>((ref, dropdown) {
   return Product(
     name: '',
@@ -13,14 +13,14 @@ final dropdownSelectedItemProvider =
   );
 });
 
-class CBSortDropdownProduct extends ConsumerStatefulWidget {
+class CBProductDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<Product> dropdownMenuEntriesLabels;
   final List<Product> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBSortDropdownProduct({
+  const CBProductDropdown({
     super.key,
     this.width,
     required this.label,
@@ -30,10 +30,10 @@ class CBSortDropdownProduct extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBSortDropdownProductState();
+      _CBProductDropdownState();
 }
 
-class _CBSortDropdownProductState extends ConsumerState<CBSortDropdownProduct> {
+class _CBProductDropdownState extends ConsumerState<CBProductDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -43,9 +43,8 @@ class _CBSortDropdownProductState extends ConsumerState<CBSortDropdownProduct> {
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
+        ref.read(productDropdownProvider(widget.providerName).notifier).state =
+            widget.dropdownMenuEntriesValues[0];
       }
     });
 
@@ -55,7 +54,7 @@ class _CBSortDropdownProductState extends ConsumerState<CBSortDropdownProduct> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(productDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -89,7 +88,7 @@ class _CBSortDropdownProductState extends ConsumerState<CBSortDropdownProduct> {
         ),
         onSelected: (value) {
           ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+              .read(productDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),

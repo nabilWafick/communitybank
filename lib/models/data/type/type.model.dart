@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:communitybank/models/tables/product/product_table.model.dart';
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:communitybank/models/data/product/product.model.dart';

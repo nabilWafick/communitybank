@@ -2,7 +2,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final stringDropdownProvider =
     StateProvider.family<String, String>((ref, dropdown) {
   return '*';
 });
@@ -32,13 +32,12 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
     // future used for avoiding error due to ref.read in initState function
     Future.delayed(
         const Duration(
-          milliseconds: 1,
+          milliseconds: 100,
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
+        ref.read(stringDropdownProvider(widget.providerName).notifier).state =
+            widget.dropdownMenuEntriesValues[0];
       }
     });
 
@@ -48,7 +47,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(stringDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -81,9 +80,8 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
-              .state = value!;
+          ref.read(stringDropdownProvider(widget.providerName).notifier).state =
+              value!;
         },
       ),
     );

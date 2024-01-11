@@ -15,14 +15,14 @@ final typeSelectedProductDropdownProvider =
   );
 });
 
-class CBProductSelectionDropdown extends ConsumerStatefulWidget {
+class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<Product> dropdownMenuEntriesLabels;
   final List<Product> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBProductSelectionDropdown({
+  const CBTypeProductSelectionDropdown({
     super.key,
     this.width,
     required this.label,
@@ -33,11 +33,11 @@ class CBProductSelectionDropdown extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBProductSelectionDropdownState();
+      _CBTypeProductSelectionDropdownState();
 }
 
-class _CBProductSelectionDropdownState
-    extends ConsumerState<CBProductSelectionDropdown> {
+class _CBTypeProductSelectionDropdownState
+    extends ConsumerState<CBTypeProductSelectionDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function

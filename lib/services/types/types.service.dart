@@ -43,9 +43,12 @@ class TypesService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll(
-      {required String selectedTypeStake /*, required int productId*/}) async* {
+  static Stream<List<Map<String, dynamic>>> getAll({
+    required String selectedTypeStake,
+    /* required int? selectedProductId,*/
+  }) async* {
     final supabase = Supabase.instance.client;
+
     //  debugPrint('In Service');
     //  debugPrint('selectedTypeStake: $selectedTypeStake');
     try {
@@ -76,6 +79,8 @@ class TypesService {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
+    //  debugPrint('In Seach Service');
+    //  debugPrint('name:$name');
     try {
       // get all Types which name contain "name"
       response = await supabase

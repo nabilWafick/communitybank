@@ -3,7 +3,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final personalStatusDropdownProvider =
     StateProvider.family<PersonalStatus, String>((ref, dropdown) {
   return PersonalStatus(
     name: '',
@@ -12,14 +12,14 @@ final dropdownSelectedItemProvider =
   );
 });
 
-class CBSortDropdownPersonalStatus extends ConsumerStatefulWidget {
+class CBPersonalStatusDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<PersonalStatus> dropdownMenuEntriesLabels;
   final List<PersonalStatus> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBSortDropdownPersonalStatus({
+  const CBPersonalStatusDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,11 +29,11 @@ class CBSortDropdownPersonalStatus extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBSortDropdownPersonalStatusState();
+      _CBPersonalStatusDropdownState();
 }
 
-class _CBSortDropdownPersonalStatusState
-    extends ConsumerState<CBSortDropdownPersonalStatus> {
+class _CBPersonalStatusDropdownState
+    extends ConsumerState<CBPersonalStatusDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -44,7 +44,7 @@ class _CBSortDropdownPersonalStatusState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+            .read(personalStatusDropdownProvider(widget.providerName).notifier)
             .state = widget.dropdownMenuEntriesValues[0];
       }
     });
@@ -55,7 +55,7 @@ class _CBSortDropdownPersonalStatusState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(personalStatusDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -89,7 +89,8 @@ class _CBSortDropdownPersonalStatusState
         ),
         onSelected: (value) {
           ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+              .read(
+                  personalStatusDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),

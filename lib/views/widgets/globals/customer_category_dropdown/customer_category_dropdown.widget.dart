@@ -3,7 +3,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final dropdownSelectedItemProvider =
+final customerCategoryDropdownProvider =
     StateProvider.family<CustomerCategory, String>((ref, dropdown) {
   return CustomerCategory(
     name: '',
@@ -12,14 +12,14 @@ final dropdownSelectedItemProvider =
   );
 });
 
-class CBSortDropdownCustomerCategory extends ConsumerStatefulWidget {
+class CBCustomerCategoryDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<CustomerCategory> dropdownMenuEntriesLabels;
   final List<CustomerCategory> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBSortDropdownCustomerCategory({
+  const CBCustomerCategoryDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,11 +29,11 @@ class CBSortDropdownCustomerCategory extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBSortDropdownCustomerCategoryState();
+      _CBCustomerCategoryDropdownState();
 }
 
-class _CBSortDropdownCustomerCategoryState
-    extends ConsumerState<CBSortDropdownCustomerCategory> {
+class _CBCustomerCategoryDropdownState
+    extends ConsumerState<CBCustomerCategoryDropdown> {
   @override
   void initState() {
     // future used for avoiding error due to ref.read in initState function
@@ -44,7 +44,8 @@ class _CBSortDropdownCustomerCategoryState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+            .read(
+                customerCategoryDropdownProvider(widget.providerName).notifier)
             .state = widget.dropdownMenuEntriesValues[0];
       }
     });
@@ -55,7 +56,7 @@ class _CBSortDropdownCustomerCategoryState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(dropdownSelectedItemProvider(widget.providerName));
+        ref.watch(customerCategoryDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -89,7 +90,8 @@ class _CBSortDropdownCustomerCategoryState
         ),
         onSelected: (value) {
           ref
-              .read(dropdownSelectedItemProvider(widget.providerName).notifier)
+              .read(customerCategoryDropdownProvider(widget.providerName)
+                  .notifier)
               .state = value!;
         },
       ),
