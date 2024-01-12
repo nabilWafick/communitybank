@@ -65,7 +65,7 @@ class CustomersService {
       );
 
       // filter le list and return only Customers which purchase prices are equal to selectedCustomerCategoryId
-      if (selectedCustomerCategoryId != 0) {
+      /*   if (selectedCustomerCategoryId != 0) {
         query.eq(CustomerTable.category, selectedCustomerCategoryId);
       }
 
@@ -82,7 +82,7 @@ class CustomersService {
       if (selectedCustomerLocalityId != 0) {
         query.eq(CustomerTable.locality, selectedCustomerLocalityId);
       }
-
+*/
       // return the result as stream
       yield* query.asBroadcastStream();
     } catch (error) {

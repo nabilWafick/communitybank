@@ -44,40 +44,88 @@ class CustomerCRUDFunctions {
       final customerLocality =
           ref.watch(localityDropdownProvider('customer-adding-form-locality'));
 
-      debugPrint(customerName.toString());
-      debugPrint(customerFirstnames.toString());
-      debugPrint(customerPhoneNumber.toString());
-      debugPrint(customerProfession.toString());
-      debugPrint(customerAddress.toString());
-      debugPrint(customerNicNumber.toString());
-      debugPrint(customerPersonalStatus.toString());
-      debugPrint(customerEconomicalActivity.toString());
-      debugPrint(customerCategory.toString());
-      debugPrint(customerLocality.toString());
-      debugPrint(customerProfilePicture.toString());
-      debugPrint(customerSignaturePicture.toString());
-
-      ServiceResponse customerStatus;
+      ServiceResponse customerStatus = ServiceResponse.waiting;
 
       if (customerProfilePicture == null || customerSignaturePicture == null) {
-        final customer = Customer(
-          name: customerName,
-          firstnames: customerFirstnames,
-          phoneNumber: customerPhoneNumber,
-          address: customerAddress,
-          profession: customerProfession,
-          nicNumber: customerNicNumber,
-          category: customerCategory,
-          economicalActivity: customerEconomicalActivity,
-          personalStatus: customerPersonalStatus,
-          locality: customerLocality,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
+        if (customerProfilePicture == null &&
+            customerSignaturePicture == null) {
+          final customer = Customer(
+            name: customerName,
+            firstnames: customerFirstnames,
+            phoneNumber: customerPhoneNumber,
+            address: customerAddress,
+            profession: customerProfession,
+            nicNumber: customerNicNumber,
+            category: customerCategory,
+            economicalActivity: customerEconomicalActivity,
+            personalStatus: customerPersonalStatus,
+            locality: customerLocality,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
 
-        customerStatus = await CustomersController.create(customer: customer);
+          customerStatus = await CustomersController.create(customer: customer);
+        } else if (customerProfilePicture == null) {
+          final customerSignatureRemotePath =
+              await CustomersController.uploadSignaturePicture(
+                  customerSignaturePicturePath: customerSignaturePicture!);
 
-        // debugPrint('new Customer: $CustomerStatus');
+          if (customerSignatureRemotePath != null) {
+            final customer = Customer(
+              name: customerName,
+              firstnames: customerFirstnames,
+              phoneNumber: customerPhoneNumber,
+              address: customerAddress,
+              profession: customerProfession,
+              nicNumber: customerNicNumber,
+              category: customerCategory,
+              economicalActivity: customerEconomicalActivity,
+              personalStatus: customerPersonalStatus,
+              locality: customerLocality,
+              signature:
+                  '${CBConstants.supabaseStorageLink}/$customerSignatureRemotePath',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            );
+
+            customerStatus =
+                await CustomersController.create(customer: customer);
+
+            //  debugPrint('new Customer: $CustomerStatus');
+          } else {
+            customerStatus = ServiceResponse.failed;
+          }
+        } else if (customerSignaturePicture == null) {
+          final customerProfilePictureRemotePath =
+              await CustomersController.uploadProfilePicture(
+                  customerProfilePicturePath: customerProfilePicture);
+
+          if (customerProfilePictureRemotePath != null) {
+            final customer = Customer(
+              name: customerName,
+              firstnames: customerFirstnames,
+              phoneNumber: customerPhoneNumber,
+              address: customerAddress,
+              profession: customerProfession,
+              nicNumber: customerNicNumber,
+              category: customerCategory,
+              economicalActivity: customerEconomicalActivity,
+              personalStatus: customerPersonalStatus,
+              locality: customerLocality,
+              profile:
+                  '${CBConstants.supabaseStorageLink}/$customerProfilePictureRemotePath',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            );
+
+            customerStatus =
+                await CustomersController.create(customer: customer);
+
+            //  debugPrint('new Customer: $CustomerStatus');
+          } else {
+            customerStatus = ServiceResponse.failed;
+          }
+        }
       } else {
         final customerProfilePictureRemotePath =
             await CustomersController.uploadProfilePicture(

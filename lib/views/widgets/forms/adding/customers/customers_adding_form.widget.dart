@@ -475,23 +475,22 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                     const SizedBox(
                       width: 20.0,
                     ),
-                    // showValidatedButton.value
-                    //  ?
-                    SizedBox(
-                      width: 170.0,
-                      child: CBElevatedButton(
-                        text: 'Valider',
-                        onPressed: () async {
-                          CustomerCRUDFunctions.create(
-                            context: context,
-                            formKey: formKey,
-                            ref: ref,
-                            showValidatedButton: showValidatedButton,
-                          );
-                        },
-                      ),
-                    )
-                    // : const SizedBox()
+                    showValidatedButton.value
+                        ? SizedBox(
+                            width: 170.0,
+                            child: CBElevatedButton(
+                              text: 'Valider',
+                              onPressed: () async {
+                                CustomerCRUDFunctions.create(
+                                  context: context,
+                                  formKey: formKey,
+                                  ref: ref,
+                                  showValidatedButton: showValidatedButton,
+                                );
+                              },
+                            ),
+                          )
+                        : const SizedBox()
                   ],
                 ),
               ],
