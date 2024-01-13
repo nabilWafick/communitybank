@@ -11,11 +11,11 @@ import 'package:communitybank/views/widgets/definitions/customers_categories/cus
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
-import 'package:communitybank/views/widgets/globals/customer_category_dropdown/customer_category_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category_dropdown/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/globals/locality_dropdown/locality_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/personal_status_dropdown/personal_status_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/locality_dropdown/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/personal_status_dropdown/personal_status_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -291,7 +291,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBCustomerCategoryDropdown(
+                          child: CBFormCustomerCategoryDropdown(
                             width: formCardWidth / 2.3,
                             label: 'Catégorie',
                             providerName: 'customer-adding-form-category',
@@ -300,7 +300,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   CustomerCategory(
-                                    name: '',
+                                    name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -315,7 +315,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   CustomerCategory(
-                                    name: '',
+                                    name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -332,7 +332,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBEconomicalActivityDropdown(
+                          child: CBFormEconomicalActivityDropdown(
                             width: formCardWidth / 2.3,
                             label: 'Activité économique',
                             providerName:
@@ -342,7 +342,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   EconomicalActivity(
-                                    name: '',
+                                    name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -357,7 +357,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   EconomicalActivity(
-                                    name: '',
+                                    name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -374,7 +374,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBPersonalStatusDropdown(
+                          child: CBFormPersonalStatusDropdown(
                             width: formCardWidth / 2.3,
                             label: 'Statut Personnel',
                             providerName:
@@ -384,7 +384,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   PersonalStatus(
-                                    name: '',
+                                    name: 'Non défini',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -399,7 +399,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   PersonalStatus(
-                                    name: '',
+                                    name: 'Non défini',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -416,7 +416,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBLocalityDropdown(
+                          child: CBFormLocalityDropdown(
                             width: formCardWidth / 2.3,
                             label: 'Localité',
                             providerName: 'customer-adding-form-locality',
@@ -425,7 +425,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   Locality(
-                                    name: '',
+                                    name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
@@ -440,7 +440,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                               data: (data) {
                                 return [
                                   Locality(
-                                    name: '',
+                                    name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),

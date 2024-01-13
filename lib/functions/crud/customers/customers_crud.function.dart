@@ -8,10 +8,10 @@ import 'package:communitybank/models/response_dialog/response_dialog.model.dart'
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
-import 'package:communitybank/views/widgets/globals/customer_category_dropdown/customer_category_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/locality_dropdown/locality_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/personal_status_dropdown/personal_status_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category_dropdown/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/locality_dropdown/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/personal_status_dropdown/personal_status_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,15 +34,16 @@ class CustomerCRUDFunctions {
       final customerAddress = ref.watch(customerAddressProvider);
       final customerProfession = ref.watch(customerProfessionProvider);
       final customerNicNumber = ref.watch(customerNicNumberProvider);
-      final customerCategory = ref.watch(
-          customerCategoryDropdownProvider('customer-adding-form-category'));
-      final customerPersonalStatus = ref.watch(personalStatusDropdownProvider(
-          'customer-adding-form-personal-status'));
+      final customerCategory = ref.watch(formCustomerCategoryDropdownProvider(
+          'customer-adding-form-category'));
+      final customerPersonalStatus = ref.watch(
+          formPersonalStatusDropdownProvider(
+              'customer-adding-form-personal-status'));
       final customerEconomicalActivity = ref.watch(
-          economicalActivityDropdownProvider(
+          formEconomicalActivityDropdownProvider(
               'customer-adding-form-economical-activity'));
-      final customerLocality =
-          ref.watch(localityDropdownProvider('customer-adding-form-locality'));
+      final customerLocality = ref
+          .watch(formLocalityDropdownProvider('customer-adding-form-locality'));
 
       ServiceResponse customerStatus = ServiceResponse.waiting;
 

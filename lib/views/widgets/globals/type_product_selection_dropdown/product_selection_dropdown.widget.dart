@@ -39,11 +39,13 @@ class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
 class _CBTypeProductSelectionDropdownState
     extends ConsumerState<CBTypeProductSelectionDropdown> {
   @override
-  void initState() {
-    // future used for avoiding error due to ref.read in initState function
+  Widget build(BuildContext context) {
+    final selectedDropdownProduct =
+        ref.watch(typeSelectedProductDropdownProvider(widget.providerName));
+
     Future.delayed(
         const Duration(
-          milliseconds: 100,
+          milliseconds: 10,
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
@@ -59,13 +61,6 @@ class _CBTypeProductSelectionDropdownState
       }
     });
 
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedDropdownProduct =
-        ref.watch(typeSelectedProductDropdownProvider(widget.providerName));
     return DropdownMenu(
       inputDecorationTheme: const InputDecorationTheme(
         enabledBorder: OutlineInputBorder(

@@ -3,23 +3,24 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final customerCategoryDropdownProvider =
+final listCustomerCategoryDropdownProvider =
     StateProvider.family<CustomerCategory, String>((ref, dropdown) {
   return CustomerCategory(
-    name: '',
+    id: 0,
+    name: 'Toutes',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
 });
 
-class CBCustomerCategoryDropdown extends ConsumerStatefulWidget {
+class CBListCustomerCategoryDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<CustomerCategory> dropdownMenuEntriesLabels;
   final List<CustomerCategory> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBCustomerCategoryDropdown({
+  const CBListCustomerCategoryDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,34 +30,16 @@ class CBCustomerCategoryDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBCustomerCategoryDropdownState();
+      _CBListCustomerCategoryDropdownState();
 }
 
-class _CBCustomerCategoryDropdownState
-    extends ConsumerState<CBCustomerCategoryDropdown> {
-  @override
-  void initState() {
-    // future used for avoiding error due to ref.read in initState function
-    Future.delayed(
-        const Duration(
-          milliseconds: 1,
-        ), () {
-// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
-      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(
-                customerCategoryDropdownProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
-      }
-    });
-
-    super.initState();
-  }
-
+class _CBListCustomerCategoryDropdownState
+    extends ConsumerState<CBListCustomerCategoryDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(customerCategoryDropdownProvider(widget.providerName));
+        ref.watch(listCustomerCategoryDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -90,9 +73,10 @@ class _CBCustomerCategoryDropdownState
         ),
         onSelected: (value) {
           ref
-              .read(customerCategoryDropdownProvider(widget.providerName)
+              .read(listCustomerCategoryDropdownProvider(widget.providerName)
                   .notifier)
               .state = value!;
+          //   debugPrint('new category: $value');
         },
       ),
     );

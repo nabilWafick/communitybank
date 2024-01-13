@@ -3,10 +3,11 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final collectorDropdownProvider =
+final listCollectorDropdownProvider =
     StateProvider.family<Collector, String>((ref, dropdown) {
   return Collector(
-    name: '',
+    id: 0,
+    name: 'Tous',
     firstnames: '',
     phoneNumber: '',
     address: '',
@@ -15,14 +16,14 @@ final collectorDropdownProvider =
   );
 });
 
-class CBCollectorDropdown extends ConsumerStatefulWidget {
+class CBListCollectorDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<Collector> dropdownMenuEntriesLabels;
   final List<Collector> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBCollectorDropdown({
+  const CBListCollectorDropdown({
     super.key,
     this.width,
     required this.label,
@@ -32,32 +33,17 @@ class CBCollectorDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBCollectorDropdownState();
+      _CBListCollectorDropdownState();
 }
 
-class _CBCollectorDropdownState extends ConsumerState<CBCollectorDropdown> {
+class _CBListCollectorDropdownState
+    extends ConsumerState<CBListCollectorDropdown> {
   @override
-  void initState() {
-    // future used for avoiding error due to ref.read in initState function
-    Future.delayed(
-        const Duration(
-          milliseconds: 1,
-        ), () {
-// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
-      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(collectorDropdownProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
-      }
-    });
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(collectorDropdownProvider(widget.providerName));
+        ref.watch(listCollectorDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -91,7 +77,7 @@ class _CBCollectorDropdownState extends ConsumerState<CBCollectorDropdown> {
         ),
         onSelected: (value) {
           ref
-              .read(collectorDropdownProvider(widget.providerName).notifier)
+              .read(listCollectorDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),

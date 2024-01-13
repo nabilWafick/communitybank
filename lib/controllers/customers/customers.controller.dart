@@ -31,12 +31,15 @@ class CustomersController {
     required int? selectedCustomerPersonalStatusId,
   }) async* {
     final customersMapListStream = CustomersService.getAll(
-      selectedCustomerCategoryId: selectedCustomerCategoryId,
+        /*   selectedCustomerCategoryId: selectedCustomerCategoryId,
       selectedCustomerEconomicalActivityId:
           selectedCustomerEconomicalActivityId,
       selectedCustomerLocalityId: selectedCustomerLocalityId,
       selectedCustomerPersonalStatusId: selectedCustomerPersonalStatusId,
-    );
+   */
+        );
+
+    //  debugPrint(customersMapListStream.toString());
 
     List<CustomerCategory> customerCategoriesList =
         await CustomersCategoriesController.getAll().first;
@@ -46,8 +49,7 @@ class CustomersController {
         await PersonalStatusController.getAll().first;
     List<Locality> localitiesList = await LocalitiesController.getAll().first;
 
-    // yield all Customers data or an empty list
-    yield* customersMapListStream.map(
+    Stream<List<Customer>> customersListStream = customersMapListStream.map(
       (customersMapList) => customersMapList.map(
         (customerMap) {
           CustomerCategory customerMapCategory = CustomerCategory(
@@ -119,6 +121,55 @@ class CustomersController {
       ).toList(),
     );
     //.asBroadcastStream();
+
+    // filter customers based on the selected locality, economical activity, personal status and category
+
+    if (selectedCustomerCategoryId != 0) {
+      customersListStream = customersListStream.map(
+        (customersList) => customersList
+            .where(
+              (customer) => customer.category.id == selectedCustomerCategoryId,
+            )
+            .toList(),
+      );
+    }
+
+    if (selectedCustomerEconomicalActivityId != 0) {
+      customersListStream = customersListStream.map(
+        (customersList) => customersList
+            .where(
+              (customer) =>
+                  customer.economicalActivity.id ==
+                  selectedCustomerEconomicalActivityId,
+            )
+            .toList(),
+      );
+    }
+
+    if (selectedCustomerPersonalStatusId != 0) {
+      customersListStream = customersListStream.map(
+        (customersList) => customersList
+            .where(
+              (customer) =>
+                  customer.personalStatus.id ==
+                  selectedCustomerPersonalStatusId,
+            )
+            .toList(),
+      );
+    }
+
+    if (selectedCustomerLocalityId != 0) {
+      customersListStream = customersListStream.map(
+        (customersList) => customersList
+            .where(
+              (customer) => customer.locality.id == selectedCustomerLocalityId,
+            )
+            .toList(),
+      );
+    }
+
+    // yield all Customers data or an empty list
+    yield* customersListStream;
   }
 
   static Future<List<Customer>> searchCustomer({required String name}) async {

@@ -2,11 +2,11 @@ import 'package:communitybank/controllers/customers/customers.controller.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/globals/customer_category_dropdown/customer_category_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/globals/locality_dropdown/locality_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/personal_status_dropdown/personal_status_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_category_dropdown/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality_dropdown/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_status_dropdown/personal_status_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,14 +26,14 @@ final searchedCustomersListProvider =
 final customersListStreamProvider =
     StreamProvider<List<Customer>>((ref) async* {
   final selectedCustomerEconomicalActivity = ref.watch(
-      economicalActivityDropdownProvider(
+      listEconomicalActivityDropdownProvider(
           'customer-list-sort-economical-activity'));
-  final selectedCustomerCategory = ref
-      .watch(customerCategoryDropdownProvider('customer-list-sort-categery'));
+  final selectedCustomerCategory = ref.watch(
+      listCustomerCategoryDropdownProvider('customer-list-sort-category'));
   final selectedCustomerPersonalStatus = ref.watch(
-      personalStatusDropdownProvider('customer-list-sort-personal-status'));
+      listPersonalStatusDropdownProvider('customer-list-sort-personal-status'));
   final selectedCustomerLocality =
-      ref.watch(localityDropdownProvider('customer-list-sort-locality'));
+      ref.watch(listLocalityDropdownProvider('customer-list-sort-locality'));
   yield* CustomersController.getAll(
     selectedCustomerCategoryId: selectedCustomerCategory.id,
     selectedCustomerEconomicalActivityId: selectedCustomerEconomicalActivity.id,
@@ -48,7 +48,7 @@ class CustomersList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final customersListStream = ref.watch(customersListStreamProvider);
-    final searchedCustomers = ref.watch(searchedCustomersListProvider);
+    //  final searchedCustomers = ref.watch(searchedCustomersListProvider);
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
@@ -161,95 +161,99 @@ class CustomersList extends ConsumerWidget {
               ),
             ],
             rows: customersListStream.when(
-              data: (data) => data
-                  .map(
-                    (customer) => DataRow(
-                      cells: [
-                        DataCell(
-                          CBText(text: customer.id!.toString()),
-                        ),
-                        DataCell(customer.profile != null
-                            ? Container(
-                                alignment: Alignment.center,
-                                child: const Icon(
-                                  Icons.account_circle_sharp,
-                                  size: 35.0,
-                                  color: CBColors.primaryColor,
-                                ),
-                              )
-                            : const SizedBox()),
-                        DataCell(
-                          CBText(
-                              text: '${customer.firstnames} ${customer.name}'),
-                        ),
-                        DataCell(
-                          CBText(text: customer.phoneNumber),
-                        ),
-                        DataCell(
-                          CBText(text: customer.address),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: customer.profession,
+              data: (data) {
+                //  debugPrint('customers: $data');
+                return data
+                    .map(
+                      (customer) => DataRow(
+                        cells: [
+                          DataCell(
+                            CBText(text: customer.id!.toString()),
                           ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: customer.nicNumber.toString(),
+                          DataCell(customer.profile != null
+                              ? Container(
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.account_circle_sharp,
+                                    size: 35.0,
+                                    color: CBColors.primaryColor,
+                                  ),
+                                )
+                              : const SizedBox()),
+                          DataCell(
+                            CBText(
+                                text:
+                                    '${customer.firstnames} ${customer.name}'),
                           ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: customer.category.name,
+                          DataCell(
+                            CBText(text: customer.phoneNumber),
                           ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: customer.economicalActivity.name,
+                          DataCell(
+                            CBText(text: customer.address),
                           ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: customer.personalStatus.name,
-                          ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: customer.locality.name,
-                          ),
-                        ),
-                        DataCell(customer.profile != null
-                            ? Container(
-                                alignment: Alignment.center,
-                                child: const Icon(
-                                  Icons.photo,
-                                  color: CBColors.primaryColor,
-                                ),
-                              )
-                            : const SizedBox()),
-                        DataCell(
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.edit,
-                              color: Colors.green,
+                          DataCell(
+                            CBText(
+                              text: customer.profession,
                             ),
                           ),
-                          // showEditIcon: true,
-                        ),
-                        DataCell(
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.delete_sharp,
-                              color: Colors.red,
+                          DataCell(
+                            CBText(
+                              text: customer.nicNumber.toString(),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                  .toList(),
+                          DataCell(
+                            CBText(
+                              text: customer.category.name,
+                            ),
+                          ),
+                          DataCell(
+                            CBText(
+                              text: customer.economicalActivity.name,
+                            ),
+                          ),
+                          DataCell(
+                            CBText(
+                              text: customer.personalStatus.name,
+                            ),
+                          ),
+                          DataCell(
+                            CBText(
+                              text: customer.locality.name,
+                            ),
+                          ),
+                          DataCell(customer.profile != null
+                              ? Container(
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.photo,
+                                    color: CBColors.primaryColor,
+                                  ),
+                                )
+                              : const SizedBox()),
+                          DataCell(
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              ),
+                            ),
+                            // showEditIcon: true,
+                          ),
+                          DataCell(
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.delete_sharp,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList();
+              },
               error: (error, stackTrace) => [],
               loading: () => [],
             ),

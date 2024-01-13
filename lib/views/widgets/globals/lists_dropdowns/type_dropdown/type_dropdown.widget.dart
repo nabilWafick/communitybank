@@ -1,20 +1,28 @@
+import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final stringDropdownProvider =
-    StateProvider.family<String, String>((ref, dropdown) {
-  return '*';
+final listTypeDropdownProvider =
+    StateProvider.family<Type, String>((ref, dropdown) {
+  return Type(
+    id: 0,
+    name: 'Tous',
+    stake: 0,
+    products: [],
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 });
 
-class CBDropdown extends ConsumerStatefulWidget {
+class CBListTypeDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<String> dropdownMenuEntriesLabels;
-  final List<String> dropdownMenuEntriesValues;
+  final List<Type> dropdownMenuEntriesLabels;
+  final List<Type> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBDropdown({
+  const CBListTypeDropdown({
     super.key,
     this.width,
     required this.label,
@@ -23,14 +31,16 @@ class CBDropdown extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CBDropdownState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CBListTypeDropdownState();
 }
 
-class _CBDropdownState extends ConsumerState<CBDropdown> {
+class _CBListTypeDropdownState extends ConsumerState<CBListTypeDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(stringDropdownProvider(widget.providerName));
+        ref.watch(listTypeDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -48,7 +58,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel,
+                label: dropdownMenuEntryLabel.name,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(
@@ -63,8 +73,9 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref.read(stringDropdownProvider(widget.providerName).notifier).state =
-              value!;
+          ref
+              .read(listTypeDropdownProvider(widget.providerName).notifier)
+              .state = value!;
         },
       ),
     );

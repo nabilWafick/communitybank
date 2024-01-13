@@ -1,25 +1,28 @@
-import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final localityDropdownProvider =
-    StateProvider.family<Locality, String>((ref, dropdown) {
-  return Locality(
+final formCollectorDropdownProvider =
+    StateProvider.family<Collector, String>((ref, dropdown) {
+  return Collector(
     name: '',
+    firstnames: '',
+    phoneNumber: '',
+    address: '',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
 });
 
-class CBLocalityDropdown extends ConsumerStatefulWidget {
+class CBFormCollectorDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<Locality> dropdownMenuEntriesLabels;
-  final List<Locality> dropdownMenuEntriesValues;
+  final List<Collector> dropdownMenuEntriesLabels;
+  final List<Collector> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBLocalityDropdown({
+  const CBFormCollectorDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,31 +32,17 @@ class CBLocalityDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBLocalityDropdownState();
+      _CBFormCollectorDropdownState();
 }
 
-class _CBLocalityDropdownState extends ConsumerState<CBLocalityDropdown> {
+class _CBFormCollectorDropdownState
+    extends ConsumerState<CBFormCollectorDropdown> {
   @override
-  void initState() {
-    // future used for avoiding error due to ref.read in initState function
-    Future.delayed(
-        const Duration(
-          milliseconds: 1,
-        ), () {
-// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
-      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref.read(localityDropdownProvider(widget.providerName).notifier).state =
-            widget.dropdownMenuEntriesValues[0];
-      }
-    });
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(localityDropdownProvider(widget.providerName));
+        ref.watch(formCollectorDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -87,7 +76,7 @@ class _CBLocalityDropdownState extends ConsumerState<CBLocalityDropdown> {
         ),
         onSelected: (value) {
           ref
-              .read(localityDropdownProvider(widget.providerName).notifier)
+              .read(formCollectorDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),

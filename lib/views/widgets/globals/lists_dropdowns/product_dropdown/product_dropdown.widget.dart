@@ -1,25 +1,27 @@
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final economicalActivityDropdownProvider =
-    StateProvider.family<EconomicalActivity, String>((ref, dropdown) {
-  return EconomicalActivity(
-    name: '',
+final listProductDropdownProvider =
+    StateProvider.family<Product, String>((ref, dropdown) {
+  return Product(
+    id: 0,
+    name: 'Tous',
+    purchasePrice: 0,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
 });
 
-class CBEconomicalActivityDropdown extends ConsumerStatefulWidget {
+class CBListProductDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<EconomicalActivity> dropdownMenuEntriesLabels;
-  final List<EconomicalActivity> dropdownMenuEntriesValues;
+  final List<Product> dropdownMenuEntriesLabels;
+  final List<Product> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBEconomicalActivityDropdown({
+  const CBListProductDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,34 +31,15 @@ class CBEconomicalActivityDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBEconomicalActivityDropdownState();
+      _CBListProductDropdownState();
 }
 
-class _CBEconomicalActivityDropdownState
-    extends ConsumerState<CBEconomicalActivityDropdown> {
-  @override
-  void initState() {
-    // future used for avoiding error due to ref.read in initState function
-    Future.delayed(
-        const Duration(
-          milliseconds: 1,
-        ), () {
-// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
-      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(economicalActivityDropdownProvider(widget.providerName)
-                .notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
-      }
-    });
-
-    super.initState();
-  }
-
+class _CBListProductDropdownState extends ConsumerState<CBListProductDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(economicalActivityDropdownProvider(widget.providerName));
+        ref.watch(listProductDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -90,8 +73,7 @@ class _CBEconomicalActivityDropdownState
         ),
         onSelected: (value) {
           ref
-              .read(economicalActivityDropdownProvider(widget.providerName)
-                  .notifier)
+              .read(listProductDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),

@@ -46,12 +46,15 @@ class CustomersService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll({
+  static Stream<List<Map<String, dynamic>>> getAll(
+      /*{
     required int? selectedCustomerCategoryId,
     required int? selectedCustomerEconomicalActivityId,
     required int? selectedCustomerLocalityId,
     required int? selectedCustomerPersonalStatusId,
-  }) async* {
+  }
+  */
+      ) async* {
     final supabase = Supabase.instance.client;
 
     try {

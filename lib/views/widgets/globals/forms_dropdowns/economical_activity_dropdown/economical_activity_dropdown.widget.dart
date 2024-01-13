@@ -1,20 +1,25 @@
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final stringDropdownProvider =
-    StateProvider.family<String, String>((ref, dropdown) {
-  return '*';
+final formEconomicalActivityDropdownProvider =
+    StateProvider.family<EconomicalActivity, String>((ref, dropdown) {
+  return EconomicalActivity(
+    name: 'Non définie',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 });
 
-class CBDropdown extends ConsumerStatefulWidget {
+class CBFormEconomicalActivityDropdown extends StatefulHookConsumerWidget {
   final String label;
   final String providerName;
-  final List<String> dropdownMenuEntriesLabels;
-  final List<String> dropdownMenuEntriesValues;
+  final List<EconomicalActivity> dropdownMenuEntriesLabels;
+  final List<EconomicalActivity> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBDropdown({
+  const CBFormEconomicalActivityDropdown({
     super.key,
     this.width,
     required this.label,
@@ -23,14 +28,17 @@ class CBDropdown extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CBDropdownState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CBFormEconomicalActivityDropdownState();
 }
 
-class _CBDropdownState extends ConsumerState<CBDropdown> {
+class _CBFormEconomicalActivityDropdownState
+    extends ConsumerState<CBFormEconomicalActivityDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(stringDropdownProvider(widget.providerName));
+        ref.watch(formEconomicalActivityDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -48,7 +56,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel,
+                label: dropdownMenuEntryLabel.name,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(
@@ -63,8 +71,10 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref.read(stringDropdownProvider(widget.providerName).notifier).state =
-              value!;
+          ref
+              .read(formEconomicalActivityDropdownProvider(widget.providerName)
+                  .notifier)
+              .state = value!;
         },
       ),
     );

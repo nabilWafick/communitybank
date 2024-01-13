@@ -28,8 +28,8 @@ class TypesController {
           selectedTypeStake, /* selectedProductId: selectedProductId*/
     );
 
-// filter the stream when selectedProductId is null in order to get only types containing selectedProductId in productsIds
-    if (selectedProductId != null) {
+// filter the stream when selectedProductId is not equal to 0 (All products) in order to get only types containing selectedProductId in productsIds
+    if (/*selectedProductId != null ||*/ selectedProductId != 0) {
       typesMapListStream = typesMapListStream.map(
         (typesMapList) => typesMapList
             .where(
@@ -89,7 +89,7 @@ class TypesController {
     debugPrint(productsList.toString());
 
     List<Product> typeProducts = [];
-
+ 
     // yield all types data or an empty list
     yield* typesMapListStream.map(
       (typesMapList) => typesMapList.map(

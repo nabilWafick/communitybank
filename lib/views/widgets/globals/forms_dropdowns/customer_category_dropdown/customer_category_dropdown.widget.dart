@@ -1,20 +1,25 @@
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final stringDropdownProvider =
-    StateProvider.family<String, String>((ref, dropdown) {
-  return '*';
+final formCustomerCategoryDropdownProvider =
+    StateProvider.family<CustomerCategory, String>((ref, dropdown) {
+  return CustomerCategory(
+    name: 'Non définie',
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 });
 
-class CBDropdown extends ConsumerStatefulWidget {
+class CBFormCustomerCategoryDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<String> dropdownMenuEntriesLabels;
-  final List<String> dropdownMenuEntriesValues;
+  final List<CustomerCategory> dropdownMenuEntriesLabels;
+  final List<CustomerCategory> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBDropdown({
+  const CBFormCustomerCategoryDropdown({
     super.key,
     this.width,
     required this.label,
@@ -23,14 +28,17 @@ class CBDropdown extends ConsumerStatefulWidget {
     required this.dropdownMenuEntriesValues,
   });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CBDropdownState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CBFormCustomerCategoryDropdownState();
 }
 
-class _CBDropdownState extends ConsumerState<CBDropdown> {
+class _CBFormCustomerCategoryDropdownState
+    extends ConsumerState<CBFormCustomerCategoryDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(stringDropdownProvider(widget.providerName));
+        ref.watch(formCustomerCategoryDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -48,7 +56,7 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel,
+                label: dropdownMenuEntryLabel.name,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(
@@ -63,8 +71,11 @@ class _CBDropdownState extends ConsumerState<CBDropdown> {
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref.read(stringDropdownProvider(widget.providerName).notifier).state =
-              value!;
+          ref
+              .read(formCustomerCategoryDropdownProvider(widget.providerName)
+                  .notifier)
+              .state = value!;
+          //   debugPrint('new category: $value');
         },
       ),
     );

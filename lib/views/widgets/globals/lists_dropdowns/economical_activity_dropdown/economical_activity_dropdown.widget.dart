@@ -1,25 +1,26 @@
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final personalStatusDropdownProvider =
-    StateProvider.family<PersonalStatus, String>((ref, dropdown) {
-  return PersonalStatus(
-    name: '',
+final listEconomicalActivityDropdownProvider =
+    StateProvider.family<EconomicalActivity, String>((ref, dropdown) {
+  return EconomicalActivity(
+    id: 0,
+    name: 'Toutes',
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
 });
 
-class CBPersonalStatusDropdown extends ConsumerStatefulWidget {
+class CBListEconomicalActivityDropdown extends StatefulHookConsumerWidget {
   final String label;
   final String providerName;
-  final List<PersonalStatus> dropdownMenuEntriesLabels;
-  final List<PersonalStatus> dropdownMenuEntriesValues;
+  final List<EconomicalActivity> dropdownMenuEntriesLabels;
+  final List<EconomicalActivity> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBPersonalStatusDropdown({
+  const CBListEconomicalActivityDropdown({
     super.key,
     this.width,
     required this.label,
@@ -29,33 +30,16 @@ class CBPersonalStatusDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBPersonalStatusDropdownState();
+      _CBListEconomicalActivityDropdownState();
 }
 
-class _CBPersonalStatusDropdownState
-    extends ConsumerState<CBPersonalStatusDropdown> {
-  @override
-  void initState() {
-    // future used for avoiding error due to ref.read in initState function
-    Future.delayed(
-        const Duration(
-          milliseconds: 1,
-        ), () {
-// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
-      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(personalStatusDropdownProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
-      }
-    });
-
-    super.initState();
-  }
-
+class _CBListEconomicalActivityDropdownState
+    extends ConsumerState<CBListEconomicalActivityDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(personalStatusDropdownProvider(widget.providerName));
+        ref.watch(listEconomicalActivityDropdownProvider(widget.providerName));
+
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -89,8 +73,8 @@ class _CBPersonalStatusDropdownState
         ),
         onSelected: (value) {
           ref
-              .read(
-                  personalStatusDropdownProvider(widget.providerName).notifier)
+              .read(listEconomicalActivityDropdownProvider(widget.providerName)
+                  .notifier)
               .state = value!;
         },
       ),

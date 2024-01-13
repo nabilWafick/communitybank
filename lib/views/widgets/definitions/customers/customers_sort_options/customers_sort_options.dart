@@ -9,11 +9,13 @@ import 'package:communitybank/views/widgets/definitions/localities/localities_li
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
-import 'package:communitybank/views/widgets/globals/customer_category_dropdown/customer_category_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/globals/locality_dropdown/locality_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/personal_status_dropdown/personal_status_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/add_button/add_button.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_category_dropdown/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality_dropdown/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_status_dropdown/personal_status_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
+import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -58,7 +60,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   const SizedBox(
                     width: 15.0,
                   ),
-                  CBCustomerCategoryDropdown(
+                  CBListCustomerCategoryDropdown(
                     // width: formCardWidth / 2.3,
                     label: 'Catégorie',
                     providerName: 'customer-list-sort-category',
@@ -73,7 +75,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           CustomerCategory(
-                            name: 'Aucun',
+                            name: 'Non définie',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -94,7 +96,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           CustomerCategory(
-                            name: 'Aucun',
+                            name: 'Non définie',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -105,7 +107,7 @@ class CustomersSortOptions extends ConsumerWidget {
                       loading: () => [],
                     ),
                   ),
-                  CBEconomicalActivityDropdown(
+                  CBListEconomicalActivityDropdown(
                     //   width: formCardWidth / 2.3,
                     label: 'Activité économique',
                     providerName: 'customer-list-sort-economical-activity',
@@ -120,7 +122,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           EconomicalActivity(
-                            name: 'Aucun',
+                            name: 'Non définie',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -141,7 +143,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           EconomicalActivity(
-                            name: 'Aucun',
+                            name: 'Non définie',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -152,7 +154,7 @@ class CustomersSortOptions extends ConsumerWidget {
                       loading: () => [],
                     ),
                   ),
-                  CBPersonalStatusDropdown(
+                  CBListPersonalStatusDropdown(
                     //     width: formCardWidth / 2.3,
                     label: 'Statut Personnel',
                     providerName: 'customer-list-sort-personal-status',
@@ -166,7 +168,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           PersonalStatus(
-                            name: 'Aucun',
+                            name: 'Non défini',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -186,7 +188,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           PersonalStatus(
-                            name: 'Aucun',
+                            name: 'Non défini',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -197,7 +199,7 @@ class CustomersSortOptions extends ConsumerWidget {
                       loading: () => [],
                     ),
                   ),
-                  CBLocalityDropdown(
+                  CBListLocalityDropdown(
                     //  width: formCardWidth / 2.3,
                     label: 'Localité',
                     providerName: 'customer-list-sort-locality',
@@ -211,7 +213,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           Locality(
-                            name: 'Aucun',
+                            name: 'Non définie',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -231,7 +233,7 @@ class CustomersSortOptions extends ConsumerWidget {
                             updatedAt: DateTime.now(),
                           ),
                           Locality(
-                            name: 'Aucun',
+                            name: 'Non définie',
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
