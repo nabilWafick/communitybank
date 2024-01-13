@@ -14,10 +14,10 @@ class Customer {
   final String address;
   final String profession;
   final int nicNumber;
-  final CustomerCategory category;
-  final EconomicalActivity economicalActivity;
-  final PersonalStatus personalStatus;
-  final Locality locality;
+  CustomerCategory category;
+  EconomicalActivity economicalActivity;
+  PersonalStatus personalStatus;
+  Locality locality;
   final String? profile;
   final String? signature;
   final DateTime createdAt;

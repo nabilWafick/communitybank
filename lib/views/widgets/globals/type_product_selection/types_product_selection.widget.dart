@@ -10,10 +10,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TypeProductSelection extends StatefulHookConsumerWidget {
   final int index;
+  final bool isVisible;
+  final String productSelectionDropdownProvider;
   final double formCardWidth;
   const TypeProductSelection({
     super.key,
     required this.index,
+    required this.isVisible,
+    required this.productSelectionDropdownProvider,
     required this.formCardWidth,
   });
 
@@ -26,7 +30,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
   @override
   Widget build(BuildContext context) {
     const formCardWidth = 450.0;
-    final showWidget = useState(true);
+    final showWidget = useState(widget.isVisible);
     final productsListStream = ref.watch(productsListStreamProvider);
     final typeSelectedProducts = ref.watch(typeSelectedProductsProvider);
     return showWidget.value
@@ -41,22 +45,25 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                     CBTypeProductSelectionDropdown(
                       width: formCardWidth / 2.3,
                       label: 'Produit',
-                      providerName:
-                          'type-selection-adding-product-${widget.index}',
+                      providerName: widget.productSelectionDropdownProvider,
                       dropdownMenuEntriesLabels: productsListStream.when(
                         data: (data) => data
-                            .where((product) =>
-                                typeSelectedProducts.containsValue(product) ==
-                                false)
+                            .where(
+                              (product) =>
+                                  typeSelectedProducts.containsValue(product) ==
+                                  false,
+                            )
                             .toList(),
                         error: (error, stackTrace) => [],
                         loading: () => [],
                       ),
                       dropdownMenuEntriesValues: productsListStream.when(
                         data: (data) => data
-                            .where((product) =>
-                                typeSelectedProducts.containsValue(product) ==
-                                false)
+                            .where(
+                              (product) =>
+                                  typeSelectedProducts.containsValue(product) ==
+                                  false,
+                            )
                             .toList(),
                         error: (error, stackTrace) => [],
                         loading: () => [],
@@ -77,18 +84,27 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                 ),
                 IconButton(
                   onPressed: () {
-                    setState(() {});
+                    showWidget.value = false;
                     ref.read(typeAddedInputsProvider.notifier).update((state) {
-                      /*  state.removeWhere(
-                          (inputIndex) => widget.index == inputIndex);*/
-                      state.remove(widget.index);
-                      //state.clear();
+                      // if input is visible, hide it
+                      state[widget.index] = showWidget.value;
+                      debugPrint('typeAddedInputsProvider');
+                      debugPrint(state.toString());
+
                       return state;
                     });
-                    showWidget.value = false;
-                    // setState(() {});
-                    debugPrint(
-                        'remain: ${ref.watch(typeAddedInputsProvider).length.toString()}');
+
+                    // remove the selected product from typeSelectedProducts
+                    ref
+                        .read(typeSelectedProductsProvider.notifier)
+                        .update((state) {
+                      // since typeSelectedProducts use type selection dropdown provider as key
+                      state.remove(widget.productSelectionDropdownProvider);
+                      debugPrint('typeSelectedProductsProvider');
+                      debugPrint('length: ${state.length}');
+                      debugPrint(state.toString());
+                      return state;
+                    });
                   },
                   icon: const Icon(
                     Icons.close_rounded,

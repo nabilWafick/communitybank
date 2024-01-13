@@ -17,22 +17,22 @@ final formCustomerDropdownProvider =
     profession: '',
     nicNumber: 1,
     category: CustomerCategory(
-      name: '',
+      name: 'Non défini',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),
     economicalActivity: EconomicalActivity(
-      name: '',
+      name: 'Non défini',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),
     personalStatus: PersonalStatus(
-      name: '',
+      name: 'Non défini',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),
     locality: Locality(
-      name: '',
+      name: 'Non défini',
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     ),
@@ -63,6 +63,23 @@ class CBFormCustomerDropdown extends ConsumerStatefulWidget {
 
 class _CBFormCustomerDropdownState
     extends ConsumerState<CBFormCustomerDropdown> {
+  @override
+  void initState() {
+    Future.delayed(
+        const Duration(
+          milliseconds: 100,
+        ), () {
+// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
+      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
+        ref
+            .read(formCustomerDropdownProvider(widget.providerName).notifier)
+            .state = widget.dropdownMenuEntriesValues[0];
+      }
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =

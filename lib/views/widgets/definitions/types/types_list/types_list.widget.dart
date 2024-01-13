@@ -99,20 +99,8 @@ class TypesList extends ConsumerWidget {
             rows: isSearching
                 ? searchedTypesList.when(
                     data: (data) {
-                      //   debugPrint('type Stream Data: $data');
-
                       return data.map(
                         (type) {
-                          /* String typeProducts = '';
-                          for (int i = 0; i < type.products.length; ++i) {
-                            if (i == 0) {
-                              typeProducts =
-                                  '${type.products[i].number} ${type.products[i].name}';
-                            } else {
-                              typeProducts =
-                                  '$typeProducts, ${type.products[i].number} ${type.products[i].name}';
-                            }
-                          }*/
                           return DataRow(
                             cells: [
                               DataCell(
@@ -145,7 +133,7 @@ class TypesList extends ConsumerWidget {
                                 CBText(
                                     text: productsListStream.when(
                                   data: (data) {
-                                    String typeProducts = '';
+                                    String typeProducts = 'Products';
                                     for (Product dataProduct in data) {
                                       for (Product product in type.products) {
                                         if (dataProduct.id! == product.id!) {
@@ -222,20 +210,8 @@ class TypesList extends ConsumerWidget {
                   )
                 : typesListStream.when(
                     data: (data) {
-                      //   debugPrint('type Stream Data: $data');
-
                       return data.map(
                         (type) {
-                          /* String typeProducts = '';
-                          for (int i = 0; i < type.products.length; ++i) {
-                            if (i == 0) {
-                              typeProducts =
-                                  '${type.products[i].number} ${type.products[i].name}';
-                            } else {
-                              typeProducts =
-                                  '$typeProducts, ${type.products[i].number} ${type.products[i].name}';
-                            }
-                          }*/
                           return DataRow(
                             cells: [
                               DataCell(
@@ -269,15 +245,24 @@ class TypesList extends ConsumerWidget {
                                     text: productsListStream.when(
                                   data: (data) {
                                     String typeProducts = '';
+                                    //  type.products.clear();
                                     for (Product dataProduct in data) {
                                       for (Product product in type.products) {
                                         if (dataProduct.id! == product.id!) {
+                                          //  final index =
+                                          //      type.products.indexOf(product);
+                                          //  type.products[index].copyWith(
+                                          //    name: dataProduct.name,
+                                          //    purchasePrice:
+                                          //        dataProduct.purchasePrice,
+                                          //    picture: dataProduct.picture,
+                                          //  );
                                           if (typeProducts.isEmpty) {
                                             typeProducts =
-                                                '${product.number} ${dataProduct.name}';
+                                                '${product.number} ${product.name}';
                                           } else {
                                             typeProducts =
-                                                '$typeProducts, ${product.number} ${dataProduct.name}';
+                                                '$typeProducts, ${product.number} ${product.name}';
                                           }
                                         }
                                       }

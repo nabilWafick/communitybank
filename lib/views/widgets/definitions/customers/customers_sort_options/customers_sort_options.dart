@@ -61,7 +61,7 @@ class CustomersSortOptions extends ConsumerWidget {
                     width: 15.0,
                   ),
                   CBListCustomerCategoryDropdown(
-                    // width: formCardWidth / 2.3,
+                    width: 200.0,
                     label: 'Catégorie',
                     providerName: 'customer-list-sort-category',
                     dropdownMenuEntriesLabels:
@@ -108,7 +108,7 @@ class CustomersSortOptions extends ConsumerWidget {
                     ),
                   ),
                   CBListEconomicalActivityDropdown(
-                    //   width: formCardWidth / 2.3,
+                    width: 200.0,
                     label: 'Activité économique',
                     providerName: 'customer-list-sort-economical-activity',
                     dropdownMenuEntriesLabels:
@@ -155,7 +155,7 @@ class CustomersSortOptions extends ConsumerWidget {
                     ),
                   ),
                   CBListPersonalStatusDropdown(
-                    //     width: formCardWidth / 2.3,
+                    width: 200.0,
                     label: 'Statut Personnel',
                     providerName: 'customer-list-sort-personal-status',
                     dropdownMenuEntriesLabels: personalStatusListStream.when(
@@ -200,7 +200,7 @@ class CustomersSortOptions extends ConsumerWidget {
                     ),
                   ),
                   CBListLocalityDropdown(
-                    //  width: formCardWidth / 2.3,
+                    width: 200.0,
                     label: 'Localité',
                     providerName: 'customer-list-sort-locality',
                     dropdownMenuEntriesLabels: localitiesListStream.when(

@@ -172,10 +172,16 @@ class CustomersService {
         CustomerTable.id: customer.id!
       }).select<List<Map<String, dynamic>>>();
 
-      // delete the customer's picture if it had before a picture
+      // delete the customer's profile picture if he had one before
       if (customer.profile != null) {
         deleteUploadedProfilePicture(
             customerProfilePictureLink: customer.profile!);
+      }
+
+      // delete the customer's signature picture if he had one before
+      if (customer.signature != null) {
+        deleteUploadedSignaturePicture(
+            customerSignaturePictureLink: customer.signature!);
       }
 
       // return the delete line
@@ -306,7 +312,7 @@ class CustomersService {
     return null;
   }
 
-  static Future<String?> updateUploadedSignatureProfilePicture({
+  static Future<String?> updateUploadedSignaturePicture({
     required String customerSignaturePictureLink,
     required String newCustomerSignaturePicturePath,
   }) async {

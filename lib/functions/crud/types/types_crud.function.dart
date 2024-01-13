@@ -29,13 +29,17 @@ class TypeCRUDFunctions {
       final typeSelectedProducts = ref.watch(typeSelectedProductsProvider);
       // store the selected products
       List<Product> typeProducts = [];
+
       typeSelectedProducts.forEach((key, product) {
         typeProducts.add(product);
       });
       // get the number of each selected product
-      final typeProductsNumber = typeAddedInputs
-          .map((input) => ref.watch(typeProductNumberProvider(input)))
-          .toList();
+      List<int> typeProductsNumber = [];
+
+      for (MapEntry typeAddedInputsEntry in typeAddedInputs.entries) {
+        typeProductsNumber.add(
+            ref.watch(typeProductNumberProvider(typeAddedInputsEntry.key)));
+      }
 
       // debugPrint('typeName: $typeName');
       // debugPrint('typeStack: $typeStack');
@@ -99,14 +103,17 @@ class TypeCRUDFunctions {
       final typeSelectedProducts = ref.watch(typeSelectedProductsProvider);
       // store the selected products
       List<Product> typeProducts = [];
+
       typeSelectedProducts.forEach((key, product) {
         typeProducts.add(product);
       });
       // get the number of each selected product
-      final typeProductsNumber = typeAddedInputs
-          .map((input) => ref.watch(typeProductNumberProvider(input)))
-          .toList();
+      List<int> typeProductsNumber = [];
 
+      for (MapEntry typeAddedInputsEntry in typeAddedInputs.entries) {
+        typeProductsNumber.add(
+            ref.watch(typeProductNumberProvider(typeAddedInputsEntry.key)));
+      }
       //  debugPrint('typeName: $typeName');
       //  debugPrint('typeStack: $typeStack');
 

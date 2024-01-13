@@ -8,7 +8,7 @@ class Type {
   final int? id;
   final String name;
   final double stake;
-  final List<Product> products;
+  List<Product> products;
   final DateTime createdAt;
   final DateTime updatedAt;
   Type({

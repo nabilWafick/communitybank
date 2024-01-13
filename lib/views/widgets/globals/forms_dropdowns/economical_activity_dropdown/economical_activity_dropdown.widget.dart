@@ -35,6 +35,24 @@ class CBFormEconomicalActivityDropdown extends StatefulHookConsumerWidget {
 class _CBFormEconomicalActivityDropdownState
     extends ConsumerState<CBFormEconomicalActivityDropdown> {
   @override
+  void initState() {
+    Future.delayed(
+        const Duration(
+          milliseconds: 100,
+        ), () {
+// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
+      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
+        ref
+            .read(formEconomicalActivityDropdownProvider(widget.providerName)
+                .notifier)
+            .state = widget.dropdownMenuEntriesValues[0];
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
         ref.watch(formEconomicalActivityDropdownProvider(widget.providerName));

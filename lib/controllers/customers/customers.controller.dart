@@ -302,12 +302,11 @@ class CustomersController {
     return response;
   }
 
-  static Future<String?> updateUploadedSignatureProfilePicture({
+  static Future<String?> updateUploadedSignaturePicture({
     required String customerSignaturePictureLink,
     required String newCustomerSignaturePicturePath,
   }) async {
-    final response =
-        await CustomersService.updateUploadedSignatureProfilePicture(
+    final response = await CustomersService.updateUploadedSignaturePicture(
       customerSignaturePictureLink: customerSignaturePictureLink,
       newCustomerSignaturePicturePath: newCustomerSignaturePicturePath,
     );

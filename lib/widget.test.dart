@@ -1,6 +1,6 @@
 import 'package:communitybank/services/types/types.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/forms/adding/types/types_product_selection_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/type_product_selection/types_product_selection.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

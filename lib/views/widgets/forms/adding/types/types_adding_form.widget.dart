@@ -6,7 +6,7 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'types_product_selection_adding_form.widget.dart';
+import '../../../globals/type_product_selection/types_product_selection.widget.dart';
 
 class TypesAddingForm extends StatefulHookConsumerWidget {
   const TypesAddingForm({super.key});
@@ -22,7 +22,6 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
   @override
   Widget build(BuildContext context) {
     final showValidatedButton = useState<bool>(true);
-    final typeAddedInputs = ref.watch(typeAddedInputsProvider);
     const formCardWidth = 500.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
@@ -117,63 +116,41 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                         fontSize: 15.0,
                         fontWeight: FontWeight.w600,
                       ),
-                      StatefulBuilder(builder: (context, setStatef) {
-                        return CBAddButton(
-                          onTap: () {
-                            setStatef(() {});
-                            ref
-                                .read(typeAddedInputsProvider.notifier)
-                                .update((state) {
-                              return [
-                                ...state,
-                                DateTime.now().millisecondsSinceEpoch,
-                              ];
-                            } /*{
-                              state.add(
-                                DateTime.now().millisecondsSinceEpoch,
-                              );
-                              return state;
-                            }*/
-                                    );
-                            setStatef(() {});
-                            debugPrint('added: ${typeAddedInputs.length}');
-                            setState(() {});
-                          },
-                        );
-                      })
+                      CBAddButton(
+                        onTap: () {
+                          ref
+                              .read(typeAddedInputsProvider.notifier)
+                              .update((state) {
+                            return {
+                              ...state,
+                              DateTime.now().millisecondsSinceEpoch: true,
+                            };
+                          });
+                        },
+                      )
                     ],
                   ),
                 ),
-                /* for (int i = 0; i < addedInputsNumber; ++i)
-                    const TypeProductSelection(
-                      formCardWidth: formCardWidth,
-                      index: 
-                      ,
-                    ),*/
-
                 Consumer(builder: (context, ref, child) {
-                  final inputs = ref.watch(typeAddedInputsProvider);
-                  return Column(
-                    children: inputs
-                        .map(
-                          (index) => TypeProductSelection(
-                            formCardWidth: formCardWidth,
-                            index: index,
-                            //   onRemove: onRemoveInput,
-                          ),
-                        )
-                        .toList(),
-                  );
-                })
+                  final inputsMaps = ref.watch(typeAddedInputsProvider);
+                  List<Widget> inputsWidgetsList = [];
 
-                /* ...addedInputs.map(
-                    (index) => TypeProductSelection(
-                      formCardWidth: formCardWidth,
-                      index: index,
-                      //   onRemove: onRemoveInput,
-                    ),
-                  ),*/
-                ,
+                  for (MapEntry mapEntry in inputsMaps.entries) {
+                    inputsWidgetsList.add(
+                      TypeProductSelection(
+                        index: mapEntry.key,
+                        isVisible: mapEntry.value,
+                        productSelectionDropdownProvider:
+                            'type-selection-adding-product-${mapEntry.key}',
+                        formCardWidth: formCardWidth,
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: inputsWidgetsList,
+                  );
+                }),
                 const SizedBox(
                   height: 35.0,
                 ),

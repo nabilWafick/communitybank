@@ -1,7 +1,20 @@
 import 'package:communitybank/controllers/customers/customers.controller.dart';
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/utils.dart';
+import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/images_shower/single/single_image_shower.widget.dart';
+import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers/customers_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/customers/customers_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_category_dropdown/customer_category_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
@@ -47,8 +60,16 @@ class CustomersList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isSearching = ref.watch(isSearchingProvider('customers'));
     final customersListStream = ref.watch(customersListStreamProvider);
-    //  final searchedCustomers = ref.watch(searchedCustomersListProvider);
+    final searchedCustomers = ref.watch(searchedCustomersListProvider);
+    final economicalActivitiesListStream =
+        ref.watch(economicalActivityListStreamProvider);
+    final customersCategoriesListStream =
+        ref.watch(custumersCategoriesListStreamProvider);
+    final localitiesListStream = ref.watch(localityListStreamProvider);
+    final personalStatusListStream =
+        ref.watch(personalStatusListStreamProvider);
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
@@ -160,103 +181,389 @@ class CustomersList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows: customersListStream.when(
-              data: (data) {
-                //  debugPrint('customers: $data');
-                return data
-                    .map(
-                      (customer) => DataRow(
-                        cells: [
-                          DataCell(
-                            CBText(text: customer.id!.toString()),
-                          ),
-                          DataCell(customer.profile != null
-                              ? Container(
-                                  alignment: Alignment.center,
-                                  child: const Icon(
-                                    Icons.account_circle_sharp,
-                                    size: 35.0,
-                                    color: CBColors.primaryColor,
+            rows: isSearching
+                ? searchedCustomers.when(
+                    data: (data) {
+                      return data
+                          .map(
+                            (customer) => DataRow(
+                              cells: [
+                                DataCell(
+                                  CBText(text: customer.id!.toString()),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    customer.profile != null
+                                        ? FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog: SingleImageShower(
+                                              imageSource: customer.profile!,
+                                            ),
+                                          )
+                                        : () {};
+                                  },
+                                  customer.profile != null
+                                      ? Container(
+                                          alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.account_circle_sharp,
+                                            size: 35.0,
+                                            color: CBColors.primaryColor,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                ),
+                                DataCell(
+                                  CBText(
+                                      text:
+                                          '${customer.firstnames} ${customer.name}'),
+                                ),
+                                DataCell(
+                                  CBText(text: customer.phoneNumber),
+                                ),
+                                DataCell(
+                                  CBText(text: customer.address),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: customer.profession,
                                   ),
-                                )
-                              : const SizedBox()),
-                          DataCell(
-                            CBText(
-                                text:
-                                    '${customer.firstnames} ${customer.name}'),
-                          ),
-                          DataCell(
-                            CBText(text: customer.phoneNumber),
-                          ),
-                          DataCell(
-                            CBText(text: customer.address),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customer.profession,
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customer.nicNumber.toString(),
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customer.category.name,
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customer.economicalActivity.name,
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customer.personalStatus.name,
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customer.locality.name,
-                            ),
-                          ),
-                          DataCell(customer.profile != null
-                              ? Container(
-                                  alignment: Alignment.center,
-                                  child: const Icon(
-                                    Icons.photo,
-                                    color: CBColors.primaryColor,
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: customer.nicNumber.toString(),
                                   ),
-                                )
-                              : const SizedBox()),
-                          DataCell(
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.green,
-                              ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: customersCategoriesListStream.when(
+                                      data: (data) {
+                                        for (CustomerCategory category
+                                            in data) {
+                                          if (customer.category.id ==
+                                              category.id) {
+                                            customer.category = category;
+                                          }
+                                        }
+                                        return customer.category.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: economicalActivitiesListStream.when(
+                                      data: (data) {
+                                        for (EconomicalActivity economicalActivity
+                                            in data) {
+                                          if (customer.economicalActivity.id ==
+                                              economicalActivity.id) {
+                                            customer.economicalActivity =
+                                                economicalActivity;
+                                          }
+                                        }
+                                        return customer.economicalActivity.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: personalStatusListStream.when(
+                                      data: (data) {
+                                        for (PersonalStatus personalStatus
+                                            in data) {
+                                          if (customer.personalStatus.id ==
+                                              personalStatus.id) {
+                                            customer.personalStatus =
+                                                personalStatus;
+                                          }
+                                        }
+                                        return customer.personalStatus.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: localitiesListStream.when(
+                                      data: (data) {
+                                        for (Locality locality in data) {
+                                          if (customer.locality.id ==
+                                              locality.id) {
+                                            customer.locality = locality;
+                                          }
+                                        }
+                                        return customer.locality.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    customer.signature != null
+                                        ? FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog: SingleImageShower(
+                                              imageSource: customer.signature!,
+                                            ),
+                                          )
+                                        : () {};
+                                  },
+                                  customer.signature != null
+                                      ? Container(
+                                          alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.photo,
+                                            color: CBColors.primaryColor,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog: CustomerUpdateForm(
+                                          customer: customer),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  // showEditIcon: true,
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog:
+                                          CustomerDeletionConfirmationDialog(
+                                        customer: customer,
+                                        confirmToDelete:
+                                            CustomerCRUDFunctions.delete,
+                                      ),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.delete_sharp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            // showEditIcon: true,
-                          ),
-                          DataCell(
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.delete_sharp,
-                                color: Colors.red,
-                              ),
+                          )
+                          .toList();
+                    },
+                    error: (error, stackTrace) => [],
+                    loading: () => [],
+                  )
+                : customersListStream.when(
+                    data: (data) {
+                      return data
+                          .map(
+                            (customer) => DataRow(
+                              cells: [
+                                DataCell(
+                                  CBText(text: customer.id!.toString()),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    customer.profile != null
+                                        ? FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog: SingleImageShower(
+                                              imageSource: customer.profile!,
+                                            ),
+                                          )
+                                        : () {};
+                                  },
+                                  customer.profile != null
+                                      ? Container(
+                                          alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.account_circle_sharp,
+                                            size: 35.0,
+                                            color: CBColors.primaryColor,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                ),
+                                DataCell(
+                                  CBText(
+                                      text:
+                                          '${customer.firstnames} ${customer.name}'),
+                                ),
+                                DataCell(
+                                  CBText(text: customer.phoneNumber),
+                                ),
+                                DataCell(
+                                  CBText(text: customer.address),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: customer.profession,
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: customer.nicNumber.toString(),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: customersCategoriesListStream.when(
+                                      data: (data) {
+                                        for (CustomerCategory category
+                                            in data) {
+                                          if (customer.category.id ==
+                                              category.id) {
+                                            customer.category = category;
+                                          }
+                                        }
+                                        return customer.category.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: economicalActivitiesListStream.when(
+                                      data: (data) {
+                                        for (EconomicalActivity economicalActivity
+                                            in data) {
+                                          if (customer.economicalActivity.id ==
+                                              economicalActivity.id) {
+                                            customer.economicalActivity =
+                                                economicalActivity;
+                                          }
+                                        }
+                                        return customer.economicalActivity.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: personalStatusListStream.when(
+                                      data: (data) {
+                                        for (PersonalStatus personalStatus
+                                            in data) {
+                                          if (customer.personalStatus.id ==
+                                              personalStatus.id) {
+                                            customer.personalStatus =
+                                                personalStatus;
+                                          }
+                                        }
+                                        return customer.personalStatus.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: localitiesListStream.when(
+                                      data: (data) {
+                                        for (Locality locality in data) {
+                                          if (customer.locality.id ==
+                                              locality.id) {
+                                            customer.locality = locality;
+                                          }
+                                        }
+                                        return customer.locality.name;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    ),
+                                  ),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    customer.signature != null
+                                        ? FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog: SingleImageShower(
+                                              imageSource: customer.signature!,
+                                            ),
+                                          )
+                                        : () {};
+                                  },
+                                  customer.signature != null
+                                      ? Container(
+                                          alignment: Alignment.center,
+                                          child: const Icon(
+                                            Icons.photo,
+                                            color: CBColors.primaryColor,
+                                          ),
+                                        )
+                                      : const SizedBox(),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog: CustomerUpdateForm(
+                                          customer: customer),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  // showEditIcon: true,
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog:
+                                          CustomerDeletionConfirmationDialog(
+                                        customer: customer,
+                                        confirmToDelete:
+                                            CustomerCRUDFunctions.delete,
+                                      ),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.delete_sharp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList();
-              },
-              error: (error, stackTrace) => [],
-              loading: () => [],
-            ),
+                          )
+                          .toList();
+                    },
+                    error: (error, stackTrace) => [],
+                    loading: () => [],
+                  ),
           ),
         ),
       ),

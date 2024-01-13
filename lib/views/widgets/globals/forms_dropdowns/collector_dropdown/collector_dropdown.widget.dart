@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final formCollectorDropdownProvider =
     StateProvider.family<Collector, String>((ref, dropdown) {
   return Collector(
-    name: '',
+    name: 'Non défini',
     firstnames: '',
     phoneNumber: '',
     address: '',
@@ -38,6 +38,22 @@ class CBFormCollectorDropdown extends ConsumerStatefulWidget {
 class _CBFormCollectorDropdownState
     extends ConsumerState<CBFormCollectorDropdown> {
   @override
+  void initState() {
+    Future.delayed(
+        const Duration(
+          milliseconds: 100,
+        ), () {
+// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
+      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
+        ref
+            .read(formCollectorDropdownProvider(widget.providerName).notifier)
+            .state = widget.dropdownMenuEntriesValues[0];
+      }
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =

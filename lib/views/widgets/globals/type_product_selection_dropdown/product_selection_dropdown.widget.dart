@@ -39,13 +39,10 @@ class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
 class _CBTypeProductSelectionDropdownState
     extends ConsumerState<CBTypeProductSelectionDropdown> {
   @override
-  Widget build(BuildContext context) {
-    final selectedDropdownProduct =
-        ref.watch(typeSelectedProductDropdownProvider(widget.providerName));
-
+  void initState() {
     Future.delayed(
         const Duration(
-          milliseconds: 10,
+          milliseconds: 100,
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
@@ -60,6 +57,14 @@ class _CBTypeProductSelectionDropdownState
         });
       }
     });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedDropdownProduct =
+        ref.watch(typeSelectedProductDropdownProvider(widget.providerName));
 
     return DropdownMenu(
       inputDecorationTheme: const InputDecorationTheme(
@@ -112,6 +117,13 @@ class _CBTypeProductSelectionDropdownState
             .read(typeSelectedProductDropdownProvider(widget.providerName)
                 .notifier)
             .state = value!;
+        // remove the last selected product from tySelectedProducts
+        ref.read(typeSelectedProductsProvider.notifier).update((state) {
+          // since typeSelectedProducts use type selection dropdown provider as key
+          state.remove(widget.providerName);
+          return state;
+        });
+
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
         ref.read(typeSelectedProductsProvider.notifier).update((state) {
           state[widget.providerName] = value;

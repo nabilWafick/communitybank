@@ -110,8 +110,9 @@ class TypesSortOptions extends ConsumerWidget {
                       data: (data) {
                         return [
                           Product(
+                            id: 0,
                             name: 'Tous',
-                            purchasePrice: 1,
+                            purchasePrice: 0,
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),
@@ -125,8 +126,9 @@ class TypesSortOptions extends ConsumerWidget {
                       data: (data) {
                         return [
                           Product(
+                            id: 0,
                             name: 'Tous',
-                            purchasePrice: 1,
+                            purchasePrice: 0,
                             createdAt: DateTime.now(),
                             updatedAt: DateTime.now(),
                           ),

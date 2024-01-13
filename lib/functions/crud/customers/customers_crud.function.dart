@@ -185,64 +185,215 @@ class CustomerCRUDFunctions {
     }
   }
 
-/*
   static Future<void> update({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required Customer Customer,
+    required Customer customer,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
-    final CustomerPicture = ref.watch(CustomerPictureProvider);
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final CustomerName = ref.watch(CustomerNameProvider);
-      final CustomerPrice = ref.watch(CustomerPurchasePriceProvider);
+      final customerProfilePicture = ref.watch(customerProfilePictureProvider);
+      final customerSignaturePicture =
+          ref.watch(customerSignaturePictureProvider);
+      showValidatedButton.value = false;
+      final customerName = ref.watch(customerNameProvider);
+      final customerFirstnames = ref.watch(customerFirstnamesProvider);
+      final customerPhoneNumber = ref.watch(customerPhoneNumberProvider);
+      final customerAddress = ref.watch(customerAddressProvider);
+      final customerProfession = ref.watch(customerProfessionProvider);
+      final customerNicNumber = ref.watch(customerNicNumberProvider);
+      final customerCategory = ref.watch(formCustomerCategoryDropdownProvider(
+          'customer-update-form-category'));
+      final customerPersonalStatus = ref.watch(
+          formPersonalStatusDropdownProvider(
+              'customer-update-form-personal-status'));
+      final customerEconomicalActivity = ref.watch(
+          formEconomicalActivityDropdownProvider(
+              'customer-update-form-economical-activity'));
+      final customerLocality = ref
+          .watch(formLocalityDropdownProvider('customer-update-form-locality'));
 
-      ServiceResponse lastCustomerStatus;
+      ServiceResponse lastCustomerStatus = ServiceResponse.waiting;
 
-      if (CustomerPicture == null) {
-        final newCustomer = Customer(
-          name: CustomerName,
-          purchasePrice: CustomerPrice,
-          picture: Customer.picture,
-          createdAt: Customer.createdAt,
-          updatedAt: DateTime.now(),
-        );
-
-        lastCustomerStatus = await CustomersController.update(
-          id: Customer.id!,
-          Customer: newCustomer,
-        );
-
-        // debugPrint('new Customer: $CustomerStatus');
-      } else {
-        String? CustomerRemotePath;
-        // if the Customer haven't a picture before
-        if (Customer.picture == null) {
-          CustomerRemotePath = await CustomersController.uploadPicture(
-              CustomerPicturePath: CustomerPicture);
-        } else {
-          CustomerRemotePath = await CustomersController.updateUploadedPicture(
-            CustomerPictureLink: Customer.picture!,
-            newCustomerPicturePath: CustomerPicture,
-          );
-        }
-
-        if (CustomerRemotePath != null) {
+      if (customerProfilePicture == null || customerSignaturePicture == null) {
+        if (customerProfilePicture == null &&
+            customerSignaturePicture == null) {
           final newCustomer = Customer(
-            name: CustomerName,
-            purchasePrice: CustomerPrice,
-            picture: '${CBConstants.supabaseStorageLink}/$CustomerRemotePath',
-            createdAt: Customer.createdAt,
+            name: customerName,
+            firstnames: customerFirstnames,
+            phoneNumber: customerPhoneNumber,
+            address: customerAddress,
+            profession: customerProfession,
+            nicNumber: customerNicNumber,
+            category: customerCategory,
+            economicalActivity: customerEconomicalActivity,
+            personalStatus: customerPersonalStatus,
+            locality: customerLocality,
+            profile: customer.profile,
+            signature: customer.signature,
+            createdAt: customer.createdAt,
             updatedAt: DateTime.now(),
           );
 
           lastCustomerStatus = await CustomersController.update(
-            id: Customer.id!,
-            Customer: newCustomer,
+            id: customer.id!,
+            customer: newCustomer,
+          );
+        }
+        // if only signature picture is updated
+        else if (customerProfilePicture == null) {
+          String? customerSignaturePictureRemotePath;
+
+          // if the customer haven't a signature picture before
+          if (customer.signature == null) {
+            customerSignaturePictureRemotePath =
+                await CustomersController.uploadSignaturePicture(
+              customerSignaturePicturePath: customerSignaturePicture!,
+            );
+          } else {
+            customerSignaturePictureRemotePath =
+                await CustomersController.updateUploadedSignaturePicture(
+              customerSignaturePictureLink: customer.signature!,
+              newCustomerSignaturePicturePath: customerSignaturePicture!,
+            );
+          }
+
+          if (customerSignaturePictureRemotePath != null) {
+            final newCustomer = Customer(
+              name: customerName,
+              firstnames: customerFirstnames,
+              phoneNumber: customerPhoneNumber,
+              address: customerAddress,
+              profession: customerProfession,
+              nicNumber: customerNicNumber,
+              category: customerCategory,
+              economicalActivity: customerEconomicalActivity,
+              personalStatus: customerPersonalStatus,
+              locality: customerLocality,
+              profile: customer.profile,
+              signature:
+                  '${CBConstants.supabaseStorageLink}/$customerSignaturePictureRemotePath',
+              createdAt: customer.createdAt,
+              updatedAt: DateTime.now(),
+            );
+
+            lastCustomerStatus = await CustomersController.update(
+              id: customer.id!,
+              customer: newCustomer,
+            );
+
+            //  debugPrint('new Customer: $CustomerStatus');
+          } else {
+            lastCustomerStatus = ServiceResponse.failed;
+          }
+        } else if (customerSignaturePicture == null) {
+          String? customerProfilePictureRemotePath;
+
+          // if the customer haven't a profile picture before
+          if (customer.profile == null) {
+            customerProfilePictureRemotePath =
+                await CustomersController.uploadProfilePicture(
+              customerProfilePicturePath: customerProfilePicture,
+            );
+          } else {
+            customerProfilePictureRemotePath =
+                await CustomersController.updateUploadedProfilePicture(
+              customerProfilePictureLink: customer.profile!,
+              newCustomerProfilePicturePath: customerProfilePicture,
+            );
+          }
+
+          if (customerProfilePictureRemotePath != null) {
+            final newCustomer = Customer(
+              name: customerName,
+              firstnames: customerFirstnames,
+              phoneNumber: customerPhoneNumber,
+              address: customerAddress,
+              profession: customerProfession,
+              nicNumber: customerNicNumber,
+              category: customerCategory,
+              economicalActivity: customerEconomicalActivity,
+              personalStatus: customerPersonalStatus,
+              locality: customerLocality,
+              profile:
+                  '${CBConstants.supabaseStorageLink}/$customerProfilePictureRemotePath',
+              signature: customer.signature,
+              createdAt: customer.createdAt,
+              updatedAt: DateTime.now(),
+            );
+
+            lastCustomerStatus = await CustomersController.update(
+              id: customer.id!,
+              customer: newCustomer,
+            );
+
+            //  debugPrint('new Customer: $CustomerStatus');
+          } else {
+            lastCustomerStatus = ServiceResponse.failed;
+          }
+        }
+
+        // debugPrint('new Customer: $CustomerStatus');
+      } else {
+        String? customerProfilePictureRemotePath;
+        String? customerSignaturePictureRemotePath;
+
+        // if the customer haven't a profile picture before
+        if (customer.profile == null) {
+          customerProfilePictureRemotePath =
+              await CustomersController.uploadProfilePicture(
+            customerProfilePicturePath: customerProfilePicture,
+          );
+        } else {
+          customerProfilePictureRemotePath =
+              await CustomersController.updateUploadedProfilePicture(
+            customerProfilePictureLink: customer.profile!,
+            newCustomerProfilePicturePath: customerProfilePicture,
+          );
+        }
+
+        // if the customer haven't a signature picture before
+        if (customer.signature == null) {
+          customerSignaturePictureRemotePath =
+              await CustomersController.uploadSignaturePicture(
+            customerSignaturePicturePath: customerSignaturePicture,
+          );
+        } else {
+          customerSignaturePictureRemotePath =
+              await CustomersController.updateUploadedSignaturePicture(
+            customerSignaturePictureLink: customer.signature!,
+            newCustomerSignaturePicturePath: customerSignaturePicture,
+          );
+        }
+
+        if (customerProfilePictureRemotePath != null &&
+            customerSignaturePictureRemotePath != null) {
+          final newCustomer = Customer(
+            name: customerName,
+            firstnames: customerFirstnames,
+            phoneNumber: customerPhoneNumber,
+            address: customerAddress,
+            profession: customerProfession,
+            nicNumber: customerNicNumber,
+            category: customerCategory,
+            economicalActivity: customerEconomicalActivity,
+            personalStatus: customerPersonalStatus,
+            locality: customerLocality,
+            profile:
+                '${CBConstants.supabaseStorageLink}/$customerProfilePictureRemotePath',
+            signature:
+                '${CBConstants.supabaseStorageLink}/$customerSignaturePictureRemotePath',
+            createdAt: customer.createdAt,
+            updatedAt: DateTime.now(),
+          );
+
+          lastCustomerStatus = await CustomersController.update(
+            id: customer.id!,
+            customer: newCustomer,
           );
 
           //  debugPrint('new Customer: $CustomerStatus');
@@ -250,6 +401,7 @@ class CustomerCRUDFunctions {
           lastCustomerStatus = ServiceResponse.failed;
         }
       }
+
       if (lastCustomerStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: lastCustomerStatus,
@@ -274,24 +426,24 @@ class CustomerCRUDFunctions {
   static Future<void> delete({
     required BuildContext context,
     required WidgetRef ref,
-    required Customer Customer,
+    required Customer customer,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
 
-    ServiceResponse CustomerStatus;
+    ServiceResponse customerStatus;
 
-    CustomerStatus = await CustomersController.delete(Customer: Customer);
+    customerStatus = await CustomersController.delete(customer: customer);
 
-    if (CustomerStatus == ServiceResponse.success) {
+    if (customerStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: CustomerStatus,
+        serviceResponse: customerStatus,
         response: 'Opération réussie',
       );
       Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: CustomerStatus,
+        serviceResponse: customerStatus,
         response: 'Opération échouée',
       );
       showConfirmationButton.value = true;
@@ -302,5 +454,4 @@ class CustomerCRUDFunctions {
     );
     return;
   }
-*/
 }
