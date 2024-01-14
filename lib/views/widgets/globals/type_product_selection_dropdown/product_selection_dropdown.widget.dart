@@ -112,23 +112,31 @@ class _CBTypeProductSelectionDropdownState
           .toList(),
       trailingIcon: const Icon(Icons.arrow_drop_down),
       onSelected: (value) {
+        // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
+        ref.read(typeSelectedProductsProvider.notifier).update((state) {
+          state[widget.providerName] = value!;
+          return state;
+        });
         // set the selected product
         ref
             .read(typeSelectedProductDropdownProvider(widget.providerName)
                 .notifier)
             .state = value!;
-        // remove the last selected product from tySelectedProducts
-        ref.read(typeSelectedProductsProvider.notifier).update((state) {
-          // since typeSelectedProducts use type selection dropdown provider as key
-          state.remove(widget.providerName);
-          return state;
-        });
+        // // remove the last selected product from tySelectedProducts
+        // ref.read(typeSelectedProductsProvider.notifier).update((state) {
+        //   // since typeSelectedProducts use type selection dropdown provider as key
+        //   state.remove(widget.providerName);
+        //   return state;
+        // });
 
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
         ref.read(typeSelectedProductsProvider.notifier).update((state) {
           state[widget.providerName] = value;
           return state;
         });
+        setState(() {});
+        //  debugPrint('dropdown value: ${value.toString()}');
+        //  debugPrint(ref.watch(typeSelectedProductsProvider).toString());
       },
     );
   }

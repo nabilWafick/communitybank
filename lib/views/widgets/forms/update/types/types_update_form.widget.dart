@@ -1,7 +1,6 @@
 import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/functions/crud/types/types_crud.function.dart';
-import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/type_product_selection/types_product_selection.widget.dart';
@@ -23,26 +22,6 @@ class TypesUpdateForm extends StatefulHookConsumerWidget {
 }
 
 class _TypesUpdateFormState extends ConsumerState<TypesUpdateForm> {
-  @override
-  void initState() {
-    Future.delayed(
-      const Duration(milliseconds: 100),
-      () {
-        // refresh typSelectedProducts provider
-        ref.read(typeSelectedProductsProvider.notifier).state = {};
-
-        // automatically add the type products inputs after rendering
-        for (Product product in widget.type.products) {
-          ref.read(typeAddedInputsProvider.notifier).update((state) {
-            state[product.id!] = true;
-            return state;
-          });
-        }
-      },
-    );
-    super.initState();
-  }
-
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -223,10 +202,11 @@ class _TypesUpdateFormState extends ConsumerState<TypesUpdateForm> {
                             child: CBElevatedButton(
                               text: 'Valider',
                               onPressed: () async {
-                                await TypeCRUDFunctions.create(
+                                await TypeCRUDFunctions.update(
                                   context: context,
                                   formKey: formKey,
                                   ref: ref,
+                                  type: widget.type,
                                   showValidatedButton: showValidatedButton,
                                 );
                               },

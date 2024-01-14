@@ -44,7 +44,7 @@ class TypeCRUDFunctions {
         typeSelectedProducts.forEach((key, product) {
           typeProducts.add(product);
         });
-
+        // debugPrint(typeProducts.toString());
         // verify if a product is repeated or is selected more than one time
         // in typeSelectedProducts
         bool isProductRepeated = false; // used to detect repetion
@@ -58,15 +58,16 @@ class TypeCRUDFunctions {
             if (productF == productL) {
               ++productNumber;
             }
-            if (productNumber > 1) {
-              isProductRepeated = !isProductRepeated;
-            }
+          }
+          // debugPrint('repeated product: ${productF.toString()}');
+          // debugPrint('productNumber: $productNumber');
+          if (productNumber > 1) {
+            isProductRepeated = true;
             break;
           }
-          break;
         }
 
-        if (!isProductRepeated) {
+        if (isProductRepeated == true) {
           // show validated button to permit a correction from the user
           showValidatedButton.value = true;
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
@@ -77,6 +78,8 @@ class TypeCRUDFunctions {
             context: context,
             alertDialog: const ResponseDialog(),
           );
+          isProductRepeated = false;
+          productNumber = 0;
         } else {
           // store the number of each selected product
           List<int> typeProductsNumber = [];
@@ -150,68 +153,126 @@ class TypeCRUDFunctions {
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
-      showValidatedButton.value = false;
-
-      // get the list of inputs created referenced by integers (DateTime.nom().millisecondsSinceEpoch)
-      final typeAddedInputs = ref.watch(typeAddedInputsProvider);
-      final typeName = ref.watch(typeNameProvider);
-      final typeStack = ref.watch(typeStakeProvider);
       final typeSelectedProducts = ref.watch(typeSelectedProductsProvider);
-      // store the selected products
-      List<Product> typeProducts = [];
-
-      typeSelectedProducts.forEach((key, product) {
-        typeProducts.add(product);
-      });
-      // get the number of each selected product
-      List<int> typeProductsNumber = [];
-
-      for (MapEntry typeAddedInputsEntry in typeAddedInputs.entries) {
-        typeProductsNumber.add(
-            ref.watch(typeProductNumberProvider(typeAddedInputsEntry.key)));
-      }
-      //  debugPrint('typeName: $typeName');
-      //  debugPrint('typeStack: $typeStack');
-
-      for (int i = 0; i < typeProductsNumber.length; ++i) {
-        typeProducts[i].number = typeProductsNumber[i];
-
-        // debugPrint(
-        //     'typeProductNumber $i-${typeProducts[i].name}: ${typeProducts[i].number}');
-      }
-
-      final type = Type(
-        name: typeName,
-        stake: typeStack,
-        products: typeProducts,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      ServiceResponse lastTypeStatus;
-
-      lastTypeStatus = await TypesController.create(type: type);
-
-      // debugPrint('new Type: $typeStatus');
-
-      if (lastTypeStatus == ServiceResponse.success) {
+      if (typeSelectedProducts.isEmpty) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastTypeStatus,
-          response: 'Opération réussie',
+          serviceResponse: ServiceResponse.failed,
+          response: 'Le type doit contenir au moins un produit',
         );
-        showValidatedButton.value = true;
-        Navigator.of(context).pop();
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
       } else {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastTypeStatus,
-          response: 'Opération échouée',
-        );
-        showValidatedButton.value = true;
+        showValidatedButton.value = false;
+        // get the list of inputs created referenced by integers (DateTime.nom().millisecondsSinceEpoch)
+        final typeAddedInputs = ref.watch(typeAddedInputsProvider);
+        final typeName = ref.watch(typeNameProvider);
+        final typeStack = ref.watch(typeStakeProvider);
+
+        // store the selected products
+        List<Product> typeProducts = [];
+
+        typeSelectedProducts.forEach((key, product) {
+          typeProducts.add(product);
+        });
+        //   debugPrint(typeProducts.toString());
+        // verify if a product is repeated or is selected more than one time
+        // in typeSelectedProducts
+        bool isProductRepeated = false; // used to detect repetion
+        // used to count the product occurrences number
+        int productNumber = 0;
+
+        for (Product productF in typeProducts) {
+          isProductRepeated = false;
+          productNumber = 0;
+          for (Product productL in typeProducts) {
+            if (productF == productL) {
+              ++productNumber;
+            }
+          }
+          //  debugPrint('repeated product: ${productF.toString()}');
+          //  debugPrint('productNumber: $productNumber');
+          if (productNumber > 1) {
+            isProductRepeated = true;
+            break;
+          }
+        }
+
+        if (isProductRepeated == true) {
+          // show validated button to permit a correction from the user
+          showValidatedButton.value = true;
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response: 'Répétition de produit dans le type',
+          );
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+          isProductRepeated = false;
+          productNumber = 0;
+        } else {
+          // store the number of each selected product
+          List<int> typeProductsNumber = [];
+
+          for (MapEntry typeAddedInputsEntry in typeAddedInputs.entries) {
+            if (typeAddedInputsEntry.value) {
+              typeProductsNumber.add(
+                ref.watch(
+                  typeProductNumberProvider(typeAddedInputsEntry.key),
+                ),
+              );
+            }
+          }
+
+          // debugPrint('typeName: $typeName');
+          // debugPrint('typeStack: $typeStack');
+
+          for (int i = 0; i < typeProductsNumber.length; ++i) {
+            typeProducts[i].number = typeProductsNumber[i];
+
+            // debugPrint(
+            //     'typeProductNumber $i-${typeProducts[i].name}: ${typeProducts[i].number}');
+          }
+
+          final newType = Type(
+            name: typeName,
+            stake: typeStack,
+            products: typeProducts,
+            createdAt: type.createdAt,
+            updatedAt: DateTime.now(),
+          );
+
+          // debugPrint('type: ${type.toString()}');
+
+          ServiceResponse typeStatus;
+
+          typeStatus =
+              await TypesController.update(id: type.id!, type: newType);
+
+          if (typeStatus == ServiceResponse.success) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: typeStatus,
+              response: 'Opération réussie',
+            );
+            showValidatedButton.value = true;
+            Navigator.of(context).pop();
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: typeStatus,
+              response: 'Opération échouée',
+            );
+            showValidatedButton.value = true;
+          }
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        }
       }
-      FunctionsController.showAlertDialog(
-        context: context,
-        alertDialog: const ResponseDialog(),
-      );
     }
   }
 

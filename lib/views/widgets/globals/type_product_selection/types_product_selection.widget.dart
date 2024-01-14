@@ -99,7 +99,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                         inputIndex: widget.index,
                         label: 'Nombre',
                         hintText: 'Nombre de produit',
-                        initialValue: widget.product!.number!.toString(),
+                        initialValue: widget.product?.number!.toString(),
                         textInputType: TextInputType.number,
                         validator: TypeValidators.typeProductNumber,
                         onChanged: TypeOnChanged.typeProductNumber,
