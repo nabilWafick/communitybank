@@ -1,3 +1,4 @@
+import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
@@ -40,6 +41,8 @@ class CustomersSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
+              ref.read(customerProfilePictureProvider.notifier).state = null;
+              ref.read(customerSignaturePictureProvider.notifier).state = null;
               FunctionsController.showAlertDialog(
                 context: context,
                 alertDialog: const CustomerAddingForm(),

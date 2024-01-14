@@ -1,22 +1,48 @@
 import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/functions/crud/types/types_crud.function.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/type_product_selection/types_product_selection.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 
-class TypesAddingForm extends StatefulHookConsumerWidget {
-  const TypesAddingForm({super.key});
+class TypesUpdateForm extends StatefulHookConsumerWidget {
+  final Type type;
+  const TypesUpdateForm({
+    super.key,
+    required this.type,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _TypesAddingFormState();
+      _TypesUpdateFormState();
 }
 
-class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
+class _TypesUpdateFormState extends ConsumerState<TypesUpdateForm> {
+  @override
+  void initState() {
+    Future.delayed(
+      const Duration(milliseconds: 100),
+      () {
+        // refresh typSelectedProducts provider
+        ref.read(typeSelectedProductsProvider.notifier).state = {};
+
+        // automatically add the type products inputs after rendering
+        for (Product product in widget.type.products) {
+          ref.read(typeAddedInputsProvider.notifier).update((state) {
+            state[product.id!] = true;
+            return state;
+          });
+        }
+      },
+    );
+    super.initState();
+  }
+
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -73,9 +99,10 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                             horizontal: 10.0,
                           ),
                           width: formCardWidth,
-                          child: const CBTextFormField(
+                          child: CBTextFormField(
                             label: 'Nom',
                             hintText: 'Nom',
+                            initialValue: widget.type.name,
                             isMultilineTextForm: false,
                             obscureText: false,
                             textInputType: TextInputType.name,
@@ -88,9 +115,10 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                             horizontal: 10.0,
                           ),
                           width: formCardWidth,
-                          child: const CBTextFormField(
+                          child: CBTextFormField(
                             label: 'Mise',
                             hintText: 'Mise',
+                            initialValue: widget.type.stake.toString(),
                             isMultilineTextForm: false,
                             obscureText: false,
                             textInputType: TextInputType.name,
@@ -136,15 +164,34 @@ class _TypesAddingFormState extends ConsumerState<TypesAddingForm> {
                   List<Widget> inputsWidgetsList = [];
 
                   for (MapEntry mapEntry in inputsMaps.entries) {
-                    inputsWidgetsList.add(
-                      TypeProductSelection(
-                        index: mapEntry.key,
-                        isVisible: mapEntry.value,
-                        productSelectionDropdownProvider:
-                            'type-selection-update-product-${mapEntry.key}',
-                        formCardWidth: formCardWidth,
-                      ),
-                    );
+                    // verify if the current mapEntry key is equal to
+                    // the id of one of type products
+                    if (widget.type.products
+                        .any((product) => product.id == mapEntry.key)) {
+                      // if true, add a new type product selection and pass the
+                      // equivalent product to it
+                      inputsWidgetsList.add(
+                        TypeProductSelection(
+                          index: mapEntry.key,
+                          isVisible: mapEntry.value,
+                          productSelectionDropdownProvider:
+                              'type-selection-update-product-${mapEntry.key}',
+                          product: widget.type.products.firstWhere(
+                              (product) => product.id! == mapEntry.key),
+                          formCardWidth: formCardWidth,
+                        ),
+                      );
+                    } else {
+                      inputsWidgetsList.add(
+                        TypeProductSelection(
+                          index: mapEntry.key,
+                          isVisible: mapEntry.value,
+                          productSelectionDropdownProvider:
+                              'type-selection-update-product-${mapEntry.key}',
+                          formCardWidth: formCardWidth,
+                        ),
+                      );
+                    }
                   }
 
                   return Column(

@@ -51,45 +51,57 @@ class MultipleImageShower extends ConsumerWidget {
                     ),
                   ],
                 ),
-                StaggeredGrid.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 2,
-                  crossAxisSpacing: 2,
-                  children: products
-                      .map((product) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(
-                                  top: 25.0,
-                                  bottom: 10.0,
-                                ),
-                                child: product.picture != null
-                                    ? Image.network(
-                                        product.picture!,
-                                        //  height: 400.0,
-                                        //  width: 400.0,
-                                      )
-                                    : Container(
-                                        padding: const EdgeInsets.all(30.0),
-                                        child: const Icon(
-                                          Icons.photo,
-                                          size: 70.0,
-                                          color: CBColors.primaryColor,
-                                        ),
+                products.length > 1
+                    ? StaggeredGrid.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 2,
+                        crossAxisSpacing: 2,
+                        children: products
+                            .map((product) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                        top: 25.0,
+                                        bottom: 10.0,
                                       ),
-                              ),
-                              CBText(
-                                text: product.name,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              const SizedBox(
-                                height: 10.0,
-                              )
-                            ],
-                          ))
-                      .toList(),
-                )
+                                      child: product.picture != null
+                                          ? Image.network(
+                                              product.picture!,
+                                              //  height: 400.0,
+                                              //  width: 400.0,
+                                            )
+                                          : Container(
+                                              padding:
+                                                  const EdgeInsets.all(30.0),
+                                              child: const Icon(
+                                                Icons.photo,
+                                                size: 70.0,
+                                                color: CBColors.primaryColor,
+                                              ),
+                                            ),
+                                    ),
+                                    CBText(
+                                      text: product.name,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    const SizedBox(
+                                      height: 10.0,
+                                    )
+                                  ],
+                                ))
+                            .toList(),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 25.0,
+                        ),
+                        child: Image.network(
+                          products[0].picture!,
+                          height: 400.0,
+                          width: 400.0,
+                        ),
+                      ),
               ],
             ),
             Container(

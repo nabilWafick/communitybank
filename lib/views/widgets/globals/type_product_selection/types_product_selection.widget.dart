@@ -1,5 +1,6 @@
 import 'package:communitybank/controllers/forms/on_changed/type/type.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
+import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/globals/type_product_selection_dropdown/product_selection_dropdown.widget.dart';
@@ -12,12 +13,14 @@ class TypeProductSelection extends StatefulHookConsumerWidget {
   final int index;
   final bool isVisible;
   final String productSelectionDropdownProvider;
+  final Product? product;
   final double formCardWidth;
   const TypeProductSelection({
     super.key,
     required this.index,
     required this.isVisible,
     required this.productSelectionDropdownProvider,
+    this.product,
     required this.formCardWidth,
   });
 
@@ -47,24 +50,45 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                       label: 'Produit',
                       providerName: widget.productSelectionDropdownProvider,
                       dropdownMenuEntriesLabels: productsListStream.when(
-                        data: (data) => data
-                            .where(
-                              (product) =>
-                                  typeSelectedProducts.containsValue(product) ==
-                                  false,
-                            )
-                            .toList(),
+                        data: (data) {
+                          // verify if the product isn't null, necessary in the
+                          // the case where it's adding, because any won't be
+                          // passed in case of adding
+                          // the product have been putted in first position so
+                          // as to it selected as the first dropdow element
+                          // after rending
+
+                          if (widget.product != null) {
+                            data.remove(widget.product);
+                            data = [widget.product!, ...data];
+                          }
+                          return data
+                              .where(
+                                (product) =>
+                                    typeSelectedProducts
+                                        .containsValue(product) ==
+                                    false,
+                              )
+                              .toList();
+                        },
                         error: (error, stackTrace) => [],
                         loading: () => [],
                       ),
                       dropdownMenuEntriesValues: productsListStream.when(
-                        data: (data) => data
-                            .where(
-                              (product) =>
-                                  typeSelectedProducts.containsValue(product) ==
-                                  false,
-                            )
-                            .toList(),
+                        data: (data) {
+                          if (widget.product != null) {
+                            data.remove(widget.product);
+                            data = [widget.product!, ...data];
+                          }
+                          return data
+                              .where(
+                                (product) =>
+                                    typeSelectedProducts
+                                        .containsValue(product) ==
+                                    false,
+                              )
+                              .toList();
+                        },
                         error: (error, stackTrace) => [],
                         loading: () => [],
                       ),
@@ -75,6 +99,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                         inputIndex: widget.index,
                         label: 'Nombre',
                         hintText: 'Nombre de produit',
+                        initialValue: widget.product!.number!.toString(),
                         textInputType: TextInputType.number,
                         validator: TypeValidators.typeProductNumber,
                         onChanged: TypeOnChanged.typeProductNumber,
@@ -88,8 +113,8 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                     ref.read(typeAddedInputsProvider.notifier).update((state) {
                       // if input is visible, hide it
                       state[widget.index] = showWidget.value;
-                      debugPrint('typeAddedInputsProvider');
-                      debugPrint(state.toString());
+                      //  debugPrint('typeAddedInputsProvider');
+                      //  debugPrint(state.toString());
 
                       return state;
                     });
@@ -100,9 +125,9 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                         .update((state) {
                       // since typeSelectedProducts use type selection dropdown provider as key
                       state.remove(widget.productSelectionDropdownProvider);
-                      debugPrint('typeSelectedProductsProvider');
-                      debugPrint('length: ${state.length}');
-                      debugPrint(state.toString());
+                      // debugPrint('typeSelectedProductsProvider');
+                      // debugPrint('length: ${state.length}');
+                      // debugPrint(state.toString());
                       return state;
                     });
                   },

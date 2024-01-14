@@ -1,3 +1,4 @@
+import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/controllers/types/types.controller.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
@@ -29,6 +30,8 @@ class TypesSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
+              ref.read(typeAddedInputsProvider.notifier).state = {};
+              ref.read(typeSelectedProductsProvider.notifier).state = {};
               showDialog(
                 context: context,
                 builder: (context) => const TypesAddingForm(),
