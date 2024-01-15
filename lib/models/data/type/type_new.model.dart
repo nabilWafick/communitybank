@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:communitybank/models/tables/type/type_table.model.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:communitybank/models/data/product/product.model.dart';
 
 class Type {
@@ -10,8 +9,6 @@ class Type {
   final String name;
   final double stake;
   List<Product> products;
-  final List<dynamic>? productsIds;
-  final List<dynamic>? productsNumber;
   final DateTime createdAt;
   final DateTime updatedAt;
   Type({
@@ -19,47 +16,43 @@ class Type {
     required this.name,
     required this.stake,
     required this.products,
-    this.productsIds,
-    this.productsNumber,
     required this.createdAt,
     required this.updatedAt,
   });
 
   Type copyWith({
-    int? id,
+    ValueGetter<int?>? id,
     String? name,
     double? stake,
     List<Product>? products,
-    List<int>? productsIds,
-    List<int>? productsNumber,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Type(
-      id: id ?? this.id,
+      id: id?.call() ?? this.id,
       name: name ?? this.name,
       stake: stake ?? this.stake,
       products: products ?? this.products,
-      productsIds: productsIds ?? this.productsIds,
-      productsNumber: productsNumber ?? this.productsNumber,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
   Map<String, dynamic> toMap() {
-    List<int> typeProductsIds = [];
-    List<int> typeProductsNumbers = [];
+    List<int> productsIds = [];
+    List<int> productsNumbers = [];
 
     for (int i = 0; i < products.length; i++) {
-      typeProductsIds.add(products[i].id!);
-      typeProductsNumbers.add(products[i].number!);
+      productsIds.add(products[i].id!);
+      productsNumbers.add(products[i].number!);
     }
+
     return {
+      //   TypeTable.id: id,
       TypeTable.name: name,
       TypeTable.stake: stake,
-      TypeTable.productsIds: typeProductsIds,
-      TypeTable.productsNumbers: typeProductsNumbers,
+      TypeTable.productsIds: productsIds,
+      TypeTable.productsNumbers: productsNumbers,
       TypeTable.createdAt: createdAt.toIso8601String(),
       TypeTable.updatedAt: updatedAt.toIso8601String(),
     };
@@ -70,10 +63,8 @@ class Type {
       id: map[TypeTable.id]?.toInt(),
       name: map[TypeTable.name] ?? '',
       stake: map[TypeTable.stake]?.toDouble() ?? 0.0,
-      products:
-          List<Product>.from(map['products']?.map((x) => Product.fromMap(x))),
-      productsIds: List<int>.from(map[TypeTable.productsIds]),
-      productsNumber: List<int>.from(map[TypeTable.productsNumbers]),
+      products: List<Product>.from(
+          map[TypeTable.productsIds]?.map((x) => Product.fromMap(x))),
       createdAt: DateTime.parse(map[TypeTable.createdAt]),
       updatedAt: DateTime.parse(map[TypeTable.updatedAt]),
     );
@@ -85,7 +76,7 @@ class Type {
 
   @override
   String toString() {
-    return 'Type(id: $id, name: $name, stake: $stake, products: $products, productsIds: $productsIds, productsNumber: $productsNumber, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Type(id: $id, name: $name, stake: $stake, products: $products, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -97,8 +88,6 @@ class Type {
         other.name == name &&
         other.stake == stake &&
         listEquals(other.products, products) &&
-        listEquals(other.productsIds, productsIds) &&
-        listEquals(other.productsNumber, productsNumber) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -109,8 +98,6 @@ class Type {
         name.hashCode ^
         stake.hashCode ^
         products.hashCode ^
-        productsIds.hashCode ^
-        productsNumber.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

@@ -1,5 +1,6 @@
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
+import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -59,6 +60,7 @@ class MainApp extends ConsumerWidget {
       home:
           // const WidgetTest(),
           const HomePage(),
+      // const LoginPage(),
     );
   }
 }

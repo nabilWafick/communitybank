@@ -3,6 +3,7 @@ import 'package:communitybank/controllers/types/types.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/types/types_crud.function.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
+import 'package:communitybank/services/types/types.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/images_shower/multiple/multiple_image_shower.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
@@ -33,8 +34,20 @@ final typesListStreamProvider = StreamProvider<List<Type>>((ref) async* {
   final selectedTypeProduct =
       ref.watch(listProductDropdownProvider('type-products'));
   yield* TypesController.getAll(
+    // ref: ref,
     selectedTypeStake: selectedTypePrice,
     selectedProductId: selectedTypeProduct.id,
+  );
+});
+
+final typesListMapStreamProvider = StreamProvider<List<Map>>((ref) async* {
+  final selectedTypePrice = ref.watch(stringDropdownProvider('types-stackes'));
+  // final selectedTypeProduct =
+  //     ref.watch(listProductDropdownProvider('type-products'));
+  yield* TypesService.getAll(
+    // ref: ref,
+    selectedTypeStake: selectedTypePrice,
+    //  selectedProductId: selectedTypeProduct.id,
   );
 });
 
@@ -46,6 +59,7 @@ class TypesList extends ConsumerWidget {
     final isSearching = ref.watch(isSearchingProvider('types'));
     final productsListStream = ref.watch(productsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
+    // final typesListMapStream = ref.watch(typesListMapStreamProvider);
     final searchedTypesList = ref.watch(searchedTypesListProvider);
     return SizedBox(
       height: 640.0,
@@ -53,7 +67,15 @@ class TypesList extends ConsumerWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
-          child: DataTable(
+          child: /* CBText(
+          text: typesListStream.when(
+            data: (data) => 'data.length.toString()',
+            error: (error, stackTrace) => '',
+            loading: () => '',
+          ),
+        )*/
+
+              DataTable(
             columns: const [
               DataColumn(
                 label: CBText(
@@ -135,20 +157,34 @@ class TypesList extends ConsumerWidget {
                                 CBText(
                                     text: productsListStream.when(
                                   data: (data) {
-                                    String typeProducts = 'Products';
+                                    // reset type products list for avoiding mutilple product adding which will be caused by stream
+                                    type.products = [];
+                                    String typeProducts = '';
+                                    //  type.products.clear();
                                     for (Product dataProduct in data) {
-                                      for (Product product in type.products) {
-                                        if (dataProduct.id! == product.id!) {
+                                      for (var productId in type.productsIds!) {
+                                        if (dataProduct.id! == productId) {
+                                          // get product number in type.productsNumber
+                                          // by using the index of product id in type.productsIds
+                                          final typeProductNumber =
+                                              type.productsNumber![type
+                                                  .productsIds!
+                                                  .indexOf(productId)];
+                                          type.products.add(
+                                            dataProduct.copyWith(
+                                                number: typeProductNumber),
+                                          );
                                           if (typeProducts.isEmpty) {
                                             typeProducts =
-                                                '${product.number} ${dataProduct.name}';
+                                                '$typeProductNumber ${dataProduct.name}';
                                           } else {
                                             typeProducts =
-                                                '$typeProducts, ${product.number} ${dataProduct.name}';
+                                                '$typeProducts, $typeProductNumber ${dataProduct.name}';
                                           }
                                         }
                                       }
                                     }
+                                    //  debugPrint('type products: ${type.products}');
                                     return typeProducts;
                                   },
                                   error: (error, stackTrace) => '',
@@ -160,14 +196,28 @@ class TypesList extends ConsumerWidget {
                               ),
                               DataCell(
                                 onTap: () {
-                                  // ref
-                                  //     .read(typePictureProvider.notifier)
-                                  //     .state = null;
-                                  // FunctionsController.showAlertDialog(
-                                  //   context: context,
-                                  //   alertDialog:
-                                  //       typeUpdateForm(type: type),
-                                  // );
+                                  ref
+                                      .read(typeAddedInputsProvider.notifier)
+                                      .state = {};
+                                  // refresh typSelectedProducts provider
+                                  ref
+                                      .read(
+                                          typeSelectedProductsProvider.notifier)
+                                      .state = {};
+
+                                  // automatically add the type products inputs after rendering
+                                  for (Product product in type.products) {
+                                    ref
+                                        .read(typeAddedInputsProvider.notifier)
+                                        .update((state) {
+                                      state[product.id!] = true;
+                                      return state;
+                                    });
+                                  }
+                                  FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog: TypesUpdateForm(type: type),
+                                  );
                                 },
                                 Container(
                                   alignment: Alignment.centerRight,
@@ -246,33 +296,34 @@ class TypesList extends ConsumerWidget {
                                 CBText(
                                     text: productsListStream.when(
                                   data: (data) {
+                                    // reset type products list for avoiding mutilple product adding which will be caused by stream
+                                    type.products = [];
                                     String typeProducts = '';
                                     //  type.products.clear();
                                     for (Product dataProduct in data) {
-                                      for (Product product in type.products) {
-                                        if (dataProduct.id! == product.id!) {
-                                          // This update i for ensuring realtime product data if the product
-                                          // have been updated
-                                          final index =
-                                              type.products.indexOf(product);
-                                          type.products[index] =
-                                              type.products[index].copyWith(
-                                            name: dataProduct.name,
-                                            purchasePrice:
-                                                dataProduct.purchasePrice,
-                                            picture: dataProduct.picture,
+                                      for (var productId in type.productsIds!) {
+                                        if (dataProduct.id! == productId) {
+                                          // get product number in type.productsNumber
+                                          // by using the index of product id in type.productsIds
+                                          final typeProductNumber =
+                                              type.productsNumber![type
+                                                  .productsIds!
+                                                  .indexOf(productId)];
+                                          type.products.add(
+                                            dataProduct.copyWith(
+                                                number: typeProductNumber),
                                           );
-                                          // this is for showing type products names and number
                                           if (typeProducts.isEmpty) {
                                             typeProducts =
-                                                '${product.number} ${dataProduct.name}';
+                                                '$typeProductNumber ${dataProduct.name}';
                                           } else {
                                             typeProducts =
-                                                '$typeProducts, ${product.number} ${dataProduct.name}';
+                                                '$typeProducts, $typeProductNumber ${dataProduct.name}';
                                           }
                                         }
                                       }
                                     }
+                                    //  debugPrint('type products: ${type.products}');
                                     return typeProducts;
                                   },
                                   error: (error, stackTrace) => '',
