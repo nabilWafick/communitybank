@@ -42,16 +42,7 @@ class TypesController {
     Stream<List<Type>> typesListStream = typesMapListStream.map(
       (typesMapList) => typesMapList.map(
         (typeMap) {
-          return Type(
-            id: typeMap[TypeTable.id]?.toInt() ?? 0,
-            name: typeMap[TypeTable.name],
-            stake: typeMap[TypeTable.stake]?.toDouble() ?? .0,
-            products: [],
-            productsIds: typeMap[TypeTable.productsIds],
-            productsNumber: typeMap[TypeTable.productsNumbers],
-            createdAt: DateTime.parse(typeMap[TypeTable.createdAt]),
-            updatedAt: DateTime.parse(typeMap[TypeTable.createdAt]),
-          );
+          return Type.fromMap(typeMap);
         },
       ).toList(),
     );
