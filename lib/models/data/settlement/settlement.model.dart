@@ -1,21 +1,21 @@
 import 'dart:convert';
 
-import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
 import 'package:flutter/widgets.dart';
-import 'package:communitybank/models/data/agent/agent.model.dart';
+
+import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
 
 class Settlement {
   final int? id;
   final int number;
-  Agent agent;
-  final int? agentId;
+  final int cardId;
+  final int agentId;
   final DateTime createdAt;
   final DateTime updatedAt;
   Settlement({
     this.id,
     required this.number,
-    required this.agent,
-    this.agentId,
+    required this.cardId,
+    required this.agentId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -23,16 +23,16 @@ class Settlement {
   Settlement copyWith({
     ValueGetter<int?>? id,
     int? number,
-    Agent? agent,
-    ValueGetter<int?>? agentId,
+    int? cardId,
+    int? agentId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Settlement(
       id: id != null ? id() : this.id,
       number: number ?? this.number,
-      agent: agent ?? this.agent,
-      agentId: agentId != null ? agentId() : this.agentId,
+      cardId: cardId ?? this.cardId,
+      agentId: agentId ?? this.agentId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -41,7 +41,8 @@ class Settlement {
   Map<String, dynamic> toMap() {
     return {
       SettlementTable.number: number,
-      SettlementTable.agentId: agent.id,
+      SettlementTable.cardId: cardId,
+      SettlementTable.agentId: agentId,
       SettlementTable.createdAt: createdAt.millisecondsSinceEpoch,
       SettlementTable.updatedAt: updatedAt.millisecondsSinceEpoch,
     };
@@ -51,18 +52,12 @@ class Settlement {
     return Settlement(
       id: map[SettlementTable.id]?.toInt(),
       number: map[SettlementTable.number]?.toInt() ?? 0,
-      agent: Agent(
-        name: '',
-        firstnames: '',
-        phoneNumber: '',
-        address: '',
-        role: '',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ),
-      agentId: map[SettlementTable.agentId]?.toInt(),
-      createdAt: DateTime.parse(map[SettlementTable.createdAt]),
-      updatedAt: DateTime.parse(map[SettlementTable.updatedAt]),
+      cardId: map[SettlementTable.cardId]?.toInt() ?? 0,
+      agentId: map[SettlementTable.agentId]?.toInt() ?? 0,
+      createdAt:
+          DateTime.fromMillisecondsSinceEpoch(map[SettlementTable.createdAt]),
+      updatedAt:
+          DateTime.fromMillisecondsSinceEpoch(map[SettlementTable.updatedAt]),
     );
   }
 
@@ -73,7 +68,7 @@ class Settlement {
 
   @override
   String toString() {
-    return 'Settlement(id: $id, number: $number, agent: $agent, agentId: $agentId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -83,7 +78,7 @@ class Settlement {
     return other is Settlement &&
         other.id == id &&
         other.number == number &&
-        other.agent == agent &&
+        other.cardId == cardId &&
         other.agentId == agentId &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -93,7 +88,7 @@ class Settlement {
   int get hashCode {
     return id.hashCode ^
         number.hashCode ^
-        agent.hashCode ^
+        cardId.hashCode ^
         agentId.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;

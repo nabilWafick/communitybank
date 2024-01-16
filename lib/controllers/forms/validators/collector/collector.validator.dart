@@ -51,7 +51,7 @@ class CollectorValidors {
 
   static String? collectorPhoneNumber(String? value, WidgetRef ref) {
     if (ref.watch(collectorPhoneNumberProvider) == '') {
-      return 'Entrez un numéro de téléphone';
+      return 'Entrez le numéro de téléphone de l\'agent';
     } else if (!RegExp(r'^(\+229|00229)[4569]\d{7}$')
         .hasMatch(ref.watch(collectorPhoneNumberProvider))) {
       return "Le numéro de téléphone est incorrect";

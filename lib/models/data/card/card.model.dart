@@ -2,17 +2,13 @@ import 'dart:convert';
 
 import 'package:communitybank/models/tables/card/card_table.model.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:communitybank/models/data/settlement/settlement.model.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:flutter/widgets.dart';
 
 class Card {
   final int? id;
   final String label;
-  Type type;
   final int typeId;
-  List<Settlement> settlements;
-  final List<int>? settelementsIds;
+  final int? customerAccountId;
   final DateTime? satisfiedAt;
   final DateTime? repaidAt;
   final DateTime createdAt;
@@ -20,10 +16,8 @@ class Card {
   Card({
     this.id,
     required this.label,
-    required this.type,
     required this.typeId,
-    required this.settlements,
-    this.settelementsIds,
+    this.customerAccountId,
     this.satisfiedAt,
     this.repaidAt,
     required this.createdAt,
@@ -31,25 +25,22 @@ class Card {
   });
 
   Card copyWith({
-    int? id,
+    ValueGetter<int?>? id,
     String? label,
-    Type? type,
     int? typeId,
-    List<Settlement>? settlements,
-    ValueGetter<List<int>?>? settelementsIds,
+    ValueGetter<int?>? customerAccountId,
     ValueGetter<DateTime?>? satisfiedAt,
     ValueGetter<DateTime?>? repaidAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Card(
-      id: id ?? this.id,
+      id: id != null ? id() : this.id,
       label: label ?? this.label,
-      type: type ?? this.type,
       typeId: typeId ?? this.typeId,
-      settlements: settlements ?? this.settlements,
-      settelementsIds:
-          settelementsIds != null ? settelementsIds() : this.settelementsIds,
+      customerAccountId: customerAccountId != null
+          ? customerAccountId()
+          : this.customerAccountId,
       satisfiedAt: satisfiedAt != null ? satisfiedAt() : this.satisfiedAt,
       repaidAt: repaidAt != null ? repaidAt() : this.repaidAt,
       createdAt: createdAt ?? this.createdAt,
@@ -60,9 +51,8 @@ class Card {
   Map<String, dynamic> toMap() {
     return {
       CardTable.label: label,
-      CardTable.typeId: type.id,
-      CardTable.settelementsIds:
-          settlements.map((settlement) => settlement.id).toList(),
+      CardTable.typeId: typeId,
+      CardTable.customerAccountId: customerAccountId,
       CardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
       CardTable.repaidAt: repaidAt?.toIso8601String(),
       CardTable.createdAt: createdAt.toIso8601String(),
@@ -74,16 +64,8 @@ class Card {
     return Card(
       id: map[CardTable.id]?.toInt(),
       label: map[CardTable.label] ?? '',
-      type: Type(
-        name: '',
-        stake: 1.0,
-        products: [],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      ),
       typeId: map[CardTable.typeId]?.toInt() ?? 0,
-      settlements: [],
-      settelementsIds: List<int>.from(map[CardTable.settelementsIds]),
+      customerAccountId: map[CardTable.customerAccountId]?.toInt(),
       satisfiedAt: map[CardTable.satisfiedAt] != null
           ? DateTime.parse(map[CardTable.satisfiedAt])
           : null,
@@ -101,7 +83,7 @@ class Card {
 
   @override
   String toString() {
-    return 'Card(id: $id, label: $label, type: $type, typeId: $typeId, settlements: $settlements, settelementsIds: $settelementsIds, satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Card(id: $id, label: $label, typeId: $typeId, customerAccountId: $customerAccountId, satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -111,10 +93,8 @@ class Card {
     return other is Card &&
         other.id == id &&
         other.label == label &&
-        other.type == type &&
         other.typeId == typeId &&
-        listEquals(other.settlements, settlements) &&
-        listEquals(other.settelementsIds, settelementsIds) &&
+        other.customerAccountId == customerAccountId &&
         other.satisfiedAt == satisfiedAt &&
         other.repaidAt == repaidAt &&
         other.createdAt == createdAt &&
@@ -125,10 +105,8 @@ class Card {
   int get hashCode {
     return id.hashCode ^
         label.hashCode ^
-        type.hashCode ^
         typeId.hashCode ^
-        settlements.hashCode ^
-        settelementsIds.hashCode ^
+        customerAccountId.hashCode ^
         satisfiedAt.hashCode ^
         repaidAt.hashCode ^
         createdAt.hashCode ^

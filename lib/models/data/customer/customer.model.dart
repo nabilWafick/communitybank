@@ -1,10 +1,6 @@
 import 'dart:convert';
 import 'package:communitybank/models/tables/customer/customer_table.model.dart';
 import 'package:flutter/widgets.dart';
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 
 class Customer {
   final int? id;
@@ -14,10 +10,10 @@ class Customer {
   final String address;
   final String profession;
   final int nicNumber;
-  CustomerCategory category;
-  EconomicalActivity economicalActivity;
-  PersonalStatus personalStatus;
-  Locality locality;
+  int? categoryId;
+  int? economicalActivityId;
+  int? personalStatusId;
+  int? localityId;
   final String? profile;
   final String? signature;
   final DateTime createdAt;
@@ -30,10 +26,10 @@ class Customer {
     required this.address,
     required this.profession,
     required this.nicNumber,
-    required this.category,
-    required this.economicalActivity,
-    required this.personalStatus,
-    required this.locality,
+    required this.categoryId,
+    required this.economicalActivityId,
+    required this.personalStatusId,
+    required this.localityId,
     this.profile,
     this.signature,
     required this.createdAt,
@@ -48,10 +44,10 @@ class Customer {
     String? address,
     String? profession,
     int? nicNumber,
-    CustomerCategory? category,
-    EconomicalActivity? economicalActivity,
-    PersonalStatus? personalStatus,
-    Locality? locality,
+    int? categoryId,
+    int? economicalActivityId,
+    int? personalStatusId,
+    int? localityId,
     ValueGetter<String?>? profile,
     ValueGetter<String?>? signature,
     DateTime? createdAt,
@@ -65,10 +61,10 @@ class Customer {
       address: address ?? this.address,
       profession: profession ?? this.profession,
       nicNumber: nicNumber ?? this.nicNumber,
-      category: category ?? this.category,
-      economicalActivity: economicalActivity ?? this.economicalActivity,
-      personalStatus: personalStatus ?? this.personalStatus,
-      locality: locality ?? this.locality,
+      categoryId: categoryId ?? this.categoryId,
+      economicalActivityId: economicalActivityId ?? this.economicalActivityId,
+      personalStatusId: personalStatusId ?? this.personalStatusId,
+      localityId: localityId ?? this.localityId,
       profile: profile?.call() ?? this.profile,
       signature: signature?.call() ?? this.signature,
       createdAt: createdAt ?? this.createdAt,
@@ -85,10 +81,10 @@ class Customer {
       CustomerTable.address: address,
       CustomerTable.profession: profession,
       CustomerTable.nciNumber: nicNumber,
-      CustomerTable.category: category.id,
-      CustomerTable.economicalActivity: economicalActivity.id,
-      CustomerTable.personalStatus: personalStatus.id,
-      CustomerTable.locality: locality.id,
+      CustomerTable.categoryId: categoryId,
+      CustomerTable.economicalActivityId: economicalActivityId,
+      CustomerTable.personalStatusId: personalStatusId,
+      CustomerTable.localityId: localityId,
       CustomerTable.profile: profile,
       CustomerTable.signature: signature,
       CustomerTable.createdAt: createdAt.toIso8601String(),
@@ -105,11 +101,10 @@ class Customer {
       address: map[CustomerTable.address] ?? '',
       profession: map[CustomerTable.profession] ?? '',
       nicNumber: map[CustomerTable.nciNumber]?.toInt() ?? 0,
-      category: CustomerCategory.fromMap(map[CustomerTable.category]),
-      economicalActivity:
-          EconomicalActivity.fromMap(map[CustomerTable.economicalActivity]),
-      personalStatus: PersonalStatus.fromMap(map[CustomerTable.personalStatus]),
-      locality: Locality.fromMap(map[CustomerTable.locality]),
+      categoryId: map[CustomerTable.categoryId],
+      economicalActivityId: map[CustomerTable.economicalActivityId],
+      personalStatusId: map[CustomerTable.personalStatusId],
+      localityId: map[CustomerTable.localityId],
       profile: map[CustomerTable.profile],
       signature: map[CustomerTable.signature],
       createdAt: DateTime.parse(map[CustomerTable.createdAt]),
@@ -124,7 +119,7 @@ class Customer {
 
   @override
   String toString() {
-    return 'Customer(id: $id, name: $name, firstnames: $firstnames, phoneNumber: $phoneNumber, address: $address, profession: $profession, nicNumber: $nicNumber, category: $category, economicalActivity: $economicalActivity, personalStatus: $personalStatus, locality: $locality, profile: $profile, signature: $signature, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Customer(id: $id, name: $name, firstnames: $firstnames, phoneNumber: $phoneNumber, address: $address, profession: $profession, nicNumber: $nicNumber, category: $categoryId, economicalActivityId: $economicalActivityId, personalStatus: $personalStatusId, loIdcality: $localityId, profile: $profile, signature: $signature,Id createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -139,10 +134,10 @@ class Customer {
         other.address == address &&
         other.profession == profession &&
         other.nicNumber == nicNumber &&
-        other.category == category &&
-        other.economicalActivity == economicalActivity &&
-        other.personalStatus == personalStatus &&
-        other.locality == locality &&
+        other.categoryId == categoryId &&
+        other.economicalActivityId == economicalActivityId &&
+        other.personalStatusId == personalStatusId &&
+        other.localityId == localityId &&
         other.profile == profile &&
         other.signature == signature &&
         other.createdAt == createdAt &&
@@ -158,10 +153,10 @@ class Customer {
         address.hashCode ^
         profession.hashCode ^
         nicNumber.hashCode ^
-        category.hashCode ^
-        economicalActivity.hashCode ^
-        personalStatus.hashCode ^
-        locality.hashCode ^
+        categoryId.hashCode ^
+        economicalActivityId.hashCode ^
+        personalStatusId.hashCode ^
+        localityId.hashCode ^
         profile.hashCode ^
         signature.hashCode ^
         createdAt.hashCode ^

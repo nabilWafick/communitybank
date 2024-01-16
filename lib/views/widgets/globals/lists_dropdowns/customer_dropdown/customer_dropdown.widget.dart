@@ -1,8 +1,4 @@
 import 'package:communitybank/models/data/customer/customer.model.dart';
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,26 +13,10 @@ final listCustomerDropdownProvider =
     address: '',
     profession: '',
     nicNumber: 1,
-    category: CustomerCategory(
-      name: '',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    economicalActivity: EconomicalActivity(
-      name: '',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    personalStatus: PersonalStatus(
-      name: '',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    locality: Locality(
-      name: '',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
+    categoryId: 0,
+    economicalActivityId: 0,
+    personalStatusId: 0,
+    localityId: 0,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

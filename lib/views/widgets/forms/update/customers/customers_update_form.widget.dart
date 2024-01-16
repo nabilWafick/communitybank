@@ -3,6 +3,10 @@ import 'package:communitybank/controllers/forms/validators/customer/customer.val
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
@@ -322,16 +326,28 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 // In first position, so as to it be setting as
                                 // the default selectedItem of the dropdown
 
-                                if (widget.customer.category.id == null) {
-                                  data = [widget.customer.category, ...data];
+                                if (widget.customer.categoryId == null) {
+                                  data = [
+                                    CustomerCategory(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
+                                  ];
                                 }
                                 //t if the customer category is defined, remove
                                 // it from data and put it as the firt data
                                 // element so as to it be setting as
                                 // the default selectedItem of the dropdown
                                 else {
-                                  data.remove(widget.customer.category);
-                                  data = [widget.customer.category, ...data];
+                                  final customerCategory = data.firstWhere(
+                                    (category) =>
+                                        category.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerCategory);
+                                  data = [customerCategory, ...data];
                                 }
                                 return data;
                               },
@@ -347,10 +363,14 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 // In first position, so as to it be setting as
                                 // the default selectedItem of the dropdown
 
-                                if (widget.customer.category.id == null) {
+                                if (widget.customer.categoryId == null) {
                                   data = [
-                                    widget.customer.category,
-                                    ...data,
+                                    CustomerCategory(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 }
                                 //t if the customer category is defined, remove
@@ -358,11 +378,13 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 // element so as to it be setting as
                                 // the default selectedItem of the dropdown
                                 else {
-                                  data.remove(widget.customer.category);
-                                  data = [
-                                    widget.customer.category,
-                                    ...data,
-                                  ];
+                                  final customerCategory = data.firstWhere(
+                                    (category) =>
+                                        category.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerCategory);
+                                  data = [customerCategory, ...data];
                                 }
                                 return data;
                               },
@@ -384,19 +406,25 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesLabels:
                                 economicalActivitiesListStream.when(
                               data: (data) {
-                                if (widget.customer.economicalActivity.id ==
+                                if (widget.customer.economicalActivityId ==
                                     null) {
                                   data = [
-                                    widget.customer.economicalActivity,
-                                    ...data,
+                                    EconomicalActivity(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 } else {
-                                  data.remove(
-                                      widget.customer.economicalActivity);
-                                  data = [
-                                    widget.customer.economicalActivity,
-                                    ...data,
-                                  ];
+                                  final customerEconomicalActivity =
+                                      data.firstWhere(
+                                    (economicalActivity) =>
+                                        economicalActivity.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerEconomicalActivity);
+                                  data = [customerEconomicalActivity, ...data];
                                 }
                                 return data;
                               },
@@ -406,19 +434,25 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesValues:
                                 economicalActivitiesListStream.when(
                               data: (data) {
-                                if (widget.customer.economicalActivity.id ==
+                                if (widget.customer.economicalActivityId ==
                                     null) {
                                   data = [
-                                    widget.customer.economicalActivity,
-                                    ...data,
+                                    EconomicalActivity(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 } else {
-                                  data.remove(
-                                      widget.customer.economicalActivity);
-                                  data = [
-                                    widget.customer.economicalActivity,
-                                    ...data,
-                                  ];
+                                  final customerEconomicalActivity =
+                                      data.firstWhere(
+                                    (economicalActivity) =>
+                                        economicalActivity.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerEconomicalActivity);
+                                  data = [customerEconomicalActivity, ...data];
                                 }
                                 return data;
                               },
@@ -440,17 +474,24 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesLabels:
                                 personalStatusListStream.when(
                               data: (data) {
-                                if (widget.customer.personalStatus.id == null) {
+                                if (widget.customer.personalStatusId == null) {
                                   data = [
-                                    widget.customer.personalStatus,
-                                    ...data,
+                                    PersonalStatus(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 } else {
-                                  data.remove(widget.customer.personalStatus);
-                                  data = [
-                                    widget.customer.personalStatus,
-                                    ...data,
-                                  ];
+                                  final customerPersonalStatus =
+                                      data.firstWhere(
+                                    (personalStatus) =>
+                                        personalStatus.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerPersonalStatus);
+                                  data = [customerPersonalStatus, ...data];
                                 }
                                 return data;
                               },
@@ -460,17 +501,24 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesValues:
                                 personalStatusListStream.when(
                               data: (data) {
-                                if (widget.customer.personalStatus.id == null) {
+                                if (widget.customer.personalStatusId == null) {
                                   data = [
-                                    widget.customer.personalStatus,
-                                    ...data,
+                                    PersonalStatus(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 } else {
-                                  data.remove(widget.customer.personalStatus);
-                                  data = [
-                                    widget.customer.personalStatus,
-                                    ...data,
-                                  ];
+                                  final customerPersonalStatus =
+                                      data.firstWhere(
+                                    (personalStatus) =>
+                                        personalStatus.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerPersonalStatus);
+                                  data = [customerPersonalStatus, ...data];
                                 }
                                 return data;
                               },
@@ -491,17 +539,23 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesLabels:
                                 localitiesListStream.when(
                               data: (data) {
-                                if (widget.customer.locality.id == null) {
+                                if (widget.customer.localityId == null) {
                                   data = [
-                                    widget.customer.locality,
-                                    ...data,
+                                    Locality(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 } else {
-                                  data.remove(widget.customer.locality);
-                                  data = [
-                                    widget.customer.locality,
-                                    ...data,
-                                  ];
+                                  final customerLocality = data.firstWhere(
+                                    (locality) =>
+                                        locality.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerLocality);
+                                  data = [customerLocality, ...data];
                                 }
                                 return data;
                               },
@@ -511,17 +565,23 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesValues:
                                 localitiesListStream.when(
                               data: (data) {
-                                if (widget.customer.locality.id == null) {
+                                if (widget.customer.localityId == null) {
                                   data = [
-                                    widget.customer.locality,
-                                    ...data,
+                                    Locality(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                    ...data
                                   ];
                                 } else {
-                                  data.remove(widget.customer.locality);
-                                  data = [
-                                    widget.customer.locality,
-                                    ...data,
-                                  ];
+                                  final customerLocality = data.firstWhere(
+                                    (locality) =>
+                                        locality.id ==
+                                        widget.customer.categoryId,
+                                  );
+                                  data.remove(customerLocality);
+                                  data = [customerLocality, ...data];
                                 }
                                 return data;
                               },

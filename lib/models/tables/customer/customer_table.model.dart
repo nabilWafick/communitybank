@@ -7,10 +7,10 @@ class CustomerTable {
   static const String address = 'adresse';
   static const String profession = 'profession';
   static const String nciNumber = 'numero_cni';
-  static const String category = 'categorie';
-  static const String economicalActivity = 'activite_economique';
-  static const String personalStatus = 'statut_personnel';
-  static const String locality = 'localite';
+  static const String categoryId = 'id_categorie';
+  static const String economicalActivityId = 'id_activite_economique';
+  static const String personalStatusId = 'id_statut_personnel';
+  static const String localityId = 'id_localite';
   static const String profile = 'profil';
   static const String signature = 'signature';
   static const String createdAt = 'date_creation';

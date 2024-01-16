@@ -2,10 +2,6 @@ import 'package:communitybank/controllers/customers/customers.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
@@ -236,75 +232,67 @@ class CustomersList extends ConsumerWidget {
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: customersCategoriesListStream.when(
-                                      data: (data) {
-                                        for (CustomerCategory category
-                                            in data) {
-                                          if (customer.category.id ==
-                                              category.id) {
-                                            customer.category = category;
-                                          }
-                                        }
-                                        return customer.category.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.categoryId == null
+                                        ? 'Non définie'
+                                        : customersCategoriesListStream.when(
+                                            data: (data) {
+                                              return data
+                                                  .firstWhere((category) {
+                                                return category.id ==
+                                                    customer.categoryId;
+                                              }).name;
+                                            },
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: economicalActivitiesListStream.when(
-                                      data: (data) {
-                                        for (EconomicalActivity economicalActivity
-                                            in data) {
-                                          if (customer.economicalActivity.id ==
-                                              economicalActivity.id) {
-                                            customer.economicalActivity =
-                                                economicalActivity;
-                                          }
-                                        }
-                                        return customer.economicalActivity.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.economicalActivityId == null
+                                        ? 'Non définie'
+                                        : economicalActivitiesListStream.when(
+                                            data: (data) {
+                                              return data.firstWhere(
+                                                  (conomicalActivity) {
+                                                return conomicalActivity.id ==
+                                                    customer
+                                                        .economicalActivityId;
+                                              }).name;
+                                            },
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: personalStatusListStream.when(
-                                      data: (data) {
-                                        for (PersonalStatus personalStatus
-                                            in data) {
-                                          if (customer.personalStatus.id ==
-                                              personalStatus.id) {
-                                            customer.personalStatus =
-                                                personalStatus;
-                                          }
-                                        }
-                                        return customer.personalStatus.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.personalStatusId == null
+                                        ? 'Non défini'
+                                        : personalStatusListStream.when(
+                                            data: (data) => data
+                                                .firstWhere((personalStatus) =>
+                                                    customer.personalStatusId ==
+                                                    personalStatus.id)
+                                                .name,
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: localitiesListStream.when(
-                                      data: (data) {
-                                        for (Locality locality in data) {
-                                          if (customer.locality.id ==
-                                              locality.id) {
-                                            customer.locality = locality;
-                                          }
-                                        }
-                                        return customer.locality.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.localityId == null
+                                        ? 'Non définie'
+                                        : localitiesListStream.when(
+                                            data: (data) => data
+                                                .firstWhere((locality) =>
+                                                    locality.id ==
+                                                    customer.localityId)
+                                                .name,
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
@@ -427,75 +415,67 @@ class CustomersList extends ConsumerWidget {
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: customersCategoriesListStream.when(
-                                      data: (data) {
-                                        for (CustomerCategory category
-                                            in data) {
-                                          if (customer.category.id ==
-                                              category.id) {
-                                            customer.category = category;
-                                          }
-                                        }
-                                        return customer.category.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.categoryId == null
+                                        ? 'Non définie'
+                                        : customersCategoriesListStream.when(
+                                            data: (data) {
+                                              return data
+                                                  .firstWhere((category) {
+                                                return category.id ==
+                                                    customer.categoryId;
+                                              }).name;
+                                            },
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: economicalActivitiesListStream.when(
-                                      data: (data) {
-                                        for (EconomicalActivity economicalActivity
-                                            in data) {
-                                          if (customer.economicalActivity.id ==
-                                              economicalActivity.id) {
-                                            customer.economicalActivity =
-                                                economicalActivity;
-                                          }
-                                        }
-                                        return customer.economicalActivity.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.economicalActivityId == null
+                                        ? 'Non définie'
+                                        : economicalActivitiesListStream.when(
+                                            data: (data) {
+                                              return data.firstWhere(
+                                                  (conomicalActivity) {
+                                                return conomicalActivity.id ==
+                                                    customer
+                                                        .economicalActivityId;
+                                              }).name;
+                                            },
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: personalStatusListStream.when(
-                                      data: (data) {
-                                        for (PersonalStatus personalStatus
-                                            in data) {
-                                          if (customer.personalStatus.id ==
-                                              personalStatus.id) {
-                                            customer.personalStatus =
-                                                personalStatus;
-                                          }
-                                        }
-                                        return customer.personalStatus.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.personalStatusId == null
+                                        ? 'Non défini'
+                                        : personalStatusListStream.when(
+                                            data: (data) => data
+                                                .firstWhere((personalStatus) =>
+                                                    customer.personalStatusId ==
+                                                    personalStatus.id)
+                                                .name,
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
-                                    text: localitiesListStream.when(
-                                      data: (data) {
-                                        for (Locality locality in data) {
-                                          if (customer.locality.id ==
-                                              locality.id) {
-                                            customer.locality = locality;
-                                          }
-                                        }
-                                        return customer.locality.name;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    ),
+                                    text: customer.localityId == null
+                                        ? 'Non définie'
+                                        : localitiesListStream.when(
+                                            data: (data) => data
+                                                .firstWhere((locality) =>
+                                                    locality.id ==
+                                                    customer.localityId)
+                                                .name,
+                                            error: (error, stackTrace) => '',
+                                            loading: () => '',
+                                          ),
                                   ),
                                 ),
                                 DataCell(
