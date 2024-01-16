@@ -1,19 +1,20 @@
-import 'package:communitybank/models/data/card/card.model.dart';
-import 'package:communitybank/models/tables/card/card_table.model.dart';
-import 'package:flutter/widgets.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CardsService {
-  static Future<Map<String, dynamic>?> create({required Card card}) async {
+class CustomerCardsService {
+  static Future<Map<String, dynamic>?> create(
+      {required CustomerCard customerCard}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
       // insert data in database
       response = await supabase
-          .from(CardTable.tableName)
+          .from(CustomerCardTable.tableName)
           .insert(
-            card.toMap(),
+            customerCard.toMap(),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -31,9 +32,9 @@ class CardsService {
     try {
       // get a specific line
       response = await supabase
-          .from(CardTable.tableName)
+          .from(CustomerCardTable.tableName)
           .select<List<Map<String, dynamic>>>()
-          .eq(CardTable.id, id);
+          .eq(CustomerCardTable.id, id);
       // return the result data
       return response.isEmpty ? null : response[0];
     } catch (error) {
@@ -47,12 +48,12 @@ class CardsService {
     final supabase = Supabase.instance.client;
 
     try {
-      // listen to Cards table change and return a stream of all Cards data
+      // listen to CustomerCards table change and return a stream of all CustomerCards data
 
       var query = supabase
-          .from(CardTable.tableName)
-          .stream(primaryKey: [CardTable.id]).order(
-        CardTable.id,
+          .from(CustomerCardTable.tableName)
+          .stream(primaryKey: [CustomerCardTable.id]).order(
+        CustomerCardTable.id,
         ascending: true,
       );
 
@@ -64,20 +65,20 @@ class CardsService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> searchCard(
+  static Future<List<Map<String, dynamic>>> searchCustomerCard(
       {required String name}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
-      // get all Cards which name contain "name"
+      // get all CustomerCards which name contain "name"
       response = await supabase
-              .from(CardTable.tableName)
+              .from(CustomerCardTable.tableName)
               .select<List<Map<String, dynamic>>>()
-              .ilike(CardTable.label, '%$name%')
+              .ilike(CustomerCardTable.label, '%$name%')
 
           //.or(filters)
-          // .ilike(CardTable.firstnames, '%$name%');
+          // .ilike(CustomerCardTable.firstnames, '%$name%');
           ;
 
       // return the result data
@@ -90,20 +91,20 @@ class CardsService {
   }
 
   static Future<Map<String, dynamic>?> update(
-      {required int id, required Card card}) async {
+      {required int id, required CustomerCard customerCard}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
       // update a specific line
-      response = await supabase.from(CardTable.tableName).update(
+      response = await supabase.from(CustomerCardTable.tableName).update(
         {
-          ...card.toMap(),
-          CardTable.updatedAt: DateTime.now().toIso8601String(),
+          ...customerCard.toMap(),
+          CustomerCardTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {
-          CardTable.id: id,
+          CustomerCardTable.id: id,
         },
       ).select<List<Map<String, dynamic>>>();
       // return the result data
@@ -115,16 +116,18 @@ class CardsService {
     return null;
   }
 
-  static Future<Map<String, dynamic>?> delete({required Card card}) async {
+  static Future<Map<String, dynamic>?> delete(
+      {required CustomerCard customerCard}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
       // delete a specific line
       response = await supabase
-          .from(CardTable.tableName)
+          .from(CustomerCardTable.tableName)
           .delete()
-          .match({CardTable.id: card.id!}).select<List<Map<String, dynamic>>>();
+          .match({CustomerCardTable.id: customerCard.id!}).select<
+              List<Map<String, dynamic>>>();
 
       // return the delete line
       return response[0];

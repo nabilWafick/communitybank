@@ -6,13 +6,13 @@ import 'package:flutter/widgets.dart';
 
 class CustomerAccount {
   final int? id;
-  final int customerAccountId;
+  final int customerId;
   final int collectorId;
   final DateTime createdAt;
   final DateTime updatedAt;
   CustomerAccount({
     this.id,
-    required this.customerAccountId,
+    required this.customerId,
     required this.collectorId,
     required this.createdAt,
     required this.updatedAt,
@@ -20,14 +20,14 @@ class CustomerAccount {
 
   CustomerAccount copyWith({
     ValueGetter<int?>? id,
-    int? customerAccountId,
+    int? customerId,
     int? collectorId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return CustomerAccount(
       id: id != null ? id() : this.id,
-      customerAccountId: customerAccountId ?? this.customerAccountId,
+      customerId: customerId ?? this.customerId,
       collectorId: collectorId ?? this.collectorId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -36,7 +36,7 @@ class CustomerAccount {
 
   Map<String, dynamic> toMap() {
     return {
-      CustomerAccountTable.customerAccountId: customerAccountId,
+      CustomerAccountTable.customerId: customerId,
       CustomerAccountTable.collectorId: collectorId,
       CustomerAccountTable.createdAt: createdAt.millisecondsSinceEpoch,
       CustomerAccountTable.updatedAt: updatedAt.millisecondsSinceEpoch,
@@ -46,8 +46,7 @@ class CustomerAccount {
   factory CustomerAccount.fromMap(Map<String, dynamic> map) {
     return CustomerAccount(
       id: map[CustomerAccountTable.id]?.toInt(),
-      customerAccountId:
-          map[CustomerAccountTable.customerAccountId]?.toInt() ?? 0,
+      customerId: map[CustomerAccountTable.customerId]?.toInt() ?? 0,
       collectorId: map[CustomerAccountTable.collectorId]?.toInt() ?? 0,
       createdAt: DateTime.fromMillisecondsSinceEpoch(
           map[CustomerAccountTable.createdAt]),
@@ -63,7 +62,7 @@ class CustomerAccount {
 
   @override
   String toString() {
-    return 'CustomerAccount(id: $id, customerAccountId: $customerAccountId, collectorId: $collectorId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerAccount(id: $id, customerId: $customerId, collectorId: $collectorId, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -72,7 +71,7 @@ class CustomerAccount {
 
     return other is CustomerAccount &&
         other.id == id &&
-        other.customerAccountId == customerAccountId &&
+        other.customerId == customerId &&
         other.collectorId == collectorId &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -81,7 +80,7 @@ class CustomerAccount {
   @override
   int get hashCode {
     return id.hashCode ^
-        customerAccountId.hashCode ^
+        customerId.hashCode ^
         collectorId.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;

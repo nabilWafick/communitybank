@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:communitybank/models/tables/card/card_table.model.dart';
+import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class Card {
+class CustomerCard {
   final int? id;
   final String label;
   final int typeId;
@@ -13,7 +13,7 @@ class Card {
   final DateTime? repaidAt;
   final DateTime createdAt;
   final DateTime updatedAt;
-  Card({
+  CustomerCard({
     this.id,
     required this.label,
     required this.typeId,
@@ -24,7 +24,7 @@ class Card {
     required this.updatedAt,
   });
 
-  Card copyWith({
+  CustomerCard copyWith({
     ValueGetter<int?>? id,
     String? label,
     int? typeId,
@@ -34,7 +34,7 @@ class Card {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return Card(
+    return CustomerCard(
       id: id != null ? id() : this.id,
       label: label ?? this.label,
       typeId: typeId ?? this.typeId,
@@ -50,47 +50,48 @@ class Card {
 
   Map<String, dynamic> toMap() {
     return {
-      CardTable.label: label,
-      CardTable.typeId: typeId,
-      CardTable.customerAccountId: customerAccountId,
-      CardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
-      CardTable.repaidAt: repaidAt?.toIso8601String(),
-      CardTable.createdAt: createdAt.toIso8601String(),
-      CardTable.updatedAt: updatedAt.toIso8601String(),
+      CustomerCardTable.label: label,
+      CustomerCardTable.typeId: typeId,
+      CustomerCardTable.customerAccountId: customerAccountId,
+      CustomerCardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
+      CustomerCardTable.repaidAt: repaidAt?.toIso8601String(),
+      CustomerCardTable.createdAt: createdAt.toIso8601String(),
+      CustomerCardTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 
-  factory Card.fromMap(Map<String, dynamic> map) {
-    return Card(
-      id: map[CardTable.id]?.toInt(),
-      label: map[CardTable.label] ?? '',
-      typeId: map[CardTable.typeId]?.toInt() ?? 0,
-      customerAccountId: map[CardTable.customerAccountId]?.toInt(),
-      satisfiedAt: map[CardTable.satisfiedAt] != null
-          ? DateTime.parse(map[CardTable.satisfiedAt])
+  factory CustomerCard.fromMap(Map<String, dynamic> map) {
+    return CustomerCard(
+      id: map[CustomerCardTable.id]?.toInt(),
+      label: map[CustomerCardTable.label] ?? '',
+      typeId: map[CustomerCardTable.typeId]?.toInt() ?? 0,
+      customerAccountId: map[CustomerCardTable.customerAccountId]?.toInt(),
+      satisfiedAt: map[CustomerCardTable.satisfiedAt] != null
+          ? DateTime.parse(map[CustomerCardTable.satisfiedAt])
           : null,
-      repaidAt: map[CardTable.repaidAt] != null
-          ? DateTime.parse(map[CardTable.repaidAt])
+      repaidAt: map[CustomerCardTable.repaidAt] != null
+          ? DateTime.parse(map[CustomerCardTable.repaidAt])
           : null,
-      createdAt: DateTime.parse(map[CardTable.createdAt]),
-      updatedAt: DateTime.parse(map[CardTable.updatedAt]),
+      createdAt: DateTime.parse(map[CustomerCardTable.createdAt]),
+      updatedAt: DateTime.parse(map[CustomerCardTable.updatedAt]),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Card.fromJson(String source) => Card.fromMap(json.decode(source));
+  factory CustomerCard.fromJson(String source) =>
+      CustomerCard.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'Card(id: $id, label: $label, typeId: $typeId, customerAccountId: $customerAccountId, satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerCard(id: $id, label: $label, typeId: $typeId, customerAccountId: $customerAccountId, satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Card &&
+    return other is CustomerCard &&
         other.id == id &&
         other.label == label &&
         other.typeId == typeId &&

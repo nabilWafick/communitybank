@@ -1,4 +1,4 @@
-class CardTable {
+class CustomerCardTable {
   static const String tableName = 'cartes';
   static const String id = 'id';
   static const String label = 'libelle';

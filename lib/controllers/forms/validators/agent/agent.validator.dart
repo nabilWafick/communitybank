@@ -24,19 +24,13 @@ final agentAddressProvider = StateProvider<String>(
   },
 );
 
-final agentRoleProvider = StateProvider<String>(
-  (ref) {
-    return '';
-  },
-);
-
 final agentPictureProvider = StateProvider<String?>(
   (ref) {
     return;
   },
 );
 
-class AgentValidors {
+class AgentValidators {
   static String? agentName(String? value, WidgetRef ref) {
     if (ref.watch(agentNameProvider) == '') {
       return 'Entrez le nom de l\'agent';
