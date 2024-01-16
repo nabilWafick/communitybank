@@ -1,18 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
-import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
+import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_account/customer_account_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/intenger_dropdown/intenger_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomerCardCRUDFunctions {
+class SettlementCRUDFunctions {
   static Future<void> create({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
@@ -22,38 +21,37 @@ class CustomerCardCRUDFunctions {
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final customerCardLabel = ref.watch(customerCardLabelProvider);
-      final customerCardType =
-          ref.watch(formTypeDropdownProvider('customer-card-adding-type'));
-      final customerCardOwnerAccount = ref.watch(
-          formCustomerAccountDropdownProvider(
-              'customer-card-adding-customer-account'));
+      final settlementNumber =
+          ref.watch(formIntDropdownProvider('settlement-adding-number'));
+      final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
+      final settlementDate = ref.watch(settlementDateProvider);
+      final settlementAgent = ref.watch(settlementAgentProvider);
 
-      ServiceResponse customerCardStatus;
+      ServiceResponse settlementStatus;
 
-      final customerCard = CustomerCard(
-        label: customerCardLabel,
-        typeId: customerCardType.id!,
-        customerAccountId: customerCardOwnerAccount.id,
-        createdAt: DateTime.now(),
+      final settlement = Settlement(
+        number: settlementNumber,
+        cardId: settlementCustomerCard.id!,
+        agentId: settlementAgent.id!,
+        createdAt: settlementDate,
         updatedAt: DateTime.now(),
       );
 
-      customerCardStatus =
-          await CustomerCardsController.create(customerCard: customerCard);
+      settlementStatus =
+          await SettlementsController.create(settlement: settlement);
 
-      // debugPrint('new CustomerCard: $customerCardStatus');
+      // debugPrint('new Settlement: $settlementStatus');
 
-      if (customerCardStatus == ServiceResponse.success) {
+      if (settlementStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: customerCardStatus,
+          serviceResponse: settlementStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: customerCardStatus,
+          serviceResponse: settlementStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -69,47 +67,46 @@ class CustomerCardCRUDFunctions {
     required BuildContext context,
     required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required CustomerCard customerCard,
+    required Settlement settlement,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final customerCardLabel = ref.watch(customerCardLabelProvider);
-      final customerCardType =
-          ref.watch(formTypeDropdownProvider('customer-card-update-type'));
-      final customerCardOwnerAccount = ref.watch(
-          formCustomerAccountDropdownProvider(
-              'customer-card-update-customer-account'));
+      final settlementNumber =
+          ref.watch(formIntDropdownProvider('settlement-adding-number'));
+      final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
+      final settlementDate = ref.watch(settlementDateProvider);
+      final settlementAgent = ref.watch(settlementAgentProvider);
 
-      ServiceResponse lastCustomerCardStatus;
+      ServiceResponse lastsettlementStatus;
 
-      final newCustomerCard = CustomerCard(
-        label: customerCardLabel,
-        typeId: customerCardType.id!,
-        customerAccountId: customerCardOwnerAccount.id,
-        createdAt: DateTime.now(),
+      final newSettlement = Settlement(
+        number: settlementNumber,
+        cardId: settlementCustomerCard.id!,
+        agentId: settlementAgent.id!,
+        createdAt: settlementDate,
         updatedAt: DateTime.now(),
       );
 
-      lastCustomerCardStatus = await CustomerCardsController.update(
-        id: customerCard.id!,
-        customerCard: newCustomerCard,
+      lastsettlementStatus = await SettlementsController.update(
+        id: settlement.id!,
+        settlement: newSettlement,
       );
 
-      // debugPrint('new CustomerCard: $customerCardStatus');
+      // debugPrint('new Settlement: $settlementStatus');
 
-      if (lastCustomerCardStatus == ServiceResponse.success) {
+      if (lastsettlementStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerCardStatus,
+          serviceResponse: lastsettlementStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerCardStatus,
+          serviceResponse: lastsettlementStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -124,25 +121,25 @@ class CustomerCardCRUDFunctions {
   static Future<void> delete({
     required BuildContext context,
     required WidgetRef ref,
-    required CustomerCard customerCard,
+    required Settlement settlement,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
 
-    ServiceResponse customerCardStatus;
+    ServiceResponse settlementStatus;
 
-    customerCardStatus =
-        await CustomerCardsController.delete(customerCard: customerCard);
+    settlementStatus =
+        await SettlementsController.delete(settlement: settlement);
 
-    if (customerCardStatus == ServiceResponse.success) {
+    if (settlementStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: customerCardStatus,
+        serviceResponse: settlementStatus,
         response: 'Opération réussie',
       );
       Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: customerCardStatus,
+        serviceResponse: settlementStatus,
         response: 'Opération échouée',
       );
       showConfirmationButton.value = true;

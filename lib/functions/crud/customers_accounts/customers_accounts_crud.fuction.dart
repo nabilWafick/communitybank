@@ -1,18 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
-import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+import 'package:communitybank/controllers/customer_account/customer_account.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_account/customer_account_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/collector/collector_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_dropdown/customer_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomerCardCRUDFunctions {
+class CustomerAccountCRUDFunctions {
   static Future<void> create({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
@@ -22,38 +21,35 @@ class CustomerCardCRUDFunctions {
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final customerCardLabel = ref.watch(customerCardLabelProvider);
-      final customerCardType =
-          ref.watch(formTypeDropdownProvider('customer-card-adding-type'));
-      final customerCardOwnerAccount = ref.watch(
-          formCustomerAccountDropdownProvider(
-              'customer-card-adding-customer-account'));
+      final customerAccountOwner = ref.watch(
+          formCustomerDropdownProvider('customer-account-adding-customer'));
+      final customerAccountCollector = ref.watch(
+          formCollectorDropdownProvider('customer-account-adding-collector'));
 
-      ServiceResponse customerCardStatus;
+      ServiceResponse customerAccountStatus;
 
-      final customerCard = CustomerCard(
-        label: customerCardLabel,
-        typeId: customerCardType.id!,
-        customerAccountId: customerCardOwnerAccount.id,
+      final customerAccount = CustomerAccount(
+        customerId: customerAccountOwner.id!,
+        collectorId: customerAccountCollector.id!,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
-      customerCardStatus =
-          await CustomerCardsController.create(customerCard: customerCard);
+      customerAccountStatus = await CustomerAccountsController.create(
+          customerAccount: customerAccount);
 
-      // debugPrint('new CustomerCard: $customerCardStatus');
+      // debugPrint('new CustomerAccount: $customerAccountStatus');
 
-      if (customerCardStatus == ServiceResponse.success) {
+      if (customerAccountStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: customerCardStatus,
+          serviceResponse: customerAccountStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: customerCardStatus,
+          serviceResponse: customerAccountStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -69,47 +65,44 @@ class CustomerCardCRUDFunctions {
     required BuildContext context,
     required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required CustomerCard customerCard,
+    required CustomerAccount customerAccount,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final customerCardLabel = ref.watch(customerCardLabelProvider);
-      final customerCardType =
-          ref.watch(formTypeDropdownProvider('customer-card-update-type'));
-      final customerCardOwnerAccount = ref.watch(
-          formCustomerAccountDropdownProvider(
-              'customer-card-update-customer-account'));
+      final customerAccountOwner = ref.watch(
+          formCustomerDropdownProvider('customer-account-update-customer'));
+      final customerAccountCollector = ref.watch(
+          formCollectorDropdownProvider('customer-account-update-collector'));
 
-      ServiceResponse lastCustomerCardStatus;
+      ServiceResponse lastCustomerAccountStatus;
 
-      final newCustomerCard = CustomerCard(
-        label: customerCardLabel,
-        typeId: customerCardType.id!,
-        customerAccountId: customerCardOwnerAccount.id,
+      final newCustomerAccount = CustomerAccount(
+        customerId: customerAccountOwner.id!,
+        collectorId: customerAccountCollector.id!,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
-      lastCustomerCardStatus = await CustomerCardsController.update(
-        id: customerCard.id!,
-        customerCard: newCustomerCard,
+      lastCustomerAccountStatus = await CustomerAccountsController.update(
+        id: customerAccount.id!,
+        customerAccount: newCustomerAccount,
       );
 
-      // debugPrint('new CustomerCard: $customerCardStatus');
+      // debugPrint('new CustomerAccount: $customerAccountStatus');
 
-      if (lastCustomerCardStatus == ServiceResponse.success) {
+      if (lastCustomerAccountStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerCardStatus,
+          serviceResponse: lastCustomerAccountStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerCardStatus,
+          serviceResponse: lastCustomerAccountStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
@@ -124,25 +117,25 @@ class CustomerCardCRUDFunctions {
   static Future<void> delete({
     required BuildContext context,
     required WidgetRef ref,
-    required CustomerCard customerCard,
+    required CustomerAccount customerAccount,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
 
-    ServiceResponse customerCardStatus;
+    ServiceResponse customerAccountStatus;
 
-    customerCardStatus =
-        await CustomerCardsController.delete(customerCard: customerCard);
+    customerAccountStatus = await CustomerAccountsController.delete(
+        customerAccount: customerAccount);
 
-    if (customerCardStatus == ServiceResponse.success) {
+    if (customerAccountStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: customerCardStatus,
+        serviceResponse: customerAccountStatus,
         response: 'Opération réussie',
       );
       Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: customerCardStatus,
+        serviceResponse: customerAccountStatus,
         response: 'Opération échouée',
       );
       showConfirmationButton.value = true;

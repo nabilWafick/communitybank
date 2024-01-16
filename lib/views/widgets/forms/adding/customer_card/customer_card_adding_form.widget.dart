@@ -1,6 +1,6 @@
-import 'package:communitybank/controllers/forms/on_changed/card/card.on_changed.dart';
-import 'package:communitybank/controllers/forms/validators/card/card.validator.dart';
-import 'package:communitybank/functions/crud/card/card_crud.fuction.dart';
+import 'package:communitybank/controllers/forms/on_changed/customer_card/customer_card.on_changed.dart';
+import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -75,8 +75,8 @@ class _CardAddingFormState extends ConsumerState<CardAddingForm> {
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,
-                          validator: CardValidators.cardLabel,
-                          onChanged: CardOnChanged.cardLabel,
+                          validator: CustomerCardValidators.customerCardLabel,
+                          onChanged: CustomerCardOnChanged.customerCardLabel,
                         ),
                       ),
                     ],

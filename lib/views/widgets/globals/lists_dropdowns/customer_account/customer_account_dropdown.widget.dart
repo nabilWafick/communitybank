@@ -4,7 +4,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final formCustomerAccountDropdownProvider =
+final listCustomerAccountDropdownProvider =
     StateProvider.family<CustomerAccount, String>((ref, dropdown) {
   return CustomerAccount(
     customerId: 0,
@@ -14,14 +14,14 @@ final formCustomerAccountDropdownProvider =
   );
 });
 
-class CBFormCustomerAccountDropdown extends ConsumerStatefulWidget {
+class CBListCustomerAccountDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<CustomerAccount> dropdownMenuEntriesLabels;
   final List<CustomerAccount> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBFormCustomerAccountDropdown({
+  const CBListCustomerAccountDropdown({
     super.key,
     this.width,
     required this.label,
@@ -31,11 +31,11 @@ class CBFormCustomerAccountDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBFormCustomerAccountDropdownState();
+      _CBListCustomerAccountDropdownState();
 }
 
-class _CBFormCustomerAccountDropdownState
-    extends ConsumerState<CBFormCustomerAccountDropdown> {
+class _CBListCustomerAccountDropdownState
+    extends ConsumerState<CBListCustomerAccountDropdown> {
   @override
   void initState() {
     Future.delayed(
@@ -45,7 +45,7 @@ class _CBFormCustomerAccountDropdownState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(formCustomerAccountDropdownProvider(widget.providerName)
+            .read(listCustomerAccountDropdownProvider(widget.providerName)
                 .notifier)
             .state = widget.dropdownMenuEntriesValues[0];
       }
@@ -57,7 +57,7 @@ class _CBFormCustomerAccountDropdownState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(formCustomerAccountDropdownProvider(widget.providerName));
+        ref.watch(listCustomerAccountDropdownProvider(widget.providerName));
     final customersListStream = ref.watch(customersListStreamProvider);
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -99,7 +99,7 @@ class _CBFormCustomerAccountDropdownState
         ),
         onSelected: (value) {
           ref
-              .read(formCustomerAccountDropdownProvider(widget.providerName)
+              .read(listCustomerAccountDropdownProvider(widget.providerName)
                   .notifier)
               .state = value!;
         },

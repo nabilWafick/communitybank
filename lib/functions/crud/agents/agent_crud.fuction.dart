@@ -8,6 +8,7 @@ import 'package:communitybank/models/response_dialog/response_dialog.model.dart'
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
+import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,7 +27,7 @@ class AgentCRUDFunctions {
       final agentFirstnames = ref.watch(agentFirstnamesProvider);
       final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
       final agentAddress = ref.watch(agentAddressProvider);
-      final agentRole = ref.watch(agentRoleProvider);
+      final agentRole = ref.watch(stringDropdownProvider('agent-adding-role'));
 
       ServiceResponse agentStatus;
 
@@ -106,7 +107,7 @@ class AgentCRUDFunctions {
       final agentFirstnames = ref.watch(agentFirstnamesProvider);
       final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
       final agentAddress = ref.watch(agentAddressProvider);
-      final agentRole = ref.watch(agentRoleProvider);
+      final agentRole = ref.watch(stringDropdownProvider('agent-adding-role'));
 
       ServiceResponse lastagentStatus;
 

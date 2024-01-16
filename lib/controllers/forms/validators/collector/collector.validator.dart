@@ -30,7 +30,7 @@ final collectorPictureProvider = StateProvider<String?>(
   },
 );
 
-class CollectorValidors {
+class CollectorValidators {
   static String? collectorName(String? value, WidgetRef ref) {
     if (ref.watch(collectorNameProvider) == '') {
       return 'Entrez le nom du collecteur';

@@ -1,28 +1,28 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final cardLabelProvider = StateProvider<String>(
+final customerCardLabelProvider = StateProvider<String>(
   (ref) {
     return '';
   },
 );
 
-final cardSatisfactionDateProvider = StateProvider<DateTime?>(
+final customerCardSatisfactionDateProvider = StateProvider<DateTime?>(
   (ref) {
     return;
   },
 );
 
-final cardRepaymentDateProvider = StateProvider<DateTime?>(
+final customerCardRepaymentDateProvider = StateProvider<DateTime?>(
   (ref) {
     return;
   },
 );
 
-class CardValidors {
-  static String? cardLabel(String? value, WidgetRef ref) {
-    if (ref.watch(cardLabelProvider) == '') {
-      return 'Entrez le libellé de l\'card';
-    } else if (ref.watch(cardLabelProvider).length < 3) {
+class CustomerCardValidators {
+  static String? customerCardLabel(String? value, WidgetRef ref) {
+    if (ref.watch(customerCardLabelProvider) == '') {
+      return 'Entrez le libellé de l\'customerCard';
+    } else if (ref.watch(customerCardLabelProvider).length < 3) {
       return "Le nom doit contenir au moins 5 lettres";
     }
     return null;

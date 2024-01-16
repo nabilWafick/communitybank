@@ -5,7 +5,7 @@ import 'package:communitybank/views/widgets/definitions/products/products_list/p
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/types/types_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/product_dropdown/product_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

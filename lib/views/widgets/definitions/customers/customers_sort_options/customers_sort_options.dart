@@ -11,10 +11,10 @@ import 'package:communitybank/views/widgets/definitions/personal_status/personal
 import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/add_button/add_button.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_category_dropdown/customer_category_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity_dropdown/economical_activity_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality_dropdown/locality_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_status_dropdown/personal_status_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_category/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_status/personal_status_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';

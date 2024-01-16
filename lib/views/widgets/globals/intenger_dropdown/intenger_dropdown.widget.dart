@@ -1,26 +1,20 @@
-import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final listCustomerCardDropdownProvider =
-    StateProvider.family<CustomerCard, String>((ref, dropdown) {
-  return CustomerCard(
-    label: 'Non défini',
-    typeId: 0,
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  );
+final formIntDropdownProvider =
+    StateProvider.family<int, String>((ref, dropdown) {
+  return 1;
 });
 
-class CBListCustomerCardDropdown extends ConsumerStatefulWidget {
+class CBFormIntDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<CustomerCard> dropdownMenuEntriesLabels;
-  final List<CustomerCard> dropdownMenuEntriesValues;
+  final List<String> dropdownMenuEntriesLabels;
+  final List<int> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBListCustomerCardDropdown({
+  const CBFormIntDropdown({
     super.key,
     this.width,
     required this.label,
@@ -30,33 +24,14 @@ class CBListCustomerCardDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBListCustomerCardDropdownState();
+      _CBFormIntDropdownState();
 }
 
-class _CBListCustomerCardDropdownState
-    extends ConsumerState<CBListCustomerCardDropdown> {
-  @override
-  void initState() {
-    Future.delayed(
-        const Duration(
-          milliseconds: 100,
-        ), () {
-// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
-      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
-        ref
-            .read(
-                listCustomerCardDropdownProvider(widget.providerName).notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
-      }
-    });
-
-    super.initState();
-  }
-
+class _CBFormIntDropdownState extends ConsumerState<CBFormIntDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(listCustomerCardDropdownProvider(widget.providerName));
+        ref.watch(formIntDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -74,7 +49,7 @@ class _CBListCustomerCardDropdownState
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel.label,
+                label: dropdownMenuEntryLabel,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(
@@ -90,8 +65,7 @@ class _CBListCustomerCardDropdownState
         ),
         onSelected: (value) {
           ref
-              .read(listCustomerCardDropdownProvider(widget.providerName)
-                  .notifier)
+              .read(formIntDropdownProvider(widget.providerName).notifier)
               .state = value!;
         },
       ),
