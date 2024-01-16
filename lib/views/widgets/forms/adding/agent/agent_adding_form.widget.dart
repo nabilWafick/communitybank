@@ -1,7 +1,7 @@
 import 'package:communitybank/controllers/forms/on_changed/agent/agent.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/agent/agent.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/agents/agent_crud.fuction.dart';
+import 'package:communitybank/functions/crud/agents/agent_crud.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';

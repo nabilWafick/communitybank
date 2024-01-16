@@ -27,7 +27,8 @@ class AgentCRUDFunctions {
       final agentFirstnames = ref.watch(agentFirstnamesProvider);
       final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
       final agentAddress = ref.watch(agentAddressProvider);
-      final agentRole = ref.watch(stringDropdownProvider('agent-adding-role'));
+      final agentRole =
+          ref.watch(formStringDropdownProvider('agent-adding-role'));
 
       ServiceResponse agentStatus;
 
@@ -107,7 +108,8 @@ class AgentCRUDFunctions {
       final agentFirstnames = ref.watch(agentFirstnamesProvider);
       final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
       final agentAddress = ref.watch(agentAddressProvider);
-      final agentRole = ref.watch(stringDropdownProvider('agent-adding-role'));
+      final agentRole =
+          ref.watch(formStringDropdownProvider('agent-adding-role'));
 
       ServiceResponse lastagentStatus;
 

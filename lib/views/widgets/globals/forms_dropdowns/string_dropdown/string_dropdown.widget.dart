@@ -2,19 +2,19 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final stringDropdownProvider =
+final formStringDropdownProvider =
     StateProvider.family<String, String>((ref, dropdown) {
   return '*';
 });
 
-class CBStringDropdown extends ConsumerStatefulWidget {
+class CBFormStringDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<String> dropdownMenuEntriesLabels;
   final List<String> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBStringDropdown({
+  const CBFormStringDropdown({
     super.key,
     this.width,
     required this.label,
@@ -24,14 +24,31 @@ class CBStringDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBStringDropdownState();
+      _CBFormStringDropdownState();
 }
 
-class _CBStringDropdownState extends ConsumerState<CBStringDropdown> {
+class _CBFormStringDropdownState extends ConsumerState<CBFormStringDropdown> {
+  @override
+  void initState() {
+    Future.delayed(
+        const Duration(
+          milliseconds: 100,
+        ), () {
+// check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
+      if (widget.dropdownMenuEntriesValues.isNotEmpty) {
+        ref
+            .read(formStringDropdownProvider(widget.providerName).notifier)
+            .state = widget.dropdownMenuEntriesValues[0];
+      }
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem =
-        ref.watch(stringDropdownProvider(widget.providerName));
+        ref.watch(formStringDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -64,8 +81,9 @@ class _CBStringDropdownState extends ConsumerState<CBStringDropdown> {
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref.read(stringDropdownProvider(widget.providerName).notifier).state =
-              value!;
+          ref
+              .read(formStringDropdownProvider(widget.providerName).notifier)
+              .state = value!;
         },
       ),
     );

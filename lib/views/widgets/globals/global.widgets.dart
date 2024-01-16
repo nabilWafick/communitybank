@@ -7,7 +7,7 @@ export 'textformfield/textformfield.widget.dart';
 export 'underlined_textformfield/underlined_textformfield.widget.dart';
 export 'logo/logo.dart';
 export 'search_input/search_input.widget.dart';
-export 'string_dropdown/string_dropdown.widget.dart';
+export 'forms_dropdowns/string_dropdown/string_dropdown.widget.dart';
 export 'add_button/add_button.widget.dart';
 export 'edit_button/edit_button.widget.dart';
 export 'delete_button/delete_button.widget.dart';

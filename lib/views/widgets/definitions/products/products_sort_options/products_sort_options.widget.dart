@@ -3,6 +3,7 @@ import 'package:communitybank/controllers/products/products.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/forms/adding/products/products_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/string_dropdown/string_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -57,7 +58,7 @@ class ProductsSortOptions extends ConsumerWidget {
                   const SizedBox(
                     width: 15.0,
                   ),
-                  CBDropdown(
+                  CBListStringDropdown(
                       label: 'Prix',
                       providerName: 'products-price',
                       dropdownMenuEntriesLabels: productsPurchasePrices.when(

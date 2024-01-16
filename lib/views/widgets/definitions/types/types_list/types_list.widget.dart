@@ -10,7 +10,7 @@ import 'package:communitybank/views/widgets/definitions/products/products_list/p
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/types/types_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/types/types_update_form.widget.dart';
-import 'package:communitybank/views/widgets/globals/string_dropdown/string_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/string_dropdown/string_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,8 @@ final searchedTypesListProvider = StreamProvider<List<Type>>((ref) async* {
 });
 
 final typesListStreamProvider = StreamProvider<List<Type>>((ref) async* {
-  final selectedTypePrice = ref.watch(stringDropdownProvider('types-stackes'));
+  final selectedTypePrice =
+      ref.watch(listStringDropdownProvider('types-stackes'));
   final selectedTypeProduct =
       ref.watch(listProductDropdownProvider('type-products'));
   yield* TypesController.getAll(
@@ -41,7 +42,8 @@ final typesListStreamProvider = StreamProvider<List<Type>>((ref) async* {
 });
 
 final typesListMapStreamProvider = StreamProvider<List<Map>>((ref) async* {
-  final selectedTypePrice = ref.watch(stringDropdownProvider('types-stackes'));
+  final selectedTypePrice =
+      ref.watch(listStringDropdownProvider('types-stackes'));
   // final selectedTypeProduct =
   //     ref.watch(listProductDropdownProvider('type-products'));
   yield* TypesService.getAll(
