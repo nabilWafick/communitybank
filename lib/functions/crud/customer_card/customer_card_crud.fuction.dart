@@ -40,7 +40,7 @@ class CustomerCardCRUDFunctions {
       );
 
       customerCardStatus =
-          await CustomerCardsController.create(customerCard: customerCard);
+          await CustomersCardsController.create(customerCard: customerCard);
 
       // debugPrint('new CustomerCard: $customerCardStatus');
 
@@ -93,7 +93,7 @@ class CustomerCardCRUDFunctions {
         updatedAt: DateTime.now(),
       );
 
-      lastCustomerCardStatus = await CustomerCardsController.update(
+      lastCustomerCardStatus = await CustomersCardsController.update(
         id: customerCard.id!,
         customerCard: newCustomerCard,
       );
@@ -132,7 +132,7 @@ class CustomerCardCRUDFunctions {
     ServiceResponse customerCardStatus;
 
     customerCardStatus =
-        await CustomerCardsController.delete(customerCard: customerCard);
+        await CustomersCardsController.delete(customerCard: customerCard);
 
     if (customerCardStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(

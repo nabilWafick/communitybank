@@ -68,6 +68,31 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
           icon: Icons.account_circle,
           name: 'Clients',
         ),
+        SidebarSubOptionModel(
+          index: 9,
+          icon: Icons.supervised_user_circle,
+          name: 'Agents',
+        ),
+        SidebarSubOptionModel(
+          index: 10,
+          icon: Icons.account_box,
+          name: 'Comptes Clients',
+        ),
+        SidebarSubOptionModel(
+          index: 11,
+          icon: Icons.payment,
+          name: 'Cartes',
+        ),
+        SidebarSubOptionModel(
+          index: 12,
+          icon: Icons.money,
+          name: 'Règlements',
+        ),
+        SidebarSubOptionModel(
+          index: 13,
+          icon: Icons.account_balance_wallet,
+          name: 'Opérations caisse',
+        ),
       ],
       showSubOptions: true,
     ),
@@ -75,7 +100,11 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       icon: Icons.keyboard,
       name: 'Saisies',
       subOptions: [
-        SidebarSubOptionModel(index: 9, icon: Icons.keyboard, name: 'Saisie'),
+        SidebarSubOptionModel(
+          index: 9,
+          icon: Icons.keyboard,
+          name: 'Saisie',
+        ),
       ],
       showSubOptions: true,
     ),

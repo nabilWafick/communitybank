@@ -35,7 +35,7 @@ class CustomerAccountCRUDFunctions {
         updatedAt: DateTime.now(),
       );
 
-      customerAccountStatus = await CustomerAccountsController.create(
+      customerAccountStatus = await CustomersAccountsController.create(
           customerAccount: customerAccount);
 
       // debugPrint('new CustomerAccount: $customerAccountStatus');
@@ -86,7 +86,7 @@ class CustomerAccountCRUDFunctions {
         updatedAt: DateTime.now(),
       );
 
-      lastCustomerAccountStatus = await CustomerAccountsController.update(
+      lastCustomerAccountStatus = await CustomersAccountsController.update(
         id: customerAccount.id!,
         customerAccount: newCustomerAccount,
       );
@@ -124,7 +124,7 @@ class CustomerAccountCRUDFunctions {
 
     ServiceResponse customerAccountStatus;
 
-    customerAccountStatus = await CustomerAccountsController.delete(
+    customerAccountStatus = await CustomersAccountsController.delete(
         customerAccount: customerAccount);
 
     if (customerAccountStatus == ServiceResponse.success) {

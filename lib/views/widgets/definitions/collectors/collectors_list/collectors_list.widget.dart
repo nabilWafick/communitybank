@@ -12,7 +12,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchedcollectorsListProvider =
+final searchedCollectorsListProvider =
     StreamProvider<List<Collector>>((ref) async* {
   String searchedcollector = ref.watch(searchProvider('collectors'));
   ref.listen(searchProvider('collectors'), (previous, next) {
@@ -37,7 +37,7 @@ class CollectorsList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSearching = ref.watch(isSearchingProvider('collectors'));
-    final searchedCollectorsList = ref.watch(searchedcollectorsListProvider);
+    final searchedCollectorsList = ref.watch(searchedCollectorsListProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
     return SizedBox(
       height: 640.0,

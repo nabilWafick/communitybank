@@ -1,11 +1,16 @@
 import 'package:communitybank/views/pages/home/dashboard/dashboard.page.dart';
+import 'package:communitybank/views/pages/home/definitions/agents/agents.page.dart';
+import 'package:communitybank/views/pages/home/definitions/customers_cards/customers_cards.page.dart';
+import 'package:communitybank/views/pages/home/definitions/cash_operations/cash_operations.page.dart';
 import 'package:communitybank/views/pages/home/definitions/collectors/collectors.page.dart';
 import 'package:communitybank/views/pages/home/definitions/customers/customers.page.dart';
+import 'package:communitybank/views/pages/home/definitions/customers_accounts/customers_accounts.page.dart';
 import 'package:communitybank/views/pages/home/definitions/customers_categories/customers_categories.page.dart';
 import 'package:communitybank/views/pages/home/definitions/economical_activities/economical_activities.page.dart';
 import 'package:communitybank/views/pages/home/definitions/localities/localities.page.dart';
 import 'package:communitybank/views/pages/home/definitions/personal_status/personal_status.page.dart';
 import 'package:communitybank/views/pages/home/definitions/products/products.page.dart';
+import 'package:communitybank/views/pages/home/definitions/settlements/settlements.page.dart';
 import 'package:communitybank/views/pages/home/definitions/types/types.page.dart';
 import 'package:communitybank/views/pages/home/entries/entries.page.dart';
 import 'package:communitybank/views/pages/home/files/files.page.dart';
@@ -31,6 +36,11 @@ class _MainBodyState extends ConsumerState<MainBody> {
     PersonnalStatusPage(),
     LocalitiesPage(),
     CustomersPage(),
+    AgentsPage(),
+    CustomersAccountsPage(),
+    CardsPage(),
+    SettlementsPage(),
+    CashOperationsPage(),
     EntriesPage(),
     FilesPage(),
     LogoutPage(),

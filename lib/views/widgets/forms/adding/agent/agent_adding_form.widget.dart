@@ -2,6 +2,7 @@ import 'package:communitybank/controllers/forms/on_changed/agent/agent.on_change
 import 'package:communitybank/controllers/forms/validators/agent/agent.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/agents/agent_crud.function.dart';
+import 'package:communitybank/models/data/agent_role/agent_role.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _AgentAddingFormState extends ConsumerState<AgentAddingForm> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const CBText(
-                        text: 'Chargé de compte',
+                        text: 'Agent',
                         fontSize: 20.0,
                         fontWeight: FontWeight.w600,
                       ),
@@ -179,6 +180,26 @@ class _AgentAddingFormState extends ConsumerState<AgentAddingForm> {
                           onChanged: AgentOnChanged.agentAddress,
                         ),
                       ),
+                      Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 10.0,
+                          ),
+                          width: formCardWidth / 2.3,
+                          child: const CBFormStringDropdown(
+                            width: formCardWidth / 2.3,
+                            label: 'Role',
+                            providerName: 'agent-adding-role',
+                            dropdownMenuEntriesLabels: [
+                              AgentRole.simpleUser,
+                              AgentRole.semiAdmin,
+                              AgentRole.admin
+                            ],
+                            dropdownMenuEntriesValues: [
+                              AgentRole.simpleUser,
+                              AgentRole.semiAdmin,
+                              AgentRole.admin
+                            ],
+                          )),
                     ],
                   )
                 ],

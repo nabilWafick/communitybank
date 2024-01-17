@@ -66,7 +66,7 @@ class CustomerCardsService {
   }
 
   static Future<List<Map<String, dynamic>>> searchCustomerCard(
-      {required String name}) async {
+      {required String label}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
@@ -75,7 +75,7 @@ class CustomerCardsService {
       response = await supabase
               .from(CustomerCardTable.tableName)
               .select<List<Map<String, dynamic>>>()
-              .ilike(CustomerCardTable.label, '%$name%')
+              .ilike(CustomerCardTable.label, '%$label%')
 
           //.or(filters)
           // .ilike(CustomerCardTable.firstnames, '%$name%');

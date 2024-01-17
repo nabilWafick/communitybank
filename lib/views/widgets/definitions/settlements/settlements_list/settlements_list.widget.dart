@@ -1,44 +1,37 @@
-import 'package:communitybank/controllers/collectors/collectors.controller.dart';
-import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
-import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/collectors/collectors_crud.function.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/images_shower/single/single_image_shower.widget.dart';
+import 'package:communitybank/controllers/settlement/settlement.controller.dart';
+import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/collectors/collectors_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/collectors/collectors_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchedcollectorsListProvider =
-    StreamProvider<List<Collector>>((ref) async* {
-  String searchedcollector = ref.watch(searchProvider('collectors'));
-  ref.listen(searchProvider('collectors'), (previous, next) {
+final searchedSettlementsListProvider =
+    StreamProvider<List<Settlement>>((ref) async* {
+  // String searchedcollector = ref.watch(searchProvider('settlements'));
+  ref.listen(searchProvider('settlements'), (previous, next) {
     if (previous != next && next != '' && next.trim() != '') {
-      ref.read(isSearchingProvider('collectors').notifier).state = true;
+      ref.read(isSearchingProvider('settlements').notifier).state = true;
     } else {
-      ref.read(isSearchingProvider('collectors').notifier).state = false;
+      ref.read(isSearchingProvider('settlements').notifier).state = false;
     }
   });
-  yield* CollectorsController.searchCollector(name: searchedcollector)
-      .asStream();
+  yield* SettlementsController.getAll();
+  // searchCollector(name: searchedcollector).asStream();
 });
 
-final collectorsListStreamProvider =
-    StreamProvider<List<Collector>>((ref) async* {
-  yield* CollectorsController.getAll();
+final settlementsListStreamProvider =
+    StreamProvider<List<Settlement>>((ref) async* {
+  yield* SettlementsController.getAll();
 });
 
-class CollectorsList extends ConsumerWidget {
-  const CollectorsList({super.key});
+class SettlementsList extends ConsumerWidget {
+  const SettlementsList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('collectors'));
-    final searchedCollectorsList = ref.watch(searchedcollectorsListProvider);
-    final collectorsListStream = ref.watch(collectorsListStreamProvider);
+    //  final isSearching = ref.watch(isSearchingProvider('settlements'));
+    //  final searchedSettlementsList = ref.watch(searchedSettlementsListProvider);
+    //  final settlementsListStream = ref.watch(settlementsListStreamProvider);
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
@@ -94,8 +87,10 @@ class CollectorsList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows: isSearching
-                ? searchedCollectorsList.when(
+            rows: const [],
+            /*
+             isSearching
+                ? searchedSettlementsList.when(
                     data: (data) {
                       //  debugPrint('collector Stream Data: $data');
                       return data
@@ -197,7 +192,7 @@ class CollectorsList extends ConsumerWidget {
                       return [];
                     },
                   )
-                : collectorsListStream.when(
+                : settlementsListStream.when(
                     data: (data) {
                       //  debugPrint('collector Stream Data: $data');
                       return data
@@ -296,6 +291,7 @@ class CollectorsList extends ConsumerWidget {
                       return [];
                     },
                   ),
+         */
           ),
         ),
       ),

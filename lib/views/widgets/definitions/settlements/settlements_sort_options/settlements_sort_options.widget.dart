@@ -1,13 +1,10 @@
-import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
-import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/adding/collectors/collectors_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CollectorsSortOptions extends ConsumerWidget {
-  const CollectorsSortOptions({super.key});
+class SettlementsSortOptions extends ConsumerWidget {
+  const SettlementsSortOptions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,11 +17,11 @@ class CollectorsSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
-              ref.read(collectorPictureProvider.notifier).state = null;
-              FunctionsController.showAlertDialog(
-                context: context,
-                alertDialog: const CollectorAddingForm(),
-              );
+              //   ref.read(collectorPictureProvider.notifier).state = null;
+              //   FunctionsController.showAlertDialog(
+              //     context: context,
+              //     alertDialog: const (),
+              //   );
             },
           ),
           Row(
@@ -32,8 +29,8 @@ class CollectorsSortOptions extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CBSearchInput(
-                hintText: 'Rechercher un chargé de clientèle',
-                searchProvider: searchProvider('collectors'),
+                hintText: 'Rechercher un règlement',
+                searchProvider: searchProvider('settlements'),
               ),
               const SizedBox(
                 width: 10.0,

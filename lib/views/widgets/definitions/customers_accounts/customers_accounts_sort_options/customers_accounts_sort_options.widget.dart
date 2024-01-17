@@ -6,8 +6,8 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CollectorsSortOptions extends ConsumerWidget {
-  const CollectorsSortOptions({super.key});
+class CustomersAccountsSortOptions extends ConsumerWidget {
+  const CustomersAccountsSortOptions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,8 +32,8 @@ class CollectorsSortOptions extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CBSearchInput(
-                hintText: 'Rechercher un chargé de clientèle',
-                searchProvider: searchProvider('collectors'),
+                hintText: 'Rechercher un compte client',
+                searchProvider: searchProvider('customers-accounts'),
               ),
               const SizedBox(
                 width: 10.0,

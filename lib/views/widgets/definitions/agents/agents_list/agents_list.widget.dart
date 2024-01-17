@@ -1,44 +1,40 @@
-import 'package:communitybank/controllers/collectors/collectors.controller.dart';
-import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
+import 'package:communitybank/controllers/agent/agent.controller.dart';
+import 'package:communitybank/controllers/forms/validators/agent/agent.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/collectors/collectors_crud.function.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
+import 'package:communitybank/functions/crud/agents/agent_crud.function.dart';
+import 'package:communitybank/models/data/agent/agent.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/images_shower/single/single_image_shower.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/collectors/collectors_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/collectors/collectors_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/agent_confirmation_dialog/agents_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchedcollectorsListProvider =
-    StreamProvider<List<Collector>>((ref) async* {
-  String searchedcollector = ref.watch(searchProvider('collectors'));
-  ref.listen(searchProvider('collectors'), (previous, next) {
+final searchedAgentsListProvider = StreamProvider<List<Agent>>((ref) async* {
+  String searchedAgent = ref.watch(searchProvider('agents'));
+  ref.listen(searchProvider('agents'), (previous, next) {
     if (previous != next && next != '' && next.trim() != '') {
-      ref.read(isSearchingProvider('collectors').notifier).state = true;
+      ref.read(isSearchingProvider('agents').notifier).state = true;
     } else {
-      ref.read(isSearchingProvider('collectors').notifier).state = false;
+      ref.read(isSearchingProvider('agents').notifier).state = false;
     }
   });
-  yield* CollectorsController.searchCollector(name: searchedcollector)
-      .asStream();
+  yield* AgentsController.searchAgent(name: searchedAgent).asStream();
 });
 
-final collectorsListStreamProvider =
-    StreamProvider<List<Collector>>((ref) async* {
-  yield* CollectorsController.getAll();
+final agentsListStreamProvider = StreamProvider<List<Agent>>((ref) async* {
+  yield* AgentsController.getAll();
 });
 
-class CollectorsList extends ConsumerWidget {
-  const CollectorsList({super.key});
+class AgentsList extends ConsumerWidget {
+  const AgentsList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('collectors'));
-    final searchedCollectorsList = ref.watch(searchedcollectorsListProvider);
-    final collectorsListStream = ref.watch(collectorsListStreamProvider);
+    final isSearching = ref.watch(isSearchingProvider('agents'));
+    final searchedAgentsList = ref.watch(searchedAgentsListProvider);
+    final agentsListStream = ref.watch(agentsListStreamProvider);
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
@@ -88,6 +84,14 @@ class CollectorsList extends ConsumerWidget {
                 ),
               ),
               DataColumn(
+                label: CBText(
+                  text: 'Role',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              DataColumn(
                 label: SizedBox(),
               ),
               DataColumn(
@@ -95,32 +99,32 @@ class CollectorsList extends ConsumerWidget {
               ),
             ],
             rows: isSearching
-                ? searchedCollectorsList.when(
+                ? searchedAgentsList.when(
                     data: (data) {
-                      //  debugPrint('collector Stream Data: $data');
+                      //  debugPrint('Agent Stream Data: $data');
                       return data
                           .map(
-                            (collector) => DataRow(
+                            (agent) => DataRow(
                               cells: [
                                 DataCell(
                                   CBText(
-                                    text: collector.id!.toString(),
+                                    text: agent.id!.toString(),
                                   ),
                                 ),
                                 DataCell(
                                   onTap: () {
-                                    collector.profile != null
+                                    agent.profile != null
                                         ? FunctionsController.showAlertDialog(
                                             context: context,
                                             alertDialog: SingleImageShower(
-                                              imageSource: collector.profile!,
+                                              imageSource: agent.profile!,
                                             ),
                                           )
                                         : () {};
                                   },
                                   Container(
                                     alignment: Alignment.center,
-                                    child: collector.profile != null
+                                    child: agent.profile != null
                                         ? const Icon(
                                             Icons.photo,
                                             color: CBColors.primaryColor,
@@ -131,28 +135,28 @@ class CollectorsList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                       text:
-                                          '${collector.name} ${collector.firstnames}'),
+                                          '${agent.name} ${agent.firstnames}'),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.phoneNumber),
+                                  CBText(text: agent.phoneNumber),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.address),
+                                  CBText(text: agent.address),
+                                ),
+                                DataCell(
+                                  CBText(text: agent.role),
                                 ),
                                 DataCell(
                                   onTap: () {
                                     ref
-                                        .read(collectorPictureProvider.notifier)
+                                        .read(agentPictureProvider.notifier)
                                         .state = null;
-                                    ref
-                                        .read(collectorPictureProvider.notifier)
-                                        .state = null;
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: CollectorUpdateForm(
-                                        collector: collector,
-                                      ),
-                                    );
+                                    //  FunctionsController.showAlertDialog(
+                                    //    context: context,
+                                    //    alertDialog: AgentUpdateForm(
+                                    //      Agent: Agent,
+                                    //    ),
+                                    //  );
                                   },
                                   Container(
                                     alignment: Alignment.centerRight,
@@ -168,10 +172,10 @@ class CollectorsList extends ConsumerWidget {
                                     FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog:
-                                          CollectorDeletionConfirmationDialog(
-                                        collector: collector,
+                                          AgentDeletionConfirmationDialog(
+                                        agent: agent,
                                         confirmToDelete:
-                                            CollectorCRUDFunctions.delete,
+                                            AgentCRUDFunctions.delete,
                                       ),
                                     );
                                   },
@@ -189,40 +193,40 @@ class CollectorsList extends ConsumerWidget {
                           .toList();
                     },
                     error: (error, stack) {
-                      //  debugPrint('collectors Stream Error');
+                      //  debugPrint('Agents Stream Error');
                       return [];
                     },
                     loading: () {
-                      //  debugPrint('collectors Stream Loading');
+                      //  debugPrint('Agents Stream Loading');
                       return [];
                     },
                   )
-                : collectorsListStream.when(
+                : agentsListStream.when(
                     data: (data) {
-                      //  debugPrint('collector Stream Data: $data');
+                      //  debugPrint('Agent Stream Data: $data');
                       return data
                           .map(
-                            (collector) => DataRow(
+                            (agent) => DataRow(
                               cells: [
                                 DataCell(
                                   CBText(
-                                    text: collector.id!.toString(),
+                                    text: agent.id!.toString(),
                                   ),
                                 ),
                                 DataCell(
                                   onTap: () {
-                                    collector.profile != null
+                                    agent.profile != null
                                         ? FunctionsController.showAlertDialog(
                                             context: context,
                                             alertDialog: SingleImageShower(
-                                              imageSource: collector.profile!,
+                                              imageSource: agent.profile!,
                                             ),
                                           )
                                         : () {};
                                   },
                                   Container(
                                     alignment: Alignment.center,
-                                    child: collector.profile != null
+                                    child: agent.profile != null
                                         ? const Icon(
                                             Icons.photo,
                                             color: CBColors.primaryColor,
@@ -233,25 +237,29 @@ class CollectorsList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                       text:
-                                          '${collector.name} ${collector.firstnames}'),
+                                          '${agent.name} ${agent.firstnames}'),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.phoneNumber),
+                                  CBText(text: agent.phoneNumber),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.address),
+                                  CBText(text: agent.address),
+                                ),
+                                DataCell(
+                                  CBText(text: agent.role),
                                 ),
                                 DataCell(
                                   onTap: () {
                                     ref
-                                        .read(collectorPictureProvider.notifier)
+                                        .read(agentPictureProvider.notifier)
                                         .state = null;
-                                    FunctionsController.showAlertDialog(
+                                    /*    FunctionsController.showAlertDialog(
                                       context: context,
-                                      alertDialog: CollectorUpdateForm(
-                                        collector: collector,
+                                      alertDialog: AgentUpdateForm(
+                                        Agent: Agent,
                                       ),
                                     );
+                                 */
                                   },
                                   Container(
                                     alignment: Alignment.centerRight,
@@ -264,15 +272,16 @@ class CollectorsList extends ConsumerWidget {
                                 ),
                                 DataCell(
                                   onTap: () async {
-                                    FunctionsController.showAlertDialog(
+                                    /*   FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog:
-                                          CollectorDeletionConfirmationDialog(
-                                        collector: collector,
+                                          AgentDeletionConfirmationDialog(
+                                        Agent: Agent,
                                         confirmToDelete:
-                                            CollectorCRUDFunctions.delete,
+                                            AgentCRUDFunctions.delete,
                                       ),
-                                    );
+                                    ); 
+                                    */
                                   },
                                   Container(
                                     alignment: Alignment.centerRight,
@@ -288,11 +297,11 @@ class CollectorsList extends ConsumerWidget {
                           .toList();
                     },
                     error: (error, stack) {
-                      //  debugPrint('collectors Stream Error');
+                      //  debugPrint('Agents Stream Error');
                       return [];
                     },
                     loading: () {
-                      //  debugPrint('collectors Stream Loading');
+                      //  debugPrint('Agents Stream Loading');
                       return [];
                     },
                   ),

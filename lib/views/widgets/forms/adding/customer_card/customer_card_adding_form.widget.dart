@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CardAddingForm extends StatefulHookConsumerWidget {
-  const CardAddingForm({super.key});
+class CustomerCardAddingForm extends StatefulHookConsumerWidget {
+  const CustomerCardAddingForm({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CardAddingFormState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CustomerCardAddingFormState();
 }
 
-class _CardAddingFormState extends ConsumerState<CardAddingForm> {
+class _CustomerCardAddingFormState
+    extends ConsumerState<CustomerCardAddingForm> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

@@ -1,126 +1,109 @@
-import 'package:communitybank/controllers/collectors/collectors.controller.dart';
-import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
-import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/collectors/collectors_crud.function.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/images_shower/single/single_image_shower.widget.dart';
+import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/collectors/collectors_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/collectors/collectors_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchedcollectorsListProvider =
-    StreamProvider<List<Collector>>((ref) async* {
-  String searchedcollector = ref.watch(searchProvider('collectors'));
-  ref.listen(searchProvider('collectors'), (previous, next) {
+final searchedCardsListProvider =
+    StreamProvider<List<CustomerCard>>((ref) async* {
+  String searchedCard = ref.watch(searchProvider('customers-cards'));
+  ref.listen(searchProvider('customers-cards'), (previous, next) {
     if (previous != next && next != '' && next.trim() != '') {
-      ref.read(isSearchingProvider('collectors').notifier).state = true;
+      ref.read(isSearchingProvider('cards').notifier).state = true;
     } else {
-      ref.read(isSearchingProvider('collectors').notifier).state = false;
+      ref.read(isSearchingProvider('customers-cards').notifier).state = false;
     }
   });
-  yield* CollectorsController.searchCollector(name: searchedcollector)
+  yield* CustomersCardsController.searchCustomerCard(label: searchedCard)
       .asStream();
 });
 
-final collectorsListStreamProvider =
-    StreamProvider<List<Collector>>((ref) async* {
-  yield* CollectorsController.getAll();
+final cardsListStreamProvider =
+    StreamProvider<List<CustomerCard>>((ref) async* {
+  yield* CustomersCardsController.getAll();
 });
 
-class CollectorsList extends ConsumerWidget {
-  const CollectorsList({super.key});
+class CustomersCardsList extends ConsumerWidget {
+  const CustomersCardsList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('collectors'));
-    final searchedCollectorsList = ref.watch(searchedcollectorsListProvider);
-    final collectorsListStream = ref.watch(collectorsListStreamProvider);
+    //  final isSearching = ref.watch(isSearchingProvider('cards'));
+    //  final searchedCardsList = ref.watch(searchedCardsListProvider);
+    //  final cardsListStream = ref.watch(cardsListStreamProvider);
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
-          child: DataTable(
-            showCheckboxColumn: true,
-            columns: const [
-              DataColumn(
-                label: CBText(
-                  text: 'Code',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+          child: DataTable(showCheckboxColumn: true, columns: const [
+            DataColumn(
+              label: CBText(
+                text: 'Code',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
               ),
-              DataColumn(
-                label: CBText(
-                  text: 'Photo',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Libellé',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
               ),
-              DataColumn(
-                label: CBText(
-                  text: 'Nom & Prénoms',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Téléphone',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
               ),
-              DataColumn(
-                label: CBText(
-                  text: 'Téléphone',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Adresse',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
               ),
-              DataColumn(
-                label: CBText(
-                  text: 'Adresse',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: SizedBox(),
-              ),
-              DataColumn(
-                label: SizedBox(),
-              ),
-            ],
-            rows: isSearching
-                ? searchedCollectorsList.when(
+            ),
+            DataColumn(
+              label: SizedBox(),
+            ),
+            DataColumn(
+              label: SizedBox(),
+            ),
+          ], rows: const [] /*
+            isSearching
+                ? searchedCardsList.when(
                     data: (data) {
-                      //  debugPrint('collector Stream Data: $data');
+                      //  debugPrint('card Stream Data: $data');
                       return data
                           .map(
-                            (collector) => DataRow(
+                            (card) => DataRow(
                               cells: [
                                 DataCell(
                                   CBText(
-                                    text: collector.id!.toString(),
+                                    text: card.id!.toString(),
                                   ),
                                 ),
                                 DataCell(
                                   onTap: () {
-                                    collector.profile != null
+                                    card.profile != null
                                         ? FunctionsController.showAlertDialog(
                                             context: context,
                                             alertDialog: SingleImageShower(
-                                              imageSource: collector.profile!,
+                                              imageSource: card.profile!,
                                             ),
                                           )
                                         : () {};
                                   },
                                   Container(
                                     alignment: Alignment.center,
-                                    child: collector.profile != null
+                                    child: card.profile != null
                                         ? const Icon(
                                             Icons.photo,
                                             color: CBColors.primaryColor,
@@ -131,26 +114,26 @@ class CollectorsList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                       text:
-                                          '${collector.name} ${collector.firstnames}'),
+                                          '${card.name} ${card.firstnames}'),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.phoneNumber),
+                                  CBText(text: card.phoneNumber),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.address),
+                                  CBText(text: card.address),
                                 ),
                                 DataCell(
                                   onTap: () {
                                     ref
-                                        .read(collectorPictureProvider.notifier)
+                                        .read(cardPictureProvider.notifier)
                                         .state = null;
                                     ref
-                                        .read(collectorPictureProvider.notifier)
+                                        .read(cardPictureProvider.notifier)
                                         .state = null;
                                     FunctionsController.showAlertDialog(
                                       context: context,
-                                      alertDialog: CollectorUpdateForm(
-                                        collector: collector,
+                                      alertDialog: CardUpdateForm(
+                                        card: card,
                                       ),
                                     );
                                   },
@@ -168,10 +151,10 @@ class CollectorsList extends ConsumerWidget {
                                     FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog:
-                                          CollectorDeletionConfirmationDialog(
-                                        collector: collector,
+                                          CardDeletionConfirmationDialog(
+                                        card: card,
                                         confirmToDelete:
-                                            CollectorCRUDFunctions.delete,
+                                            CardCRUDFunctions.delete,
                                       ),
                                     );
                                   },
@@ -189,40 +172,40 @@ class CollectorsList extends ConsumerWidget {
                           .toList();
                     },
                     error: (error, stack) {
-                      //  debugPrint('collectors Stream Error');
+                      //  debugPrint('cards Stream Error');
                       return [];
                     },
                     loading: () {
-                      //  debugPrint('collectors Stream Loading');
+                      //  debugPrint('cards Stream Loading');
                       return [];
                     },
                   )
-                : collectorsListStream.when(
+                : cardsListStream.when(
                     data: (data) {
-                      //  debugPrint('collector Stream Data: $data');
+                      //  debugPrint('card Stream Data: $data');
                       return data
                           .map(
-                            (collector) => DataRow(
+                            (card) => DataRow(
                               cells: [
                                 DataCell(
                                   CBText(
-                                    text: collector.id!.toString(),
+                                    text: card.id!.toString(),
                                   ),
                                 ),
                                 DataCell(
                                   onTap: () {
-                                    collector.profile != null
+                                    card.profile != null
                                         ? FunctionsController.showAlertDialog(
                                             context: context,
                                             alertDialog: SingleImageShower(
-                                              imageSource: collector.profile!,
+                                              imageSource: card.profile!,
                                             ),
                                           )
                                         : () {};
                                   },
                                   Container(
                                     alignment: Alignment.center,
-                                    child: collector.profile != null
+                                    child: card.profile != null
                                         ? const Icon(
                                             Icons.photo,
                                             color: CBColors.primaryColor,
@@ -233,23 +216,23 @@ class CollectorsList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                       text:
-                                          '${collector.name} ${collector.firstnames}'),
+                                          '${card.name} ${card.firstnames}'),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.phoneNumber),
+                                  CBText(text: card.phoneNumber),
                                 ),
                                 DataCell(
-                                  CBText(text: collector.address),
+                                  CBText(text: card.address),
                                 ),
                                 DataCell(
                                   onTap: () {
                                     ref
-                                        .read(collectorPictureProvider.notifier)
+                                        .read(cardPictureProvider.notifier)
                                         .state = null;
                                     FunctionsController.showAlertDialog(
                                       context: context,
-                                      alertDialog: CollectorUpdateForm(
-                                        collector: collector,
+                                      alertDialog: CardUpdateForm(
+                                        card: card,
                                       ),
                                     );
                                   },
@@ -267,10 +250,10 @@ class CollectorsList extends ConsumerWidget {
                                     FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog:
-                                          CollectorDeletionConfirmationDialog(
-                                        collector: collector,
+                                          CardDeletionConfirmationDialog(
+                                        card: card,
                                         confirmToDelete:
-                                            CollectorCRUDFunctions.delete,
+                                            CardCRUDFunctions.delete,
                                       ),
                                     );
                                   },
@@ -288,15 +271,16 @@ class CollectorsList extends ConsumerWidget {
                           .toList();
                     },
                     error: (error, stack) {
-                      //  debugPrint('collectors Stream Error');
+                      //  debugPrint('cards Stream Error');
                       return [];
                     },
                     loading: () {
-                      //  debugPrint('collectors Stream Loading');
+                      //  debugPrint('cards Stream Loading');
                       return [];
                     },
                   ),
-          ),
+         */
+              ),
         ),
       ),
     );

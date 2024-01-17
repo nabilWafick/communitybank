@@ -2,7 +2,7 @@ import 'package:communitybank/models/data/customer_card/customer_card.model.dart
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/services/customer_card/customer_card.service.dart';
 
-class CustomerCardsController {
+class CustomersCardsController {
   static Future<ServiceResponse> create(
       {required CustomerCard customerCard}) async {
     final response =
@@ -32,9 +32,9 @@ class CustomerCardsController {
   }
 
   static Future<List<CustomerCard>> searchCustomerCard(
-      {required String name}) async {
+      {required String label}) async {
     final searchedCustomerCards =
-        await CustomerCardsService.searchCustomerCard(name: name);
+        await CustomerCardsService.searchCustomerCard(label: label);
 
     return searchedCustomerCards
         .map(
