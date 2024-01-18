@@ -1,4 +1,3 @@
-import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/customer_card/customer_card_adding_form.widget.dart';
@@ -20,10 +19,6 @@ class CustomersCardsSortOptions extends ConsumerWidget {
         children: [
           CBAddButton(
             onTap: () {
-              ref.read(customerAccountAddedInputsProvider.notifier).state = {};
-              ref
-                  .read(customerAccountSelectedOwnerCardsProvider.notifier)
-                  .state = {};
               FunctionsController.showAlertDialog(
                 context: context,
                 alertDialog: const CustomerCardAddingForm(),

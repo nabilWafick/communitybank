@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:communitybank/models/data/collector/collector.model.dart';
+import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,15 +10,19 @@ import 'package:communitybank/models/tables/customer_account/customer_account_ta
 
 class CustomerAccount {
   final int? id;
+  Customer? customer;
   final int customerId;
+  Collector? collector;
   final int collectorId;
-  final List<CustomerCard> customerCards;
+  List<CustomerCard> customerCards;
   final List<dynamic>? customerCardsIds;
   final DateTime createdAt;
   final DateTime updatedAt;
   CustomerAccount({
     this.id,
+    this.customer,
     required this.customerId,
+    this.collector,
     required this.collectorId,
     required this.customerCards,
     this.customerCardsIds,
@@ -59,7 +65,9 @@ class CustomerAccount {
   factory CustomerAccount.fromMap(Map<String, dynamic> map) {
     return CustomerAccount(
       id: map[CustomerAccountTable.id]?.toInt(),
+      customer: null,
       customerId: map[CustomerAccountTable.customerId]?.toInt() ?? 0,
+      collector: null,
       collectorId: map[CustomerAccountTable.collectorId]?.toInt() ?? 0,
       customerCards: [],
       customerCardsIds:

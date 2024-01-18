@@ -9,6 +9,7 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 
 class CustomerCardUpdateForm extends StatefulHookConsumerWidget {
   final CustomerCard customerCard;
@@ -96,9 +97,10 @@ class _CustomerCardUpdateFormState
                           horizontal: 10.0,
                         ),
                         width: formCardWidth,
-                        child: const CBTextFormField(
+                        child: CBTextFormField(
                           label: 'Libellé',
                           hintText: 'Libellé',
+                          initialValue: widget.customerCard.label,
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,
@@ -118,14 +120,26 @@ class _CustomerCardUpdateFormState
                         child: CBFormTypeDropdown(
                           width: formCardWidth / 1.16,
                           label: 'Type',
-                          providerName: 'customer-card-adding-type',
+                          providerName: 'customer-card-update-type',
                           dropdownMenuEntriesLabels: typeListStream.when(
-                            data: (data) => data,
+                            data: (data) {
+                              List<Type> typesList = data;
+                              typesList.remove(widget.customerCard.type);
+                              typesList = [
+                                widget.customerCard.type!,
+                                ...typesList
+                              ];
+                              return typesList;
+                            },
                             error: (error, stackTrace) => [],
                             loading: () => [],
                           ),
                           dropdownMenuEntriesValues: typeListStream.when(
-                            data: (data) => data,
+                            data: (data) {
+                              data.remove(widget.customerCard.type);
+                              data = [widget.customerCard.type!, ...data];
+                              return data;
+                            },
                             error: (error, stackTrace) => [],
                             loading: () => [],
                           ),
@@ -189,10 +203,11 @@ class _CustomerCardUpdateFormState
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              CustomerCardCRUDFunctions.create(
+                              CustomerCardCRUDFunctions.update(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
+                                customerCard: widget.customerCard,
                                 showValidatedButton: showValidatedButton,
                               );
                             },

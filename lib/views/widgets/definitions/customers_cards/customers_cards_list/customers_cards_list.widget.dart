@@ -9,6 +9,7 @@ import 'package:communitybank/views/widgets/forms/update/customer_card/customer_
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 
 final searchedCustomersCardsListProvider =
     StreamProvider<List<CustomerCard>>((ref) async* {
@@ -212,10 +213,21 @@ class CustomersCardsList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                     text: typesListStream.when(
-                                        data: (data) => data
-                                            .firstWhere((type) =>
-                                                type.id == customerCard.typeId)
-                                            .name,
+                                        data: (data) {
+                                          final typeList = data;
+                                          customerCard.type = null;
+                                          String typeName = '';
+
+                                          for (Type type in typeList) {
+                                            if (type.id ==
+                                                customerCard.typeId) {
+                                              typeName = type.name;
+                                              customerCard.type = type;
+                                            }
+                                          }
+
+                                          return typeName;
+                                        },
                                         error: (error, stackTrace) => '',
                                         loading: () => ''),
                                   ),

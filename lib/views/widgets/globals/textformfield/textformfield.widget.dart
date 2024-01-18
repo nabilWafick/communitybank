@@ -48,7 +48,7 @@ class CBTextFormField extends HookConsumerWidget {
               style: const TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 14.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
                 label: label != null

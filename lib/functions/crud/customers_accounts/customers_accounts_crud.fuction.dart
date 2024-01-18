@@ -3,6 +3,8 @@
 import 'package:communitybank/controllers/customer_account/customer_account.controller.dart';
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
+import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
@@ -43,6 +45,8 @@ class CustomerAccountCRUDFunctions {
 
         List<CustomerCard> customerAccountOwnerCards = [];
 
+        // store selected customerCards
+
         customerAccountSelectedOwnerCards.forEach((key, customerCard) {
           customerAccountOwnerCards.add(customerCard);
         });
@@ -79,19 +83,39 @@ class CustomerAccountCRUDFunctions {
           isCustomerCardRepeated = false;
           customerCardNumber = 0;
         } else {
-          //   ServiceResponse customerAccountStatus;
+          ServiceResponse customerAccountStatus;
 
           final customerAccount = CustomerAccount(
+            customer: Customer(
+              name: 'name',
+              firstnames: 'firstnames',
+              phoneNumber: 'phoneNumber',
+              address: 'address',
+              profession: 'profession',
+              nicNumber: 1,
+              categoryId: 0,
+              economicalActivityId: 0,
+              personalStatusId: 0,
+              localityId: 0,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
             customerId: customerAccountOwner.id!,
+            collector: Collector(
+              name: 'name',
+              firstnames: 'firstnames',
+              phoneNumber: 'phoneNumber',
+              address: 'address',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
             collectorId: customerAccountCollector.id!,
             customerCards: customerAccountOwnerCards,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
 
-          debugPrint(customerAccount.toString());
-
-          /* customerAccountStatus = await CustomersAccountsController.create(
+          customerAccountStatus = await CustomersAccountsController.create(
               customerAccount: customerAccount);
 
           // debugPrint('new CustomerAccount: $customerAccountStatus');
@@ -115,7 +139,7 @@ class CustomerAccountCRUDFunctions {
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
-          );*/
+          );
         }
       }
     }
@@ -131,47 +155,126 @@ class CustomerAccountCRUDFunctions {
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
-      showValidatedButton.value = false;
-      final customerAccountOwner = ref.watch(
-          formCustomerDropdownProvider('customer-account-update-customer'));
-      final customerAccountCollector = ref.watch(
-          formCollectorDropdownProvider('customer-account-update-collector'));
-
-      ServiceResponse lastCustomerAccountStatus;
-
-      final newCustomerAccount = CustomerAccount(
-        customerId: customerAccountOwner.id!,
-        collectorId: customerAccountCollector.id!,
-        customerCards: [],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      lastCustomerAccountStatus = await CustomersAccountsController.update(
-        id: customerAccount.id!,
-        customerAccount: newCustomerAccount,
-      );
-
-      // debugPrint('new CustomerAccount: $customerAccountStatus');
-
-      if (lastCustomerAccountStatus == ServiceResponse.success) {
+      final customerAccountSelectedOwnerCards =
+          ref.watch(customerAccountSelectedOwnerCardsProvider);
+//  if  any  customer card have  been  selected
+      if (customerAccountSelectedOwnerCards.isEmpty) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerAccountStatus,
-          response: 'Opération réussie',
+          serviceResponse: ServiceResponse.failed,
+          response: 'Le compte client doit avoir au moins une carte',
         );
-        showValidatedButton.value = true;
-        Navigator.of(context).pop();
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
       } else {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerAccountStatus,
-          response: 'Opération échouée',
-        );
-        showValidatedButton.value = true;
+        showValidatedButton.value = false;
+        final customerAccountOwner = ref.watch(
+            formCustomerDropdownProvider('customer-account-update-customer'));
+        final customerAccountCollector = ref.watch(
+            formCollectorDropdownProvider('customer-account-update-collector'));
+
+        List<CustomerCard> customerAccountOwnerCards = [];
+
+        // store selected customerCards
+
+        customerAccountSelectedOwnerCards.forEach((key, customerCard) {
+          customerAccountOwnerCards.add(customerCard);
+        });
+
+        bool isCustomerCardRepeated = false;
+        int customerCardNumber = 0;
+
+        for (CustomerCard customerCardF in customerAccountOwnerCards) {
+          isCustomerCardRepeated = false;
+          customerCardNumber = 0;
+          for (CustomerCard customerCardL in customerAccountOwnerCards) {
+            if (customerCardF == customerCardL) {
+              ++customerCardNumber;
+            }
+          }
+
+          if (customerCardNumber > 1) {
+            isCustomerCardRepeated = true;
+            break;
+          }
+        }
+
+        if (isCustomerCardRepeated == true) {
+          // show validated button to permit a correction from the user
+          showValidatedButton.value = true;
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response: 'Répétition de carte dans le compte',
+          );
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+          isCustomerCardRepeated = false;
+          customerCardNumber = 0;
+        } else {
+          ServiceResponse lastCustomerAccountStatus;
+
+          final newCustomerAccount = CustomerAccount(
+            customer: Customer(
+              name: 'name',
+              firstnames: 'firstnames',
+              phoneNumber: 'phoneNumber',
+              address: 'address',
+              profession: 'profession',
+              nicNumber: 1,
+              categoryId: 0,
+              economicalActivityId: 0,
+              personalStatusId: 0,
+              localityId: 0,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+            customerId: customerAccountOwner.id!,
+            collector: Collector(
+              name: 'name',
+              firstnames: 'firstnames',
+              phoneNumber: 'phoneNumber',
+              address: 'address',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+            collectorId: customerAccountCollector.id!,
+            customerCards: customerAccountOwnerCards,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+
+          lastCustomerAccountStatus = await CustomersAccountsController.update(
+            id: customerAccount.id!,
+            customerAccount: newCustomerAccount,
+          );
+
+          // debugPrint('new CustomerAccount: $customerAccountStatus');
+
+          if (lastCustomerAccountStatus == ServiceResponse.success) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: lastCustomerAccountStatus,
+              response: 'Opération réussie',
+            );
+            showValidatedButton.value = true;
+            Navigator.of(context).pop();
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: lastCustomerAccountStatus,
+              response: 'Opération échouée',
+            );
+            showValidatedButton.value = true;
+          }
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        }
       }
-      FunctionsController.showAlertDialog(
-        context: context,
-        alertDialog: const ResponseDialog(),
-      );
     }
   }
 

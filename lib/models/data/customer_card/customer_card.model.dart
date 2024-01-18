@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 
 class CustomerCard {
   final int? id;
   final String label;
+  Type? type;
   final int typeId;
 
   final DateTime? satisfiedAt;
@@ -16,6 +16,7 @@ class CustomerCard {
   CustomerCard({
     this.id,
     required this.label,
+    this.type,
     required this.typeId,
     this.satisfiedAt,
     this.repaidAt,
@@ -24,20 +25,20 @@ class CustomerCard {
   });
 
   CustomerCard copyWith({
-    ValueGetter<int?>? id,
+    int? id,
     String? label,
     int? typeId,
-    ValueGetter<DateTime?>? satisfiedAt,
-    ValueGetter<DateTime?>? repaidAt,
+    DateTime? satisfiedAt,
+    DateTime? repaidAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return CustomerCard(
-      id: id != null ? id() : this.id,
+      id: id ?? this.id,
       label: label ?? this.label,
       typeId: typeId ?? this.typeId,
-      satisfiedAt: satisfiedAt != null ? satisfiedAt() : this.satisfiedAt,
-      repaidAt: repaidAt != null ? repaidAt() : this.repaidAt,
+      satisfiedAt: satisfiedAt ?? this.satisfiedAt,
+      repaidAt: repaidAt ?? this.repaidAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

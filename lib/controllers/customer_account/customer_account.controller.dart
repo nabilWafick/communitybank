@@ -1,6 +1,7 @@
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/services/customer_account/customer_account.service.dart';
+import 'package:flutter/material.dart';
 
 class CustomersAccountsController {
   static Future<ServiceResponse> create(
@@ -19,14 +20,15 @@ class CustomersAccountsController {
 
   static Stream<List<CustomerAccount>> getAll() async* {
     final customerAccountsMapListStream = CustomerAccountsService.getAll();
-
+    //   debugPrint('In Controller');
     // yield all CustomerAccounts data or an empty list
     yield* customerAccountsMapListStream.map(
-      (customerAccountsMapList) => customerAccountsMapList
-          .map(
-            (customerAccountMap) => CustomerAccount.fromMap(customerAccountMap),
-          )
-          .toList(),
+      (customerAccountsMapList) => customerAccountsMapList.map(
+        (customerAccountMap) {
+          //   debugPrint(customerAccountMap.toString());
+          return CustomerAccount.fromMap(customerAccountMap);
+        },
+      ).toList(),
     );
     //.asBroadcastStream();
   }

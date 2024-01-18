@@ -65,7 +65,8 @@ class _CBListCustomerDropdownState
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: dropdownMenuEntryLabel.name,
+                label:
+                    '${dropdownMenuEntryLabel.firstnames} ${dropdownMenuEntryLabel.name}',
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(

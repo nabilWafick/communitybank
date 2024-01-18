@@ -9,6 +9,7 @@ class CashOperationsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return const Column(
       children: [
+        CashOperationsSearchOptions(),
         CashOperationsCard(),
       ],
     );

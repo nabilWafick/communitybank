@@ -163,9 +163,9 @@ class TypesList extends ConsumerWidget {
                                     type.products = [];
                                     String typeProducts = '';
                                     //  type.products.clear();
-                                    for (Product dataProduct in data) {
+                                    for (Product product in data) {
                                       for (var productId in type.productsIds!) {
-                                        if (dataProduct.id! == productId) {
+                                        if (product.id! == productId) {
                                           // get product number in type.productsNumber
                                           // by using the index of product id in type.productsIds
                                           final typeProductNumber =
@@ -173,15 +173,15 @@ class TypesList extends ConsumerWidget {
                                                   .productsIds!
                                                   .indexOf(productId)];
                                           type.products.add(
-                                            dataProduct.copyWith(
+                                            product.copyWith(
                                                 number: typeProductNumber),
                                           );
                                           if (typeProducts.isEmpty) {
                                             typeProducts =
-                                                '$typeProductNumber ${dataProduct.name}';
+                                                '$typeProductNumber ${product.name}';
                                           } else {
                                             typeProducts =
-                                                '$typeProducts, $typeProductNumber ${dataProduct.name}';
+                                                '$typeProducts, $typeProductNumber ${product.name}';
                                           }
                                         }
                                       }
@@ -302,9 +302,9 @@ class TypesList extends ConsumerWidget {
                                     type.products = [];
                                     String typeProducts = '';
                                     //  type.products.clear();
-                                    for (Product dataProduct in data) {
+                                    for (Product product in data) {
                                       for (var productId in type.productsIds!) {
-                                        if (dataProduct.id! == productId) {
+                                        if (product.id! == productId) {
                                           // get product number in type.productsNumber
                                           // by using the index of product id in type.productsIds
                                           final typeProductNumber =
@@ -312,15 +312,15 @@ class TypesList extends ConsumerWidget {
                                                   .productsIds!
                                                   .indexOf(productId)];
                                           type.products.add(
-                                            dataProduct.copyWith(
+                                            product.copyWith(
                                                 number: typeProductNumber),
                                           );
                                           if (typeProducts.isEmpty) {
                                             typeProducts =
-                                                '$typeProductNumber ${dataProduct.name}';
+                                                '$typeProductNumber ${product.name}';
                                           } else {
                                             typeProducts =
-                                                '$typeProducts, $typeProductNumber ${dataProduct.name}';
+                                                '$typeProducts, $typeProductNumber ${product.name}';
                                           }
                                         }
                                       }
