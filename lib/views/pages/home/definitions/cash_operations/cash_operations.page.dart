@@ -8,9 +8,15 @@ class CashOperationsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CashOperationsSearchOptions(),
-        CashOperationsCard(),
+        Column(
+          children: [
+            CashOperationsSearchOptions(),
+            CashOperationsInfos(),
+          ],
+        ),
+        CashOperationsSettlements(),
       ],
     );
   }

@@ -1,10 +1,7 @@
-import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
-import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/adding/agent/agent_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_account/customer_account_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_card/customer_card_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,13 +12,15 @@ class CashOperationsSearchOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final custumersAccountsOwners =
         ref.watch(customersAccountsListStreamProvider);
+    final customersCards = ref.watch(customersCardsListStreamProvider);
     return Container(
       margin: const EdgeInsets.only(
         top: 20.0,
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           CBFormCustomerAccountDropdown(
             width: 400.0,
@@ -38,16 +37,16 @@ class CashOperationsSearchOptions extends ConsumerWidget {
               loading: () => [],
             ),
           ),
-          CBFormCustomerAccountDropdown(
-            width: 400.0,
-            label: 'Compte Client',
-            providerName: 'cash-operations-clients',
-            dropdownMenuEntriesLabels: custumersAccountsOwners.when(
+          CBFormCustomerCardDropdown(
+            width: 200.0,
+            label: 'Carte',
+            providerName: 'cash-operations-customer-card',
+            dropdownMenuEntriesLabels: customersCards.when(
               data: (data) => data,
               error: (error, stackTrace) => [],
               loading: () => [],
             ),
-            dropdownMenuEntriesValues: custumersAccountsOwners.when(
+            dropdownMenuEntriesValues: customersCards.when(
               data: (data) => data,
               error: (error, stackTrace) => [],
               loading: () => [],
