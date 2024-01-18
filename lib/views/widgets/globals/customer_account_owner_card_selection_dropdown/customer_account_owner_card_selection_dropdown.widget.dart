@@ -1,28 +1,28 @@
-import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
-import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
+import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final listCustomerAccountDropdownProvider =
-    StateProvider.family<CustomerAccount, String>((ref, dropdown) {
-  return CustomerAccount(
-    customerId: 0,
-    collectorId: 0,
-    customerCards: [],
+final customerAccountOwnerCardSelectionDropdownProvider =
+    StateProvider.family<CustomerCard, String>((ref, dropdown) {
+  return CustomerCard(
+    label: '',
+    typeId: 0,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
 });
 
-class CBListCustomerAccountDropdown extends ConsumerStatefulWidget {
+class CBCustomerAccountOwnerCardSelectionDropdown
+    extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
-  final List<CustomerAccount> dropdownMenuEntriesLabels;
-  final List<CustomerAccount> dropdownMenuEntriesValues;
+  final List<CustomerCard> dropdownMenuEntriesLabels;
+  final List<CustomerCard> dropdownMenuEntriesValues;
   final double? width;
 
-  const CBListCustomerAccountDropdown({
+  const CBCustomerAccountOwnerCardSelectionDropdown({
     super.key,
     this.width,
     required this.label,
@@ -32,11 +32,11 @@ class CBListCustomerAccountDropdown extends ConsumerStatefulWidget {
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBListCustomerAccountDropdownState();
+      _CBCustomerAccountOwnerCardSelectionDropdownState();
 }
 
-class _CBListCustomerAccountDropdownState
-    extends ConsumerState<CBListCustomerAccountDropdown> {
+class _CBCustomerAccountOwnerCardSelectionDropdownState
+    extends ConsumerState<CBCustomerAccountOwnerCardSelectionDropdown> {
   @override
   void initState() {
     Future.delayed(
@@ -46,9 +46,18 @@ class _CBListCustomerAccountDropdownState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(listCustomerAccountDropdownProvider(widget.providerName)
+            .read(customerAccountOwnerCardSelectionDropdownProvider(
+                    widget.providerName)
                 .notifier)
             .state = widget.dropdownMenuEntriesValues[0];
+
+// put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
+        ref
+            .read(customerAccountSelectedOwnerCardsProvider.notifier)
+            .update((state) {
+          state[widget.providerName] = widget.dropdownMenuEntriesValues[0];
+          return state;
+        });
       }
     });
 
@@ -57,9 +66,8 @@ class _CBListCustomerAccountDropdownState
 
   @override
   Widget build(BuildContext context) {
-    final selectedDropdownItem =
-        ref.watch(listCustomerAccountDropdownProvider(widget.providerName));
-    final customersListStream = ref.watch(customersListStreamProvider);
+    final selectedDropdownItem = ref.watch(
+        customerAccountOwnerCardSelectionDropdownProvider(widget.providerName));
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
@@ -77,14 +85,7 @@ class _CBListCustomerAccountDropdownState
                 value: widget.dropdownMenuEntriesValues[widget
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
-                label: customersListStream.when(
-                  data: (data) => data
-                      .firstWhere((customer) =>
-                          customer.id == dropdownMenuEntryLabel.collectorId)
-                      .name,
-                  error: (error, stackTrace) => '',
-                  loading: () => '',
-                ),
+                label: dropdownMenuEntryLabel.label,
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(
@@ -100,9 +101,23 @@ class _CBListCustomerAccountDropdownState
         ),
         onSelected: (value) {
           ref
-              .read(listCustomerAccountDropdownProvider(widget.providerName)
+              .read(customerAccountSelectedOwnerCardsProvider.notifier)
+              .update((state) {
+            state[widget.providerName] = value!;
+            return state;
+          });
+          ref
+              .read(customerAccountOwnerCardSelectionDropdownProvider(
+                      widget.providerName)
                   .notifier)
               .state = value!;
+
+          ref
+              .read(customerAccountSelectedOwnerCardsProvider.notifier)
+              .update((state) {
+            state[widget.providerName] = value;
+            return state;
+          });
         },
       ),
     );

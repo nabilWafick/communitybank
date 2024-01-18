@@ -6,7 +6,7 @@ import 'package:communitybank/models/data/agent/agent.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/images_shower/single/single_image_shower.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/agent_confirmation_dialog/agents_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/agent/agents_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

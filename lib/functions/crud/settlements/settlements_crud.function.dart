@@ -7,7 +7,7 @@ import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
-import 'package:communitybank/views/widgets/globals/intenger_dropdown/intenger_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/intenger_dropdown/intenger_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

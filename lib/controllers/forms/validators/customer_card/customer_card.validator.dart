@@ -6,6 +6,18 @@ final customerCardLabelProvider = StateProvider<String>(
   },
 );
 
+final isCustomerCardSatisfiedProvider = StateProvider<bool>(
+  (ref) {
+    return false;
+  },
+);
+
+final isCustomerCardRepaidProvider = StateProvider<bool>(
+  (ref) {
+    return false;
+  },
+);
+
 final customerCardSatisfactionDateProvider = StateProvider<DateTime?>(
   (ref) {
     return;

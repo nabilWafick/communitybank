@@ -1,6 +1,7 @@
 import 'package:communitybank/controllers/forms/on_changed/customer_card/customer_card.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
@@ -9,21 +10,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CustomerCardAddingForm extends StatefulHookConsumerWidget {
-  const CustomerCardAddingForm({super.key});
+class CustomerCardUpdateForm extends StatefulHookConsumerWidget {
+  final CustomerCard customerCard;
+  const CustomerCardUpdateForm({super.key, required this.customerCard});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CustomerCardAddingFormState();
+      _CustomerCardUpdateFormState();
 }
 
-class _CustomerCardAddingFormState
-    extends ConsumerState<CustomerCardAddingForm> {
+class _CustomerCardUpdateFormState
+    extends ConsumerState<CustomerCardUpdateForm> {
+  @override
+  void initState() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      ref.read(isCustomerCardSatisfiedProvider.notifier).state =
+          widget.customerCard.satisfiedAt != null;
+
+      ref.read(isCustomerCardRepaidProvider.notifier).state =
+          widget.customerCard.repaidAt != null;
+
+      ref.read(customerCardSatisfactionDateProvider.notifier).state =
+          widget.customerCard.satisfiedAt;
+
+      ref.read(customerCardRepaymentDateProvider.notifier).state =
+          widget.customerCard.repaidAt;
+    });
+    super.initState();
+  }
+
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final showValidatedButton = useState<bool>(true);
     final typeListStream = ref.watch(typesListStreamProvider);
+    final isSatisfied = ref.watch(isCustomerCardSatisfiedProvider);
+    final isRepaid = ref.watch(isCustomerCardRepaidProvider);
     const formCardWidth = 500.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
@@ -110,6 +132,35 @@ class _CustomerCardAddingFormState
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 5.0,
+                  ),
+                  SwitchListTile(
+                    value: isRepaid,
+                    title: const CBText(
+                      text: 'Remboursé',
+                    ),
+                    onChanged: (value) {
+                      isSatisfied == false
+                          ? ref
+                              .read(isCustomerCardRepaidProvider.notifier)
+                              .state = value
+                          : () {};
+                    },
+                  ),
+                  SwitchListTile(
+                    value: isSatisfied,
+                    title: const CBText(
+                      text: 'Satisfait',
+                    ),
+                    onChanged: (value) {
+                      isRepaid == false
+                          ? ref
+                              .read(isCustomerCardSatisfiedProvider.notifier)
+                              .state = value
+                          : () {};
+                    },
                   )
                 ],
               ),

@@ -8,7 +8,7 @@ class CustomerCard {
   final int? id;
   final String label;
   final int typeId;
-  final int? customerAccountId;
+
   final DateTime? satisfiedAt;
   final DateTime? repaidAt;
   final DateTime createdAt;
@@ -17,7 +17,6 @@ class CustomerCard {
     this.id,
     required this.label,
     required this.typeId,
-    this.customerAccountId,
     this.satisfiedAt,
     this.repaidAt,
     required this.createdAt,
@@ -28,7 +27,6 @@ class CustomerCard {
     ValueGetter<int?>? id,
     String? label,
     int? typeId,
-    ValueGetter<int?>? customerAccountId,
     ValueGetter<DateTime?>? satisfiedAt,
     ValueGetter<DateTime?>? repaidAt,
     DateTime? createdAt,
@@ -38,9 +36,6 @@ class CustomerCard {
       id: id != null ? id() : this.id,
       label: label ?? this.label,
       typeId: typeId ?? this.typeId,
-      customerAccountId: customerAccountId != null
-          ? customerAccountId()
-          : this.customerAccountId,
       satisfiedAt: satisfiedAt != null ? satisfiedAt() : this.satisfiedAt,
       repaidAt: repaidAt != null ? repaidAt() : this.repaidAt,
       createdAt: createdAt ?? this.createdAt,
@@ -52,7 +47,6 @@ class CustomerCard {
     return {
       CustomerCardTable.label: label,
       CustomerCardTable.typeId: typeId,
-      CustomerCardTable.customerAccountId: customerAccountId,
       CustomerCardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
       CustomerCardTable.repaidAt: repaidAt?.toIso8601String(),
       CustomerCardTable.createdAt: createdAt.toIso8601String(),
@@ -65,13 +59,12 @@ class CustomerCard {
       id: map[CustomerCardTable.id]?.toInt(),
       label: map[CustomerCardTable.label] ?? '',
       typeId: map[CustomerCardTable.typeId]?.toInt() ?? 0,
-      customerAccountId: map[CustomerCardTable.customerAccountId]?.toInt(),
-      satisfiedAt: map[CustomerCardTable.satisfiedAt] != null
+      /*  satisfiedAt: map[CustomerCardTable.satisfiedAt] != null
           ? DateTime.parse(map[CustomerCardTable.satisfiedAt])
           : null,
       repaidAt: map[CustomerCardTable.repaidAt] != null
           ? DateTime.parse(map[CustomerCardTable.repaidAt])
-          : null,
+          : null,*/
       createdAt: DateTime.parse(map[CustomerCardTable.createdAt]),
       updatedAt: DateTime.parse(map[CustomerCardTable.updatedAt]),
     );
@@ -84,7 +77,7 @@ class CustomerCard {
 
   @override
   String toString() {
-    return 'CustomerCard(id: $id, label: $label, typeId: $typeId, customerAccountId: $customerAccountId, satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerCard(id: $id, label: $label, typeId: $typeId,  satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -95,7 +88,6 @@ class CustomerCard {
         other.id == id &&
         other.label == label &&
         other.typeId == typeId &&
-        other.customerAccountId == customerAccountId &&
         other.satisfiedAt == satisfiedAt &&
         other.repaidAt == repaidAt &&
         other.createdAt == createdAt &&
@@ -107,7 +99,6 @@ class CustomerCard {
     return id.hashCode ^
         label.hashCode ^
         typeId.hashCode ^
-        customerAccountId.hashCode ^
         satisfiedAt.hashCode ^
         repaidAt.hashCode ^
         createdAt.hashCode ^

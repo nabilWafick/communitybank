@@ -1,19 +1,25 @@
 import 'dart:convert';
 
-import 'package:communitybank/models/tables/customer_account/customer_account_table.model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/tables/customer_account/customer_account_table.model.dart';
 
 class CustomerAccount {
   final int? id;
   final int customerId;
   final int collectorId;
+  final List<CustomerCard> customerCards;
+  final List<dynamic>? customerCardsIds;
   final DateTime createdAt;
   final DateTime updatedAt;
   CustomerAccount({
     this.id,
     required this.customerId,
     required this.collectorId,
+    required this.customerCards,
+    this.customerCardsIds,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -22,6 +28,8 @@ class CustomerAccount {
     ValueGetter<int?>? id,
     int? customerId,
     int? collectorId,
+    List<CustomerCard>? customerCards,
+    ValueGetter<List<dynamic>?>? customerCardsIds,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -29,6 +37,9 @@ class CustomerAccount {
       id: id != null ? id() : this.id,
       customerId: customerId ?? this.customerId,
       collectorId: collectorId ?? this.collectorId,
+      customerCards: customerCards ?? this.customerCards,
+      customerCardsIds:
+          customerCardsIds != null ? customerCardsIds() : this.customerCardsIds,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -38,8 +49,10 @@ class CustomerAccount {
     return {
       CustomerAccountTable.customerId: customerId,
       CustomerAccountTable.collectorId: collectorId,
-      CustomerAccountTable.createdAt: createdAt.millisecondsSinceEpoch,
-      CustomerAccountTable.updatedAt: updatedAt.millisecondsSinceEpoch,
+      CustomerAccountTable.customerCardsIds:
+          customerCards.map((customerCard) => customerCard.id).toList(),
+      CustomerAccountTable.createdAt: createdAt.toIso8601String(),
+      CustomerAccountTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 
@@ -48,10 +61,11 @@ class CustomerAccount {
       id: map[CustomerAccountTable.id]?.toInt(),
       customerId: map[CustomerAccountTable.customerId]?.toInt() ?? 0,
       collectorId: map[CustomerAccountTable.collectorId]?.toInt() ?? 0,
-      createdAt: DateTime.fromMillisecondsSinceEpoch(
-          map[CustomerAccountTable.createdAt]),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(
-          map[CustomerAccountTable.updatedAt]),
+      customerCards: [],
+      customerCardsIds:
+          List<dynamic>.from(map[CustomerAccountTable.customerCardsIds]),
+      createdAt: DateTime.parse(map[CustomerAccountTable.createdAt]),
+      updatedAt: DateTime.parse(map[CustomerAccountTable.updatedAt]),
     );
   }
 
@@ -62,7 +76,7 @@ class CustomerAccount {
 
   @override
   String toString() {
-    return 'CustomerAccount(id: $id, customerId: $customerId, collectorId: $collectorId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerAccount(id: $id, customerId: $customerId, collectorId: $collectorId, customerCards: $customerCards, customerCardsIds: $customerCardsIds, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -73,6 +87,8 @@ class CustomerAccount {
         other.id == id &&
         other.customerId == customerId &&
         other.collectorId == collectorId &&
+        listEquals(other.customerCards, customerCards) &&
+        listEquals(other.customerCardsIds, customerCardsIds) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -82,6 +98,8 @@ class CustomerAccount {
     return id.hashCode ^
         customerId.hashCode ^
         collectorId.hashCode ^
+        customerCards.hashCode ^
+        customerCardsIds.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

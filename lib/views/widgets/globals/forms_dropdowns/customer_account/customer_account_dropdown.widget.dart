@@ -9,6 +9,7 @@ final formCustomerAccountDropdownProvider =
   return CustomerAccount(
     customerId: 0,
     collectorId: 0,
+    customerCards: [],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

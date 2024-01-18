@@ -5,7 +5,7 @@ import 'package:communitybank/models/data/customer_account/customer_account.mode
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customer_account_confirmation_dialog/customer_account_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customer_account/customer_account_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/customer_account/customer_account_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';

@@ -7,7 +7,6 @@ import 'package:communitybank/models/data/customer_card/customer_card.model.dart
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,16 +24,12 @@ class CustomerCardCRUDFunctions {
       final customerCardLabel = ref.watch(customerCardLabelProvider);
       final customerCardType =
           ref.watch(formTypeDropdownProvider('customer-card-adding-type'));
-      final customerCardOwnerAccount = ref.watch(
-          formCustomerAccountDropdownProvider(
-              'customer-card-adding-customer-account'));
 
       ServiceResponse customerCardStatus;
 
       final customerCard = CustomerCard(
         label: customerCardLabel,
         typeId: customerCardType.id!,
-        customerAccountId: customerCardOwnerAccount.id,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -79,16 +74,12 @@ class CustomerCardCRUDFunctions {
       final customerCardLabel = ref.watch(customerCardLabelProvider);
       final customerCardType =
           ref.watch(formTypeDropdownProvider('customer-card-update-type'));
-      final customerCardOwnerAccount = ref.watch(
-          formCustomerAccountDropdownProvider(
-              'customer-card-update-customer-account'));
 
       ServiceResponse lastCustomerCardStatus;
 
       final newCustomerCard = CustomerCard(
         label: customerCardLabel,
         typeId: customerCardType.id!,
-        customerAccountId: customerCardOwnerAccount.id,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );

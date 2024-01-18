@@ -55,8 +55,8 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         ),
         SidebarSubOptionModel(
           index: 6,
-          icon: Icons.account_box,
-          name: 'Statut Personnel',
+          icon: Icons.person,
+          name: 'Statuts Personnels',
         ),
         SidebarSubOptionModel(
           index: 7,
@@ -70,7 +70,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         ),
         SidebarSubOptionModel(
           index: 9,
-          icon: Icons.supervised_user_circle,
+          icon: Icons.admin_panel_settings,
           name: 'Agents',
         ),
         SidebarSubOptionModel(
@@ -90,7 +90,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         ),
         SidebarSubOptionModel(
           index: 13,
-          icon: Icons.account_balance_wallet,
+          icon: Icons.account_balance,
           name: 'Opérations caisse',
         ),
       ],

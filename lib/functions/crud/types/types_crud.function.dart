@@ -85,6 +85,7 @@ class TypeCRUDFunctions {
           List<int> typeProductsNumber = [];
 
           for (MapEntry typeAddedInputsEntry in typeAddedInputs.entries) {
+            // verify if the input is visible
             if (typeAddedInputsEntry.value) {
               typeProductsNumber.add(
                 ref.watch(

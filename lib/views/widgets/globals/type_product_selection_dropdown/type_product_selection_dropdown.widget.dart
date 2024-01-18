@@ -113,10 +113,7 @@ class _CBTypeProductSelectionDropdownState
       trailingIcon: const Icon(Icons.arrow_drop_down),
       onSelected: (value) {
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
-        ref.read(typeSelectedProductsProvider.notifier).update((state) {
-          state[widget.providerName] = value!;
-          return state;
-        });
+
         // set the selected product
         ref
             .read(typeSelectedProductDropdownProvider(widget.providerName)
@@ -134,7 +131,7 @@ class _CBTypeProductSelectionDropdownState
           state[widget.providerName] = value;
           return state;
         });
-        setState(() {});
+
         //  debugPrint('dropdown value: ${value.toString()}');
         //  debugPrint(ref.watch(typeSelectedProductsProvider).toString());
       },
