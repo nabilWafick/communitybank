@@ -80,7 +80,7 @@ class _CBListCustomerAccountDropdownState
                 label: customersListStream.when(
                   data: (data) {
                     final customer = data.firstWhere((customer) =>
-                        customer.id == dropdownMenuEntryLabel.collectorId);
+                        customer.id == dropdownMenuEntryLabel.customerId);
                     return '${customer.firstnames} ${customer.name}';
                   },
                   error: (error, stackTrace) => '',

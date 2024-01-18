@@ -17,13 +17,30 @@ class CashOperationsSearchOptions extends ConsumerWidget {
         ref.watch(customersAccountsListStreamProvider);
     return Container(
       margin: const EdgeInsets.only(
+        top: 20.0,
         bottom: 40.0,
       ),
       width: double.maxFinite,
-      child: Column(
+      child: Row(
         children: [
           CBFormCustomerAccountDropdown(
-            label: 'Clients',
+            width: 400.0,
+            label: 'Compte Client',
+            providerName: 'cash-operations-clients',
+            dropdownMenuEntriesLabels: custumersAccountsOwners.when(
+              data: (data) => data,
+              error: (error, stackTrace) => [],
+              loading: () => [],
+            ),
+            dropdownMenuEntriesValues: custumersAccountsOwners.when(
+              data: (data) => data,
+              error: (error, stackTrace) => [],
+              loading: () => [],
+            ),
+          ),
+          CBFormCustomerAccountDropdown(
+            width: 400.0,
+            label: 'Compte Client',
             providerName: 'cash-operations-clients',
             dropdownMenuEntriesLabels: custumersAccountsOwners.when(
               data: (data) => data,

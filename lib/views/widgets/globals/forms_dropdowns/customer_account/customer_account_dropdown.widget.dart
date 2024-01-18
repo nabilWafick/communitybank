@@ -103,15 +103,9 @@ class _CBFormCustomerAccountDropdownState
                     .indexOf(dropdownMenuEntryLabel)],
                 label: customersListStream.when(
                   data: (data) {
-                    /*
                     final customer = data.firstWhere((customer) =>
-                        customer.id == dropdownMenuEntryLabel.collectorId);
+                        customer.id == dropdownMenuEntryLabel.customerId);
                     return '${customer.firstnames} ${customer.name}';
-                    */
-                    return data
-                        .firstWhere((customer) =>
-                            customer.id == dropdownMenuEntryLabel.collectorId)
-                        .name;
                   },
                   error: (error, stackTrace) => '',
                   loading: () => '',
