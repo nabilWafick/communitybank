@@ -17,10 +17,10 @@ class CashOperationsInfos extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CashOperationsCustomerInfos(
-              width: width / 3.5,
+              width: width / 3.3,
             ),
             CashOperationsCustomerCardInfos(
-              width: width * 1.45 / 3,
+              width: width * 1.543 / 3,
             ),
           ],
         ),

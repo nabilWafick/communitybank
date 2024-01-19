@@ -5,7 +5,7 @@ import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/images_shower/single/single_image_shower.widget.dart';
+import 'package:communitybank/views/widgets/globals/images_shower/single/single_image_shower.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';

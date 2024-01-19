@@ -2,6 +2,7 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class CashOperationsCustomerInfos extends ConsumerWidget {
   final double width;
@@ -27,43 +28,64 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
       ),
       height: 440.0,
       width: width,
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                UserInfos(),
-                UserInfos(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              UserInfos(),
+              UserInfos(),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 15.0),
+            width: width,
+            child: StaggeredGrid.count(
+              crossAxisCount: 2,
+              mainAxisSpacing: 7.0,
+              // crossAxisSpacing: 2.0,
+              children: const [
+                OtherInfos(
+                  label: 'Profession',
+                  value: 'Profession',
+                ),
+                OtherInfos(
+                  label: 'CIP',
+                  value: '1234567890',
+                ),
+                OtherInfos(
+                  label: 'Categorie',
+                  value: 'Categorie',
+                ),
+                OtherInfos(
+                  label: 'Activité Économique',
+                  value: 'Activity',
+                ),
+                OtherInfos(
+                  label: 'Statut Personnel',
+                  value: 'Personnel',
+                ),
+                OtherInfos(
+                  label: 'Localité',
+                  value: 'Locality',
+                ),
               ],
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 15.0),
-              child: const Wrap(
-                runSpacing: 7.0,
-                spacing: 2.0,
-                children: [
-                  OtherInfos(label: 'Category', value: 'Categorie'),
-                  OtherInfos(label: 'Economical Activity', value: 'Activity'),
-                  OtherInfos(label: 'Personal Status', value: 'Personnel'),
-                  OtherInfos(label: 'Locality', value: 'Locality'),
-                ],
+          ),
+          Container(
+            height: 80.0,
+            width: 80.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                color: CBColors.sidebarTextColor.withOpacity(.5),
+                width: 1.5,
               ),
             ),
-            Container(
-              height: 120.0,
-              width: 120.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15.0),
-                border: Border.all(
-                  color: CBColors.sidebarTextColor.withOpacity(.5),
-                  width: 1.5,
-                ),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -76,8 +98,8 @@ class UserInfos extends ConsumerWidget {
     return Row(
       children: [
         Container(
-          height: 100.0,
-          width: 100.0,
+          height: 80.0,
+          width: 80.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
               50.0,
@@ -101,7 +123,7 @@ class UserInfos extends ConsumerWidget {
               fontSize: 15.0,
             ),
             CBText(
-              text: 'Adresse',
+              text: '+22994444444',
               fontSize: 12.0,
             ),
           ],
@@ -123,18 +145,18 @@ class OtherInfos extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
-      width: 240.0,
+      //  width: 240.0,
       child: Row(
         children: [
           CBText(
             text: '$label: ',
-            fontSize: 13.2,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
           CBText(
             text: value,
-            fontSize: 13.2,
-            // fontWeight: FontWeight.w500,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
           )
         ],
       ),

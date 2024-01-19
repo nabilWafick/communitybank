@@ -5,7 +5,7 @@ import 'package:communitybank/functions/crud/types/types_crud.function.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/services/types/types.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/images_shower/multiple/multiple_image_shower.dart';
+import 'package:communitybank/views/widgets/globals/images_shower/multiple/multiple_image_shower.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/types/types_deletion_confirmation_dialog.widget.dart';
