@@ -9,6 +9,7 @@ class Settlement {
   final int number;
   final int cardId;
   final int agentId;
+  final DateTime collectAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   Settlement({
@@ -16,6 +17,7 @@ class Settlement {
     required this.number,
     required this.cardId,
     required this.agentId,
+    required this.collectAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -25,6 +27,7 @@ class Settlement {
     int? number,
     int? cardId,
     int? agentId,
+    DateTime? collectAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -33,6 +36,7 @@ class Settlement {
       number: number ?? this.number,
       cardId: cardId ?? this.cardId,
       agentId: agentId ?? this.agentId,
+      collectAt: collectAt ?? this.collectAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -43,8 +47,9 @@ class Settlement {
       SettlementTable.number: number,
       SettlementTable.cardId: cardId,
       SettlementTable.agentId: agentId,
-      SettlementTable.createdAt: createdAt.millisecondsSinceEpoch,
-      SettlementTable.updatedAt: updatedAt.millisecondsSinceEpoch,
+      SettlementTable.collecteAt: collectAt.toIso8601String(),
+      SettlementTable.createdAt: createdAt.toIso8601String(),
+      SettlementTable.updatedAt: updatedAt.toIso8601String(),
     };
   }
 
@@ -54,10 +59,9 @@ class Settlement {
       number: map[SettlementTable.number]?.toInt() ?? 0,
       cardId: map[SettlementTable.cardId]?.toInt() ?? 0,
       agentId: map[SettlementTable.agentId]?.toInt() ?? 0,
-      createdAt:
-          DateTime.fromMillisecondsSinceEpoch(map[SettlementTable.createdAt]),
-      updatedAt:
-          DateTime.fromMillisecondsSinceEpoch(map[SettlementTable.updatedAt]),
+      collectAt: DateTime.parse(map[SettlementTable.collecteAt]),
+      createdAt: DateTime.parse(map[SettlementTable.createdAt]),
+      updatedAt: DateTime.parse(map[SettlementTable.updatedAt]),
     );
   }
 
@@ -68,7 +72,7 @@ class Settlement {
 
   @override
   String toString() {
-    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, collectAt:$collectAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -80,6 +84,7 @@ class Settlement {
         other.number == number &&
         other.cardId == cardId &&
         other.agentId == agentId &&
+        other.collectAt == collectAt &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }

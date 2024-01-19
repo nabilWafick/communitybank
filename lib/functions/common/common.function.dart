@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FunctionsController {
   static showAlertDialog({
@@ -24,5 +27,32 @@ class FunctionsController {
     } else {
       return null;
     }
+  }
+
+  static showDateTime(
+      BuildContext context, WidgetRef ref, StateProvider stateProvider) async {
+    DateTime? selectedDate;
+    TimeOfDay? selectedTime;
+    do {
+      selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2010),
+        lastDate: DateTime(20100),
+      );
+
+      selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+    } while (selectedDate == null || selectedTime == null);
+
+    ref.read(stateProvider.notifier).state = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      selectedTime.hour,
+      selectedTime.minute,
+    );
   }
 }

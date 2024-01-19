@@ -1,5 +1,7 @@
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/forms/adding/settlement/settlement_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -57,7 +59,7 @@ class _CashOperationsCustomerCardInfosState
                 fontWeight: FontWeight.w600,
               ),
               SizedBox(
-                width: widget.width * .89,
+                width: widget.width * .88,
                 child: const SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -112,6 +114,7 @@ class _CashOperationsCustomerCardInfosState
                   label: 'Mises Restantes',
                   value: '300',
                 ),
+                SizedBox(),
                 CustomerCardInfos(
                   label: 'Reste à Payer',
                   value: '36000',
@@ -187,8 +190,25 @@ class _CashOperationsCustomerCardInfosState
               ),
             ],
           ),
-          CBAddSettlementButton(
-            onTap: () {},
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CBIconButton(
+                icon: Icons.book,
+                text: 'Situation du client',
+                onTap: () {},
+              ),
+              CBIconButton(
+                icon: Icons.add_circle,
+                text: 'Ajouter un règlement',
+                onTap: () {
+                  FunctionsController.showAlertDialog(
+                    context: context,
+                    alertDialog: const SettlementAddingForm(),
+                  );
+                },
+              ),
+            ],
           )
         ],
       ),
@@ -230,15 +250,15 @@ class CustomerCardCard extends ConsumerWidget {
         },
         child: const Padding(
           padding: EdgeInsets.symmetric(
-            vertical: 12.0,
-            horizontal: 20.0,
+            vertical: 10.0,
+            horizontal: 15.0,
           ),
           child: Row(
             children: [
               CBText(
                 text: 'C0001',
                 // sidebarSubOptionData.name,
-                fontSize: 12.0,
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
                 /* selectedSidebarSubOption == sidebarSubOptionData
@@ -314,6 +334,56 @@ class CustomerCardInfosDate extends ConsumerWidget {
             //  color: CBColors.tertiaryColor,
           )
         ],
+      ),
+    );
+  }
+}
+
+class CBIconButton extends ConsumerWidget {
+  final IconData icon;
+  final String text;
+  final Function() onTap;
+
+  const CBIconButton({
+    super.key,
+    required this.icon,
+    required this.text,
+    required this.onTap,
+  });
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(
+          //   vertical: 10.0,
+          ),
+      child: InkWell(
+        onTap: onTap,
+        child: Card(
+          elevation: 5.0,
+          color: CBColors.primaryColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 15.0,
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Icon(
+                icon,
+                color: CBColors.backgroundColor,
+              ),
+              const SizedBox(
+                width: 15.0,
+              ),
+              CBText(
+                text: text,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+                color: CBColors.backgroundColor,
+              )
+            ]),
+          ),
+        ),
       ),
     );
   }

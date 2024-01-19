@@ -24,11 +24,157 @@ class CashOperationsSettlements extends ConsumerWidget {
             width: 1.5,
           )),
       height: 370.0,
-      child: const Center(
-        child: Center(
-          child: CBText(
-            text: 'Settlements',
-          ),
+      width: double.infinity,
+      child: SingleChildScrollView(
+        child: DataTable(
+          columns: const [
+            DataColumn(
+              label: CBText(
+                text: 'Code',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Carte',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Nombre de Mise',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Montant',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Date Collecte',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Date Saisie',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: CBText(
+                text: 'Agent',
+                textAlign: TextAlign.start,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DataColumn(
+              label: SizedBox(),
+            ),
+            DataColumn(
+              label: SizedBox(),
+            ),
+          ],
+          rows: [
+            for (int i = 0; i < 20; i++)
+              DataRow(
+                cells: [
+                  DataCell(
+                    CBText(
+                      text: '000${i + 1}',
+                    ),
+                  ),
+                  DataCell(
+                    CBText(
+                      text: 'COO0${i + 1}',
+                    ),
+                  ),
+                  DataCell(
+                    Center(
+                      child: CBText(
+                        text: '${i + 1}',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    Center(
+                      child: CBText(
+                        text: '${(i + 1) * 100} f',
+                      ),
+                    ),
+                  ),
+                  DataCell(
+                    CBText(
+                      text: '1${i + 1} Janvier 2024',
+                    ),
+                  ),
+                  DataCell(
+                    CBText(
+                      text: '1${i + 2} Janvier 2024',
+                    ),
+                  ),
+                  DataCell(
+                    CBText(
+                      text: 'Agent ${i + 1}',
+                    ),
+                  ),
+                  DataCell(
+                    onTap: () {
+                      // FunctionsController.showAlertDialog(
+                      //   context: context,
+                      //   alertDialog: LocalityUpdateForm(
+                      //       locality: locality),
+                      // );
+                    },
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.green,
+                      ),
+                    ),
+                    // showEditIcon: true,
+                  ),
+                  DataCell(
+                    onTap: () async {
+                      // FunctionsController.showAlertDialog(
+                      //   context: context,
+                      //   alertDialog:
+                      //       LocalityDeletionConfirmationDialog(
+                      //     locality: locality,
+                      //     confirmToDelete:
+                      //         LocalityCRUDFunctions.delete,
+                      //   ),
+                      // );
+                    },
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ],
         ),
       ),
     );

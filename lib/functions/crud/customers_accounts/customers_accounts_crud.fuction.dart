@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:communitybank/controllers/customer_account/customer_account.controller.dart';
+import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
@@ -86,29 +85,7 @@ class CustomerAccountCRUDFunctions {
           ServiceResponse customerAccountStatus;
 
           final customerAccount = CustomerAccount(
-            customer: Customer(
-              name: 'name',
-              firstnames: 'firstnames',
-              phoneNumber: 'phoneNumber',
-              address: 'address',
-              profession: 'profession',
-              nicNumber: 1,
-              categoryId: 0,
-              economicalActivityId: 0,
-              personalStatusId: 0,
-              localityId: 0,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
             customerId: customerAccountOwner.id!,
-            collector: Collector(
-              name: 'name',
-              firstnames: 'firstnames',
-              phoneNumber: 'phoneNumber',
-              address: 'address',
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
             collectorId: customerAccountCollector.id!,
             customerCards: customerAccountOwnerCards,
             createdAt: DateTime.now(),
@@ -116,7 +93,8 @@ class CustomerAccountCRUDFunctions {
           );
 
           customerAccountStatus = await CustomersAccountsController.create(
-              customerAccount: customerAccount);
+            customerAccount: customerAccount,
+          );
 
           // debugPrint('new CustomerAccount: $customerAccountStatus');
 
@@ -217,32 +195,10 @@ class CustomerAccountCRUDFunctions {
           ServiceResponse lastCustomerAccountStatus;
 
           final newCustomerAccount = CustomerAccount(
-            customer: Customer(
-              name: 'name',
-              firstnames: 'firstnames',
-              phoneNumber: 'phoneNumber',
-              address: 'address',
-              profession: 'profession',
-              nicNumber: 1,
-              categoryId: 0,
-              economicalActivityId: 0,
-              personalStatusId: 0,
-              localityId: 0,
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
             customerId: customerAccountOwner.id!,
-            collector: Collector(
-              name: 'name',
-              firstnames: 'firstnames',
-              phoneNumber: 'phoneNumber',
-              address: 'address',
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
             collectorId: customerAccountCollector.id!,
             customerCards: customerAccountOwnerCards,
-            createdAt: DateTime.now(),
+            createdAt: customerAccountCollector.createdAt,
             updatedAt: DateTime.now(),
           );
 
@@ -251,9 +207,35 @@ class CustomerAccountCRUDFunctions {
             customerAccount: newCustomerAccount,
           );
 
+          // update the owner account id of each customer card
+          // will store all customerCard update status
+          List<ServiceResponse> customerCardsUpdateStatus = [];
+          for (CustomerCard customerCard in customerAccountOwnerCards) {
+            customerCard.customerAccountId = customerAccount.id!;
+            final customerCardUpdateStatus =
+                await CustomersCardsController.update(
+              id: customerCard.id!,
+              customerCard: customerCard,
+            );
+            customerCardsUpdateStatus.add(customerCardUpdateStatus);
+          }
+
           // debugPrint('new CustomerAccount: $customerAccountStatus');
 
-          if (lastCustomerAccountStatus == ServiceResponse.success) {
+          bool isAllCustomerCardsUpdatedSuccessfully = false;
+
+          for (ServiceResponse customerCardStatus
+              in customerCardsUpdateStatus) {
+            if (customerCardStatus == ServiceResponse.success) {
+              isAllCustomerCardsUpdatedSuccessfully = true;
+            } else {
+              isAllCustomerCardsUpdatedSuccessfully = false;
+            }
+          }
+
+          // if the customer account and all customer cards have been updated successfully
+          if (lastCustomerAccountStatus == ServiceResponse.success &&
+              isAllCustomerCardsUpdatedSuccessfully == true) {
             ref.read(responseDialogProvider.notifier).state =
                 ResponseDialogModel(
               serviceResponse: lastCustomerAccountStatus,

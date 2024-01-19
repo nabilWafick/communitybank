@@ -55,8 +55,11 @@ class CustomerAccount {
     return {
       CustomerAccountTable.customerId: customerId,
       CustomerAccountTable.collectorId: collectorId,
-      CustomerAccountTable.customerCardsIds:
-          customerCards.map((customerCard) => customerCard.id).toList(),
+      CustomerAccountTable.customerCardsIds: customerCards
+          .map(
+            (customerCard) => customerCard.id,
+          )
+          .toList(),
       CustomerAccountTable.createdAt: createdAt.toIso8601String(),
       CustomerAccountTable.updatedAt: updatedAt.toIso8601String(),
     };

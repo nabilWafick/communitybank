@@ -12,7 +12,7 @@ class CBThemeData {
       seedColor: CBColors.primaryColor,
       primary: CBColors.primaryColor,
       secondary: CBColors.primaryColor,
-      surface: CBColors.primaryColor,
+      surface: CBColors.backgroundColor,
       primaryContainer: CBColors.primaryColor,
       brightness: Brightness.light,
     ),

@@ -9,16 +9,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
   return [
     SidebarOptionModel(
-        icon: Icons.stacked_bar_chart,
-        name: 'Dashboard',
-        subOptions: [
-          SidebarSubOptionModel(
-            index: 0,
-            icon: Icons.stacked_bar_chart,
-            name: 'Dashboard',
-          ),
-        ],
-        showSubOptions: false),
+      icon: Icons.stacked_bar_chart,
+      name: 'Dashboard',
+      subOptions: [
+        SidebarSubOptionModel(
+          index: 0,
+          icon: Icons.stacked_bar_chart,
+          name: 'Dashboard',
+        ),
+      ],
+      showSubOptions: false,
+    ),
     SidebarOptionModel(
       icon: Icons.dataset,
       name: 'Définitions',
@@ -30,7 +31,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
                 ),*/
         SidebarSubOptionModel(
           index: 1,
-          icon: Icons.square_outlined,
+          icon: Icons.inventory,
           name: 'Produits',
         ),
         SidebarSubOptionModel(

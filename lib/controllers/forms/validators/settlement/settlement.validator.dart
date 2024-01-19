@@ -29,15 +29,16 @@ final settlementAgentProvider = StateProvider<Agent>((ref) {
   );
 });
 
-final settlementDateProvider = StateProvider<DateTime>(
+final settlementCollectionDateProvider = StateProvider<DateTime?>(
   (ref) {
-    return DateTime.now();
+    return;
   },
 );
 
 class SettlementValidors {
   static String? settlementNumber(String? value, WidgetRef ref) {
-    if (ref.watch(settlementNumberProvider) == 0) {
+    final settlementNumber = ref.watch(settlementNumberProvider);
+    if (settlementNumber <= 0 || settlementNumber > 372) {
       return 'Entrez un nombre valide';
     }
     return null;

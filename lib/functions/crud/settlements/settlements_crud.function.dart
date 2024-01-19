@@ -24,7 +24,8 @@ class SettlementCRUDFunctions {
       final settlementNumber =
           ref.watch(formIntDropdownProvider('settlement-adding-number'));
       final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
-      final settlementDate = ref.watch(settlementDateProvider);
+      final settlementCollectionDate =
+          ref.watch(settlementCollectionDateProvider);
       final settlementAgent = ref.watch(settlementAgentProvider);
 
       ServiceResponse settlementStatus;
@@ -33,7 +34,8 @@ class SettlementCRUDFunctions {
         number: settlementNumber,
         cardId: settlementCustomerCard.id!,
         agentId: settlementAgent.id!,
-        createdAt: settlementDate,
+        collectAt: settlementCollectionDate!,
+        createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
 
@@ -76,37 +78,39 @@ class SettlementCRUDFunctions {
       showValidatedButton.value = false;
       final settlementNumber =
           ref.watch(formIntDropdownProvider('settlement-adding-number'));
-      final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
-      final settlementDate = ref.watch(settlementDateProvider);
-      final settlementAgent = ref.watch(settlementAgentProvider);
+      // final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
+      final settlementCollectionDate =
+          ref.watch(settlementCollectionDateProvider);
+      //  final settlementAgent = ref.watch(settlementAgentProvider);
 
-      ServiceResponse lastsettlementStatus;
+      ServiceResponse lastSettlementStatus;
 
       final newSettlement = Settlement(
         number: settlementNumber,
-        cardId: settlementCustomerCard.id!,
-        agentId: settlementAgent.id!,
-        createdAt: settlementDate,
+        cardId: settlement.cardId,
+        agentId: settlement.agentId,
+        collectAt: settlementCollectionDate!,
+        createdAt: settlement.createdAt,
         updatedAt: DateTime.now(),
       );
 
-      lastsettlementStatus = await SettlementsController.update(
+      lastSettlementStatus = await SettlementsController.update(
         id: settlement.id!,
         settlement: newSettlement,
       );
 
       // debugPrint('new Settlement: $settlementStatus');
 
-      if (lastsettlementStatus == ServiceResponse.success) {
+      if (lastSettlementStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastsettlementStatus,
+          serviceResponse: lastSettlementStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastsettlementStatus,
+          serviceResponse: lastSettlementStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;
