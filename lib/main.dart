@@ -3,6 +3,7 @@ import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -54,6 +55,12 @@ class MainApp extends ConsumerWidget {
     );
 
     return MaterialApp(
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
+
+      supportedLocales: const [
+        Locale('fr', 'FR'),
+        Locale('en', 'US'),
+      ],
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
       home:

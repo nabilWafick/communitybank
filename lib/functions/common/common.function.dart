@@ -37,13 +37,18 @@ class FunctionsController {
       selectedDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
+        locale: const Locale('fr', 'FR'),
         firstDate: DateTime(2010),
         lastDate: DateTime(20100),
+        confirmText: 'Valider',
+        cancelText: 'Annuler',
       );
 
       selectedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
+        confirmText: 'Valider',
+        cancelText: 'Annuler',
       );
     } while (selectedDate == null || selectedTime == null);
 

@@ -34,7 +34,8 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
     const formCardWidth = 500.0;
     final settlementCollectionDate =
         ref.watch(settlementCollectionDateProvider);
-    final format = DateFormat.yMMMEd('fr');
+    final format = DateFormat.yMMMMEEEEd('fr');
+
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -117,9 +118,9 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                             ),
                             CBText(
                               text: settlementCollectionDate != null
-                                  ? '${format.format(settlementCollectionDate).toUpperCase()}  ${settlementCollectionDate.hour}:${settlementCollectionDate.minute}'
+                                  ? '${format.format(settlementCollectionDate)}  ${settlementCollectionDate.hour}:${settlementCollectionDate.minute}'
                                   : '',
-                              fontSize: 14,
+                              fontSize: 12.5,
                               fontWeight: FontWeight.w500,
                             ),
                             //   const SizedBox(),
