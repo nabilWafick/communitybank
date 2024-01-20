@@ -1,9 +1,13 @@
 import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
+import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
+import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 final searchedSettlementsListProvider =
     StreamProvider<List<Settlement>>((ref) async* {
@@ -24,14 +28,29 @@ final settlementsListStreamProvider =
   yield* SettlementsController.getAll();
 });
 
-class SettlementsList extends ConsumerWidget {
+class SettlementsList extends ConsumerStatefulWidget {
   const SettlementsList({super.key});
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SettlementsListState();
+}
+
+class _SettlementsListState extends ConsumerState<SettlementsList> {
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('fr');
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     //  final isSearching = ref.watch(isSearchingProvider('settlements'));
-    //  final searchedSettlementsList = ref.watch(searchedSettlementsListProvider);
-    //  final settlementsListStream = ref.watch(settlementsListStreamProvider);
+    final settlementsListStream = ref.watch(settlementsListStreamProvider);
+    final customersCardsListStream =
+        ref.watch(customersCardsListStreamProvider);
+    final agentsListStream = ref.watch(agentsListStreamProvider);
+
+    final format = DateFormat.yMMMMEEEEd('fr');
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
@@ -50,7 +69,7 @@ class SettlementsList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
-                  text: 'Photo',
+                  text: 'Carte',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w600,
@@ -58,7 +77,7 @@ class SettlementsList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
-                  text: 'Nom & Prénoms',
+                  text: 'Nombre',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w600,
@@ -66,7 +85,7 @@ class SettlementsList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
-                  text: 'Téléphone',
+                  text: 'Date de règlement',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w600,
@@ -74,224 +93,89 @@ class SettlementsList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
-                  text: 'Adresse',
+                  text: 'Date de saisie',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               DataColumn(
-                label: SizedBox(),
-              ),
-              DataColumn(
-                label: SizedBox(),
+                label: CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
-            rows: const [],
-            /*
-             isSearching
-                ? searchedSettlementsList.when(
-                    data: (data) {
-                      //  debugPrint('collector Stream Data: $data');
-                      return data
-                          .map(
-                            (collector) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: collector.id!.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    collector.profile != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: collector.profile!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: collector.profile != null
-                                        ? const Icon(
-                                            Icons.photo,
-                                            color: CBColors.primaryColor,
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                      text:
-                                          '${collector.name} ${collector.firstnames}'),
-                                ),
-                                DataCell(
-                                  CBText(text: collector.phoneNumber),
-                                ),
-                                DataCell(
-                                  CBText(text: collector.address),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    ref
-                                        .read(collectorPictureProvider.notifier)
-                                        .state = null;
-                                    ref
-                                        .read(collectorPictureProvider.notifier)
-                                        .state = null;
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: CollectorUpdateForm(
-                                        collector: collector,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          CollectorDeletionConfirmationDialog(
-                                        collector: collector,
-                                        confirmToDelete:
-                                            CollectorCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
+            rows: settlementsListStream.when(
+              data: (data) {
+                //  debugPrint('collector Stream Data: $data');
+                return data
+                    .map(
+                      (settlement) => DataRow(
+                        cells: [
+                          DataCell(
+                            CBText(
+                              text: settlement.id!.toString(),
                             ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('collectors Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('collectors Stream Loading');
-                      return [];
-                    },
-                  )
-                : settlementsListStream.when(
-                    data: (data) {
-                      //  debugPrint('collector Stream Data: $data');
-                      return data
-                          .map(
-                            (collector) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: collector.id!.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    collector.profile != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: collector.profile!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: collector.profile != null
-                                        ? const Icon(
-                                            Icons.photo,
-                                            color: CBColors.primaryColor,
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                      text:
-                                          '${collector.name} ${collector.firstnames}'),
-                                ),
-                                DataCell(
-                                  CBText(text: collector.phoneNumber),
-                                ),
-                                DataCell(
-                                  CBText(text: collector.address),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    ref
-                                        .read(collectorPictureProvider.notifier)
-                                        .state = null;
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: CollectorUpdateForm(
-                                        collector: collector,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          CollectorDeletionConfirmationDialog(
-                                        collector: collector,
-                                        confirmToDelete:
-                                            CollectorCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                          ),
+                          DataCell(
+                            CBText(
+                              text: customersCardsListStream.when(
+                                  data: (data) => data
+                                      .firstWhere((customerCard) =>
+                                          customerCard.id == settlement.cardId)
+                                      .label,
+                                  error: ((error, stackTrace) => ''),
+                                  loading: () => ''),
                             ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('collectors Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('collectors Stream Loading');
-                      return [];
-                    },
-                  ),
-         */
+                          ),
+                          DataCell(
+                            CBText(
+                              text: settlement.number.toString(),
+                            ),
+                          ),
+                          DataCell(
+                            CBText(
+                              text:
+                                  '${format.format(settlement.collectAt)}  ${settlement.collectAt.hour}:${settlement.collectAt.minute}',
+                            ),
+                          ),
+                          DataCell(
+                            CBText(
+                              text:
+                                  '${format.format(settlement.createdAt)}  ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                            ),
+                          ),
+                          DataCell(
+                            CBText(
+                              text: agentsListStream.when(
+                                data: (data) {
+                                  final agent = data.firstWhere((agent) =>
+                                      agent.id == settlement.agentId);
+
+                                  return '${agent.firstnames} ${agent.name}';
+                                },
+                                error: (error, stackTrace) => '',
+                                loading: () => '',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList();
+              },
+              error: (error, stack) {
+                //  debugPrint('collectors Stream Error');
+                return [];
+              },
+              loading: () {
+                //  debugPrint('collectors Stream Loading');
+                return [];
+              },
+            ),
           ),
         ),
       ),

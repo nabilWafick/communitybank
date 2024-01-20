@@ -8,6 +8,8 @@ import 'package:communitybank/models/data/customer_account/customer_account.mode
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/models/tables/customer_account/customer_account_table.model.dart';
+import 'package:communitybank/services/customer_account/customer_account.service.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_dropdown/customer_dropdown.widget.dart';
@@ -92,13 +94,52 @@ class CustomerAccountCRUDFunctions {
             updatedAt: DateTime.now(),
           );
 
-          customerAccountStatus = await CustomersAccountsController.create(
+          final newCustomerAccountMap = await CustomersAccountsService.create(
             customerAccount: customerAccount,
           );
 
+          bool isAllCustomerCardsUpdatedSuccessfully = false;
+
+          if (newCustomerAccountMap != null &&
+              newCustomerAccountMap[CustomerAccountTable.id] != null) {
+            customerAccountStatus = ServiceResponse.success;
+
+            // update the owner account id of each customer card
+            // will store all customerCard update status
+            List<ServiceResponse> customerCardsUpdateStatus = [];
+            for (CustomerCard customerCard in customerAccountOwnerCards) {
+              // all selected customerCards will get the
+              // new customer Account id
+              customerCard.customerAccountId =
+                  newCustomerAccountMap[CustomerAccountTable.id];
+              final customerCardUpdateStatus =
+                  await CustomersCardsController.update(
+                id: customerCard.id!,
+                customerCard: customerCard,
+              );
+              customerCardsUpdateStatus.add(customerCardUpdateStatus);
+            }
+
+            // debugPrint('new CustomerAccount: $customerAccountStatus');
+
+            for (ServiceResponse customerCardStatus
+                in customerCardsUpdateStatus) {
+              if (customerCardStatus == ServiceResponse.success) {
+                isAllCustomerCardsUpdatedSuccessfully = true;
+              } else {
+                isAllCustomerCardsUpdatedSuccessfully = false;
+              }
+            }
+          } else {
+            // the account haven't been created
+            customerAccountStatus = ServiceResponse.failed;
+          }
+
           // debugPrint('new CustomerAccount: $customerAccountStatus');
 
-          if (customerAccountStatus == ServiceResponse.success) {
+// check if the account have been successfully created and the customer cards sucessfuly updated
+          if (customerAccountStatus == ServiceResponse.success &&
+              isAllCustomerCardsUpdatedSuccessfully == true) {
             ref.read(responseDialogProvider.notifier).state =
                 ResponseDialogModel(
               serviceResponse: customerAccountStatus,

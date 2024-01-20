@@ -3,7 +3,7 @@ import 'package:communitybank/models/tables/customer_account/customer_account_ta
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CustomerAccountsService {
+class CustomersAccountsService {
   static Future<Map<String, dynamic>?> create(
       {required CustomerAccount customerAccount}) async {
     List<Map<String, dynamic>>? response;

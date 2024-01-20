@@ -25,7 +25,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
           CBFormCustomerAccountDropdown(
             width: 400.0,
             label: 'Compte Client',
-            providerName: 'cash-operations-clients',
+            providerName: 'cash-operations-customer-accounts',
             dropdownMenuEntriesLabels: custumersAccountsOwners.when(
               data: (data) => data,
               error: (error, stackTrace) => [],

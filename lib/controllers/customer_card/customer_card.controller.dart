@@ -1,5 +1,6 @@
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
 import 'package:communitybank/services/customer_card/customer_card.service.dart';
 
 class CustomersCardsController {
@@ -19,6 +20,29 @@ class CustomersCardsController {
 
   static Stream<List<CustomerCard>> getAll() async* {
     final customerCardsMapListStream = CustomerCardsService.getAll();
+
+    // yield all CustomerCards data or an empty list
+    yield* customerCardsMapListStream.map(
+      (customerCardsMapList) => customerCardsMapList
+          .map(
+            (customerCardMap) => CustomerCard.fromMap(customerCardMap),
+          )
+          .toList(),
+    );
+    //.asBroadcastStream();
+  }
+
+  static Stream<List<CustomerCard>> getAllWithOwner() async* {
+    Stream<List<Map<String, dynamic>>> customerCardsMapListStream =
+        CustomerCardsService.getAll();
+
+// filter and return only customer card which have an an owner i.e only which are used by an account owner
+    customerCardsMapListStream = customerCardsMapListStream.map(
+      (customerCardsMapList) => customerCardsMapList
+          .where((customerCardMap) =>
+              customerCardMap[CustomerCardTable.customerAccountId] != null)
+          .toList(),
+    );
 
     // yield all CustomerCards data or an empty list
     yield* customerCardsMapListStream.map(

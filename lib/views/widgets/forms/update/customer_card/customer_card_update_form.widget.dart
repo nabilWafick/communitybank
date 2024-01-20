@@ -147,35 +147,6 @@ class _CustomerCardUpdateFormState
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 5.0,
-                  ),
-                  SwitchListTile(
-                    value: isRepaid,
-                    title: const CBText(
-                      text: 'Remboursé',
-                    ),
-                    onChanged: (value) {
-                      isSatisfied == false
-                          ? ref
-                              .read(isCustomerCardRepaidProvider.notifier)
-                              .state = value
-                          : () {};
-                    },
-                  ),
-                  SwitchListTile(
-                    value: isSatisfied,
-                    title: const CBText(
-                      text: 'Satisfait',
-                    ),
-                    onChanged: (value) {
-                      isRepaid == false
-                          ? ref
-                              .read(isCustomerCardSatisfiedProvider.notifier)
-                              .state = value
-                          : () {};
-                    },
-                  )
                 ],
               ),
               const SizedBox(

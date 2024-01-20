@@ -320,6 +320,8 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesLabels:
                                 customersCategoriesListStream.when(
                               data: (data) {
+                                debugPrint(
+                                    'categoryId: ${widget.customer.categoryId}');
                                 // if customer category is undefined, return
                                 // data whith undefined category in first
                                 // position
@@ -357,6 +359,7 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesValues:
                                 customersCategoriesListStream.when(
                               data: (data) {
+                                //    debugPrint(data.toString());
                                 // if customer category is undefined, return
                                 // data whith undefined category in first
                                 // position
@@ -384,7 +387,10 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                         widget.customer.categoryId,
                                   );
                                   data.remove(customerCategory);
-                                  data = [customerCategory, ...data];
+                                  data = [
+                                    customerCategory,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -393,7 +399,7 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             ),
                           ),
                         ),
-                        Container(
+                        /*     Container(
                           margin: const EdgeInsets.symmetric(
                             vertical: 10.0,
                             horizontal: 5.0,
@@ -590,6 +596,7 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             ),
                           ),
                         ),
+                    */
                       ],
                     )
                   ],

@@ -30,6 +30,11 @@ final customersCardsListStreamProvider =
   yield* CustomersCardsController.getAll();
 });
 
+final customersCardsWithOwnerListStreamProvider =
+    StreamProvider<List<CustomerCard>>((ref) async* {
+  yield* CustomersCardsController.getAllWithOwner();
+});
+
 class CustomersCardsList extends ConsumerWidget {
   const CustomersCardsList({super.key});
 
@@ -41,6 +46,7 @@ class CustomersCardsList extends ConsumerWidget {
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
+
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
