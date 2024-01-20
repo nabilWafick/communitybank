@@ -33,8 +33,8 @@ class _CustomerAccountOwnerCardSelectionState
   Widget build(BuildContext context) {
     // const formCardWidth = 50.0;
     final showWidget = useState(widget.isVisible);
-    final customersCardsListStream =
-        ref.watch(customersCardsListStreamProvider);
+    final customersCardsWithoutOwnerListStream =
+        ref.watch(customersCardsWithoutOwnerListStreamProvider);
     final customerAccountSelectedOwnerCards =
         ref.watch(customerAccountSelectedOwnerCardsProvider);
     return showWidget.value
@@ -51,7 +51,8 @@ class _CustomerAccountOwnerCardSelectionState
                   width: widget.formCardWidth / 3.5,
                   label: 'Carte',
                   providerName: widget.customerCardDropdownProvider,
-                  dropdownMenuEntriesLabels: customersCardsListStream.when(
+                  dropdownMenuEntriesLabels:
+                      customersCardsWithoutOwnerListStream.when(
                     data: (data) {
                       // verify if the customerCard isn't null, necessary in the
                       // the case where it's adding, because any won't be
@@ -76,7 +77,8 @@ class _CustomerAccountOwnerCardSelectionState
                     error: (error, stackTrace) => [],
                     loading: () => [],
                   ),
-                  dropdownMenuEntriesValues: customersCardsListStream.when(
+                  dropdownMenuEntriesValues:
+                      customersCardsWithoutOwnerListStream.when(
                     data: (data) {
                       if (widget.customerCard != null) {
                         data.remove(widget.customerCard);

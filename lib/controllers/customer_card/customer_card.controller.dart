@@ -55,6 +55,29 @@ class CustomersCardsController {
     //.asBroadcastStream();
   }
 
+  static Stream<List<CustomerCard>> getAllWithoutOwner() async* {
+    Stream<List<Map<String, dynamic>>> customerCardsMapListStream =
+        CustomerCardsService.getAll();
+
+// filter and return only customer card which have an an owner i.e only which are used by an account owner
+    customerCardsMapListStream = customerCardsMapListStream.map(
+      (customerCardsMapList) => customerCardsMapList
+          .where((customerCardMap) =>
+              customerCardMap[CustomerCardTable.customerAccountId] == null)
+          .toList(),
+    );
+
+    // yield all CustomerCards data or an empty list
+    yield* customerCardsMapListStream.map(
+      (customerCardsMapList) => customerCardsMapList
+          .map(
+            (customerCardMap) => CustomerCard.fromMap(customerCardMap),
+          )
+          .toList(),
+    );
+    //.asBroadcastStream();
+  }
+
   static Future<List<CustomerCard>> searchCustomerCard(
       {required String label}) async {
     final searchedCustomerCards =

@@ -35,6 +35,11 @@ final customersCardsWithOwnerListStreamProvider =
   yield* CustomersCardsController.getAllWithOwner();
 });
 
+final customersCardsWithoutOwnerListStreamProvider =
+    StreamProvider<List<CustomerCard>>((ref) async* {
+  yield* CustomersCardsController.getAllWithoutOwner();
+});
+
 class CustomersCardsList extends ConsumerWidget {
   const CustomersCardsList({super.key});
 

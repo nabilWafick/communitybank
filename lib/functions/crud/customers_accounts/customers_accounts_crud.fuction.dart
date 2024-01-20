@@ -137,7 +137,8 @@ class CustomerAccountCRUDFunctions {
 
           // debugPrint('new CustomerAccount: $customerAccountStatus');
 
-// check if the account have been successfully created and the customer cards sucessfuly updated
+          // check if the account have been successfully created
+          // and the customer cards sucessfuly updated
           if (customerAccountStatus == ServiceResponse.success &&
               isAllCustomerCardsUpdatedSuccessfully == true) {
             ref.read(responseDialogProvider.notifier).state =
