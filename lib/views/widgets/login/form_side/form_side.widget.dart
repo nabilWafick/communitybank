@@ -11,6 +11,7 @@ class FormSide extends ConsumerStatefulWidget {
 }
 
 class _FormSideState extends ConsumerState<FormSide> {
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -58,6 +59,7 @@ class _FormSideState extends ConsumerState<FormSide> {
             ),
           ),
           Form(
+            key: formKey,
             child: Column(
               children: [
                 CBTextFormField(

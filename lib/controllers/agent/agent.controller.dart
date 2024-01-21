@@ -15,6 +15,12 @@ class AgentsController {
     return response == null ? null : Agent.fromMap(response);
   }
 
+  static Future<Agent?> getOneByEmail({required String email}) async {
+    final response = await AgentsService.getOneByEmail(email: email);
+    // return the specific Agent data or null
+    return response == null ? null : Agent.fromMap(response);
+  }
+
   static Stream<List<Agent>> getAll() async* {
     final agentsMapListStream = AgentsService.getAll();
 

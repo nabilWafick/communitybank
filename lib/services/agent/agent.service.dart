@@ -45,6 +45,26 @@ class AgentsService {
     return null;
   }
 
+  static Future<Map<String, dynamic>?> getOneByEmail(
+      {required String email}) async {
+    List<Map<String, dynamic>>? response;
+    final supabase = Supabase.instance.client;
+
+    try {
+      // get a specific line
+      response = await supabase
+          .from(AgentTable.tableName)
+          .select<List<Map<String, dynamic>>>()
+          .eq(AgentTable.email, email);
+      // return the result data
+      return response.isEmpty ? null : response[0];
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+
+    return null;
+  }
+
   static Stream<List<Map<String, dynamic>>> getAll() async* {
     final supabase = Supabase.instance.client;
 
