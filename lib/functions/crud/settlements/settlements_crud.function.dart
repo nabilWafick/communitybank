@@ -26,14 +26,14 @@ class SettlementCRUDFunctions {
       final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
       final settlementCollectionDate =
           ref.watch(settlementCollectionDateProvider);
-      final settlementAgent = ref.watch(settlementAgentProvider);
+      //  final settlementAgent = ref.watch(settlementAgentProvider);
 
       ServiceResponse settlementStatus;
 
       final settlement = Settlement(
         number: settlementNumber,
         cardId: settlementCustomerCard.id!,
-        agentId: settlementAgent.id!,
+        agentId: 1,
         collectAt: settlementCollectionDate!,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

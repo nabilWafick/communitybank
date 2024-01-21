@@ -26,6 +26,8 @@ class AgentCRUDFunctions {
       final agentName = ref.watch(agentNameProvider);
       final agentFirstnames = ref.watch(agentFirstnamesProvider);
       final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
+
+      final agentEmail = ref.watch(agentEmailProvider);
       final agentAddress = ref.watch(agentAddressProvider);
       final agentRole =
           ref.watch(formStringDropdownProvider('agent-adding-role'));
@@ -37,6 +39,7 @@ class AgentCRUDFunctions {
           name: agentName,
           firstnames: agentFirstnames,
           phoneNumber: agentPhoneNumber,
+          email: agentEmail,
           address: agentAddress,
           role: agentRole,
           profile: agentPicture,
@@ -57,6 +60,7 @@ class AgentCRUDFunctions {
             name: agentName,
             firstnames: agentFirstnames,
             phoneNumber: agentPhoneNumber,
+            email: agentEmail,
             address: agentAddress,
             role: agentRole,
             profile: '${CBConstants.supabaseStorageLink}/$agentRemotePath',
@@ -107,6 +111,7 @@ class AgentCRUDFunctions {
       final agentName = ref.watch(agentNameProvider);
       final agentFirstnames = ref.watch(agentFirstnamesProvider);
       final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
+      final agentEmail = ref.watch(agentEmailProvider);
       final agentAddress = ref.watch(agentAddressProvider);
       final agentRole =
           ref.watch(formStringDropdownProvider('agent-adding-role'));
@@ -118,6 +123,7 @@ class AgentCRUDFunctions {
           name: agentName,
           firstnames: agentFirstnames,
           phoneNumber: agentPhoneNumber,
+          email: agentEmail,
           address: agentAddress,
           role: agentRole,
           profile: agent.profile,
@@ -148,6 +154,7 @@ class AgentCRUDFunctions {
           name: agentName,
           firstnames: agentFirstnames,
           phoneNumber: agentPhoneNumber,
+          email: agentEmail,
           address: agentAddress,
           role: agentRole,
           profile: '${CBConstants.supabaseStorageLink}/$agentRemotePath',

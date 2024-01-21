@@ -171,6 +171,21 @@ class _AgentAddingFormState extends ConsumerState<AgentAddingForm> {
                         ),
                         width: formCardWidth / 2.3,
                         child: const CBTextFormField(
+                          label: 'Email',
+                          hintText: 'test@gmail.com',
+                          isMultilineTextForm: false,
+                          obscureText: false,
+                          textInputType: TextInputType.emailAddress,
+                          validator: AgentValidators.agentEmail,
+                          onChanged: AgentOnChanged.agentEmail,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        width: formCardWidth / 2.3,
+                        child: const CBTextFormField(
                           label: 'Adresse',
                           hintText: 'Adresse',
                           isMultilineTextForm: false,

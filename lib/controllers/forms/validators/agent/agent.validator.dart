@@ -18,6 +18,12 @@ final agentPhoneNumberProvider = StateProvider<String>(
   },
 );
 
+final agentEmailProvider = StateProvider<String>(
+  (ref) {
+    return '';
+  },
+);
+
 final agentAddressProvider = StateProvider<String>(
   (ref) {
     return '';
@@ -59,6 +65,13 @@ class AgentValidators {
     return null;
   }
 
+  static String? agentEmail(String? value, WidgetRef ref) {
+    if (!isValidEmail(ref.watch(agentEmailProvider))) {
+      return 'Entrez un email valide';
+    }
+    return null;
+  }
+
   static String? agentAddress(String? value, WidgetRef ref) {
     if (ref.watch(agentAddressProvider) == '') {
       return 'Entrez l\'adresse de l\'agent';
@@ -66,5 +79,12 @@ class AgentValidators {
       return "L'adresse doit contenir au moins 3 lettres";
     }
     return null;
+  }
+
+  static bool isValidEmail(String email) {
+    RegExp emailRegExp = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+    );
+    return emailRegExp.hasMatch(email);
   }
 }

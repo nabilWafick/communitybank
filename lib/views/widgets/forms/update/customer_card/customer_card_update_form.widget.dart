@@ -45,8 +45,7 @@ class _CustomerCardUpdateFormState
   Widget build(BuildContext context) {
     final showValidatedButton = useState<bool>(true);
     final typeListStream = ref.watch(typesListStreamProvider);
-    final isSatisfied = ref.watch(isCustomerCardSatisfiedProvider);
-    final isRepaid = ref.watch(isCustomerCardRepaidProvider);
+
     const formCardWidth = 500.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(

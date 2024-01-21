@@ -24,6 +24,13 @@ class AgentOnChanged {
         agentPhoneNumberProvider,
       );
 
+  static agentEmail(String? value, WidgetRef ref) =>
+      CommonOnChangedFunction.onStringTextInputValueChanged(
+        value,
+        ref,
+        agentEmailProvider,
+      );
+
   static agentAddress(String? value, WidgetRef ref) =>
       CommonOnChangedFunction.onStringTextInputValueChanged(
         value,

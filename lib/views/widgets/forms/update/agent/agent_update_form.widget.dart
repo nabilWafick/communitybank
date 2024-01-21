@@ -172,12 +172,28 @@ class _AgentUpdateFormState extends ConsumerState<AgentUpdateForm> {
                         child: CBTextFormField(
                           label: 'Téléphone',
                           hintText: '+229|00229________',
-                          isMultilineTextForm: false,
                           obscureText: false,
+                          isMultilineTextForm: false,
                           initialValue: widget.agent.phoneNumber,
                           textInputType: TextInputType.name,
                           validator: AgentValidators.agentPhoneNumber,
                           onChanged: AgentOnChanged.agentPhoneNumber,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
+                        width: formCardWidth / 2.3,
+                        child: CBTextFormField(
+                          label: 'Email',
+                          hintText: 'test@gmail.com',
+                          initialValue: widget.agent.email,
+                          isMultilineTextForm: false,
+                          obscureText: false,
+                          textInputType: TextInputType.emailAddress,
+                          validator: AgentValidators.agentEmail,
+                          onChanged: AgentOnChanged.agentEmail,
                         ),
                       ),
                       Container(

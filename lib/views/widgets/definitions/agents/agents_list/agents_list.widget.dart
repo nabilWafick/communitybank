@@ -77,6 +77,14 @@ class AgentsList extends ConsumerWidget {
               ),
               DataColumn(
                 label: CBText(
+                  text: 'Email',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              DataColumn(
+                label: CBText(
                   text: 'Adresse',
                   textAlign: TextAlign.start,
                   fontSize: 15.0,
@@ -139,6 +147,11 @@ class AgentsList extends ConsumerWidget {
                                 ),
                                 DataCell(
                                   CBText(text: agent.phoneNumber),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: agent.email,
+                                  ),
                                 ),
                                 DataCell(
                                   CBText(text: agent.address),
@@ -241,6 +254,11 @@ class AgentsList extends ConsumerWidget {
                                 ),
                                 DataCell(
                                   CBText(text: agent.phoneNumber),
+                                ),
+                                DataCell(
+                                  CBText(
+                                    text: agent.email,
+                                  ),
                                 ),
                                 DataCell(
                                   CBText(text: agent.address),

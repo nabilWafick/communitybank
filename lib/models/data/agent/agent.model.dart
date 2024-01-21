@@ -8,6 +8,7 @@ class Agent {
   final String name;
   final String firstnames;
   final String phoneNumber;
+  final String email;
   final String address;
   final String? profile;
   final String role;
@@ -18,6 +19,7 @@ class Agent {
     required this.name,
     required this.firstnames,
     required this.phoneNumber,
+    required this.email,
     required this.address,
     this.profile,
     required this.role,
@@ -30,6 +32,7 @@ class Agent {
     String? name,
     String? firstnames,
     String? phoneNumber,
+    String? email,
     String? address,
     ValueGetter<String?>? profile,
     String? role,
@@ -41,6 +44,7 @@ class Agent {
       name: name ?? this.name,
       firstnames: firstnames ?? this.firstnames,
       phoneNumber: phoneNumber ?? this.phoneNumber,
+      email: email ?? this.email,
       address: address ?? this.address,
       profile: profile != null ? profile() : this.profile,
       role: role ?? this.role,
@@ -54,6 +58,7 @@ class Agent {
       AgentTable.name: name,
       AgentTable.firstnames: firstnames,
       AgentTable.phoneNumber: phoneNumber,
+      AgentTable.email: email,
       AgentTable.address: address,
       AgentTable.profile: profile,
       AgentTable.role: role,
@@ -68,6 +73,7 @@ class Agent {
       name: map[AgentTable.name] ?? '',
       firstnames: map[AgentTable.firstnames] ?? '',
       phoneNumber: map[AgentTable.phoneNumber] ?? '',
+      email: map[AgentTable.email] ?? '',
       address: map[AgentTable.address] ?? '',
       profile: map[AgentTable.profile],
       role: map[AgentTable.role],
@@ -81,7 +87,7 @@ class Agent {
 
   @override
   String toString() {
-    return 'Agent(id: $id, name: $name, firstnames: $firstnames, phoneNumber: $phoneNumber, address: $address, profile: $profile, role: $role, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Agent(id: $id, name: $name, firstnames: $firstnames, phoneNumber: $phoneNumber, email: $email, address: $address, profile: $profile, role: $role, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -93,6 +99,7 @@ class Agent {
         other.name == name &&
         other.firstnames == firstnames &&
         other.phoneNumber == phoneNumber &&
+        other.email == email &&
         other.address == address &&
         other.profile == profile &&
         other.role == role &&
@@ -106,6 +113,7 @@ class Agent {
         name.hashCode ^
         firstnames.hashCode ^
         phoneNumber.hashCode ^
+        email.hashCode ^
         address.hashCode ^
         profile.hashCode ^
         role.hashCode ^
