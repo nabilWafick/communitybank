@@ -1,3 +1,4 @@
+import 'package:communitybank/functions/auth/auth.function.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar_suboption/sidebar_suboption.widget.dart';
@@ -14,8 +15,10 @@ class MainAppbar extends ConsumerStatefulWidget {
 class _MainAppbarState extends ConsumerState<MainAppbar> {
   @override
   Widget build(BuildContext context) {
+    final authenticatedAgent = ref.watch(authenticatedAgentProvider);
     final screenSize = MediaQuery.of(context).size;
     final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
+
     return Container(
       height: screenSize.height / 7,
       padding: const EdgeInsets.only(top: 25.0),
@@ -32,7 +35,7 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                 fontSize: 25.0,
                 fontWeight: FontWeight.w600,
               ),
-              const Row(
+              Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   /*  Icon(
@@ -44,7 +47,9 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                     width: 30.0,
                   ),*/
                   CBText(
-                    text: 'TEST User',
+                    text: authenticatedAgent != null
+                        ? '${authenticatedAgent.firstnames} ${authenticatedAgent.name}'
+                        : '',
                     fontSize: 15.0,
                     fontWeight: FontWeight.w600,
                   ),

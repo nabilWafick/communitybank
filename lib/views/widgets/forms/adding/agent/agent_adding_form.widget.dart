@@ -198,6 +198,7 @@ class _AgentAddingFormState extends ConsumerState<AgentAddingForm> {
                       Container(
                           margin: const EdgeInsets.symmetric(
                             horizontal: 10.0,
+                            vertical: 10.0,
                           ),
                           width: formCardWidth / 2.3,
                           child: const CBFormStringDropdown(

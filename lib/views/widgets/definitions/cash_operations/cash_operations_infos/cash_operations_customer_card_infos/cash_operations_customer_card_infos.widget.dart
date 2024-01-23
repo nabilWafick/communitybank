@@ -1,6 +1,10 @@
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
+import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/settlement/settlement_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +39,13 @@ class _CashOperationsCustomerCardInfosState
   Widget build(BuildContext context) {
     final isSatisfied = ref.watch(isCustomerCardSatisfiedProvider);
     final isRepaid = ref.watch(isCustomerCardRepaidProvider);
+    final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
+    final customerCardListStream = ref.watch(customersCardsListStreamProvider);
+    final typesListStream = ref.watch(typesListStreamProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
     return Container(
       padding: const EdgeInsets.all(15.0),
       width: widget.width,
@@ -60,21 +71,24 @@ class _CashOperationsCustomerCardInfosState
               ),
               SizedBox(
                 width: widget.width * .88,
-                child: const SingleChildScrollView(
+                child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: [
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                      CustomerCardCard(),
-                    ],
+                    children:
+                        cashOperationsSelectedCustomerAccountOwnerCustomerCards
+                            .map(
+                              (customerCard) => CustomerCardCard(
+                                customerCard: customerCardListStream.when(
+                                  data: (data) => data.firstWhere(
+                                    (customerCardData) =>
+                                        customerCardData.id == customerCard.id,
+                                  ),
+                                  error: (error, stackTrace) => customerCard,
+                                  loading: () => customerCard,
+                                ),
+                              ),
+                            )
+                            .toList(),
                   ),
                 ),
               ),
@@ -89,33 +103,65 @@ class _CashOperationsCustomerCardInfosState
             child: StaggeredGrid.count(
               mainAxisSpacing: 7.0,
               crossAxisCount: 3,
-              children: const [
+              children: [
                 CustomerCardInfos(
                   label: 'Type',
-                  value: 'Type AAAA',
+                  value:
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                              null
+                          ? typesListStream.when(
+                              data: (data) => data
+                                  .firstWhere(
+                                    (type) =>
+                                        type.id ==
+                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                            .typeId,
+                                  )
+                                  .name,
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            )
+                          : '',
                 ),
                 CustomerCardInfos(
                   label: 'Mise',
-                  value: '500',
+                  value:
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                              null
+                          ? typesListStream.when(
+                              data: (data) => data
+                                  .firstWhere(
+                                    (type) =>
+                                        type.id ==
+                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                            .typeId,
+                                  )
+                                  .stake
+                                  .ceil()
+                                  .toString(),
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            )
+                          : '',
                 ),
-                CustomerCardInfos(
+                const CustomerCardInfos(
                   label: 'Total Mise',
                   value: '372',
                 ),
-                CustomerCardInfos(
+                const CustomerCardInfos(
                   label: 'Mises Effectuées',
                   value: '300',
                 ),
-                CustomerCardInfos(
+                const CustomerCardInfos(
                   label: 'Montant Payé',
                   value: '150000',
                 ),
-                CustomerCardInfos(
+                const CustomerCardInfos(
                   label: 'Mises Restantes',
                   value: '300',
                 ),
-                SizedBox(),
-                CustomerCardInfos(
+                const SizedBox(),
+                const CustomerCardInfos(
                   label: 'Reste à Payer',
                   value: '36000',
                 ),
@@ -217,16 +263,16 @@ class _CashOperationsCustomerCardInfosState
 }
 
 class CustomerCardCard extends ConsumerWidget {
-//  final String cutomerCardName;
+  final CustomerCard customerCard;
   const CustomerCardCard({
     super.key,
-//    required this.cutomerCardName,
+    required this.customerCard,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final selectedSidebarSubOption =
-    //     ref.watch(selectedSidebarSubOptionProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 10.0,
@@ -238,33 +284,34 @@ class CustomerCardCard extends ConsumerWidget {
         ),
       ),
       elevation: 7.0,
-      color: CBColors.primaryColor,
-      /* selectedSidebarSubOption == sidebarSubOptionData
-          ? Colors.white
-          : CBColors.primaryColor,
-          */
+      color:
+          cashOperationsSelectedCustomerAccountOwnerSelectedCard == customerCard
+              ? Colors.white
+              : CBColors.primaryColor,
       child: InkWell(
         onTap: () {
-          //   ref.read(selectedSidebarSubOptionProvider.notifier).state =
-          //       sidebarSubOptionData;
+          ref
+              .read(
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
+                      .notifier)
+              .state = customerCard;
         },
-        child: const Padding(
-          padding: EdgeInsets.symmetric(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
             vertical: 10.0,
             horizontal: 15.0,
           ),
           child: Row(
             children: [
               CBText(
-                text: 'C0001',
+                text: customerCard.label,
                 // sidebarSubOptionData.name,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
-                /* selectedSidebarSubOption == sidebarSubOptionData
+                color: cashOperationsSelectedCustomerAccountOwnerSelectedCard ==
+                        customerCard
                     ? CBColors.primaryColor
                     : Colors.white,
-                    */
               )
             ],
           ),
@@ -291,13 +338,13 @@ class CustomerCardInfos extends ConsumerWidget {
         children: [
           CBText(
             text: '$label: ',
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+            fontSize: 10.5,
+            //  fontWeight: FontWeight.w500,
           ),
           CBText(
             text: value,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
             //  color: CBColors.tertiaryColor,
           )
         ],

@@ -1,4 +1,3 @@
-import 'package:communitybank/services/types/types.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +20,11 @@ class WidgetTest extends ConsumerWidget {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  TypesService.getAll(
-                          selectedTypeStake: '100' /*, productId: 14*/)
-                      .first
-                      .then((value) {
-                    debugPrint('types: ${value.toString()}');
-                  });
+                  //final supabase = Supabase.instance.client;
+                  //final user = supabase.auth.currentUser;
+                  debugPrint(
+                    'Current User: ${DateTime.fromMicrosecondsSinceEpoch(1705885678)}',
+                  );
                 },
               ),
             ),

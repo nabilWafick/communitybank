@@ -1,3 +1,4 @@
+import 'package:communitybank/functions/auth/auth.function.dart';
 import 'package:communitybank/models/views/sidear_suboption/sidebar_suboption.model.dart';
 import 'package:communitybank/models/views/sidebar_option/sidebar_option.model.dart';
 import 'package:communitybank/utils/utils.dart';
@@ -102,7 +103,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       name: 'Saisies',
       subOptions: [
         SidebarSubOptionModel(
-          index: 9,
+          index: 14,
           icon: Icons.keyboard,
           name: 'Saisie',
         ),
@@ -114,7 +115,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       name: 'Fichier',
       subOptions: [
         SidebarSubOptionModel(
-          index: 10,
+          index: 15,
           icon: Icons.file_present,
           name: 'Fichier',
         )
@@ -186,13 +187,16 @@ class _SidebarState extends ConsumerState<Sidebar> {
                       )
                       .toList(),
                 ),
-                SidebarOption(
+                LogoutSidebarOption(
                   sidebarOptionData: SidebarOptionModel(
                     icon: Icons.logout,
                     name: 'Déconnexion',
                     subOptions: [
                       SidebarSubOptionModel(
-                          index: 11, icon: Icons.logout, name: 'Déconnexion')
+                        index: 16,
+                        icon: Icons.logout,
+                        name: 'Déconnexion',
+                      )
                     ],
                     showSubOptions: true,
                   ),
@@ -201,6 +205,76 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class LogoutSidebarOption extends ConsumerWidget {
+  final SidebarOptionModel sidebarOptionData;
+
+  const LogoutSidebarOption({
+    super.key,
+    required this.sidebarOptionData,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
+    return InkWell(
+      onTap: () async {
+        //  ref.read(selectedSidebarOptionProvider.notifier).state =
+        //      sidebarOptionData;
+        //  ref.read(selectedSidebarSubOptionProvider.notifier).state =
+        //      sidebarOptionData.subOptions[0];
+
+        await AuthFunctions.logout(context);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 12.0),
+        padding: const EdgeInsets.symmetric(
+          // vertical: 5.0,
+          horizontal: 25.0,
+        ),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          border: Border(
+            left: BorderSide(
+              width: selectedSidebarOption.name == sidebarOptionData.name
+                  ? 5.0
+                  : 0,
+              color: selectedSidebarOption.name == sidebarOptionData.name
+                  ? CBColors.primaryColor
+                  : CBColors.sidebarTextColor,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              sidebarOptionData.icon,
+              size: selectedSidebarOption.name == sidebarOptionData.name
+                  ? 25.0
+                  : 20.0,
+              color: selectedSidebarOption.name == sidebarOptionData.name
+                  ? CBColors.primaryColor
+                  : CBColors.sidebarTextColor,
+            ),
+            const SizedBox(
+              width: 10.0,
+            ),
+            CBText(
+              text: sidebarOptionData.name,
+              fontSize: 15.0,
+              fontWeight: selectedSidebarOption.name == sidebarOptionData.name
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+              color: selectedSidebarOption.name == sidebarOptionData.name
+                  ? CBColors.primaryColor
+                  : CBColors.sidebarTextColor,
+            )
+          ],
+        ),
       ),
     );
   }

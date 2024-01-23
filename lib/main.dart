@@ -1,7 +1,7 @@
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
-import 'package:communitybank/views/pages/registration/registration.page.dart';
+import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -35,13 +35,13 @@ Future<void> main() async {
   );
   runApp(
     const ProviderScope(
-      child: MainApp(),
+      child: CommunityBankApp(),
     ),
   );
 }
 
-class MainApp extends ConsumerWidget {
-  const MainApp({super.key});
+class CommunityBankApp extends ConsumerWidget {
+  const CommunityBankApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +58,6 @@ class MainApp extends ConsumerWidget {
 
     return MaterialApp(
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-
       supportedLocales: const [
         Locale('fr', 'FR'),
         Locale('en', 'US'),
@@ -66,11 +65,68 @@ class MainApp extends ConsumerWidget {
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
       home:
-          // const WidgetTest(),
-          const RegistrationPage(),
-      // LoginPage(),
-      //  HomePage(),
+          //  const WidgetTest(),
+          //  const RegistrationPage(),
+          //  const LoginPage(),
+          const MainApp(),
       // const LoginPage(),
+    );
+  }
+}
+
+final authStateProvider = StreamProvider<AuthState>((ref) async* {
+  final supabase = Supabase.instance.client;
+  final auth = supabase.auth.onAuthStateChange;
+  yield* auth;
+});
+
+class MainApp extends ConsumerWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authStateStream = ref.watch(authStateProvider);
+    final supabase = Supabase.instance.client;
+
+    final currentUser = supabase.auth.currentUser;
+
+    return currentUser == null
+        ? const LoginPage()
+        : authStateStream.when(
+            data: (authState) {
+              /* final authStateEvent = authState.event;
+        if (authStateEvent == AuthChangeEvent.signedIn) {
+          return const HomePage();
+        } else if (authStateEvent == AuthChangeEvent.signedOut) {
+          return const LoginPage();
+        } else {
+          return const LoginPage();
+        } */
+
+              final authStateSession = authState.session;
+              if (authStateSession != null) {
+                return const HomePage();
+              } else {
+                return const LoginPage();
+              }
+            },
+            error: (error, stackTrace) => const LoginPage(),
+            loading: () => const LoginPage(),
+          );
+  }
+}
+
+class LoadingPage extends ConsumerWidget {
+  const LoadingPage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return const Scaffold(
+      body: Center(
+        child: CBText(
+          text: 'Veuillez patientez ...',
+        ), // CircularProgressIndicator(),
+      ),
     );
   }
 }
