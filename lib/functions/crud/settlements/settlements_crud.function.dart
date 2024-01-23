@@ -6,10 +6,13 @@ import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/utils/constants/constants.util.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/intenger_dropdown/intenger_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettlementCRUDFunctions {
   static Future<void> create({
@@ -21,47 +24,61 @@ class SettlementCRUDFunctions {
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final settlementNumber =
-          ref.watch(formIntDropdownProvider('settlement-adding-number'));
-      final settlementCustomerCard = ref.watch(settlementCustomerCardProvider);
+      final settlementNumber = ref.watch(settlementNumberProvider);
+      final settlementCustomerCard = ref.watch(
+          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
       final settlementCollectionDate =
           ref.watch(settlementCollectionDateProvider);
-      //  final settlementAgent = ref.watch(settlementAgentProvider);
 
-      ServiceResponse settlementStatus;
-
-      final settlement = Settlement(
-        number: settlementNumber,
-        cardId: settlementCustomerCard.id!,
-        agentId: 1,
-        collectAt: settlementCollectionDate!,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      settlementStatus =
-          await SettlementsController.create(settlement: settlement);
-
-      // debugPrint('new Settlement: $settlementStatus');
-
-      if (settlementStatus == ServiceResponse.success) {
+      if (settlementCollectionDate == null) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: settlementStatus,
-          response: 'Opération réussie',
+          serviceResponse: ServiceResponse.failed,
+          response: 'La date de collecte n\'a  pas été selectionnée',
         );
         showValidatedButton.value = true;
-        Navigator.of(context).pop();
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
       } else {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: settlementStatus,
-          response: 'Opération échouée',
+        ServiceResponse settlementStatus;
+
+        final prefs = await SharedPreferences.getInstance();
+        final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+        final settlement = Settlement(
+          number: settlementNumber,
+          cardId: settlementCustomerCard!.id!,
+          agentId: agentId ?? 0,
+          collectedAt: settlementCollectionDate,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
-        showValidatedButton.value = true;
+
+        settlementStatus =
+            await SettlementsController.create(settlement: settlement);
+
+        // debugPrint('new Settlement: $settlementStatus');
+
+        if (settlementStatus == ServiceResponse.success) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: settlementStatus,
+            response: 'Opération réussie',
+          );
+          showValidatedButton.value = true;
+          Navigator.of(context).pop();
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: settlementStatus,
+            response: 'Opération échouée',
+          );
+          showValidatedButton.value = true;
+        }
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
       }
-      FunctionsController.showAlertDialog(
-        context: context,
-        alertDialog: const ResponseDialog(),
-      );
     }
   }
 
@@ -89,7 +106,7 @@ class SettlementCRUDFunctions {
         number: settlementNumber,
         cardId: settlement.cardId,
         agentId: settlement.agentId,
-        collectAt: settlementCollectionDate!,
+        collectedAt: settlementCollectionDate!,
         createdAt: settlement.createdAt,
         updatedAt: DateTime.now(),
       );

@@ -5,17 +5,14 @@ import 'package:communitybank/controllers/forms/validators/login/login.validator
 import 'package:communitybank/controllers/forms/validators/registration/registration.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/main.dart';
-import 'package:communitybank/models/data/agent/agent.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-final authenticatedAgentProvider = StateProvider<Agent?>((ref) {
-  return;
-});
 
 class AuthFunctions {
   static Future<void> register({
@@ -39,7 +36,7 @@ class AuthFunctions {
       if (agent == null) {
         newUserStatus = ServiceResponse.failed;
         authResponseMessage =
-            'Opération annulée \nCompte non créé \nEmail Inconnu';
+            'Opération annulée \nCompte non créé : Email Inconnu';
       } else {
         final supabase = Supabase.instance.client;
 
@@ -103,7 +100,7 @@ class AuthFunctions {
       if (agent == null) {
         userStatus = ServiceResponse.failed;
         authResponseMessage =
-            'Opération annulée \nNon connecté \nEmail Inconnu';
+            'Opération annulée \nNon connecté : Email Inconnu';
       } else {
         final supabase = Supabase.instance.client;
 
@@ -113,9 +110,6 @@ class AuthFunctions {
         );
 
         if (authResponse.user != null) {
-          // debugPrint('User: ${authResponse.user}');
-          ref.read(authenticatedAgentProvider.notifier).state = agent;
-
           userStatus = ServiceResponse.success;
           authResponseMessage = 'Opération réussie \nConnecté avec succès !';
         } else {
@@ -130,11 +124,27 @@ class AuthFunctions {
           response: authResponseMessage,
         );
         showLoginButton.value = true;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const MainApp(),
-          ),
-        );
+
+        //  set user data in shared preferences
+        final prefs = await SharedPreferences.getInstance();
+
+        // set the agent id so as to facilitate some tasks like settlements adding
+        prefs.setInt(CBConstants.agentIdPrefKey, agent!.id!);
+
+        // set the agent name for main app bar view
+        prefs.setString(CBConstants.agentNamePrefKey, agent.name);
+
+        // set the agent firstnames for main app bar view
+        prefs.setString(CBConstants.agentFirstnamesPrefKey, agent.firstnames);
+
+        // set the agent email
+        prefs.setString(CBConstants.agentEmailPrefKey, agent.email);
+
+        //  Navigator.of(context).push(
+        //    MaterialPageRoute(
+        //      builder: (context) => const MainApp(),
+        //    ),
+        //  );
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: userStatus,
@@ -154,10 +164,25 @@ class AuthFunctions {
 
     await supabase.auth.signOut();
 
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const MainApp(),
-      ),
-    );
+    //  set user data in shared preferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // remove the agent id so as to facilitate some tasks like settlements adding
+    prefs.remove(CBConstants.agentIdPrefKey);
+
+    // remove the agent name for main app bar view
+    prefs.remove(CBConstants.agentNamePrefKey);
+
+    // remove the agent firstnames for main app bar view
+    prefs.remove(CBConstants.agentFirstnamesPrefKey);
+
+    // remove the agent email
+    prefs.remove(CBConstants.agentEmailPrefKey);
+
+    //  Navigator.of(context).push(
+    //    MaterialPageRoute(
+    //      builder: (context) => const MainApp(),
+    //    ),
+    //  );
   }
 }

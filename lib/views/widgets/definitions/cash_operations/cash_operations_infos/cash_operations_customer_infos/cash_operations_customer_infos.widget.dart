@@ -37,7 +37,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
         ref.watch(custumersCategoriesListStreamProvider);
     final economicalActivitiesListStream =
         ref.watch(economicalActivityListStreamProvider);
-    final personaltatusSListStream =
+    final personalStatusListStream =
         ref.watch(personalStatusListStreamProvider);
     final localitiesListStream = ref.watch(localityListStreamProvider);
     final customersCardsListStream =
@@ -122,27 +122,6 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                   .state = ref.watch(
                       cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider)[
                   0];
-
-// update  selected carte type
-              typesListStream.when(
-                data: (data) {
-                  ref
-                      .read(
-                          cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider
-                              .notifier)
-                      .state = data.firstWhere(
-                    (type) =>
-                        type.id ==
-                        ref
-                            .watch(
-                              cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
-                            )!
-                            .typeId,
-                  );
-                },
-                error: (error, stackTrace) {},
-                loading: () {},
-              );
             },
             error: (error, stackTrace) {},
             loading: () {},
@@ -150,6 +129,33 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
         });
       },
     );
+
+    ref.listen(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+        (previous, next) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        // update  selected carte type
+        typesListStream.when(
+          data: (data) {
+            ref
+                .read(
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider
+                      .notifier,
+                )
+                .state = data.firstWhere(
+              (type) =>
+                  type.id ==
+                  ref
+                      .watch(
+                        cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+                      )!
+                      .typeId,
+            );
+          },
+          error: (error, stackTrace) {},
+          loading: () {},
+        );
+      });
+    });
 
     return Container(
       padding: const EdgeInsets.all(
@@ -248,7 +254,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                           cashOperationsSelectedCustomerAccountOwner
                                   .personalStatusId !=
                               null
-                      ? personaltatusSListStream.when(
+                      ? personalStatusListStream.when(
                           data: (data) => data
                               .firstWhere(
                                 (personalStatus) =>

@@ -126,11 +126,11 @@ class CBThemeData {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
-        borderSide: const BorderSide(color: Colors.red, width: .5),
+        borderSide: const BorderSide(color: Colors.redAccent, width: .5),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
-        borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        borderSide: const BorderSide(color: Colors.redAccent, width: 2.0),
       ),
     ),
     dropdownMenuTheme: DropdownMenuThemeData(
@@ -168,7 +168,7 @@ class CBThemeData {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: Colors.red, width: .5),
+          borderSide: const BorderSide(color: Colors.redAccent, width: .5),
         ),
       ),
     ),
@@ -281,11 +281,11 @@ class CBThemeData {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
-        borderSide: const BorderSide(color: Colors.red, width: .5),
+        borderSide: const BorderSide(color: Colors.redAccent, width: .5),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
-        borderSide: const BorderSide(color: Colors.red, width: 2.0),
+        borderSide: const BorderSide(color: Colors.redAccent, width: 2.0),
       ),
     ),
     dropdownMenuTheme: DropdownMenuThemeData(
@@ -309,7 +309,7 @@ class CBThemeData {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
-          borderSide: const BorderSide(color: Colors.red, width: .5),
+          borderSide: const BorderSide(color: Colors.redAccent, width: .5),
         ),
       ),
     ),

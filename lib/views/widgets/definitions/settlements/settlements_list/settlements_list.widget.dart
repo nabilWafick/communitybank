@@ -19,13 +19,13 @@ final searchedSettlementsListProvider =
       ref.read(isSearchingProvider('settlements').notifier).state = false;
     }
   });
-  yield* SettlementsController.getAll();
+  yield* SettlementsController.getAll(customerCardId: null);
   // searchCollector(name: searchedcollector).asStream();
 });
 
 final settlementsListStreamProvider =
     StreamProvider<List<Settlement>>((ref) async* {
-  yield* SettlementsController.getAll();
+  yield* SettlementsController.getAll(customerCardId: null);
 });
 
 class SettlementsList extends ConsumerStatefulWidget {
@@ -139,7 +139,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                           DataCell(
                             CBText(
                               text:
-                                  '${format.format(settlement.collectAt)}  ${settlement.collectAt.hour}:${settlement.collectAt.minute}',
+                                  '${format.format(settlement.collectedAt)}  ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
                             ),
                           ),
                           DataCell(

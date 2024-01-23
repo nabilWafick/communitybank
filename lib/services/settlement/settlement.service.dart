@@ -44,7 +44,8 @@ class SettlementsService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll() async* {
+  static Stream<List<Map<String, dynamic>>> getAll(
+      {required int? customerCardId}) async* {
     final supabase = Supabase.instance.client;
 
     try {
@@ -56,6 +57,10 @@ class SettlementsService {
         SettlementTable.id,
         ascending: true,
       );
+
+      if (customerCardId != null) {
+        query = query.eq(SettlementTable.cardId, customerCardId);
+      }
 
       // return the result as stream
       yield* query.asBroadcastStream();

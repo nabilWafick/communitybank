@@ -1,12 +1,16 @@
+import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class WidgetTest extends ConsumerWidget {
+class WidgetTest extends HookConsumerWidget {
   const WidgetTest({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final data = useState('');
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
@@ -14,16 +18,31 @@ class WidgetTest extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            CBText(
+              text: data.value,
+            ),
+            const SizedBox(
+              height: 200,
+            ),
+
             Container(
               alignment: Alignment.center,
               width: 500.0,
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  //final supabase = Supabase.instance.client;
-                  //final user = supabase.auth.currentUser;
+                  final supabase = Supabase.instance.client;
+                  data.value = await supabase
+                      .from(SettlementTable.tableName)
+                      .select(
+                        SettlementTable.number,
+                        const FetchOptions(
+                          count: CountOption.exact,
+                        ),
+                      )
+                      .eq(SettlementTable.cardId, 14);
                   debugPrint(
-                    'Current User: ${DateTime.fromMicrosecondsSinceEpoch(1705885678)}',
+                    'data: $data',
                   );
                 },
               ),

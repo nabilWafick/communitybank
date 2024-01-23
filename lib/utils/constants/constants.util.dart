@@ -5,4 +5,9 @@ class CBConstants {
   static final supabaseKey = dotenv.env['SUPABASE_KEY'];
   static const supabaseStorageLink =
       'https://cifvlislcfhwxopfwnnf.supabase.co/storage/v1/object/public';
+
+  static const agentIdPrefKey = 'agentId';
+  static const agentNamePrefKey = 'agentName';
+  static const agentFirstnamesPrefKey = 'agentFirstnames';
+  static const agentEmailPrefKey = 'agentEmail';
 }

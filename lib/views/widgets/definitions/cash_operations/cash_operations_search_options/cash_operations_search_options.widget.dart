@@ -1,7 +1,9 @@
+import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options_custumer_account_dropdown/cash_operations_search_options_customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options_custumer_card_dropdown/cash_operations_search_options_custumer_card_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
@@ -38,6 +40,18 @@ final cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider =
 final cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider =
     StateProvider<Type?>((ref) {
   return;
+});
+
+final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider =
+    StreamProvider<List<Settlement>>((ref) {
+  final selectedAccountCard =
+      ref.watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
+  return selectedAccountCard != null
+      ? SettlementsController.getAll(customerCardId: selectedAccountCard.id)
+      : SettlementsController.getAll(
+          customerCardId: 1000000000000000000,
+        );
 });
 
 class CashOperationsSearchOptions extends ConsumerWidget {

@@ -4,6 +4,7 @@ import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_infos.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -34,6 +35,11 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
     const formCardWidth = 500.0;
     final settlementCollectionDate =
         ref.watch(settlementCollectionDateProvider);
+    final settlementNumber = ref.watch(settlementNumberProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
+        ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+
     final format = DateFormat.yMMMMEEEEd('fr');
 
     return AlertDialog(
@@ -94,6 +100,28 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                           textInputType: TextInputType.name,
                           validator: SettlementValidors.settlementNumber,
                           onChanged: SettlementOnChanged.settlementName,
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 5.0,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const CBText(
+                              text: 'Montant: ',
+                              fontSize: 12,
+                            ),
+                            CBText(
+                              text:
+                                  '${settlementNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}f',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ],
                         ),
                       ),
                       Container(

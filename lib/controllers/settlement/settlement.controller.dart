@@ -16,8 +16,11 @@ class SettlementsController {
     return response == null ? null : Settlement.fromMap(response);
   }
 
-  static Stream<List<Settlement>> getAll() async* {
-    final settlementsMapListStream = SettlementsService.getAll();
+  static Stream<List<Settlement>> getAll(
+      {required int? customerCardId}) async* {
+    final settlementsMapListStream = SettlementsService.getAll(
+      customerCardId: customerCardId,
+    );
 
     // yield all Settlements data or an empty list
     yield* settlementsMapListStream.map(

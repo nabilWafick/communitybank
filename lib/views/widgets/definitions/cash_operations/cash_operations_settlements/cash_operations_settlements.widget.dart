@@ -1,13 +1,42 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
-class CashOperationsSettlements extends ConsumerWidget {
+class CashOperationsSettlements extends StatefulHookConsumerWidget {
   const CashOperationsSettlements({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CashOperationsSettlementsState();
+}
+
+class _CashOperationsSettlementsState
+    extends ConsumerState<CashOperationsSettlements> {
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('fr');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
+        ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider,
+    );
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
+        ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+    final agentListStream = ref.watch(agentsListStreamProvider);
+    final format = DateFormat.yMMMMEEEEd('fr');
+
     return Container(
       decoration: BoxDecoration(
           //  color: Colors.blueAccent,
@@ -27,155 +56,160 @@ class CashOperationsSettlements extends ConsumerWidget {
       width: double.infinity,
       child: SingleChildScrollView(
         child: DataTable(
-          columns: const [
-            DataColumn(
-              label: CBText(
-                text: 'Code',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+            columns: const [
+              DataColumn(
+                label: CBText(
+                  text: 'Code',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: CBText(
-                text: 'Carte',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+              DataColumn(
+                label: CBText(
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: CBText(
-                text: 'Nombre de Mise',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+              DataColumn(
+                label: CBText(
+                  text: 'Nombre de Mise',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: CBText(
-                text: 'Montant',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+              DataColumn(
+                label: CBText(
+                  text: 'Montant',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: CBText(
-                text: 'Date Collecte',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+              DataColumn(
+                label: CBText(
+                  text: 'Date Collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: CBText(
-                text: 'Date Saisie',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+              DataColumn(
+                label: CBText(
+                  text: 'Date Saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: CBText(
-                text: 'Agent',
-                textAlign: TextAlign.start,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w600,
+              DataColumn(
+                label: CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            DataColumn(
-              label: SizedBox(),
-            ),
-            DataColumn(
-              label: SizedBox(),
-            ),
-          ],
-          rows: [
-            for (int i = 0; i < 20; i++)
-              DataRow(
-                cells: [
-                  DataCell(
-                    CBText(
-                      text: '000${i + 1}',
-                    ),
-                  ),
-                  DataCell(
-                    CBText(
-                      text: 'COO0${i + 1}',
-                    ),
-                  ),
-                  DataCell(
-                    Center(
-                      child: CBText(
-                        text: '${i + 1}',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    Center(
-                      child: CBText(
-                        text: '${(i + 1) * 100} f',
-                      ),
-                    ),
-                  ),
-                  DataCell(
-                    CBText(
-                      text: '1${i + 1} Janvier 2024',
-                    ),
-                  ),
-                  DataCell(
-                    CBText(
-                      text: '1${i + 2} Janvier 2024',
-                    ),
-                  ),
-                  DataCell(
-                    CBText(
-                      text: 'Agent ${i + 1}',
-                    ),
-                  ),
-                  DataCell(
-                    onTap: () {
-                      // FunctionsController.showAlertDialog(
-                      //   context: context,
-                      //   alertDialog: LocalityUpdateForm(
-                      //       locality: locality),
-                      // );
-                    },
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: const Icon(
-                        Icons.edit,
-                        color: Colors.green,
-                      ),
-                    ),
-                    // showEditIcon: true,
-                  ),
-                  DataCell(
-                    onTap: () async {
-                      // FunctionsController.showAlertDialog(
-                      //   context: context,
-                      //   alertDialog:
-                      //       LocalityDeletionConfirmationDialog(
-                      //     locality: locality,
-                      //     confirmToDelete:
-                      //         LocalityCRUDFunctions.delete,
-                      //   ),
-                      // );
-                    },
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: const Icon(
-                        Icons.delete_sharp,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ],
+              DataColumn(
+                label: SizedBox(),
               ),
-          ],
-        ),
+              DataColumn(
+                label: SizedBox(),
+              ),
+            ],
+            rows:
+                cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                    .when(
+              data: (data) => data
+                  .map(
+                    (settlement) => DataRow(
+                      cells: [
+                        DataCell(
+                          CBText(
+                            text: settlement.id!.toString(),
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text:
+                                cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                                    .label,
+                          ),
+                        ),
+                        DataCell(
+                          Center(
+                            child: CBText(
+                              text: settlement.number.toString(),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Center(
+                            child: CBText(
+                              text:
+                                  '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text:
+                                '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text:
+                                '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: agentListStream.when(
+                              data: (data) {
+                                final agent = data.firstWhere(
+                                  (agentData) =>
+                                      agentData.id == settlement.agentId,
+                                );
+                                return "${agent.firstnames} ${agent.name}";
+                              },
+                              error: (error, stracTrace) => '',
+                              loading: () => '',
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          onTap: () {},
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.green,
+                            ),
+                          ),
+                          // showEditIcon: true,
+                        ),
+                        DataCell(
+                          onTap: () async {},
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.delete_sharp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+              error: (error, stackTrace) => [],
+              loading: () => [],
+            )),
       ),
     );
   }

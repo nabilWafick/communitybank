@@ -1,9 +1,19 @@
-import 'package:communitybank/functions/auth/auth.function.dart';
+import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar_suboption/sidebar_suboption.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final authenticatedAgentNameProvider = FutureProvider<String>((ref) async {
+  //  set user data in shared preferences
+  final prefs = await SharedPreferences.getInstance();
+  final agentFistnames = prefs.getString(CBConstants.agentFirstnamesPrefKey);
+  final agentName = prefs.getString(CBConstants.agentNamePrefKey);
+
+  return '${agentFistnames ?? ''} ${agentName ?? ''}';
+});
 
 class MainAppbar extends ConsumerStatefulWidget {
   const MainAppbar({super.key});
@@ -15,7 +25,7 @@ class MainAppbar extends ConsumerStatefulWidget {
 class _MainAppbarState extends ConsumerState<MainAppbar> {
   @override
   Widget build(BuildContext context) {
-    final authenticatedAgent = ref.watch(authenticatedAgentProvider);
+    final authenticatedAgentName = ref.watch(authenticatedAgentNameProvider);
     final screenSize = MediaQuery.of(context).size;
     final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
 
@@ -47,9 +57,10 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                     width: 30.0,
                   ),*/
                   CBText(
-                    text: authenticatedAgent != null
-                        ? '${authenticatedAgent.firstnames} ${authenticatedAgent.name}'
-                        : '',
+                    text: authenticatedAgentName.when(
+                        data: (data) => data,
+                        error: (error, stakTrace) => '',
+                        loading: () => ''),
                     fontSize: 15.0,
                     fontWeight: FontWeight.w600,
                   ),

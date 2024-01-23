@@ -86,33 +86,33 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authStateStream = ref.watch(authStateProvider);
-    final supabase = Supabase.instance.client;
+    // final supabase = Supabase.instance.client;
+    // final currentUser = supabase.auth.currentUser;
 
-    final currentUser = supabase.auth.currentUser;
-
-    return currentUser == null
-        ? const LoginPage()
-        : authStateStream.when(
-            data: (authState) {
-              /* final authStateEvent = authState.event;
+    // return currentUser == null
+    //     ? const LoginPage()
+    //     :
+    return authStateStream.when(
+      data: (authState) {
+        /* final authStateEvent = authState.event;
         if (authStateEvent == AuthChangeEvent.signedIn) {
-          return const HomePage();
+          return const HomePage();1
         } else if (authStateEvent == AuthChangeEvent.signedOut) {
           return const LoginPage();
         } else {
           return const LoginPage();
         } */
 
-              final authStateSession = authState.session;
-              if (authStateSession != null) {
-                return const HomePage();
-              } else {
-                return const LoginPage();
-              }
-            },
-            error: (error, stackTrace) => const LoginPage(),
-            loading: () => const LoginPage(),
-          );
+        final authStateSession = authState.session;
+        if (authStateSession != null) {
+          return const HomePage();
+        } else {
+          return const LoginPage();
+        }
+      },
+      error: (error, stackTrace) => const LoginPage(),
+      loading: () => const LoginPage(),
+    );
   }
 }
 
@@ -123,9 +123,19 @@ class LoadingPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(
       body: Center(
-        child: CBText(
-          text: 'Veuillez patientez ...',
-        ), // CircularProgressIndicator(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(
+              width: 15.0,
+            ),
+            CBText(
+              text: 'Veuillez patientez ...',
+              fontWeight: FontWeight.w500,
+            ),
+          ],
+        ),
       ),
     );
   }

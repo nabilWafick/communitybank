@@ -1,6 +1,8 @@
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
@@ -37,15 +39,35 @@ class _CashOperationsCustomerCardInfosState
 
   @override
   Widget build(BuildContext context) {
-    final isSatisfied = ref.watch(isCustomerCardSatisfiedProvider);
-    final isRepaid = ref.watch(isCustomerCardRepaidProvider);
+    final cashOperationsSelectedCustomerAccount =
+        ref.watch(cashOperationsSelectedCustomerAccountProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
+    final isSatisfied =
+        cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+            ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                    .satisfiedAt !=
+                null
+            : false;
+    final isRepaid =
+        cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+            ? cashOperationsSelectedCustomerAccountOwnerSelectedCard.repaidAt !=
+                null
+            : false;
     final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
     final customerCardListStream = ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
-    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
-        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
 
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
+        ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
+        ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider,
+    );
     return Container(
       padding: const EdgeInsets.all(15.0),
       width: widget.width,
@@ -131,10 +153,11 @@ class _CashOperationsCustomerCardInfosState
                           ? typesListStream.when(
                               data: (data) => data
                                   .firstWhere(
-                                    (type) =>
-                                        type.id ==
-                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                            .typeId,
+                                    (type) {
+                                      return type.id ==
+                                          cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                              .typeId;
+                                    },
                                   )
                                   .stake
                                   .ceil()
@@ -148,22 +171,82 @@ class _CashOperationsCustomerCardInfosState
                   label: 'Total Mise',
                   value: '372',
                 ),
-                const CustomerCardInfos(
+                CustomerCardInfos(
                   label: 'Mises Effectuées',
-                  value: '300',
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                          null
+                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                          .when(
+                          data: (data) {
+                            int settlementsNumber = 0;
+
+                            for (Settlement settlement in data) {
+                              settlementsNumber += settlement.number;
+                            }
+                            return settlementsNumber.toString();
+                          },
+                          error: (error, stckTrace) => '',
+                          loading: () => '',
+                        )
+                      : '',
                 ),
-                const CustomerCardInfos(
+                CustomerCardInfos(
                   label: 'Montant Payé',
-                  value: '150000',
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                          null
+                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                          .when(
+                          data: (data) {
+                            int settlementsNumber = 0;
+
+                            for (Settlement settlement in data) {
+                              settlementsNumber += settlement.number;
+                            }
+                            return '${settlementsNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
+                          },
+                          error: (error, stckTrace) => '',
+                          loading: () => '',
+                        )
+                      : '',
                 ),
-                const CustomerCardInfos(
+                CustomerCardInfos(
                   label: 'Mises Restantes',
-                  value: '300',
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                          null
+                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                          .when(
+                          data: (data) {
+                            int settlementsNumber = 0;
+
+                            for (Settlement settlement in data) {
+                              settlementsNumber += settlement.number;
+                            }
+                            return '${372 - settlementsNumber}';
+                          },
+                          error: (error, stckTrace) => '',
+                          loading: () => '',
+                        )
+                      : '',
                 ),
                 const SizedBox(),
-                const CustomerCardInfos(
+                CustomerCardInfos(
                   label: 'Reste à Payer',
-                  value: '36000',
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                          null
+                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                          .when(
+                          data: (data) {
+                            int settlementsNumber = 0;
+
+                            for (Settlement settlement in data) {
+                              settlementsNumber += settlement.number;
+                            }
+                            return '${(372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
+                          },
+                          error: (error, stckTrace) => '',
+                          loading: () => '',
+                        )
+                      : '',
                 ),
               ],
             ),
@@ -242,16 +325,23 @@ class _CashOperationsCustomerCardInfosState
               CBIconButton(
                 icon: Icons.book,
                 text: 'Situation du client',
-                onTap: () {},
+                onTap: () {
+                  cashOperationsSelectedCustomerAccount != null ? () {} : () {};
+                },
               ),
               CBIconButton(
                 icon: Icons.add_circle,
                 text: 'Ajouter un règlement',
                 onTap: () {
-                  FunctionsController.showAlertDialog(
-                    context: context,
-                    alertDialog: const SettlementAddingForm(),
-                  );
+                  ref.read(settlementNumberProvider.notifier).state = 0;
+                  ref.read(settlementCollectionDateProvider.notifier).state =
+                      null;
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+                      ? FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog: const SettlementAddingForm(),
+                        )
+                      : () {};
                 },
               ),
             ],
