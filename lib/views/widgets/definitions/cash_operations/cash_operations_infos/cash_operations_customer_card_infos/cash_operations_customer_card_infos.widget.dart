@@ -26,9 +26,22 @@ class _CashOperationsCustomerCardInfosState
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      ref.read(isCustomerCardSatisfiedProvider.notifier).state = false;
+      final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref.watch(
+          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
 
-      ref.read(isCustomerCardRepaidProvider.notifier).state = false;
+      ref.read(isCustomerCardSatisfiedProvider.notifier).state =
+          cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+              ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                      .satisfiedAt !=
+                  null
+              : false;
+
+      ref.read(isCustomerCardRepaidProvider.notifier).state =
+          cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+              ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                      .repaidAt !=
+                  null
+              : false;
 
       ref.read(customerCardSatisfactionDateProvider.notifier).state = null;
 
@@ -43,18 +56,8 @@ class _CashOperationsCustomerCardInfosState
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
-
-    final isSatisfied =
-        cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
-            ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                    .satisfiedAt !=
-                null
-            : false;
-    final isRepaid =
-        cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
-            ? cashOperationsSelectedCustomerAccountOwnerSelectedCard.repaidAt !=
-                null
-            : false;
+    final isSatisfied = ref.watch(isCustomerCardSatisfiedProvider);
+    final isRepaid = ref.watch(isCustomerCardRepaidProvider);
     final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
     final customerCardListStream = ref.watch(customersCardsListStreamProvider);
@@ -68,6 +71,12 @@ class _CashOperationsCustomerCardInfosState
         ref.watch(
       cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider,
     );
+
+    final customerCardSatisfactionDate =
+        ref.watch(customerCardSatisfactionDateProvider);
+    final customerCardRepaymentDate =
+        ref.watch(customerCardRepaymentDateProvider);
+
     return Container(
       padding: const EdgeInsets.all(15.0),
       width: widget.width,
@@ -280,11 +289,21 @@ class _CashOperationsCustomerCardInfosState
                         fontSize: 12.0,
                         fontWeight: FontWeight.w500,
                       ),
-                      onChanged: (value) {
+                      onChanged: (value) async {
                         isSatisfied == false
-                            ? ref
-                                .read(isCustomerCardRepaidProvider.notifier)
-                                .state = value
+                            ? {
+                                FunctionsController.showDateTime(
+                                  context,
+                                  ref,
+                                  customerCardRepaymentDateProvider,
+                                ),
+                                customerCardRepaymentDate != null
+                                    ? ref
+                                        .read(isCustomerCardRepaidProvider
+                                            .notifier)
+                                        .state = value
+                                    : {}
+                              }
                             : () {};
                       },
                     ),
@@ -311,11 +330,21 @@ class _CashOperationsCustomerCardInfosState
                         fontSize: 12.0,
                         fontWeight: FontWeight.w500,
                       ),
-                      onChanged: (value) {
+                      onChanged: (value) async {
                         isRepaid == false
-                            ? ref
-                                .read(isCustomerCardSatisfiedProvider.notifier)
-                                .state = value
+                            ? {
+                                FunctionsController.showDateTime(
+                                  context,
+                                  ref,
+                                  customerCardSatisfactionDateProvider,
+                                ),
+                                customerCardSatisfactionDate != null
+                                    ? ref
+                                        .read(isCustomerCardSatisfiedProvider
+                                            .notifier)
+                                        .state = value
+                                    : {}
+                              }
                             : () {};
                       },
                     ),

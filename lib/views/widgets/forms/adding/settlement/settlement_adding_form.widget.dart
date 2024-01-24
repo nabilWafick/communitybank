@@ -144,12 +144,18 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                                 );
                               },
                             ),
-                            CBText(
-                              text: settlementCollectionDate != null
-                                  ? '${format.format(settlementCollectionDate)}  ${settlementCollectionDate.hour}:${settlementCollectionDate.minute}'
-                                  : '',
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w500,
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Flexible(
+                              child: CBText(
+                                text: settlementCollectionDate != null
+                                    ? '${format.format(settlementCollectionDate)}  ${settlementCollectionDate.hour}:${settlementCollectionDate.minute}'
+                                    : '',
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w500,
+                                textOverflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             //   const SizedBox(),
                           ],
