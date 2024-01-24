@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
@@ -13,8 +16,8 @@ import 'package:communitybank/views/widgets/forms/adding/settlement/settlement_a
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -74,7 +77,8 @@ class _CashOperationsCustomerCardInfosState
     final isRepaid = ref.watch(isCustomerCardRepaidProvider);
     final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
-    final customerCardListStream = ref.watch(customersCardsListStreamProvider);
+    final customersCardsListStream =
+        ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
 
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
@@ -126,11 +130,14 @@ class _CashOperationsCustomerCardInfosState
                         cashOperationsSelectedCustomerAccountOwnerCustomerCards
                             .map(
                               (customerCard) => CustomerCardCard(
-                                customerCard: customerCardListStream.when(
-                                  data: (data) => data.firstWhere(
-                                    (customerCardData) =>
-                                        customerCardData.id == customerCard.id,
-                                  ),
+                                customerCard: customersCardsListStream.when(
+                                  data: (data) {
+                                    return data.firstWhere(
+                                      (customerCardData) =>
+                                          customerCardData.id ==
+                                          customerCard.id,
+                                    );
+                                  },
                                   error: (error, stackTrace) => customerCard,
                                   loading: () => customerCard,
                                 ),
@@ -153,19 +160,19 @@ class _CashOperationsCustomerCardInfosState
               crossAxisCount: 3,
               children: [
                 CustomerCardInfos(
-                  label: 'Type',
+                  label: 'Carte',
                   value:
                       cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
                               null
-                          ? typesListStream.when(
+                          ? customersCardsListStream.when(
                               data: (data) => data
                                   .firstWhere(
-                                    (type) =>
-                                        type.id ==
+                                    (customerCard) =>
+                                        customerCard.id ==
                                         cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                            .typeId,
+                                            .id,
                                   )
-                                  .name,
+                                  .label,
                               error: (error, stackTrace) => '',
                               loading: () => '',
                             )
@@ -203,9 +210,24 @@ class _CashOperationsCustomerCardInfosState
                           ? '372'
                           : '',
                 ),
-                const CustomerCardInfos(
-                  label: '',
-                  value: '',
+                CustomerCardInfos(
+                  label: 'Type',
+                  value:
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                              null
+                          ? typesListStream.when(
+                              data: (data) => data
+                                  .firstWhere(
+                                    (type) =>
+                                        type.id ==
+                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                            .typeId,
+                                  )
+                                  .name,
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            )
+                          : '',
                 ),
                 CustomerCardInfos(
                   label: 'Montant Payé',
@@ -255,6 +277,7 @@ class _CashOperationsCustomerCardInfosState
                         )
                       : '',
                 ),
+                const SizedBox(),
                 CustomerCardInfos(
                   label: 'Reste à Payer',
                   value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -343,12 +366,26 @@ class _CashOperationsCustomerCardInfosState
                                   customerCardRepaymentDateProvider,
                                 );
 
-                                // change switch state/value
-                                ref
-                                    .read(
-                                      isCustomerCardRepaidProvider.notifier,
-                                    )
-                                    .state = value;
+                                // if customerCard repayment is setted and not null
+                                if (ref.watch(
+                                        customerCardRepaymentDateProvider) !=
+                                    null) {
+                                  // do uptate
+
+                                  await CustomerCardCRUDFunctions
+                                      .updateRepaymentDate(
+                                    context: context,
+                                    ref: ref,
+                                    customerCard:
+                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+                                  );
+                                  // change switch state/value
+                                  ref
+                                      .read(
+                                        isCustomerCardRepaidProvider.notifier,
+                                      )
+                                      .state = value;
+                                }
                               } else {
                                 ref
                                     .read(responseDialogProvider.notifier)
@@ -364,7 +401,7 @@ class _CashOperationsCustomerCardInfosState
                                 );
                               }
                             } else {
-                              ref
+                              /* ref
                                   .read(
                                     customerCardRepaymentDateProvider.notifier,
                                   )
@@ -373,6 +410,7 @@ class _CashOperationsCustomerCardInfosState
                               ref
                                   .read(isCustomerCardRepaidProvider.notifier)
                                   .state = value;
+                           */
                             }
                           }
                         }
@@ -428,12 +466,28 @@ class _CashOperationsCustomerCardInfosState
                                   ref,
                                   customerCardSatisfactionDateProvider,
                                 );
-                                // change switch state/value
-                                ref
-                                    .read(
-                                      isCustomerCardSatisfiedProvider.notifier,
-                                    )
-                                    .state = value;
+
+                                // customer card satisfaction date is setted
+                                // and is not null
+
+                                if (ref.watch(
+                                        customerCardSatisfactionDateProvider) !=
+                                    null) {
+                                  CustomerCardCRUDFunctions
+                                      .updateSatisfactionDate(
+                                    context: context,
+                                    ref: ref,
+                                    customerCard:
+                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+                                  );
+                                  // change switch state/value
+                                  ref
+                                      .read(
+                                        isCustomerCardSatisfiedProvider
+                                            .notifier,
+                                      )
+                                      .state = value;
+                                }
                               } else {
                                 ref
                                     .read(responseDialogProvider.notifier)
@@ -449,7 +503,7 @@ class _CashOperationsCustomerCardInfosState
                                 );
                               }
                             } else {
-                              ref
+                              /*    ref
                                   .read(
                                     customerCardSatisfactionDateProvider
                                         .notifier,
@@ -461,6 +515,7 @@ class _CashOperationsCustomerCardInfosState
                                     isCustomerCardSatisfiedProvider.notifier,
                                   )
                                   .state = value;
+                          */
                             }
                           }
                         }
@@ -521,6 +576,8 @@ class CustomerCardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    final customersCardsListStream =
+        ref.watch(customersCardsListStreamProvider);
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 10.0,
@@ -532,12 +589,12 @@ class CustomerCardCard extends ConsumerWidget {
         ),
       ),
       elevation: 7.0,
-      color:
-          cashOperationsSelectedCustomerAccountOwnerSelectedCard == customerCard
-              ? Colors.white
-              : CBColors.primaryColor,
+      color: cashOperationsSelectedCustomerAccountOwnerSelectedCard!.id ==
+              customerCard.id
+          ? Colors.white
+          : CBColors.primaryColor,
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           ref
               .read(
                   cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
@@ -552,14 +609,27 @@ class CustomerCardCard extends ConsumerWidget {
           child: Row(
             children: [
               CBText(
-                text: customerCard.label,
-                // sidebarSubOptionData.name,
+                text: customersCardsListStream.when(
+                  data: (data) {
+                    final customerCardRealTime = data.firstWhere(
+                      (customerCardData) =>
+                          customerCardData.id == customerCard.id,
+                    );
+
+                    return customerCardRealTime.label;
+                  },
+                  error: (error, stackTrace) => '',
+                  loading: () => '',
+                ),
+
+                // sidebarSubOptionData.name
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: cashOperationsSelectedCustomerAccountOwnerSelectedCard ==
-                        customerCard
-                    ? CBColors.primaryColor
-                    : Colors.white,
+                color:
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCard.id ==
+                            customerCard.id
+                        ? CBColors.primaryColor
+                        : Colors.white,
               )
             ],
           ),

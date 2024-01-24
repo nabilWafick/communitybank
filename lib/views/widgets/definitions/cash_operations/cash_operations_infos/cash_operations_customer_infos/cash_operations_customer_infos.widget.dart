@@ -45,6 +45,13 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
         ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
 
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
+// listen for cash operations selected customer account provider (update)
+// for updating account owner collector, setting the first customer card
+// as the selected customer card
+
     ref.listen(
       cashOperationsSelectedCustomerAccountProvider,
       (previous, next) {
@@ -131,6 +138,11 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
       },
     );
 
+    // listening to cash operation selected customer card provider (update)
+    // for updating the type data of the selected customer card, updating
+    // the repayment date, the satisfaction date,
+    // and their switch state provider
+
     ref.listen(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
         (previous, next) {
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -184,6 +196,30 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
         ref.read(customerCardRepaymentDateProvider.notifier).state =
             cashOperationsSelectedCustomerAccountOwnerSelectedCard?.repaidAt;
+      });
+    });
+
+    // listening to customers cards list stream provider (data update)
+    // for updating in real time the cash operations selected customer card
+
+    ref.listen(customersCardsListStreamProvider, (previous, next) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
+          final realTimeCustomerCard = next.when(
+              data: (data) => data.firstWhere((customerCard) =>
+                  customerCard.id ==
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard.id),
+              error: (error, stackTrace) =>
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+              loading: () =>
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard);
+
+          ref
+              .read(
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
+                      .notifier)
+              .state = realTimeCustomerCard;
+        }
       });
     });
 

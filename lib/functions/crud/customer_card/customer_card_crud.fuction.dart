@@ -80,7 +80,7 @@ class CustomerCardCRUDFunctions {
       final newCustomerCard = CustomerCard(
         label: customerCardLabel,
         typeId: customerCardType.id!,
-        createdAt: DateTime.now(),
+        createdAt: customerCard.createdAt,
         updatedAt: DateTime.now(),
       );
 
@@ -110,6 +110,94 @@ class CustomerCardCRUDFunctions {
         alertDialog: const ResponseDialog(),
       );
     }
+  }
+
+  static Future<void> updateRepaymentDate({
+    required BuildContext context,
+    required WidgetRef ref,
+    required CustomerCard customerCard,
+  }) async {
+    //  final customerCardSatisfactionDate =
+    //      ref.watch(customerCardSatisfactionDateProvider);
+    final customerCardRepaymentDate =
+        ref.watch(customerCardRepaymentDateProvider);
+
+    ServiceResponse lastCustomerCardStatus;
+
+    final newCustomerCard = CustomerCard(
+      label: customerCard.label,
+      typeId: customerCard.typeId,
+      createdAt: customerCard.createdAt,
+      repaidAt: customerCardRepaymentDate,
+      //    satisfiedAt: customerCardSatisfactionDate,
+      updatedAt: DateTime.now(),
+    );
+
+    lastCustomerCardStatus = await CustomersCardsController.update(
+      id: customerCard.id!,
+      customerCard: newCustomerCard,
+    );
+
+    if (lastCustomerCardStatus == ServiceResponse.success) {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: lastCustomerCardStatus,
+        response: 'Opération réussie',
+      );
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: lastCustomerCardStatus,
+        response: 'Opération échouée',
+      );
+    }
+    FunctionsController.showAlertDialog(
+      context: context,
+      alertDialog: const ResponseDialog(),
+    );
+  }
+
+  static Future<void> updateSatisfactionDate({
+    required BuildContext context,
+    required WidgetRef ref,
+    required CustomerCard customerCard,
+  }) async {
+    final customerCardSatisfactionDate =
+        ref.watch(customerCardSatisfactionDateProvider);
+    // final customerCardRepaymentDate =
+    //     ref.watch(customerCardRepaymentDateProvider);
+
+    ServiceResponse lastCustomerCardStatus;
+
+    final newCustomerCard = CustomerCard(
+      label: customerCard.label,
+      typeId: customerCard.typeId,
+      createdAt: customerCard.createdAt,
+      //  repaidAt: customerCardRepaymentDate,
+      satisfiedAt: customerCardSatisfactionDate,
+      updatedAt: DateTime.now(),
+    );
+
+    lastCustomerCardStatus = await CustomersCardsController.update(
+      id: customerCard.id!,
+      customerCard: newCustomerCard,
+    );
+
+    // debugPrint('new CustomerCard: $customerCardStatus');
+
+    if (lastCustomerCardStatus == ServiceResponse.success) {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: lastCustomerCardStatus,
+        response: 'Opération réussie',
+      );
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: lastCustomerCardStatus,
+        response: 'Opération échouée',
+      );
+    }
+    FunctionsController.showAlertDialog(
+      context: context,
+      alertDialog: const ResponseDialog(),
+    );
   }
 
   static Future<void> delete({
