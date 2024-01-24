@@ -29,35 +29,53 @@ class FunctionsController {
     }
   }
 
-  static showDateTime(
-      BuildContext context, WidgetRef ref, StateProvider stateProvider) async {
+  static showDateTime(BuildContext context, WidgetRef ref,
+      StateProvider<DateTime?> stateProvider) async {
     DateTime? selectedDate;
     TimeOfDay? selectedTime;
-    do {
-      selectedDate = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        locale: const Locale('fr', 'FR'),
-        firstDate: DateTime(2010),
-        lastDate: DateTime(20100),
-        confirmText: 'Valider',
-        cancelText: 'Annuler',
-      );
-
-      selectedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        confirmText: 'Valider',
-        cancelText: 'Annuler',
-      );
-    } while (selectedDate == null || selectedTime == null);
-
-    ref.read(stateProvider.notifier).state = DateTime(
-      selectedDate.year,
-      selectedDate.month,
-      selectedDate.day,
-      selectedTime.hour,
-      selectedTime.minute,
+    //  do {
+    selectedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      locale: const Locale('fr', 'FR'),
+      firstDate: DateTime(2010),
+      lastDate: DateTime(20100),
+      confirmText: 'Valider',
+      cancelText: 'Annuler',
     );
+
+    selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      confirmText: 'Valider',
+      cancelText: 'Annuler',
+    );
+    //  } while (selectedDate == null || selectedTime == null);
+
+    DateTime? dateTime;
+
+    if (selectedDate != null) {
+      dateTime = DateTime.now();
+      dateTime.copyWith(
+        year: selectedDate.year,
+        month: selectedDate.month,
+        day: selectedDate.day,
+      );
+
+      dateTime.copyWith(
+        hour: selectedTime != null ? selectedTime.hour : 0,
+        minute: selectedTime != null ? selectedTime.minute : 0,
+      );
+    }
+
+    ref.read(stateProvider.notifier).state = dateTime != null
+        ? DateTime(
+            dateTime.year,
+            dateTime.month,
+            dateTime.day,
+            dateTime.hour,
+            dateTime.minute,
+          )
+        : null;
   }
 }

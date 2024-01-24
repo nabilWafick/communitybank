@@ -1,3 +1,4 @@
+import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
@@ -133,7 +134,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
     ref.listen(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
         (previous, next) {
       Future.delayed(const Duration(milliseconds: 100), () {
-        // update  selected carte type
+        // update  selected custumer card type
         typesListStream.when(
           data: (data) {
             ref
@@ -154,6 +155,35 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
           error: (error, stackTrace) {},
           loading: () {},
         );
+
+        // update for the selected custumer card
+        // satisfaction and repayment date,
+        // satisfaction and repayment switch state
+        // provider(isRepaid, isSatified)
+
+        final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
+            ref.watch(
+                cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
+        ref.read(isCustomerCardSatisfiedProvider.notifier).state =
+            cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+                ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                        .satisfiedAt !=
+                    null
+                : false;
+
+        ref.read(isCustomerCardRepaidProvider.notifier).state =
+            cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+                ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                        .repaidAt !=
+                    null
+                : false;
+
+        ref.read(customerCardSatisfactionDateProvider.notifier).state =
+            cashOperationsSelectedCustomerAccountOwnerSelectedCard?.satisfiedAt;
+
+        ref.read(customerCardRepaymentDateProvider.notifier).state =
+            cashOperationsSelectedCustomerAccountOwnerSelectedCard?.repaidAt;
       });
     });
 

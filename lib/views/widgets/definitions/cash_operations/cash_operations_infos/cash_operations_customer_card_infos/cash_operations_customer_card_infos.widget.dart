@@ -3,15 +3,24 @@ import 'package:communitybank/controllers/forms/validators/settlement/settlement
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
+import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
+import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/settlement/settlement_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+
+final settlementsNumbersTotalProvider = StateProvider<int>((ref) {
+  return 0;
+});
 
 class CashOperationsCustomerCardInfos extends ConsumerStatefulWidget {
   final double width;
@@ -25,6 +34,8 @@ class _CashOperationsCustomerCardInfosState
     extends ConsumerState<CashOperationsCustomerCardInfos> {
   @override
   void initState() {
+    initializeDateFormatting('fr');
+    /*
     Future.delayed(const Duration(milliseconds: 100), () {
       final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref.watch(
           cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
@@ -43,10 +54,13 @@ class _CashOperationsCustomerCardInfosState
                   null
               : false;
 
-      ref.read(customerCardSatisfactionDateProvider.notifier).state = null;
+      ref.read(customerCardSatisfactionDateProvider.notifier).state =
+          cashOperationsSelectedCustomerAccountOwnerSelectedCard?.satisfiedAt;
 
-      ref.read(customerCardRepaymentDateProvider.notifier).state = null;
+      ref.read(customerCardRepaymentDateProvider.notifier).state =
+          cashOperationsSelectedCustomerAccountOwnerSelectedCard?.repaidAt;
     });
+   */
     super.initState();
   }
 
@@ -76,6 +90,9 @@ class _CashOperationsCustomerCardInfosState
         ref.watch(customerCardSatisfactionDateProvider);
     final customerCardRepaymentDate =
         ref.watch(customerCardRepaymentDateProvider);
+    final settlementsNumbersTotal = ref.watch(settlementsNumbersTotalProvider);
+
+    final format = DateFormat.yMMMMEEEEd('fr');
 
     return Container(
       padding: const EdgeInsets.all(15.0),
@@ -204,7 +221,7 @@ class _CashOperationsCustomerCardInfosState
                             }
                             return '${settlementsNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
                           },
-                          error: (error, stckTrace) => '',
+                          error: (error, stackTrace) => '',
                           loading: () => '',
                         )
                       : '',
@@ -216,14 +233,24 @@ class _CashOperationsCustomerCardInfosState
                       ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
                           .when(
                           data: (data) {
-                            int settlementsNumber = 0;
+                            int settlementsNumbersT = 0;
 
                             for (Settlement settlement in data) {
-                              settlementsNumber += settlement.number;
+                              settlementsNumbersT += settlement.number;
                             }
-                            return settlementsNumber.toString();
+                            Future.delayed(
+                              const Duration(milliseconds: 100),
+                              () {
+                                ref
+                                    .read(settlementsNumbersTotalProvider
+                                        .notifier)
+                                    .state = settlementsNumbersT;
+                              },
+                            );
+
+                            return settlementsNumbersT.toString();
                           },
-                          error: (error, stckTrace) => '',
+                          error: (error, stackTrace) => '',
                           loading: () => '',
                         )
                       : '',
@@ -232,38 +259,41 @@ class _CashOperationsCustomerCardInfosState
                   label: 'Reste à Payer',
                   value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
                           null
-                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                          .when(
-                          data: (data) {
-                            int settlementsNumber = 0;
+                      ? isRepaid
+                          ? '0'
+                          : cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                              .when(
+                              data: (data) {
+                                int settlementsNumber = 0;
 
-                            for (Settlement settlement in data) {
-                              settlementsNumber += settlement.number;
-                            }
-                            return '${(372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
-                          },
-                          error: (error, stckTrace) => '',
-                          loading: () => '',
-                        )
+                                for (Settlement settlement in data) {
+                                  settlementsNumber += settlement.number;
+                                }
+                                return '${(372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            )
                       : '',
                 ),
                 CustomerCardInfos(
                   label: 'Règlements Restants',
                   value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
                           null
-                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                          .when(
-                          data: (data) {
-                            int settlementsNumber = 0;
-
-                            for (Settlement settlement in data) {
-                              settlementsNumber += settlement.number;
-                            }
-                            return '${372 - settlementsNumber}';
-                          },
-                          error: (error, stckTrace) => '',
-                          loading: () => '',
-                        )
+                      ? isRepaid
+                          ? '0'
+                          : cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                              .when(
+                              data: (data) {
+                                int settlementsNumber = 0;
+                                for (Settlement settlement in data) {
+                                  settlementsNumber += settlement.number;
+                                }
+                                return '${372 - settlementsNumber}';
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            )
                       : '',
                 ),
               ],
@@ -280,37 +310,80 @@ class _CashOperationsCustomerCardInfosState
                     child: SwitchListTile(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: .0,
-                        vertical: 5.0,
+                        vertical: .0,
                       ),
                       splashRadius: .0,
-                      value: isRepaid,
+                      // isRepaid && && customerCardRepaymentDate != null
+                      // because, update switch state only after verify that
+                      // the date have be setted properly and isn't null
+                      // don't work,
+                      value: isRepaid && customerCardRepaymentDate != null,
                       title: const CBText(
                         text: 'Remboursé',
                         fontSize: 12.0,
                         fontWeight: FontWeight.w500,
                       ),
                       onChanged: (value) async {
-                        isSatisfied == false
-                            ? {
-                                FunctionsController.showDateTime(
+                        // check if a customer card is selected
+                        if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                            null) {
+                          // if the customerCard isn't satisfied
+                          if (isSatisfied == false &&
+                              customerCardSatisfactionDate == null) {
+                            // if switch will be switched to on
+                            if (value == true) {
+                              // verify if there is a least one settlement
+                              // on the customer card
+                              if (settlementsNumbersTotal > 0) {
+                                //  show dataTime picker for setting
+                                // repayment date
+                                await FunctionsController.showDateTime(
                                   context,
                                   ref,
                                   customerCardRepaymentDateProvider,
-                                ),
-                                customerCardRepaymentDate != null
-                                    ? ref
-                                        .read(isCustomerCardRepaidProvider
-                                            .notifier)
-                                        .state = value
-                                    : {}
+                                );
+
+                                // change switch state/value
+                                ref
+                                    .read(
+                                      isCustomerCardRepaidProvider.notifier,
+                                    )
+                                    .state = value;
+                              } else {
+                                ref
+                                    .read(responseDialogProvider.notifier)
+                                    .state = ResponseDialogModel(
+                                  serviceResponse: ServiceResponse.failed,
+                                  response:
+                                      'Aucun règlement n\'a été fait sur la carte',
+                                );
+
+                                FunctionsController.showAlertDialog(
+                                  context: context,
+                                  alertDialog: const ResponseDialog(),
+                                );
                               }
-                            : () {};
+                            } else {
+                              ref
+                                  .read(
+                                    customerCardRepaymentDateProvider.notifier,
+                                  )
+                                  .state = null;
+
+                              ref
+                                  .read(isCustomerCardRepaidProvider.notifier)
+                                  .state = value;
+                            }
+                          }
+                        }
                       },
                     ),
                   ),
-                  const CustomerCardInfosDate(
+                  CustomerCardInfosDate(
                     label: 'Date de Remboursement',
-                    value: '',
+                    value: customerCardRepaymentDate != null && isRepaid
+                        ? '${format.format(customerCardRepaymentDate)}  ${customerCardRepaymentDate.hour}:${customerCardRepaymentDate.minute}'
+                        : '',
                   ),
                 ],
               ),
@@ -322,36 +395,83 @@ class _CashOperationsCustomerCardInfosState
                     child: SwitchListTile(
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: .0,
-                        vertical: 5.0,
+                        vertical: .0,
                       ),
-                      value: isSatisfied,
+                      value:
+                          isSatisfied && customerCardSatisfactionDate != null,
                       title: const CBText(
                         text: 'Satisfait',
                         fontSize: 12.0,
                         fontWeight: FontWeight.w500,
                       ),
+                      // isSatisfied && customerCardSatisfactionDate != null
+                      // because, update switch state only after verify that
+                      // the date have be setted properly and isn't null
+                      // don't work,
                       onChanged: (value) async {
-                        isRepaid == false
-                            ? {
-                                FunctionsController.showDateTime(
+                        // check if a customer card is selected
+                        if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                            null) {
+                          // if the customerCard isn't repaid
+                          if (isRepaid == false &&
+                              customerCardRepaymentDate == null) {
+                            // if switch will be switched to on
+                            if (value == true) {
+                              // verify if settlementsTotalNumbers is
+                              // equal to 372 on the customer card
+
+                              if (settlementsNumbersTotal == 372) {
+                                //  show dataTime picker for setting
+                                //  satisfaction date
+                                await FunctionsController.showDateTime(
                                   context,
                                   ref,
                                   customerCardSatisfactionDateProvider,
-                                ),
-                                customerCardSatisfactionDate != null
-                                    ? ref
-                                        .read(isCustomerCardSatisfiedProvider
-                                            .notifier)
-                                        .state = value
-                                    : {}
+                                );
+                                // change switch state/value
+                                ref
+                                    .read(
+                                      isCustomerCardSatisfiedProvider.notifier,
+                                    )
+                                    .state = value;
+                              } else {
+                                ref
+                                    .read(responseDialogProvider.notifier)
+                                    .state = ResponseDialogModel(
+                                  serviceResponse: ServiceResponse.failed,
+                                  response:
+                                      'Tous les règlements de la carte n\'ont pas été éffectués',
+                                );
+
+                                FunctionsController.showAlertDialog(
+                                  context: context,
+                                  alertDialog: const ResponseDialog(),
+                                );
                               }
-                            : () {};
+                            } else {
+                              ref
+                                  .read(
+                                    customerCardSatisfactionDateProvider
+                                        .notifier,
+                                  )
+                                  .state = null;
+
+                              ref
+                                  .read(
+                                    isCustomerCardSatisfiedProvider.notifier,
+                                  )
+                                  .state = value;
+                            }
+                          }
+                        }
                       },
                     ),
                   ),
-                  const CustomerCardInfosDate(
+                  CustomerCardInfosDate(
                     label: 'Date de Satisfaction',
-                    value: '',
+                    value: customerCardSatisfactionDate != null && isSatisfied
+                        ? '${format.format(customerCardSatisfactionDate)}  ${customerCardSatisfactionDate.hour}:${customerCardSatisfactionDate.minute}'
+                        : '',
                   ),
                 ],
               ),
@@ -499,13 +619,13 @@ class CustomerCardInfosDate extends ConsumerWidget {
         children: [
           CBText(
             text: label,
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
+            fontSize: 11,
+            //  fontWeight: FontWeight.w500,
           ),
           CBText(
             text: value,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
             //  color: CBColors.tertiaryColor,
           )
         ],

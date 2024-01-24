@@ -43,17 +43,17 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         SidebarSubOptionModel(
           index: 3,
           icon: Icons.supervised_user_circle,
-          name: 'Chargé de comptes',
+          name: 'Chargés de comptes',
         ),
         SidebarSubOptionModel(
           index: 4,
           icon: Icons.group,
-          name: 'Catégorie de clients',
+          name: 'Catégories Client',
         ),
         SidebarSubOptionModel(
           index: 5,
           icon: Icons.work,
-          name: 'Activités économiques',
+          name: 'Activités Économiques',
         ),
         SidebarSubOptionModel(
           index: 6,
@@ -93,7 +93,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         SidebarSubOptionModel(
           index: 13,
           icon: Icons.account_balance,
-          name: 'Opérations caisse',
+          name: 'Opérations Caisse',
         ),
       ],
       showSubOptions: true,
