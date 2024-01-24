@@ -6,11 +6,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class WidgetTest extends HookConsumerWidget {
+class WidgetTest extends StatefulHookConsumerWidget {
   const WidgetTest({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final data = useState('');
+  ConsumerState<ConsumerStatefulWidget> createState() => _WidgetTestState();
+}
+
+class _WidgetTestState extends ConsumerState<WidgetTest> {
+  dynamic data;
+  @override
+  Widget build(BuildContext context) {
+    //  dynamic data = useState(initialData); //useState();
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
@@ -19,7 +26,7 @@ class WidgetTest extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CBText(
-              text: data.value,
+              text: data.toString(),
             ),
             const SizedBox(
               height: 200,
@@ -32,18 +39,22 @@ class WidgetTest extends HookConsumerWidget {
                 text: 'Show dialog',
                 onPressed: () async {
                   final supabase = Supabase.instance.client;
-                  data.value = await supabase
-                      .from(SettlementTable.tableName)
-                      .select(
-                        SettlementTable.number,
-                        const FetchOptions(
-                          count: CountOption.exact,
-                        ),
-                      )
-                      .eq(SettlementTable.cardId, 14);
+                  final fetchedData =
+                      await supabase.from(SettlementTable.tableName).select(
+                            SettlementTable.number,
+                            const FetchOptions(
+                              count: CountOption.exact,
+                            ),
+                          );
+                  //;
+                  //  .eq(SettlementTable.cardId, 14);
                   debugPrint(
-                    'data: $data',
+                    'data: ${fetchedData.count.toString()}',
                   );
+
+                  setState(() {
+                    data = fetchedData.count;
+                  });
                 },
               ),
             ),

@@ -30,6 +30,7 @@ class SettlementCRUDFunctions {
       final settlementCollectionDate =
           ref.watch(settlementCollectionDateProvider);
 
+// if collection date have not been selected
       if (settlementCollectionDate == null) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: ServiceResponse.failed,
@@ -41,43 +42,70 @@ class SettlementCRUDFunctions {
           alertDialog: const ResponseDialog(),
         );
       } else {
-        ServiceResponse settlementStatus;
+        final customerCardSettlements = await SettlementsController.getAll(
+                customerCardId: settlementCustomerCard!.id)
+            .first;
 
-        final prefs = await SharedPreferences.getInstance();
-        final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+        int customerCardSettlementsNumberTotal = 0;
 
-        final settlement = Settlement(
-          number: settlementNumber,
-          cardId: settlementCustomerCard!.id!,
-          agentId: agentId ?? 0,
-          collectedAt: settlementCollectionDate,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-
-        settlementStatus =
-            await SettlementsController.create(settlement: settlement);
-
-        // debugPrint('new Settlement: $settlementStatus');
-
-        if (settlementStatus == ServiceResponse.success) {
-          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-            serviceResponse: settlementStatus,
-            response: 'Opération réussie',
-          );
-          showValidatedButton.value = true;
-          Navigator.of(context).pop();
-        } else {
-          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-            serviceResponse: settlementStatus,
-            response: 'Opération échouée',
-          );
-          showValidatedButton.value = true;
+        for (Settlement settlement in customerCardSettlements) {
+          customerCardSettlementsNumberTotal += settlement.number;
         }
-        FunctionsController.showAlertDialog(
-          context: context,
-          alertDialog: const ResponseDialog(),
-        );
+
+        // if the number of settlement added plus the number of settlement to add is greater than 372 (the total number of settelements of a customer card)
+
+        if (customerCardSettlementsNumberTotal + settlementNumber > 372) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response:
+                'Le nombre de règlement à ajouter est supérieur au restant',
+          );
+          showValidatedButton.value = true;
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        } else {
+          ServiceResponse settlementStatus;
+
+          final prefs = await SharedPreferences.getInstance();
+          final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+          final settlement = Settlement(
+            number: settlementNumber,
+            cardId: settlementCustomerCard.id!,
+            agentId: agentId ?? 0,
+            collectedAt: settlementCollectionDate,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+
+          settlementStatus =
+              await SettlementsController.create(settlement: settlement);
+
+          // debugPrint('new Settlement: $settlementStatus');
+
+          if (settlementStatus == ServiceResponse.success) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: settlementStatus,
+              response: 'Opération réussie',
+            );
+            showValidatedButton.value = true;
+            Navigator.of(context).pop();
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: settlementStatus,
+              response: 'Opération échouée',
+            );
+            showValidatedButton.value = true;
+          }
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        }
       }
     }
   }

@@ -151,44 +151,35 @@ class _CashOperationsCustomerCardInfosState
                       cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
                               null
                           ? typesListStream.when(
-                              data: (data) => data
-                                  .firstWhere(
-                                    (type) {
-                                      return type.id ==
-                                          cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                              .typeId;
-                                    },
-                                  )
-                                  .stake
-                                  .ceil()
-                                  .toString(),
+                              data: (data) {
+                                final stake = data
+                                    .firstWhere(
+                                      (type) {
+                                        return type.id ==
+                                            cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                                .typeId;
+                                      },
+                                    )
+                                    .stake
+                                    .ceil();
+                                return '${stake}f';
+                              },
                               error: (error, stackTrace) => '',
                               loading: () => '',
                             )
                           : '',
                 ),
-                const CustomerCardInfos(
-                  label: 'Total Mise',
-                  value: '372',
-                ),
                 CustomerCardInfos(
-                  label: 'Mises Effectuées',
-                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                          null
-                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                          .when(
-                          data: (data) {
-                            int settlementsNumber = 0;
-
-                            for (Settlement settlement in data) {
-                              settlementsNumber += settlement.number;
-                            }
-                            return settlementsNumber.toString();
-                          },
-                          error: (error, stckTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
+                  label: 'Total Règlements',
+                  value:
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                              null
+                          ? '372'
+                          : '',
+                ),
+                const CustomerCardInfos(
+                  label: '',
+                  value: '',
                 ),
                 CustomerCardInfos(
                   label: 'Montant Payé',
@@ -210,7 +201,7 @@ class _CashOperationsCustomerCardInfosState
                       : '',
                 ),
                 CustomerCardInfos(
-                  label: 'Mises Restantes',
+                  label: 'Règlements Effectués',
                   value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
                           null
                       ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
@@ -221,14 +212,13 @@ class _CashOperationsCustomerCardInfosState
                             for (Settlement settlement in data) {
                               settlementsNumber += settlement.number;
                             }
-                            return '${372 - settlementsNumber}';
+                            return settlementsNumber.toString();
                           },
                           error: (error, stckTrace) => '',
                           loading: () => '',
                         )
                       : '',
                 ),
-                const SizedBox(),
                 CustomerCardInfos(
                   label: 'Reste à Payer',
                   value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -242,6 +232,25 @@ class _CashOperationsCustomerCardInfosState
                               settlementsNumber += settlement.number;
                             }
                             return '${(372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
+                          },
+                          error: (error, stckTrace) => '',
+                          loading: () => '',
+                        )
+                      : '',
+                ),
+                CustomerCardInfos(
+                  label: 'Règlements Restants',
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                          null
+                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                          .when(
+                          data: (data) {
+                            int settlementsNumber = 0;
+
+                            for (Settlement settlement in data) {
+                              settlementsNumber += settlement.number;
+                            }
+                            return '${372 - settlementsNumber}';
                           },
                           error: (error, stckTrace) => '',
                           loading: () => '',
@@ -428,12 +437,12 @@ class CustomerCardInfos extends ConsumerWidget {
         children: [
           CBText(
             text: '$label: ',
-            fontSize: 10.5,
+            fontSize: 11,
             //  fontWeight: FontWeight.w500,
           ),
           CBText(
             text: value,
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: FontWeight.w500,
             //  color: CBColors.tertiaryColor,
           )

@@ -34,8 +34,9 @@ class _CBCashOperationsSearchOptionsCustumerCardDropdownState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem = ref.watch(
-        cashOperationsSearchOptionsCustumerCardDropdownProvider(
-            widget.providerName));
+      cashOperationsSearchOptionsCustumerCardDropdownProvider(
+          widget.providerName),
+    );
     return Container(
       margin: const EdgeInsets.symmetric(
         horizontal: 5.0,
