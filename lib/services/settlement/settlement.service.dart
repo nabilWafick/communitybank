@@ -48,8 +48,6 @@ class SettlementsService {
       {required int? customerCardId}) async* {
     final supabase = Supabase.instance.client;
 
-    debugPrint('Customer Card Id: $customerCardId');
-
     try {
       // listen to Settlements table change and return a stream of all Settlements data
 

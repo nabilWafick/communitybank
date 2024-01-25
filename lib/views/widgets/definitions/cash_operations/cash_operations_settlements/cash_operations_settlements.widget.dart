@@ -43,19 +43,20 @@ class _CashOperationsSettlementsState
 
     return Container(
       decoration: BoxDecoration(
-          //  color: Colors.blueAccent,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(
-              15.0,
-            ),
-            topRight: Radius.circular(
-              15.0,
-            ),
+        //  color: Colors.blueAccent,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(
+            15.0,
           ),
-          border: Border.all(
-            color: CBColors.sidebarTextColor.withOpacity(.5),
-            width: 1.5,
-          )),
+          topRight: Radius.circular(
+            15.0,
+          ),
+        ),
+        border: Border.all(
+          color: CBColors.sidebarTextColor.withOpacity(.5),
+          width: 1.5,
+        ),
+      ),
       height: 370.0,
       width: double.infinity,
       child: SingleChildScrollView(

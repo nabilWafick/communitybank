@@ -58,7 +58,9 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
 
     final format = DateFormat.yMMMMEEEEd('fr');
     return SizedBox(
-      height: 640.0,
+      // alignment: Alignment.center,
+      height: 712.0,
+      // width: double.infinity,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
