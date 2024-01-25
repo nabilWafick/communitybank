@@ -1,0 +1,4 @@
+
+SUPABASE_URL=https://cifvlislcfhwxopfwnnf.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZnZsaXNsY2Zod3hvcGZ3bm5mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE5NjQyMzYsImV4cCI6MjAxNzU0MDIzNn0.QXgIVFPsS-XNYjDp3t6Lx99N6-wJIvvPpquRFbxAAjc
+
