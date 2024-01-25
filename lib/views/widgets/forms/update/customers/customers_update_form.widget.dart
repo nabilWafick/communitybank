@@ -3,13 +3,15 @@ import 'package:communitybank/controllers/forms/validators/customer/customer.val
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category/customer_category_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/locality/locality_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/personal_status/personal_status_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -314,8 +316,6 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             dropdownMenuEntriesLabels:
                                 customersCategoriesListStream.when(
                               data: (data) {
-                                debugPrint(
-                                    'categoryId: ${widget.customer.categoryId}');
                                 // if customer category is undefined, return
                                 // data whith undefined category in first
                                 // position
@@ -323,27 +323,15 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 // the default selectedItem of the dropdown
 
                                 if (widget.customer.categoryId == null) {
-                                  data = [
-                                    CustomerCategory(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
-                                    ...data
-                                  ];
+                                  data = [widget.customer.category!, ...data];
                                 }
                                 //t if the customer category is defined, remove
                                 // it from data and put it as the firt data
                                 // element so as to it be setting as
                                 // the default selectedItem of the dropdown
                                 else {
-                                  final customerCategory = data.firstWhere(
-                                    (category) =>
-                                        category.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerCategory);
-                                  data = [customerCategory, ...data];
+                                  data.remove(widget.customer.category);
+                                  data = [widget.customer.category!, ...data];
                                 }
                                 return data;
                               },
@@ -362,11 +350,12 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
 
                                 if (widget.customer.categoryId == null) {
                                   data = [
-                                    CustomerCategory(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
+                                    // CustomerCategory(
+                                    //   name: 'Non définie',
+                                    //   createdAt: DateTime.now(),
+                                    //   updatedAt: DateTime.now(),
+                                    // ),
+                                    widget.customer.category!,
                                     ...data
                                   ];
                                 }
@@ -375,14 +364,14 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 // element so as to it be setting as
                                 // the default selectedItem of the dropdown
                                 else {
-                                  final customerCategory = data.firstWhere(
+                                  /*  final customerCategory = data.firstWhere(
                                     (category) =>
                                         category.id ==
                                         widget.customer.categoryId,
-                                  );
-                                  data.remove(customerCategory);
+                                  );*/
+                                  data.remove(widget.customer.category);
                                   data = [
-                                    customerCategory,
+                                    widget.customer.category!,
                                     ...data,
                                   ];
                                 }
@@ -393,7 +382,7 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             ),
                           ),
                         ),
-                        /*     Container(
+                        Container(
                           margin: const EdgeInsets.symmetric(
                             vertical: 10.0,
                             horizontal: 5.0,
@@ -409,22 +398,16 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 if (widget.customer.economicalActivityId ==
                                     null) {
                                   data = [
-                                    EconomicalActivity(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
+                                    widget.customer.economicalActivity!,
                                     ...data
                                   ];
                                 } else {
-                                  final customerEconomicalActivity =
-                                      data.firstWhere(
-                                    (economicalActivity) =>
-                                        economicalActivity.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerEconomicalActivity);
-                                  data = [customerEconomicalActivity, ...data];
+                                  data.remove(
+                                      widget.customer.economicalActivity);
+                                  data = [
+                                    widget.customer.economicalActivity!,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -437,22 +420,16 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 if (widget.customer.economicalActivityId ==
                                     null) {
                                   data = [
-                                    EconomicalActivity(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
+                                    widget.customer.economicalActivity!,
                                     ...data
                                   ];
                                 } else {
-                                  final customerEconomicalActivity =
-                                      data.firstWhere(
-                                    (economicalActivity) =>
-                                        economicalActivity.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerEconomicalActivity);
-                                  data = [customerEconomicalActivity, ...data];
+                                  data.remove(
+                                      widget.customer.economicalActivity);
+                                  data = [
+                                    widget.customer.economicalActivity!,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -476,22 +453,15 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                               data: (data) {
                                 if (widget.customer.personalStatusId == null) {
                                   data = [
-                                    PersonalStatus(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
+                                    widget.customer.personalStatus!,
                                     ...data
                                   ];
                                 } else {
-                                  final customerPersonalStatus =
-                                      data.firstWhere(
-                                    (personalStatus) =>
-                                        personalStatus.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerPersonalStatus);
-                                  data = [customerPersonalStatus, ...data];
+                                  data.remove(widget.customer.personalStatus);
+                                  data = [
+                                    widget.customer.personalStatus!,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -503,22 +473,15 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                               data: (data) {
                                 if (widget.customer.personalStatusId == null) {
                                   data = [
-                                    PersonalStatus(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
+                                    widget.customer.personalStatus!,
                                     ...data
                                   ];
                                 } else {
-                                  final customerPersonalStatus =
-                                      data.firstWhere(
-                                    (personalStatus) =>
-                                        personalStatus.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerPersonalStatus);
-                                  data = [customerPersonalStatus, ...data];
+                                  data.remove(widget.customer.personalStatus);
+                                  data = [
+                                    widget.customer.personalStatus!,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -540,22 +503,13 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 localitiesListStream.when(
                               data: (data) {
                                 if (widget.customer.localityId == null) {
-                                  data = [
-                                    Locality(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
-                                    ...data
-                                  ];
+                                  data = [widget.customer.locality!, ...data];
                                 } else {
-                                  final customerLocality = data.firstWhere(
-                                    (locality) =>
-                                        locality.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerLocality);
-                                  data = [customerLocality, ...data];
+                                  data.remove(widget.customer.locality);
+                                  data = [
+                                    widget.customer.locality!,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -566,22 +520,13 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                                 localitiesListStream.when(
                               data: (data) {
                                 if (widget.customer.localityId == null) {
-                                  data = [
-                                    Locality(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
-                                    ...data
-                                  ];
+                                  data = [widget.customer.locality!, ...data];
                                 } else {
-                                  final customerLocality = data.firstWhere(
-                                    (locality) =>
-                                        locality.id ==
-                                        widget.customer.categoryId,
-                                  );
-                                  data.remove(customerLocality);
-                                  data = [customerLocality, ...data];
+                                  data.remove(widget.customer.locality);
+                                  data = [
+                                    widget.customer.locality!,
+                                    ...data,
+                                  ];
                                 }
                                 return data;
                               },
@@ -590,7 +535,6 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             ),
                           ),
                         ),
-                    */
                       ],
                     )
                   ],

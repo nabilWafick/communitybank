@@ -56,13 +56,16 @@ class FunctionsController {
 
     if (selectedDate != null) {
       dateTime = DateTime.now();
-      dateTime.copyWith(
+      dateTime = dateTime.copyWith(
         year: selectedDate.year,
         month: selectedDate.month,
         day: selectedDate.day,
       );
 
-      dateTime.copyWith(
+      debugPrint(selectedDate.toIso8601String());
+      debugPrint(selectedTime.toString());
+
+      dateTime = dateTime.copyWith(
         hour: selectedTime != null ? selectedTime.hour : 0,
         minute: selectedTime != null ? selectedTime.minute : 0,
       );

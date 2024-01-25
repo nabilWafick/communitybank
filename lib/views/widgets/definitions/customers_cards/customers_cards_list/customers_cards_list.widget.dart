@@ -10,6 +10,8 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 final searchedCustomersCardsListProvider =
     StreamProvider<List<CustomerCard>>((ref) async* {
@@ -40,17 +42,30 @@ final customersCardsWithoutOwnerListStreamProvider =
   yield* CustomersCardsController.getAllWithoutOwner();
 });
 
-class CustomersCardsList extends ConsumerWidget {
+class CustomersCardsList extends ConsumerStatefulWidget {
   const CustomersCardsList({super.key});
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CustomersCardsListState();
+}
+
+class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('fr');
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('cards'));
     final searchedCustomersCardsList =
         ref.watch(searchedCustomersCardsListProvider);
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
+
+    final format = DateFormat.yMMMMEEEEd('fr');
 
     return SizedBox(
       height: 640.0,
@@ -139,16 +154,14 @@ class CustomersCardsList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                     text: customerCard.repaidAt != null
-                                        ? customerCard.repaidAt!
-                                            .toIso8601String()
+                                        ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt?.hour}:${customerCard.repaidAt?.minute}'
                                         : '',
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.satisfiedAt != null
-                                        ? customerCard.satisfiedAt!
-                                            .toIso8601String()
+                                        ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt?.hour}:${customerCard.satisfiedAt?.minute}'
                                         : '',
                                   ),
                                 ),
@@ -207,100 +220,98 @@ class CustomersCardsList extends ConsumerWidget {
                 : customersCardsListStream.when(
                     data: (data) {
                       //  debugPrint('card Stream Data: $data');
-                      return data
-                          .map(
-                            (customerCard) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: customerCard.id!.toString(),
-                                  ),
+                      return data.map(
+                        (customerCard) {
+                          //  debugPrint(customerCard.toString());
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                CBText(
+                                  text: customerCard.id!.toString(),
                                 ),
-                                DataCell(
-                                  CBText(
-                                    text: customerCard.label,
-                                  ),
+                              ),
+                              DataCell(
+                                CBText(
+                                  text: customerCard.label,
                                 ),
-                                DataCell(
-                                  CBText(
-                                    text: typesListStream.when(
-                                        data: (data) {
-                                          final typeList = data;
-                                          customerCard.type = null;
-                                          String typeName = '';
+                              ),
+                              DataCell(
+                                CBText(
+                                  text: typesListStream.when(
+                                      data: (data) {
+                                        final typeList = data;
+                                        customerCard.type = null;
+                                        String typeName = '';
 
-                                          for (Type type in typeList) {
-                                            if (type.id ==
-                                                customerCard.typeId) {
-                                              typeName = type.name;
-                                              customerCard.type = type;
-                                            }
+                                        for (Type type in typeList) {
+                                          if (type.id == customerCard.typeId) {
+                                            typeName = type.name;
+                                            customerCard.type = type;
                                           }
+                                        }
 
-                                          return typeName;
-                                        },
-                                        error: (error, stackTrace) => '',
-                                        loading: () => ''),
-                                  ),
+                                        return typeName;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => ''),
                                 ),
-                                DataCell(
-                                  CBText(
-                                    text: customerCard.repaidAt != null
-                                        ? customerCard.repaidAt!
-                                            .toIso8601String()
-                                        : '',
-                                  ),
+                              ),
+                              DataCell(
+                                CBText(
+                                  text: customerCard.repaidAt != null
+                                      ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt?.hour}:${customerCard.repaidAt?.minute}'
+                                      : '',
                                 ),
-                                DataCell(
-                                  CBText(
-                                    text: customerCard.satisfiedAt != null
-                                        ? customerCard.satisfiedAt!
-                                            .toIso8601String()
-                                        : '',
-                                  ),
+                              ),
+                              DataCell(
+                                CBText(
+                                  text: customerCard.satisfiedAt != null
+                                      ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt?.hour}:${customerCard.satisfiedAt?.minute}'
+                                      : '',
                                 ),
-                                DataCell(
-                                  onTap: () {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: CustomerCardUpdateForm(
-                                        customerCard: customerCard,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
+                              ),
+                              DataCell(
+                                onTap: () {
+                                  FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog: CustomerCardUpdateForm(
+                                      customerCard: customerCard,
                                     ),
+                                  );
+                                },
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
                                   ),
-                                  // showEditIcon: true,
                                 ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          CustomerCardDeletionConfirmationDialog(
-                                        customerCard: customerCard,
-                                        confirmToDelete:
-                                            CustomerCardCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
+                                // showEditIcon: true,
+                              ),
+                              DataCell(
+                                onTap: () async {
+                                  FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog:
+                                        CustomerCardDeletionConfirmationDialog(
+                                      customerCard: customerCard,
+                                      confirmToDelete:
+                                          CustomerCardCRUDFunctions.delete,
                                     ),
+                                  );
+                                },
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: const Icon(
+                                    Icons.delete_sharp,
+                                    color: Colors.red,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )
-                          .toList();
+                              ),
+                            ],
+                          );
+                        },
+                      ).toList();
                     },
                     error: (error, stack) {
                       //  debugPrint('cards Stream Error');

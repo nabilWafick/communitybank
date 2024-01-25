@@ -1,9 +1,17 @@
+import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_infos.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {
+  return;
+});
 
 class WidgetTest extends StatefulHookConsumerWidget {
   const WidgetTest({super.key});
@@ -13,9 +21,19 @@ class WidgetTest extends StatefulHookConsumerWidget {
 }
 
 class _WidgetTestState extends ConsumerState<WidgetTest> {
+  @override
+  void initState() {
+    super.initState();
+    initializeDateFormatting('fr');
+  }
+
   dynamic data;
+
   @override
   Widget build(BuildContext context) {
+    final settlementsCollectionDate =
+        ref.watch(settlementsCollectionDateProvider);
+    final format = DateFormat.yMMMMEEEEd('fr');
     //  dynamic data = useState(initialData); //useState();
     return Scaffold(
       body: SizedBox(
@@ -27,6 +45,44 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
             CBText(
               text: data.toString(),
             ),
+            const SizedBox(
+              height: 200,
+            ),
+            SizedBox(
+              width: 350.0,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CBIconButton(
+                    icon: Icons.date_range,
+                    text: 'Date de Collecte',
+                    onTap: () async {
+                      await FunctionsController.showDateTime(
+                        context,
+                        ref,
+                        settlementsCollectionDateProvider,
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    width: 20.0,
+                  ),
+                  Flexible(
+                    child: CBText(
+                      text: settlementsCollectionDate != null
+                          ? '${format.format(settlementsCollectionDate)}  ${settlementsCollectionDate.hour}:${settlementsCollectionDate.minute}'
+                          : '',
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w500,
+                      textOverflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  //   const SizedBox(),
+                ],
+              ),
+            ),
+
             const SizedBox(
               height: 200,
             ),

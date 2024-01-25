@@ -5,7 +5,6 @@ import 'package:communitybank/views/widgets/definitions/customers_cards/customer
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -75,7 +74,7 @@ class _SettlementsSortOptionsState
                   width: 10.0,
                 ),
                 SizedBox(
-                  width: 350.0,
+                  width: 320.0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,8 +82,8 @@ class _SettlementsSortOptionsState
                       CBIconButton(
                         icon: Icons.date_range,
                         text: 'Date de Collecte',
-                        onTap: () {
-                          FunctionsController.showDateTime(
+                        onTap: () async {
+                          await FunctionsController.showDateTime(
                             context,
                             ref,
                             settlementsListCollectionDateProvider,
@@ -109,7 +108,7 @@ class _SettlementsSortOptionsState
                   ),
                 ),
                 SizedBox(
-                  width: 350.0,
+                  width: 320.0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -117,8 +116,8 @@ class _SettlementsSortOptionsState
                       CBIconButton(
                         icon: Icons.date_range,
                         text: 'Date de Saisie',
-                        onTap: () {
-                          FunctionsController.showDateTime(
+                        onTap: () async {
+                          await FunctionsController.showDateTime(
                             context,
                             ref,
                             settlementsListEntryDateProvider,

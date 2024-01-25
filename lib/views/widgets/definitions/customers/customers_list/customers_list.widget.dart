@@ -2,6 +2,9 @@ import 'package:communitybank/controllers/customers/customers.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
@@ -18,6 +21,7 @@ import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality/loc
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_status/personal_status_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 
 final searchedCustomersListProvider =
     StreamProvider<List<Customer>>((ref) async* {
@@ -66,6 +70,7 @@ class CustomersList extends ConsumerWidget {
     final localitiesListStream = ref.watch(localityListStreamProvider);
     final personalStatusListStream =
         ref.watch(personalStatusListStreamProvider);
+
     return SizedBox(
       height: 640.0,
       child: SingleChildScrollView(
@@ -365,7 +370,31 @@ class CustomersList extends ConsumerWidget {
                     data: (data) {
                       return data.map(
                         (customer) {
-                          //  debugPrint('Customer data: $customer');
+                          final customersCategoriesListStreamData =
+                              customersCategoriesListStream.when(
+                            data: (data) => data,
+                            error: (error, stackTrace) => [],
+                            loading: () => [],
+                          );
+                          /*   final economicalActivitiesListStreamData =
+                              economicalActivitiesListStream.when(
+                            data: (data) => data,
+                            error: (error, stackTrace) => [],
+                            loading: () => [],
+                          );
+                          final personalStatusListStreamData =
+                              personalStatusListStream.when(
+                            data: (data) => data,
+                            error: (error, stackTrace) => [],
+                            loading: () => [],
+                          );
+                          final localitiesListStreamData =
+                              localitiesListStream.when(
+                            data: (data) => data,
+                            error: (error, stackTrace) => [],
+                            loading: () => [],
+                          );*/
+
                           return DataRow(
                             cells: [
                               DataCell(
@@ -416,65 +445,103 @@ class CustomersList extends ConsumerWidget {
                               ),
                               DataCell(
                                 CBText(
-                                  text: customer.categoryId == null
-                                      ? 'Non définie'
-                                      : customersCategoriesListStream.when(
-                                          data: (data) {
-                                            return data.firstWhere((category) {
-                                              return category.id ==
-                                                  customer.categoryId;
-                                            }).name;
-                                          },
-                                          error: (error, stackTrace) => '',
-                                          loading: () => '',
-                                        ),
+                                  text: customersCategoriesListStreamData
+                                      .firstWhere(
+                                    (category) {
+                                      if (category.id == customer.categoryId) {
+                                        customer.category = category;
+                                      }
+                                      return category.id == customer.categoryId;
+                                    },
+                                    orElse: () {
+                                      final category = CustomerCategory(
+                                        name: 'Non définie',
+                                        createdAt: DateTime.now(),
+                                        updatedAt: DateTime.now(),
+                                      );
+                                      customer.category = category;
+                                      return category;
+                                    },
+                                  ).name,
                                 ),
                               ),
                               DataCell(
                                 CBText(
-                                  text: customer.economicalActivityId == null
-                                      ? 'Non définie'
-                                      : economicalActivitiesListStream.when(
-                                          data: (data) {
-                                            return data.firstWhere(
-                                                (conomicalActivity) {
-                                              return conomicalActivity.id ==
-                                                  customer.economicalActivityId;
-                                            }).name;
-                                          },
-                                          error: (error, stackTrace) => '',
-                                          loading: () => '',
+                                  text: economicalActivitiesListStream.when(
+                                    data: (data) {
+                                      final customerEconomicalActivity =
+                                          data.firstWhere(
+                                        (economicalActivity) {
+                                          return economicalActivity.id ==
+                                              customer.economicalActivityId;
+                                        },
+                                        orElse: () => EconomicalActivity(
+                                          name: 'Non définie',
+                                          createdAt: DateTime.now(),
+                                          updatedAt: DateTime.now(),
                                         ),
+                                      );
+
+                                      customer.economicalActivity =
+                                          customerEconomicalActivity;
+
+                                      return customerEconomicalActivity.name;
+                                    },
+                                    error: (error, stackTrace) => '',
+                                    loading: () => '',
+                                  ),
                                 ),
                               ),
                               DataCell(
                                 CBText(
-                                  text: customer.personalStatusId == null
-                                      ? 'Non défini'
-                                      : personalStatusListStream.when(
-                                          data: (data) => data
-                                              .firstWhere((personalStatus) =>
-                                                  customer.personalStatusId ==
-                                                  personalStatus.id)
-                                              .name,
-                                          error: (error, stackTrace) => '',
-                                          loading: () => '',
+                                  text: personalStatusListStream.when(
+                                    data: (data) {
+                                      final customerPersonalStatus =
+                                          data.firstWhere(
+                                        (personalStatus) {
+                                          return personalStatus.id ==
+                                              customer.personalStatusId;
+                                        },
+                                        orElse: () => PersonalStatus(
+                                          name: 'Non défini',
+                                          createdAt: DateTime.now(),
+                                          updatedAt: DateTime.now(),
                                         ),
+                                      );
+
+                                      customer.personalStatus =
+                                          customerPersonalStatus;
+
+                                      return customerPersonalStatus.name;
+                                    },
+                                    error: (error, stackTrace) => '',
+                                    loading: () => '',
+                                  ),
                                 ),
                               ),
                               DataCell(
                                 CBText(
-                                  text: customer.localityId == null
-                                      ? 'Non définie'
-                                      : localitiesListStream.when(
-                                          data: (data) => data
-                                              .firstWhere((locality) =>
-                                                  locality.id ==
-                                                  customer.localityId)
-                                              .name,
-                                          error: (error, stackTrace) => '',
-                                          loading: () => '',
+                                  text: localitiesListStream.when(
+                                    data: (data) {
+                                      final customerLocality = data.firstWhere(
+                                        (locality) {
+                                          return locality.id ==
+                                              customer.localityId;
+                                        },
+                                        orElse: () => Locality(
+                                          name: 'Non définie',
+                                          createdAt: DateTime.now(),
+                                          updatedAt: DateTime.now(),
                                         ),
+                                      );
+
+                                      customer.locality = customerLocality;
+
+                                      return customerLocality.name;
+                                    },
+                                    error: (error, stackTrace) => '',
+                                    loading: () => '',
+                                  ),
                                 ),
                               ),
                               DataCell(
@@ -499,8 +566,8 @@ class CustomersList extends ConsumerWidget {
                                     : const SizedBox(),
                               ),
                               DataCell(
-                                onTap: () {
-                                  FunctionsController.showAlertDialog(
+                                onTap: () async {
+                                  await FunctionsController.showAlertDialog(
                                     context: context,
                                     alertDialog:
                                         CustomerUpdateForm(customer: customer),

@@ -1,6 +1,13 @@
 import 'dart:convert';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/models/tables/customer/customer_table.model.dart';
 import 'package:flutter/widgets.dart';
+
+// use class nullable or not required classes in model
+// for facilitating update of data requiring dropdown
 
 class Customer {
   final int? id;
@@ -10,9 +17,13 @@ class Customer {
   final String address;
   final String profession;
   final int nicNumber;
+  CustomerCategory? category;
   int? categoryId;
+  EconomicalActivity? economicalActivity;
   int? economicalActivityId;
+  PersonalStatus? personalStatus;
   int? personalStatusId;
+  Locality? locality;
   int? localityId;
   final String? profile;
   final String? signature;
@@ -26,10 +37,14 @@ class Customer {
     required this.address,
     required this.profession,
     required this.nicNumber,
-    required this.categoryId,
-    required this.economicalActivityId,
-    required this.personalStatusId,
-    required this.localityId,
+    this.category,
+    /*  required  */ this.categoryId,
+    this.economicalActivity,
+    /*  required  */ this.economicalActivityId,
+    this.personalStatus,
+    /*  required  */ this.personalStatusId,
+    this.locality,
+    /*  required  */ this.localityId,
     this.profile,
     this.signature,
     required this.createdAt,

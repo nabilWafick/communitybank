@@ -24,7 +24,7 @@ class CBText extends StatelessWidget {
       text,
       textAlign: textAlign,
       overflow: textOverflow,
-      maxLines: 2,
+      maxLines: 3,
       style: TextStyle(
         fontSize: fontSize,
         fontFamily: 'Poppins',
