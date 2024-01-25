@@ -576,8 +576,8 @@ class CustomerCardCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
-    final customersCardsListStream =
-        ref.watch(customersCardsListStreamProvider);
+    //  final customersCardsListStream =
+    //      ref.watch(customersCardsListStreamProvider);
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal: 10.0,
@@ -609,18 +609,7 @@ class CustomerCardCard extends ConsumerWidget {
           child: Row(
             children: [
               CBText(
-                text: customersCardsListStream.when(
-                  data: (data) {
-                    final customerCardRealTime = data.firstWhere(
-                      (customerCardData) =>
-                          customerCardData.id == customerCard.id,
-                    );
-
-                    return customerCardRealTime.label;
-                  },
-                  error: (error, stackTrace) => '',
-                  loading: () => '',
-                ),
+                text: customerCard.label,
 
                 // sidebarSubOptionData.name
                 fontSize: 11,

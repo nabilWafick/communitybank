@@ -109,7 +109,7 @@ class TypesSortOptions extends ConsumerWidget {
                   CBListProductDropdown(
                     width: 150.0,
                     label: 'Produit',
-                    providerName: 'type-products',
+                    providerName: 'types-products',
                     dropdownMenuEntriesLabels: productsListStream.when(
                       data: (data) {
                         return [

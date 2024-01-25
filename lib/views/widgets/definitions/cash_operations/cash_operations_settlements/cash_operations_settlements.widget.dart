@@ -1,6 +1,10 @@
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/settlements/settlements_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/settlement/settlement_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -183,7 +187,13 @@ class _CashOperationsSettlementsState
                           ),
                         ),
                         DataCell(
-                          onTap: () {},
+                          onTap: () async {
+                            await FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog:
+                                  SettlementUpdateForm(settlement: settlement),
+                            );
+                          },
                           Container(
                             alignment: Alignment.centerRight,
                             child: const Icon(
@@ -194,7 +204,15 @@ class _CashOperationsSettlementsState
                           // showEditIcon: true,
                         ),
                         DataCell(
-                          onTap: () async {},
+                          onTap: () async {
+                            await FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SettlementDeletionConfirmationDialog(
+                                settlement: settlement,
+                                confirmToDelete: SettlementCRUDFunctions.delete,
+                              ),
+                            );
+                          },
                           Container(
                             alignment: Alignment.centerRight,
                             child: const Icon(

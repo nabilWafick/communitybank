@@ -2,16 +2,16 @@ import 'package:communitybank/controllers/settlement/settlement.controller.dart'
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-final searchedSettlementsListProvider =
+/*final searchedSettlementsListProvider =
     StreamProvider<List<Settlement>>((ref) async* {
-  // String searchedcollector = ref.watch(searchProvider('settlements'));
+   String searchedCustumerollector = ref.watch(searchProvider('settlements'));
   ref.listen(searchProvider('settlements'), (previous, next) {
     if (previous != next && next != '' && next.trim() != '') {
       ref.read(isSearchingProvider('settlements').notifier).state = true;
@@ -23,9 +23,15 @@ final searchedSettlementsListProvider =
   // searchCollector(name: searchedcollector).asStream();
 });
 
+*/
 final settlementsListStreamProvider =
     StreamProvider<List<Settlement>>((ref) async* {
-  yield* SettlementsController.getAll(customerCardId: null);
+  final selectedCustomerCard = ref.watch(
+    listCustomerCardDropdownProvider('settlements-card'),
+  );
+  yield* SettlementsController.getAll(
+    customerCardId: selectedCustomerCard.id,
+  );
 });
 
 class SettlementsList extends ConsumerStatefulWidget {

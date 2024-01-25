@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final listCustomerCardDropdownProvider =
     StateProvider.family<CustomerCard, String>((ref, dropdown) {
   return CustomerCard(
-    label: 'Non défini',
+    label: 'Tous',
     typeId: 0,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),

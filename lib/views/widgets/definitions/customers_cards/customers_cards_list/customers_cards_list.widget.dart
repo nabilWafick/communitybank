@@ -4,7 +4,7 @@ import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fu
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customer_card/customers_cards_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customer_cards/customers_cards_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/customer_card/customer_card_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';

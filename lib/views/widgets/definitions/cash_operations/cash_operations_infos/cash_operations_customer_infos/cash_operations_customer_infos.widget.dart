@@ -203,8 +203,10 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
     // for updating in real time the cash operations selected customer card
 
     ref.listen(customersCardsListStreamProvider, (previous, next) {
+      debugPrint('new data');
       Future.delayed(const Duration(milliseconds: 100), () {
         if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
+          debugPrint('new data after selected card check');
           final realTimeCustomerCard = next.when(
               data: (data) => data.firstWhere((customerCard) =>
                   customerCard.id ==

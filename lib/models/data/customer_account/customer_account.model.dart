@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/tables/customer_account/customer_account_table.model.dart';

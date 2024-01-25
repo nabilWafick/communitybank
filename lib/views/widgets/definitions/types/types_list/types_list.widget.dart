@@ -30,10 +30,12 @@ final searchedTypesListProvider = StreamProvider<List<Type>>((ref) async* {
 });
 
 final typesListStreamProvider = StreamProvider<List<Type>>((ref) async* {
-  final selectedTypePrice =
-      ref.watch(listStringDropdownProvider('types-stackes'));
-  final selectedTypeProduct =
-      ref.watch(listProductDropdownProvider('type-products'));
+  final selectedTypePrice = ref.watch(
+    listStringDropdownProvider('types-stackes'),
+  );
+  final selectedTypeProduct = ref.watch(
+    listProductDropdownProvider('types-products'),
+  );
   yield* TypesController.getAll(
     // ref: ref,
     selectedTypeStake: selectedTypePrice,
