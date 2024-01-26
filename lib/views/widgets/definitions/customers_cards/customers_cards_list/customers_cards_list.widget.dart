@@ -9,7 +9,6 @@ import 'package:communitybank/views/widgets/forms/update/customer_card/customer_
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -157,14 +156,14 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                 DataCell(
                                   CBText(
                                     text: customerCard.repaidAt != null
-                                        ? '${format.format(customerCard.repaidAt)}  ${customerCard.repaidAt.hour}:${customerCard.repaidAt.minute}'
+                                        ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt!.hour}:${customerCard.repaidAt!.minute}'
                                         : '',
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.satisfiedAt != null
-                                        ? '${format.format(customerCard.satisfiedAt)}  ${customerCard.satisfiedAt.hour}:${customerCard.satisfiedAt.minute}'
+                                        ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt!.hour}:${customerCard.satisfiedAt!.minute}'
                                         : '',
                                   ),
                                 ),
@@ -251,7 +250,6 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                         (type) =>
                                             customerCard.typeId == type.id,
                                       );
-                                      customerCard.type == customerCardType;
 
                                       return CBText(
                                         text: customerCardType.name,
@@ -309,14 +307,14 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                               DataCell(
                                 CBText(
                                   text: customerCard.repaidAt != null
-                                      ? '${format.format(customerCard.repaidAt)}  ${customerCard.repaidAt.hour}:${customerCard.repaidAt.minute}'
+                                      ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt!.hour}:${customerCard.repaidAt!.minute}'
                                       : '',
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text: customerCard.satisfiedAt != null
-                                      ? '${format.format(customerCard.satisfiedAt)}  ${customerCard.satisfiedAt.hour}:${customerCard.satisfiedAt.minute}'
+                                      ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt!.hour}:${customerCard.satisfiedAt!.minute}'
                                       : '',
                                 ),
                               ),

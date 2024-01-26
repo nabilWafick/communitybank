@@ -123,9 +123,9 @@ class _CustomerCardUpdateFormState
                           dropdownMenuEntriesLabels: typeListStream.when(
                             data: (data) {
                               List<Type> typesList = data;
-                              typesList.remove(widget.customerCard.type);
+                              //  typesList.remove(widget.customerCard.type);
                               typesList = [
-                                widget.customerCard.type!,
+                                //    widget.customerCard.type!,
                                 ...typesList
                               ];
                               return typesList;
@@ -135,8 +135,11 @@ class _CustomerCardUpdateFormState
                           ),
                           dropdownMenuEntriesValues: typeListStream.when(
                             data: (data) {
-                              data.remove(widget.customerCard.type);
-                              data = [widget.customerCard.type!, ...data];
+                              //    data.remove(widget.customerCard.type);
+                              data = [
+                                //      widget.customerCard.type!,
+                                ...data,
+                              ];
                               return data;
                             },
                             error: (error, stackTrace) => [],
