@@ -70,7 +70,7 @@ class _CustomerCardUpdateFormState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const CBText(
-                        text: 'Cartes Clients',
+                        text: 'Carte Client',
                         fontSize: 20.0,
                         fontWeight: FontWeight.w600,
                       ),

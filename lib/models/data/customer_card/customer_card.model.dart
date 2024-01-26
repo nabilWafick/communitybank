@@ -6,21 +6,23 @@ import 'package:communitybank/models/data/type/type.model.dart';
 class CustomerCard {
   final int? id;
   final String label;
-  Type? type;
+  Type type;
   final int typeId;
   int? customerAccountId;
-  final DateTime? satisfiedAt;
-  final DateTime? repaidAt;
-  final DateTime createdAt;
+  final DateTime satisfiedAt;
+  final DateTime
+      repaidAt; // declared as non-nullable for avoiding the loss of data after adding or updating data
+  final DateTime
+      createdAt; // declared as non-nullable for avoiding the loss of data after adding or updating data
   final DateTime updatedAt;
   CustomerCard({
     this.id,
     required this.label,
-    this.type,
+    required this.type,
     required this.typeId,
     this.customerAccountId,
-    this.satisfiedAt,
-    this.repaidAt,
+    required this.satisfiedAt,
+    required this.repaidAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -29,6 +31,7 @@ class CustomerCard {
     int? id,
     String? label,
     int? typeId,
+    Type? type,
     int? customerAccountId,
     DateTime? satisfiedAt,
     DateTime? repaidAt,
@@ -38,6 +41,7 @@ class CustomerCard {
     return CustomerCard(
       id: id ?? this.id,
       label: label ?? this.label,
+      type: type ?? this.type,
       typeId: typeId ?? this.typeId,
       customerAccountId: customerAccountId ?? this.customerAccountId,
       satisfiedAt: satisfiedAt ?? this.satisfiedAt,
@@ -52,8 +56,8 @@ class CustomerCard {
       CustomerCardTable.label: label,
       CustomerCardTable.typeId: typeId,
       CustomerCardTable.customerAccountId: customerAccountId,
-      CustomerCardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
-      CustomerCardTable.repaidAt: repaidAt?.toIso8601String(),
+      CustomerCardTable.satisfiedAt: satisfiedAt.toIso8601String(),
+      CustomerCardTable.repaidAt: repaidAt.toIso8601String(),
       CustomerCardTable.createdAt: createdAt.toIso8601String(),
       CustomerCardTable.updatedAt: updatedAt.toIso8601String(),
     };
@@ -63,14 +67,21 @@ class CustomerCard {
     return CustomerCard(
       id: map[CustomerCardTable.id]?.toInt(),
       label: map[CustomerCardTable.label] ?? '',
-      typeId: map[CustomerCardTable.typeId]?.toInt() ?? 0,
+      type: Type(
+        name: 'Undefined',
+        stake: 0,
+        products: [],
+        createdAt: DateTime(700),
+        updatedAt: DateTime(700),
+      ),
+      typeId: map[CustomerCardTable.typeId]?.toInt(),
       customerAccountId: map[CustomerCardTable.customerAccountId],
       satisfiedAt: map[CustomerCardTable.satisfiedAt] != null
           ? DateTime.parse(map[CustomerCardTable.satisfiedAt])
-          : null,
+          : DateTime(700),
       repaidAt: map[CustomerCardTable.repaidAt] != null
           ? DateTime.parse(map[CustomerCardTable.repaidAt])
-          : null,
+          : DateTime(700),
       createdAt: DateTime.parse(map[CustomerCardTable.createdAt]),
       updatedAt: DateTime.parse(map[CustomerCardTable.updatedAt]),
     );

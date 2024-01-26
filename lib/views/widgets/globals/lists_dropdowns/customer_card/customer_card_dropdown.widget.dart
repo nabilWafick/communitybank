@@ -3,11 +3,22 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:communitybank/models/data/type/type.model.dart';
+
 final listCustomerCardDropdownProvider =
     StateProvider.family<CustomerCard, String>((ref, dropdown) {
   return CustomerCard(
     label: 'Tous',
     typeId: 0,
+    type: Type(
+      name: 'Undefined',
+      stake: 0,
+      products: [],
+      createdAt: DateTime(700),
+      updatedAt: DateTime(700),
+    ),
+    satisfiedAt: DateTime.now(), // nullable value
+    repaidAt: DateTime.now(), // nullable value
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

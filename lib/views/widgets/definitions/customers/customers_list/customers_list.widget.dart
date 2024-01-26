@@ -60,9 +60,9 @@ class CustomersList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('customers'));
+    //   final isSearching = ref.watch(isSearchingProvider('customers'));
     final customersListStream = ref.watch(customersListStreamProvider);
-    final searchedCustomers = ref.watch(searchedCustomersListProvider);
+    //   final searchedCustomers = ref.watch(searchedCustomersListProvider);
     final economicalActivitiesListStream =
         ref.watch(economicalActivityListStreamProvider);
     final customersCategoriesListStream =
@@ -182,201 +182,17 @@ class CustomersList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows: isSearching
-                ? searchedCustomers.when(
-                    data: (data) {
-                      return data
-                          .map(
-                            (customer) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(text: customer.id!.toString()),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    customer.profile != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: customer.profile!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  customer.profile != null
-                                      ? Container(
-                                          alignment: Alignment.center,
-                                          child: const Icon(
-                                            Icons.account_circle_sharp,
-                                            size: 35.0,
-                                            color: CBColors.primaryColor,
-                                          ),
-                                        )
-                                      : const SizedBox(),
-                                ),
-                                DataCell(
-                                  CBText(
-                                      text:
-                                          '${customer.firstnames} ${customer.name}'),
-                                ),
-                                DataCell(
-                                  CBText(text: customer.phoneNumber),
-                                ),
-                                DataCell(
-                                  CBText(text: customer.address),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: customer.profession,
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: customer.nicNumber.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: customer.categoryId == null
-                                        ? 'Non définie'
-                                        : customersCategoriesListStream.when(
-                                            data: (data) {
-                                              return data
-                                                  .firstWhere((category) {
-                                                return category.id ==
-                                                    customer.categoryId;
-                                              }).name;
-                                            },
-                                            error: (error, stackTrace) => '',
-                                            loading: () => '',
-                                          ),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: customer.economicalActivityId == null
-                                        ? 'Non définie'
-                                        : economicalActivitiesListStream.when(
-                                            data: (data) {
-                                              return data.firstWhere(
-                                                  (conomicalActivity) {
-                                                return conomicalActivity.id ==
-                                                    customer
-                                                        .economicalActivityId;
-                                              }).name;
-                                            },
-                                            error: (error, stackTrace) => '',
-                                            loading: () => '',
-                                          ),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: customer.personalStatusId == null
-                                        ? 'Non défini'
-                                        : personalStatusListStream.when(
-                                            data: (data) => data
-                                                .firstWhere((personalStatus) =>
-                                                    customer.personalStatusId ==
-                                                    personalStatus.id)
-                                                .name,
-                                            error: (error, stackTrace) => '',
-                                            loading: () => '',
-                                          ),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: customer.localityId == null
-                                        ? 'Non définie'
-                                        : localitiesListStream.when(
-                                            data: (data) => data
-                                                .firstWhere((locality) =>
-                                                    locality.id ==
-                                                    customer.localityId)
-                                                .name,
-                                            error: (error, stackTrace) => '',
-                                            loading: () => '',
-                                          ),
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    customer.signature != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: customer.signature!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  customer.signature != null
-                                      ? Container(
-                                          alignment: Alignment.center,
-                                          child: const Icon(
-                                            Icons.photo,
-                                            color: CBColors.primaryColor,
-                                          ),
-                                        )
-                                      : const SizedBox(),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: CustomerUpdateForm(
-                                          customer: customer),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          CustomerDeletionConfirmationDialog(
-                                        customer: customer,
-                                        confirmToDelete:
-                                            CustomerCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  )
-                : customersListStream.when(
-                    data: (data) {
-                      return data.map(
-                        (customer) {
-                          final customersCategoriesListStreamData =
-                              customersCategoriesListStream.when(
-                            data: (data) => data,
-                            error: (error, stackTrace) => [],
-                            loading: () => [],
-                          );
-                          /*   final economicalActivitiesListStreamData =
+            rows: customersListStream.when(
+              data: (data) {
+                return data.map(
+                  (customer) {
+                    final customersCategoriesListStreamData =
+                        customersCategoriesListStream.when(
+                      data: (data) => data,
+                      error: (error, stackTrace) => [],
+                      loading: () => [],
+                    );
+                    /*   final economicalActivitiesListStreamData =
                               economicalActivitiesListStream.when(
                             data: (data) => data,
                             error: (error, stackTrace) => [],
@@ -395,221 +211,249 @@ class CustomersList extends ConsumerWidget {
                             loading: () => [],
                           );*/
 
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                CBText(text: customer.id!.toString()),
-                              ),
-                              DataCell(
-                                onTap: () {
-                                  customer.profile != null
-                                      ? FunctionsController.showAlertDialog(
-                                          context: context,
-                                          alertDialog: SingleImageShower(
-                                            imageSource: customer.profile!,
-                                          ),
-                                        )
-                                      : () {};
-                                },
-                                customer.profile != null
-                                    ? Container(
-                                        alignment: Alignment.center,
-                                        child: const Icon(
-                                          Icons.account_circle_sharp,
-                                          size: 35.0,
-                                          color: CBColors.primaryColor,
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ),
-                              DataCell(
-                                CBText(
-                                    text:
-                                        '${customer.firstnames} ${customer.name}'),
-                              ),
-                              DataCell(
-                                CBText(text: customer.phoneNumber),
-                              ),
-                              DataCell(
-                                CBText(text: customer.address),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: customer.profession,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: customer.nicNumber.toString(),
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: customersCategoriesListStreamData
-                                      .firstWhere(
-                                    (category) {
-                                      if (category.id == customer.categoryId) {
-                                        customer.category = category;
-                                      }
-                                      return category.id == customer.categoryId;
-                                    },
-                                    orElse: () {
-                                      final category = CustomerCategory(
-                                        name: 'Non définie',
-                                        createdAt: DateTime.now(),
-                                        updatedAt: DateTime.now(),
-                                      );
-                                      customer.category = category;
-                                      return category;
-                                    },
-                                  ).name,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: economicalActivitiesListStream.when(
-                                    data: (data) {
-                                      final customerEconomicalActivity =
-                                          data.firstWhere(
-                                        (economicalActivity) {
-                                          return economicalActivity.id ==
-                                              customer.economicalActivityId;
-                                        },
-                                        orElse: () => EconomicalActivity(
-                                          name: 'Non définie',
-                                          createdAt: DateTime.now(),
-                                          updatedAt: DateTime.now(),
-                                        ),
-                                      );
-
-                                      customer.economicalActivity =
-                                          customerEconomicalActivity;
-
-                                      return customerEconomicalActivity.name;
-                                    },
-                                    error: (error, stackTrace) => '',
-                                    loading: () => '',
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: personalStatusListStream.when(
-                                    data: (data) {
-                                      final customerPersonalStatus =
-                                          data.firstWhere(
-                                        (personalStatus) {
-                                          return personalStatus.id ==
-                                              customer.personalStatusId;
-                                        },
-                                        orElse: () => PersonalStatus(
-                                          name: 'Non défini',
-                                          createdAt: DateTime.now(),
-                                          updatedAt: DateTime.now(),
-                                        ),
-                                      );
-
-                                      customer.personalStatus =
-                                          customerPersonalStatus;
-
-                                      return customerPersonalStatus.name;
-                                    },
-                                    error: (error, stackTrace) => '',
-                                    loading: () => '',
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: localitiesListStream.when(
-                                    data: (data) {
-                                      final customerLocality = data.firstWhere(
-                                        (locality) {
-                                          return locality.id ==
-                                              customer.localityId;
-                                        },
-                                        orElse: () => Locality(
-                                          name: 'Non définie',
-                                          createdAt: DateTime.now(),
-                                          updatedAt: DateTime.now(),
-                                        ),
-                                      );
-
-                                      customer.locality = customerLocality;
-
-                                      return customerLocality.name;
-                                    },
-                                    error: (error, stackTrace) => '',
-                                    loading: () => '',
-                                  ),
-                                ),
-                              ),
-                              DataCell(
-                                onTap: () {
-                                  customer.signature != null
-                                      ? FunctionsController.showAlertDialog(
-                                          context: context,
-                                          alertDialog: SingleImageShower(
-                                            imageSource: customer.signature!,
-                                          ),
-                                        )
-                                      : () {};
-                                },
-                                customer.signature != null
-                                    ? Container(
-                                        alignment: Alignment.center,
-                                        child: const Icon(
-                                          Icons.photo,
-                                          color: CBColors.primaryColor,
-                                        ),
-                                      )
-                                    : const SizedBox(),
-                              ),
-                              DataCell(
-                                onTap: () async {
-                                  await FunctionsController.showAlertDialog(
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          CBText(text: customer.id!.toString()),
+                        ),
+                        DataCell(
+                          onTap: () {
+                            customer.profile != null
+                                ? FunctionsController.showAlertDialog(
                                     context: context,
-                                    alertDialog:
-                                        CustomerUpdateForm(customer: customer),
-                                  );
-                                },
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                // showEditIcon: true,
-                              ),
-                              DataCell(
-                                onTap: () {
-                                  FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog:
-                                        CustomerDeletionConfirmationDialog(
-                                      customer: customer,
-                                      confirmToDelete:
-                                          CustomerCRUDFunctions.delete,
+                                    alertDialog: SingleImageShower(
+                                      imageSource: customer.profile!,
                                     ),
-                                  );
-                                },
-                                Container(
-                                  alignment: Alignment.centerRight,
+                                  )
+                                : () {};
+                          },
+                          customer.profile != null
+                              ? Container(
+                                  alignment: Alignment.center,
                                   child: const Icon(
-                                    Icons.delete_sharp,
-                                    color: Colors.red,
+                                    Icons.account_circle_sharp,
+                                    size: 35.0,
+                                    color: CBColors.primaryColor,
                                   ),
+                                )
+                              : const SizedBox(),
+                        ),
+                        DataCell(
+                          CBText(
+                              text: '${customer.firstnames} ${customer.name}'),
+                        ),
+                        DataCell(
+                          CBText(text: customer.phoneNumber),
+                        ),
+                        DataCell(
+                          CBText(text: customer.address),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: customer.profession,
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: customer.nicNumber.toString(),
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: customersCategoriesListStreamData.firstWhere(
+                              (category) {
+                                if (category.id == customer.categoryId) {
+                                  customer.category = category;
+                                }
+                                return category.id == customer.categoryId;
+                              },
+                              orElse: () {
+                                final category = CustomerCategory(
+                                  name: 'Non définie',
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                );
+                                customer.category = category;
+                                return category;
+                              },
+                            ).name,
+                          ),
+                        ),
+                        DataCell(
+                          economicalActivitiesListStream.when(
+                            data: (data) {
+                              final customerEconomicalActivity =
+                                  data.firstWhere(
+                                (economicalActivity) {
+                                  return economicalActivity.id ==
+                                      customer.economicalActivityId;
+                                },
+                                orElse: () => EconomicalActivity(
+                                  name: 'Non définie',
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
                                 ),
+                              );
+
+                              customer.economicalActivity =
+                                  customerEconomicalActivity;
+
+                              return CBText(
+                                text: customerEconomicalActivity.name,
+                              );
+
+                              //  customerEconomicalActivity.name;
+                            },
+                            error: (error, stackTrace) => const CBText(
+                              text: '',
+                            ),
+                            loading: () => const CBText(
+                              text: '',
+                            ),
+                          ),
+
+/*
+                          CBText(
+                            text: economicalActivitiesListStream.when(
+                              data: (data) {
+                                final customerEconomicalActivity =
+                                    data.firstWhere(
+                                  (economicalActivity) {
+                                    return economicalActivity.id ==
+                                        customer.economicalActivityId;
+                                  },
+                                  orElse: () => EconomicalActivity(
+                                    name: 'Non définie',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  ),
+                                );
+
+                                customer.economicalActivity =
+                                    customerEconomicalActivity;
+
+                                return customerEconomicalActivity.name;
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            ),
+                          ),
+                        */
+                        ),
+                        DataCell(
+                          CBText(
+                            text: personalStatusListStream.when(
+                              data: (data) {
+                                final customerPersonalStatus = data.firstWhere(
+                                  (personalStatus) {
+                                    return personalStatus.id ==
+                                        customer.personalStatusId;
+                                  },
+                                  orElse: () => PersonalStatus(
+                                    name: 'Non défini',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  ),
+                                );
+
+                                customer.personalStatus =
+                                    customerPersonalStatus;
+
+                                return customerPersonalStatus.name;
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: localitiesListStream.when(
+                              data: (data) {
+                                final customerLocality = data.firstWhere(
+                                  (locality) {
+                                    return locality.id == customer.localityId;
+                                  },
+                                  orElse: () => Locality(
+                                    name: 'Non définie',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  ),
+                                );
+
+                                customer.locality = customerLocality;
+
+                                return customerLocality.name;
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          onTap: () {
+                            customer.signature != null
+                                ? FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog: SingleImageShower(
+                                      imageSource: customer.signature!,
+                                    ),
+                                  )
+                                : () {};
+                          },
+                          customer.signature != null
+                              ? Container(
+                                  alignment: Alignment.center,
+                                  child: const Icon(
+                                    Icons.photo,
+                                    color: CBColors.primaryColor,
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ),
+                        DataCell(
+                          onTap: () async {
+                            await FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog:
+                                  CustomerUpdateForm(customer: customer),
+                            );
+                          },
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.green,
+                            ),
+                          ),
+                          // showEditIcon: true,
+                        ),
+                        DataCell(
+                          onTap: () {
+                            FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: CustomerDeletionConfirmationDialog(
+                                customer: customer,
+                                confirmToDelete: CustomerCRUDFunctions.delete,
                               ),
-                            ],
-                          );
-                        },
-                      ).toList();
-                    },
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
+                            );
+                          },
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.delete_sharp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ).toList();
+              },
+              error: (error, stackTrace) => [],
+              loading: () => [],
+            ),
           ),
         ),
       ),

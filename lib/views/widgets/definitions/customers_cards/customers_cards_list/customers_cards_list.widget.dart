@@ -63,9 +63,18 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
         ref.watch(searchedCustomersCardsListProvider);
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
-    final typesListStream = ref.watch(typesListStreamProvider);
+    // final typesListStream = ref.watch(typesListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
+
+    debugPrint('Building');
+/*
+    final typeListStreamData = typesListStream.when(
+      data: (data) => data,
+      error: (error, stackTrace) => <Type>[],
+      loading: () => <Type>[],
+    );
+    */
 
     return SizedBox(
       height: 640.0,
@@ -140,28 +149,22 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     text: customerCard.label,
                                   ),
                                 ),
-                                DataCell(
+                                const DataCell(
                                   CBText(
-                                    text: typesListStream.when(
-                                        data: (data) => data
-                                            .firstWhere((type) =>
-                                                type.id == customerCard.typeId)
-                                            .name,
-                                        error: (error, stackTrace) => '',
-                                        loading: () => ''),
+                                    text: 'Searched Customer Card Type',
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.repaidAt != null
-                                        ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt?.hour}:${customerCard.repaidAt?.minute}'
+                                        ? '${format.format(customerCard.repaidAt)}  ${customerCard.repaidAt.hour}:${customerCard.repaidAt.minute}'
                                         : '',
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.satisfiedAt != null
-                                        ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt?.hour}:${customerCard.satisfiedAt?.minute}'
+                                        ? '${format.format(customerCard.satisfiedAt)}  ${customerCard.satisfiedAt.hour}:${customerCard.satisfiedAt.minute}'
                                         : '',
                                   ),
                                 ),
@@ -220,9 +223,11 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                 : customersCardsListStream.when(
                     data: (data) {
                       //  debugPrint('card Stream Data: $data');
+                      debugPrint('In List');
+                      debugPrint('data length: ${data.length}');
                       return data.map(
                         (customerCard) {
-                          //  debugPrint(customerCard.toString());
+                          debugPrint(customerCard.toString());
                           return DataRow(
                             cells: [
                               DataCell(
@@ -235,38 +240,83 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                   text: customerCard.label,
                                 ),
                               ),
-                              DataCell(
-                                CBText(
-                                  text: typesListStream.when(
-                                      data: (data) {
-                                        final typeList = data;
-                                        customerCard.type = null;
-                                        String typeName = '';
+                              DataCell(Consumer(
+                                builder: (context, ref, child) {
+                                  final typesListStream =
+                                      ref.watch(typesListStreamProvider);
 
-                                        for (Type type in typeList) {
+                                  return typesListStream.when(
+                                    data: (data) {
+                                      final customerCardType = data.firstWhere(
+                                        (type) =>
+                                            customerCard.typeId == type.id,
+                                      );
+                                      customerCard.type == customerCardType;
+
+                                      return CBText(
+                                        text: customerCardType.name,
+                                      );
+                                    },
+                                    error: (error, stackTrace) => const CBText(
+                                      text: '',
+                                    ),
+                                    loading: () => const CBText(
+                                      text: '',
+                                    ),
+                                  );
+                                },
+                              )
+
+                                  /*  CBText(
+                                  text:
+                                      /*
+                                   typesListStream.when(
+                                      data: (data) {
+                                       
+                                        String typeName = 'Default';
+
+                                        for (Type type in data) {
                                           if (type.id == customerCard.typeId) {
                                             typeName = type.name;
                                             customerCard.type = type;
                                           }
                                         }
 
+                                        final customerCardType =
+                                            data.firstWhere(
+                                          (type) => type.id == customerCard.id,
+                                        );
+
+                                        customerCard.type = customerCardType;
+
+                                        typeName = customerCardType.name;
+
                                         return typeName;
                                       },
                                       error: (error, stackTrace) => '',
                                       loading: () => ''),
-                                ),
-                              ),
+                                      */
+                                      typeListStreamData.firstWhere(
+                                    (type) {
+                                      if (type.id == customerCard.typeId) {
+                                        customerCard.type = type;
+                                      }
+                                      return type.id == customerCard.typeId;
+                                    },
+                                  ).name,
+                                ),*/
+                                  ),
                               DataCell(
                                 CBText(
                                   text: customerCard.repaidAt != null
-                                      ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt?.hour}:${customerCard.repaidAt?.minute}'
+                                      ? '${format.format(customerCard.repaidAt)}  ${customerCard.repaidAt.hour}:${customerCard.repaidAt.minute}'
                                       : '',
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text: customerCard.satisfiedAt != null
-                                      ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt?.hour}:${customerCard.satisfiedAt?.minute}'
+                                      ? '${format.format(customerCard.satisfiedAt)}  ${customerCard.satisfiedAt.hour}:${customerCard.satisfiedAt.minute}'
                                       : '',
                                 ),
                               ),

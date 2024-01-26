@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 
 final settlementsListCollectionDateProvider = StateProvider<DateTime?>((ref) {
   return;
@@ -151,6 +152,15 @@ class _SettlementsSortOptionsState
                       CustomerCard(
                         label: 'Tous',
                         typeId: 0,
+                        type: Type(
+                          name: 'Undefined',
+                          stake: 0,
+                          products: [],
+                          createdAt: DateTime(700),
+                          updatedAt: DateTime(700),
+                        ),
+                        satisfiedAt: DateTime.now(), // nullable value
+                        repaidAt: DateTime.now(), // nullable value
                         createdAt: DateTime.now(),
                         updatedAt: DateTime.now(),
                       ),
@@ -164,7 +174,16 @@ class _SettlementsSortOptionsState
                     data: (data) => [
                       CustomerCard(
                         label: 'Tous',
+                        type: Type(
+                          name: 'Undefined',
+                          stake: 0,
+                          products: [],
+                          createdAt: DateTime(700),
+                          updatedAt: DateTime(700),
+                        ),
                         typeId: 0,
+                        satisfiedAt: DateTime.now(), // nullable value
+                        repaidAt: DateTime.now(), // nullable value
                         createdAt: DateTime.now(),
                         updatedAt: DateTime.now(),
                       ),

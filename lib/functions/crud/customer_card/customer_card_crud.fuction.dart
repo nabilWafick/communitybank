@@ -29,7 +29,10 @@ class CustomerCardCRUDFunctions {
 
       final customerCard = CustomerCard(
         label: customerCardLabel,
+        type: customerCardType,
         typeId: customerCardType.id!,
+        satisfiedAt: DateTime.now(), // nullable value
+        repaidAt: DateTime.now(), // nullable value
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -79,7 +82,10 @@ class CustomerCardCRUDFunctions {
 
       final newCustomerCard = CustomerCard(
         label: customerCardLabel,
+        type: customerCardType,
         typeId: customerCardType.id!,
+        satisfiedAt: DateTime.now(), // nullable value
+        repaidAt: DateTime.now(), // nullable value
         createdAt: customerCard.createdAt,
         updatedAt: DateTime.now(),
       );
@@ -117,8 +123,8 @@ class CustomerCardCRUDFunctions {
     required WidgetRef ref,
     required CustomerCard customerCard,
   }) async {
-    //  final customerCardSatisfactionDate =
-    //      ref.watch(customerCardSatisfactionDateProvider);
+    final customerCardSatisfactionDate =
+        ref.watch(customerCardSatisfactionDateProvider);
     final customerCardRepaymentDate =
         ref.watch(customerCardRepaymentDateProvider);
 
@@ -127,9 +133,10 @@ class CustomerCardCRUDFunctions {
     final newCustomerCard = CustomerCard(
       label: customerCard.label,
       typeId: customerCard.typeId,
+      type: customerCard.type,
       createdAt: customerCard.createdAt,
-      repaidAt: customerCardRepaymentDate,
-      //    satisfiedAt: customerCardSatisfactionDate,
+      repaidAt: customerCardRepaymentDate!,
+      satisfiedAt: customerCardSatisfactionDate!, // it's not defined
       updatedAt: DateTime.now(),
     );
 
@@ -162,17 +169,18 @@ class CustomerCardCRUDFunctions {
   }) async {
     final customerCardSatisfactionDate =
         ref.watch(customerCardSatisfactionDateProvider);
-    // final customerCardRepaymentDate =
-    //     ref.watch(customerCardRepaymentDateProvider);
+    final customerCardRepaymentDate =
+        ref.watch(customerCardRepaymentDateProvider);
 
     ServiceResponse lastCustomerCardStatus;
 
     final newCustomerCard = CustomerCard(
       label: customerCard.label,
+      type: customerCard.type,
       typeId: customerCard.typeId,
       createdAt: customerCard.createdAt,
-      //  repaidAt: customerCardRepaymentDate,
-      satisfiedAt: customerCardSatisfactionDate,
+      repaidAt: customerCardRepaymentDate!, // it's not defined
+      satisfiedAt: customerCardSatisfactionDate!,
       updatedAt: DateTime.now(),
     );
 
