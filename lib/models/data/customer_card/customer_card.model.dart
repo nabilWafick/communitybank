@@ -61,10 +61,6 @@ class CustomerCard {
   }
 
   factory CustomerCard.fromMap(Map<String, dynamic> map) {
-    debugPrint('DateTime Now: ${DateTime.now()}');
-    debugPrint('Parsing satisfiedAt: ${map[CustomerCardTable.satisfiedAt]}');
-    debugPrint('Parsing repaidAt: ${map[CustomerCardTable.repaidAt]}');
-
     try {
       return CustomerCard(
         id: map[CustomerCardTable.id]?.toInt(),

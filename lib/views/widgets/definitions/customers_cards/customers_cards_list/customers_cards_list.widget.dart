@@ -57,9 +57,9 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
 
   @override
   Widget build(BuildContext context) {
-    final isSearching = ref.watch(isSearchingProvider('cards'));
-    final searchedCustomersCardsList =
-        ref.watch(searchedCustomersCardsListProvider);
+    //  final isSearching = ref.watch(isSearchingProvider('cards'));
+    //  final searchedCustomersCardsList =
+    //      ref.watch(searchedCustomersCardsListProvider);
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     // final typesListStream = ref.watch(typesListStreamProvider);
@@ -130,7 +130,9 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                 label: SizedBox(),
               ),
             ],
-            rows: isSearching
+            rows:
+                /*
+             isSearching
                 ? searchedCustomersCardsList.when(
                     data: (data) {
                       //  debugPrint('card Stream Data: $data');
@@ -219,53 +221,50 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                       return [];
                     },
                   )
-                : customersCardsListStream.when(
-                    data: (data) {
-                      //  debugPrint('card Stream Data: $data');
-                      debugPrint('In List');
-                      debugPrint('data length: ${data.length}');
-                      return data.map(
-                        (customerCard) {
-                          debugPrint(customerCard.toString());
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                CBText(
-                                  text: customerCard.id!.toString(),
-                                ),
+                :
+          */
+                customersCardsListStream.when(
+              data: (data) {
+                return data.map(
+                  (customerCard) {
+                    return DataRow(
+                      cells: [
+                        DataCell(
+                          CBText(
+                            text: customerCard.id!.toString(),
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: customerCard.label,
+                          ),
+                        ),
+                        DataCell(Consumer(
+                          builder: (context, ref, child) {
+                            final typesListStream =
+                                ref.watch(typesListStreamProvider);
+
+                            return typesListStream.when(
+                              data: (data) {
+                                final customerCardType = data.firstWhere(
+                                  (type) => customerCard.typeId == type.id,
+                                );
+
+                                return CBText(
+                                  text: customerCardType.name,
+                                );
+                              },
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
                               ),
-                              DataCell(
-                                CBText(
-                                  text: customerCard.label,
-                                ),
+                              loading: () => const CBText(
+                                text: '',
                               ),
-                              DataCell(Consumer(
-                                builder: (context, ref, child) {
-                                  final typesListStream =
-                                      ref.watch(typesListStreamProvider);
+                            );
+                          },
+                        )
 
-                                  return typesListStream.when(
-                                    data: (data) {
-                                      final customerCardType = data.firstWhere(
-                                        (type) =>
-                                            customerCard.typeId == type.id,
-                                      );
-
-                                      return CBText(
-                                        text: customerCardType.name,
-                                      );
-                                    },
-                                    error: (error, stackTrace) => const CBText(
-                                      text: '',
-                                    ),
-                                    loading: () => const CBText(
-                                      text: '',
-                                    ),
-                                  );
-                                },
-                              )
-
-                                  /*  CBText(
+                            /*  CBText(
                                   text:
                                       /*
                                    typesListStream.when(
@@ -303,73 +302,73 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     },
                                   ).name,
                                 ),*/
-                                  ),
-                              DataCell(
-                                CBText(
-                                  text: customerCard.repaidAt != null
-                                      ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt!.hour}:${customerCard.repaidAt!.minute}'
-                                      : '',
-                                ),
+                            ),
+                        DataCell(
+                          CBText(
+                            text: customerCard.repaidAt != null
+                                ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt!.hour}:${customerCard.repaidAt!.minute}'
+                                : '',
+                          ),
+                        ),
+                        DataCell(
+                          CBText(
+                            text: customerCard.satisfiedAt != null
+                                ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt!.hour}:${customerCard.satisfiedAt!.minute}'
+                                : '',
+                          ),
+                        ),
+                        DataCell(
+                          onTap: () {
+                            FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: CustomerCardUpdateForm(
+                                customerCard: customerCard,
                               ),
-                              DataCell(
-                                CBText(
-                                  text: customerCard.satisfiedAt != null
-                                      ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt!.hour}:${customerCard.satisfiedAt!.minute}'
-                                      : '',
-                                ),
+                            );
+                          },
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.green,
+                            ),
+                          ),
+                          // showEditIcon: true,
+                        ),
+                        DataCell(
+                          onTap: () async {
+                            FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog:
+                                  CustomerCardDeletionConfirmationDialog(
+                                customerCard: customerCard,
+                                confirmToDelete:
+                                    CustomerCardCRUDFunctions.delete,
                               ),
-                              DataCell(
-                                onTap: () {
-                                  FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog: CustomerCardUpdateForm(
-                                      customerCard: customerCard,
-                                    ),
-                                  );
-                                },
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.green,
-                                  ),
-                                ),
-                                // showEditIcon: true,
-                              ),
-                              DataCell(
-                                onTap: () async {
-                                  FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog:
-                                        CustomerCardDeletionConfirmationDialog(
-                                      customerCard: customerCard,
-                                      confirmToDelete:
-                                          CustomerCardCRUDFunctions.delete,
-                                    ),
-                                  );
-                                },
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                    Icons.delete_sharp,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ).toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('cards Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('cards Stream Loading');
-                      return [];
-                    },
-                  ),
+                            );
+                          },
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: const Icon(
+                              Icons.delete_sharp,
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ).toList();
+              },
+              error: (error, stack) {
+                //  debugPrint('cards Stream Error');
+                return [];
+              },
+              loading: () {
+                //  debugPrint('cards Stream Loading');
+                return [];
+              },
+            ),
           ),
         ),
       ),

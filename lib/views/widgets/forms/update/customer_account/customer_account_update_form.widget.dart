@@ -107,7 +107,7 @@ class _CustomerAccountUpdateFormState
                                   data = {accountOwner!, ...data}.toList();
 
                                   return CBFormCustomerDropdown(
-                                    width: formCardWidth / 2.3,
+                                    width: formCardWidth / 1.2,
                                     label: 'Client',
                                     providerName:
                                         'customer-account-update-customer',
@@ -116,10 +116,10 @@ class _CustomerAccountUpdateFormState
                                   );
                                 },
                                 error: (error, stackTrace) => const SizedBox(
-                                  width: formCardWidth / 2.3,
+                                  width: formCardWidth / 1.2,
                                 ),
                                 loading: () => const SizedBox(
-                                  width: formCardWidth / 2.3,
+                                  width: formCardWidth / 1.2,
                                 ),
                               );
                             },
@@ -152,7 +152,7 @@ class _CustomerAccountUpdateFormState
                                   data = {accountCollector!, ...data}.toList();
 
                                   return CBFormCollectorDropdown(
-                                    width: formCardWidth / 2.3,
+                                    width: formCardWidth / 1.2,
                                     label: 'Chargé de compte',
                                     providerName:
                                         'customer-account-update-collector',
@@ -161,10 +161,10 @@ class _CustomerAccountUpdateFormState
                                   );
                                 },
                                 error: (error, stackTrace) => const SizedBox(
-                                  width: formCardWidth / 2.3,
+                                  width: formCardWidth / 1.2,
                                 ),
                                 loading: () => const SizedBox(
-                                  width: formCardWidth / 2.3,
+                                  width: formCardWidth / 1.2,
                                 ),
                               );
                             },

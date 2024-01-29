@@ -196,26 +196,27 @@ class _AgentAddingFormState extends ConsumerState<AgentAddingForm> {
                         ),
                       ),
                       Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 10.0,
-                          ),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 10.0,
+                        ),
+                        width: formCardWidth / 2.3,
+                        child: const CBFormStringDropdown(
                           width: formCardWidth / 2.3,
-                          child: const CBFormStringDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Role',
-                            providerName: 'agent-adding-role',
-                            dropdownMenuEntriesLabels: [
-                              AgentRole.simpleUser,
-                              AgentRole.semiAdmin,
-                              AgentRole.admin
-                            ],
-                            dropdownMenuEntriesValues: [
-                              AgentRole.simpleUser,
-                              AgentRole.semiAdmin,
-                              AgentRole.admin
-                            ],
-                          )),
+                          label: 'Role',
+                          providerName: 'agent-adding-role',
+                          dropdownMenuEntriesLabels: [
+                            AgentRole.simpleUser,
+                            AgentRole.semiAdmin,
+                            AgentRole.admin
+                          ],
+                          dropdownMenuEntriesValues: [
+                            AgentRole.simpleUser,
+                            AgentRole.semiAdmin,
+                            AgentRole.admin
+                          ],
+                        ),
+                      ),
                     ],
                   )
                 ],

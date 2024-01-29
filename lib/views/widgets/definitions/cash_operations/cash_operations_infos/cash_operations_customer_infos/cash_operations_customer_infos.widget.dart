@@ -1,11 +1,16 @@
-import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/customer/customer.model.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_collector_profil/cash_operations_customer_profil.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_customer_profil/cash_operations_customer_profil.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options_customer_card_dropdown/cash_operations_search_options_customer_card_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options_custumer_account_dropdown/cash_operations_search_options_customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers.widgets.dart';
+import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities.widgets.dart';
@@ -26,15 +31,17 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //  final cashOperationsSelectedCustomerAccount =
-    //      ref.watch(cashOperationsSelectedCustomerAccountProvider);
+    final customersAccountsListStream =
+        ref.watch(customersAccountsListStreamProvider);
+    final cashOperationsSelectedCustomerAccount =
+        ref.watch(cashOperationsSelectedCustomerAccountProvider);
     final customersListStream = ref.watch(customersListStreamProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
     final cashOperationsSelectedCustomerAccountOwner =
         ref.watch(cashOperationsSelectedCustomerAccountOwnerProvider);
     final cashOperationsSelectedCustomerAccountCollector =
         ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
-    final categoriesListStream =
+    final customersCategoriesListStream =
         ref.watch(custumersCategoriesListStreamProvider);
     final economicalActivitiesListStream =
         ref.watch(economicalActivityListStreamProvider);
@@ -130,8 +137,18 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                         .notifier,
                   )
                   .state = ref.watch(
-                      cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider)[
-                  0];
+                cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
+              )[0];
+
+              // update cash operations customer card dropdown selected item
+
+              ref
+                  .read(cashOperationsSearchOptionsCustumerCardDropdownProvider(
+                    'cash-operations-search-option-customer-card',
+                  ).notifier)
+                  .state = ref.watch(
+                cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
+              )[0];
             },
             error: (error, stackTrace) {},
             loading: () {},
@@ -148,6 +165,63 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
     ref.listen(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
         (previous, next) {
       Future.delayed(const Duration(milliseconds: 100), () {
+        final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
+            ref.watch(
+                cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
+// if there is no account selected and selection beginining by card or if the customer card selected is not for the owner of the previous customer card
+        if (cashOperationsSelectedCustomerAccount == null ||
+            cashOperationsSelectedCustomerAccount.id !=
+                cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                    .customerAccountId) {
+          customersAccountsListStream.when(
+            data: (data) {
+              // update the selected customer account dropdown
+              ref
+                  .read(
+                    cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                            'cash-operations-search-options-customer-account')
+                        .notifier,
+                  )
+                  .state = data.firstWhere(
+                (customerAccount) =>
+                    customerAccount.id ==
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                        .customerAccountId,
+              );
+
+              // update cash operations customer account
+              ref
+                  .read(cashOperationsSelectedCustomerAccountProvider.notifier)
+                  .state = data.firstWhere(
+                (customerAccount) =>
+                    customerAccount.id ==
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                        .customerAccountId,
+              );
+            },
+            error: (error, stackTrace) {},
+            loading: () {},
+          );
+        }
+
+        // update cash operations customer card dropdown selected item
+        customersCardsListStream.when(
+          data: (data) {
+            ref
+                .read(cashOperationsSearchOptionsCustumerCardDropdownProvider(
+                  'cash-operations-search-option-customer-card',
+                ).notifier)
+                .state = data.firstWhere(
+              (customerCard) =>
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard!.id ==
+                  customerCard.id,
+            );
+          },
+          error: (error, stackTrace) {},
+          loading: () {},
+        );
+
         // update  selected custumer card type
         typesListStream.when(
           data: (data) {
@@ -174,30 +248,6 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
         // satisfaction and repayment date,
         // satisfaction and repayment switch state
         // provider(isRepaid, isSatified)
-
-        final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
-            ref.watch(
-                cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
-
-        ref.read(isCustomerCardSatisfiedProvider.notifier).state =
-            cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
-                ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                        .satisfiedAt !=
-                    null
-                : false;
-
-        ref.read(isCustomerCardRepaidProvider.notifier).state =
-            cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
-                ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                        .repaidAt !=
-                    null
-                : false;
-
-        ref.read(customerCardSatisfactionDateProvider.notifier).state =
-            cashOperationsSelectedCustomerAccountOwnerSelectedCard?.satisfiedAt;
-
-        ref.read(customerCardRepaymentDateProvider.notifier).state =
-            cashOperationsSelectedCustomerAccountOwnerSelectedCard?.repaidAt;
       });
     });
 
@@ -205,7 +255,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
     // for updating in real time the cash operations selected customer card
 
     ref.listen(customersCardsListStreamProvider, (previous, next) {
-      debugPrint('new data');
+      //  debugPrint('new data');
       Future.delayed(const Duration(milliseconds: 100), () {
         if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
           debugPrint('new data after selected card check');
@@ -265,99 +315,288 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
               mainAxisSpacing: 7.0,
               // crossAxisSpacing: 2.0,
               children: [
-                OtherInfos(
-                  label: 'Profession',
-                  value: cashOperationsSelectedCustomerAccountOwner != null
-                      ? cashOperationsSelectedCustomerAccountOwner.profession
-                      : '',
-                ),
-                OtherInfos(
-                  label: 'CNI/NPI',
-                  value: cashOperationsSelectedCustomerAccountOwner != null
-                      ? cashOperationsSelectedCustomerAccountOwner.nicNumber
-                          .toString()
-                      : '',
-                ),
-                OtherInfos(
-                  label: 'Categorie',
-                  value: cashOperationsSelectedCustomerAccountOwner != null &&
-                          cashOperationsSelectedCustomerAccountOwner
-                                  .categoryId !=
-                              null
-                      ? categoriesListStream.when(
-                          data: (data) => data
-                              .firstWhere(
-                                (category) =>
-                                    category.id ==
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final realTimeCustomerData = data.firstWhere(
+                                (customer) =>
+                                    customer.id ==
                                     cashOperationsSelectedCustomerAccountOwner
-                                        .categoryId,
-                              )
-                              .name,
-                          error: (error, stackTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
-                ),
-                OtherInfos(
-                  label: 'Act. Économique',
-                  value: cashOperationsSelectedCustomerAccountOwner != null &&
-                          cashOperationsSelectedCustomerAccountOwner
-                                  .economicalActivityId !=
-                              null
-                      ? economicalActivitiesListStream.when(
-                          data: (data) => data
-                              .firstWhere(
-                                (economicalActivity) =>
-                                    economicalActivity.id ==
+                                        .id,
+                              );
+                              return OtherInfos(
+                                label: 'Profession',
+                                value: realTimeCustomerData.profession,
+                              );
+                            },
+                            error: (error, stackTrace) => const OtherInfos(
+                              label: 'Profession',
+                              value: '',
+                            ),
+                            loading: () => const OtherInfos(
+                              label: 'Profession',
+                              value: '',
+                            ),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'Profession',
+                        value: '',
+                      ),
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final realTimeCustomerData = data.firstWhere(
+                                (customer) =>
+                                    customer.id ==
                                     cashOperationsSelectedCustomerAccountOwner
-                                        .economicalActivityId,
-                              )
-                              .name,
-                          error: (error, stackTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
-                ),
-                OtherInfos(
-                  label: 'Stat. Personnel',
-                  value: cashOperationsSelectedCustomerAccountOwner != null &&
-                          cashOperationsSelectedCustomerAccountOwner
-                                  .personalStatusId !=
-                              null
-                      ? personalStatusListStream.when(
-                          data: (data) => data
-                              .firstWhere(
-                                (personalStatus) =>
-                                    personalStatus.id ==
+                                        .id,
+                              );
+                              return OtherInfos(
+                                label: 'CNI/NPI',
+                                value:
+                                    realTimeCustomerData.nicNumber.toString(),
+                              );
+                            },
+                            error: (error, stackTrace) => const OtherInfos(
+                              label: 'CNI/NPI',
+                              value: 'CNI/NPI',
+                            ),
+                            loading: () => const OtherInfos(
+                              label: 'CNI/NPI',
+                              value: '',
+                            ),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'CNI/NPI',
+                        value: '',
+                      ),
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final realTimeCustomerData = data.firstWhere(
+                                (customer) =>
+                                    customer.id ==
                                     cashOperationsSelectedCustomerAccountOwner
-                                        .personalStatusId,
-                              )
-                              .name,
-                          error: (error, stackTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
-                ),
-                OtherInfos(
-                  label: 'Localité',
-                  value: cashOperationsSelectedCustomerAccountOwner != null &&
-                          cashOperationsSelectedCustomerAccountOwner
-                                  .localityId !=
-                              null
-                      ? localitiesListStream.when(
-                          data: (data) => data
-                              .firstWhere(
-                                (locality) =>
-                                    locality.id ==
+                                        .id,
+                              );
+
+                              return customersCategoriesListStream.when(
+                                data: (data) {
+                                  final realTimeCategoryData = data.firstWhere(
+                                    (category) =>
+                                        category.id ==
+                                        realTimeCustomerData.categoryId,
+                                    orElse: () => CustomerCategory(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                  );
+                                  return OtherInfos(
+                                    label: 'Catégorie',
+                                    value: realTimeCategoryData.name,
+                                  );
+                                },
+                                error: (error, stackTrace) => const OtherInfos(
+                                  label: 'Catégorie',
+                                  value: '',
+                                ),
+                                loading: () => const OtherInfos(
+                                  label: 'Catégorie',
+                                  value: '',
+                                ),
+                              );
+                            },
+                            error: (error, stackTrace) => const OtherInfos(
+                              label: 'Catégorie',
+                              value: '',
+                            ),
+                            loading: () => const OtherInfos(
+                              label: 'Catégorie',
+                              value: '',
+                            ),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'Catégorie',
+                        value: '',
+                      ),
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final realTimeCustomerData = data.firstWhere(
+                                (customer) =>
+                                    customer.id ==
                                     cashOperationsSelectedCustomerAccountOwner
-                                        .localityId,
-                              )
-                              .name,
-                          error: (error, stackTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
-                ),
+                                        .id,
+                              );
+
+                              return economicalActivitiesListStream.when(
+                                data: (data) {
+                                  final realTimeEconomicalActivityData =
+                                      data.firstWhere(
+                                    (economicalActivity) =>
+                                        economicalActivity.id ==
+                                        realTimeCustomerData
+                                            .economicalActivityId,
+                                    orElse: () => EconomicalActivity(
+                                      name: 'Non définie',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                  );
+                                  return OtherInfos(
+                                    label: 'Act. Économique',
+                                    value: realTimeEconomicalActivityData.name,
+                                  );
+                                },
+                                error: (error, stackTrace) => const OtherInfos(
+                                  label: 'Act. Économique',
+                                  value: '',
+                                ),
+                                loading: () => const OtherInfos(
+                                  label: 'Act. Économique',
+                                  value: '',
+                                ),
+                              );
+                            },
+                            error: (error, stackTrace) => const OtherInfos(
+                              label: 'Act. Économique',
+                              value: '',
+                            ),
+                            loading: () => const OtherInfos(
+                              label: 'Act. Économique',
+                              value: '',
+                            ),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'Act. Économique',
+                        value: '',
+                      ),
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final realTimeCustomerData = data.firstWhere(
+                                (customer) =>
+                                    customer.id ==
+                                    cashOperationsSelectedCustomerAccountOwner
+                                        .id,
+                              );
+
+                              return personalStatusListStream.when(
+                                data: (data) {
+                                  final realTimePersonalStatusData =
+                                      data.firstWhere(
+                                    (personalStatus) =>
+                                        personalStatus.id ==
+                                        realTimeCustomerData.personalStatusId,
+                                    orElse: () => PersonalStatus(
+                                      name: 'Non défini',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                  );
+                                  return OtherInfos(
+                                    label: 'Stat. Personnel',
+                                    value: realTimePersonalStatusData.name,
+                                  );
+                                },
+                                error: (error, stackTrace) => const OtherInfos(
+                                  label: 'Stat. Personnel',
+                                  value: '',
+                                ),
+                                loading: () => const OtherInfos(
+                                  label: 'Stat. Personnel',
+                                  value: '',
+                                ),
+                              );
+                            },
+                            error: (error, stackTrace) => const OtherInfos(
+                              label: 'Stat. Personnel',
+                              value: '',
+                            ),
+                            loading: () => const OtherInfos(
+                              label: 'Stat. Personnel',
+                              value: '',
+                            ),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'Stat. Personnel',
+                        value: '',
+                      ),
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final realTimeCustomerData = data.firstWhere(
+                                (customer) =>
+                                    customer.id ==
+                                    cashOperationsSelectedCustomerAccountOwner
+                                        .id,
+                              );
+
+                              return localitiesListStream.when(
+                                data: (data) {
+                                  final realTimeLocalityData = data.firstWhere(
+                                    (locality) =>
+                                        locality.id ==
+                                        realTimeCustomerData.localityId,
+                                    orElse: () => Locality(
+                                      name: 'Localité',
+                                      createdAt: DateTime.now(),
+                                      updatedAt: DateTime.now(),
+                                    ),
+                                  );
+                                  return OtherInfos(
+                                    label: 'Localité',
+                                    value: realTimeLocalityData.name,
+                                  );
+                                },
+                                error: (error, stackTrace) => const OtherInfos(
+                                  label: 'Localité',
+                                  value: '',
+                                ),
+                                loading: () => const OtherInfos(
+                                  label: 'Localité',
+                                  value: '',
+                                ),
+                              );
+                            },
+                            error: (error, stackTrace) => const OtherInfos(
+                              label: 'Localité',
+                              value: '',
+                            ),
+                            loading: () => const OtherInfos(
+                              label: 'Localité',
+                              value: '',
+                            ),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'Localité',
+                        value: '',
+                      ),
               ],
             ),
           ),
@@ -372,15 +611,36 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
               ),
             ),
             child: Center(
-              child: cashOperationsSelectedCustomerAccountOwner != null &&
-                      cashOperationsSelectedCustomerAccountOwner.signature !=
-                          null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        10.0,
+              child: cashOperationsSelectedCustomerAccountOwner != null
+                  ? customersListStream.when(
+                      data: (data) {
+                        final realtimeCustomerData = data.firstWhere(
+                            (customer) =>
+                                customer.id ==
+                                cashOperationsSelectedCustomerAccountOwner.id);
+
+                        return realtimeCustomerData.signature != null
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  10.0,
+                                ),
+                                child: Image.network(
+                                  cashOperationsSelectedCustomerAccountOwner
+                                      .signature!,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.image,
+                                color: CBColors.primaryColor,
+                              );
+                      },
+                      error: (error, stackTrace) => const Icon(
+                        Icons.image,
+                        color: CBColors.primaryColor,
                       ),
-                      child: Image.network(
-                        cashOperationsSelectedCustomerAccountOwner.signature!,
+                      loading: () => const Icon(
+                        Icons.image,
+                        color: CBColors.primaryColor,
                       ),
                     )
                   : const Icon(
@@ -391,128 +651,6 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class CashOperationsCustomerProfil extends ConsumerWidget {
-  final Customer? customer;
-  const CashOperationsCustomerProfil({super.key, this.customer});
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        Container(
-          height: 80.0,
-          width: 80.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              50.0,
-            ),
-            border: Border.all(
-              color: CBColors.sidebarTextColor.withOpacity(.5),
-              width: 1.5,
-            ),
-          ),
-          child: Center(
-            child: customer != null && customer!.profile != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      50.0,
-                    ),
-                    child: Image.network(
-                      customer!.profile!,
-                    ),
-                  )
-                : const Icon(
-                    Icons.person,
-                    size: 30.0,
-                    color: CBColors.primaryColor,
-                  ),
-          ),
-        ),
-        const SizedBox(
-          width: 20.0,
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CBText(
-              text: customer != null
-                  ? '${customer!.firstnames} ${customer!.name}'
-                  : '',
-              fontWeight: FontWeight.w500,
-              fontSize: 12.0,
-            ),
-            CBText(
-              text: customer != null ? customer!.phoneNumber : '',
-              fontSize: 11.0,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class CashOperationsCollectorProfil extends ConsumerWidget {
-  final Collector? collector;
-  const CashOperationsCollectorProfil({super.key, this.collector});
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Row(
-      children: [
-        Container(
-          height: 80.0,
-          width: 80.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              50.0,
-            ),
-            border: Border.all(
-              color: CBColors.sidebarTextColor.withOpacity(.5),
-              width: 1.5,
-            ),
-          ),
-          child: Center(
-            child: collector != null && collector!.profile != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                      50.0,
-                    ),
-                    child: Image.network(
-                      collector!.profile!,
-                    ),
-                  )
-                : const Icon(
-                    Icons.person,
-                    size: 30.0,
-                    color: CBColors.primaryColor,
-                  ),
-          ),
-        ),
-        const SizedBox(
-          width: 20.0,
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CBText(
-              text: collector != null
-                  ? '${collector!.firstnames} ${collector!.name}'
-                  : '',
-              fontWeight: FontWeight.w500,
-              fontSize: 12.0,
-            ),
-            CBText(
-              text: collector != null ? collector!.phoneNumber : '',
-              fontSize: 11.0,
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

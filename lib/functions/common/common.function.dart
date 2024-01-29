@@ -12,6 +12,7 @@ class FunctionsController {
     showDialog(
       context: context,
       builder: (context) => alertDialog,
+      barrierDismissible: false,
     );
   }
 

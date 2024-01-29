@@ -1,13 +1,13 @@
-import 'package:communitybank/functions/common/common.function.dart';
+//import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
-import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_infos.widget.dart';
+//import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_infos.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+//import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 
 final settlementsListCollectionDateProvider = StateProvider<DateTime?>((ref) {
   return;
@@ -36,12 +36,12 @@ class _SettlementsSortOptionsState
   Widget build(BuildContext context) {
     final customersCardsWithOwnerListStream =
         ref.watch(customersCardsWithOwnerListStreamProvider);
-    final settlementsListCollectionDate =
-        ref.watch(settlementsListCollectionDateProvider);
-    final settlementsListEntryDate =
-        ref.watch(settlementsListEntryDateProvider);
+    //   final settlementsListCollectionDate =
+    //       ref.watch(settlementsListCollectionDateProvider);
+    //   final settlementsListEntryDate =
+    //       ref.watch(settlementsListEntryDateProvider);
 
-    final format = DateFormat.yMMMMEEEEd('fr');
+    //   final format = DateFormat.yMMMMEEEEd('fr');
     return Container(
       margin: const EdgeInsets.only(
         bottom: 40.0,
@@ -73,7 +73,7 @@ class _SettlementsSortOptionsState
                 const SizedBox(
                   width: 10.0,
                 ),
-                SizedBox(
+                /*   SizedBox(
                   width: 320.0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -141,6 +141,7 @@ class _SettlementsSortOptionsState
                     ],
                   ),
                 ),
+               */
                 CBListCustomerCardDropdown(
                   width: 200.0,
                   label: 'Carte',

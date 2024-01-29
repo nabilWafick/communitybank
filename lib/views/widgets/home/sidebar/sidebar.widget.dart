@@ -85,15 +85,22 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
           icon: Icons.payment,
           name: 'Cartes',
         ),
+      ],
+      showSubOptions: true,
+    ),
+    SidebarOptionModel(
+      icon: Icons.account_balance,
+      name: 'Caisse',
+      subOptions: [
         SidebarSubOptionModel(
           index: 12,
-          icon: Icons.money,
-          name: 'Règlements',
+          icon: Icons.account_balance,
+          name: 'Opérations Caisse',
         ),
         SidebarSubOptionModel(
           index: 13,
-          icon: Icons.account_balance,
-          name: 'Opérations Caisse',
+          icon: Icons.money,
+          name: 'Règlements',
         ),
       ],
       showSubOptions: true,
