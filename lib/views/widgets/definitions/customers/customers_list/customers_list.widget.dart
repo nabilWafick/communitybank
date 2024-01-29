@@ -63,13 +63,6 @@ class CustomersList extends ConsumerWidget {
     //   final isSearching = ref.watch(isSearchingProvider('customers'));
     final customersListStream = ref.watch(customersListStreamProvider);
     //   final searchedCustomers = ref.watch(searchedCustomersListProvider);
-    final economicalActivitiesListStream =
-        ref.watch(economicalActivityListStreamProvider);
-    final customersCategoriesListStream =
-        ref.watch(custumersCategoriesListStreamProvider);
-    final localitiesListStream = ref.watch(localityListStreamProvider);
-    final personalStatusListStream =
-        ref.watch(personalStatusListStreamProvider);
 
     return SizedBox(
       height: 640.0,
@@ -186,31 +179,6 @@ class CustomersList extends ConsumerWidget {
               data: (data) {
                 return data.map(
                   (customer) {
-                    final customersCategoriesListStreamData =
-                        customersCategoriesListStream.when(
-                      data: (data) => data,
-                      error: (error, stackTrace) => [],
-                      loading: () => [],
-                    );
-                    /*   final economicalActivitiesListStreamData =
-                              economicalActivitiesListStream.when(
-                            data: (data) => data,
-                            error: (error, stackTrace) => [],
-                            loading: () => [],
-                          );
-                          final personalStatusListStreamData =
-                              personalStatusListStream.when(
-                            data: (data) => data,
-                            error: (error, stackTrace) => [],
-                            loading: () => [],
-                          );
-                          final localitiesListStreamData =
-                              localitiesListStream.when(
-                            data: (data) => data,
-                            error: (error, stackTrace) => [],
-                            loading: () => [],
-                          );*/
-
                     return DataRow(
                       cells: [
                         DataCell(
@@ -258,138 +226,142 @@ class CustomersList extends ConsumerWidget {
                             text: customer.nicNumber.toString(),
                           ),
                         ),
-                        DataCell(
-                          CBText(
-                            text: customersCategoriesListStreamData.firstWhere(
-                              (category) {
-                                if (category.id == customer.categoryId) {
-                                  customer.category = category;
+                        DataCell(Consumer(
+                          builder: (BuildContext context, WidgetRef ref,
+                              Widget? child) {
+                            final customersCategoriesListStream = ref
+                                .watch(custumersCategoriesListStreamProvider);
+
+                            return customersCategoriesListStream.when(
+                              data: (data) {
+                                CustomerCategory customerCategory =
+                                    CustomerCategory(
+                                  name: 'Non définie',
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                );
+
+                                for (CustomerCategory customerCategoryData
+                                    in data) {
+                                  if (customerCategoryData.id ==
+                                      customer.categoryId) {
+                                    customerCategory = customerCategoryData;
+                                    break;
+                                  }
                                 }
-                                return category.id == customer.categoryId;
+
+                                return CBText(
+                                  text: customerCategory.name,
+                                );
                               },
-                              orElse: () {
-                                final category = CustomerCategory(
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
+                              ),
+                              loading: () => const CBText(text: ''),
+                            );
+                          },
+                        )),
+                        DataCell(Consumer(
+                          builder: (BuildContext context, WidgetRef ref,
+                              Widget? child) {
+                            final economicalActivitiesListStream =
+                                ref.watch(economicalActivityListStreamProvider);
+
+                            return economicalActivitiesListStream.when(
+                              data: (data) {
+                                EconomicalActivity economicalActivity =
+                                    EconomicalActivity(
                                   name: 'Non définie',
                                   createdAt: DateTime.now(),
                                   updatedAt: DateTime.now(),
                                 );
-                                customer.category = category;
-                                return category;
+
+                                for (EconomicalActivity economicalActivityData
+                                    in data) {
+                                  if (economicalActivityData.id ==
+                                      customer.economicalActivityId) {
+                                    economicalActivity = economicalActivityData;
+                                    break;
+                                  }
+                                }
+
+                                return CBText(
+                                  text: economicalActivity.name,
+                                );
                               },
-                            ).name,
-                          ),
-                        ),
-                        DataCell(
-                          economicalActivitiesListStream.when(
-                            data: (data) {
-                              final customerEconomicalActivity =
-                                  data.firstWhere(
-                                (economicalActivity) {
-                                  return economicalActivity.id ==
-                                      customer.economicalActivityId;
-                                },
-                                orElse: () => EconomicalActivity(
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
+                              ),
+                              loading: () => const CBText(text: ''),
+                            );
+                          },
+                        )),
+                        DataCell(Consumer(
+                          builder: (BuildContext context, WidgetRef ref,
+                              Widget? child) {
+                            final personalStatusListStream =
+                                ref.watch(personalStatusListStreamProvider);
+
+                            return personalStatusListStream.when(
+                              data: (data) {
+                                PersonalStatus personalStatus = PersonalStatus(
+                                  name: 'Non défini',
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                );
+
+                                for (PersonalStatus personalStatusData
+                                    in data) {
+                                  if (personalStatusData.id ==
+                                      customer.personalStatusId) {
+                                    personalStatus = personalStatusData;
+                                    break;
+                                  }
+                                }
+
+                                return CBText(
+                                  text: personalStatus.name,
+                                );
+                              },
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
+                              ),
+                              loading: () => const CBText(text: ''),
+                            );
+                          },
+                        )),
+                        DataCell(Consumer(
+                          builder: (BuildContext context, WidgetRef ref,
+                              Widget? child) {
+                            final localitiesListStream =
+                                ref.watch(localityListStreamProvider);
+
+                            return localitiesListStream.when(
+                              data: (data) {
+                                Locality customerLocality = Locality(
                                   name: 'Non définie',
                                   createdAt: DateTime.now(),
                                   updatedAt: DateTime.now(),
-                                ),
-                              );
-
-                              customer.economicalActivity =
-                                  customerEconomicalActivity;
-
-                              return CBText(
-                                text: customerEconomicalActivity.name,
-                              );
-
-                              //  customerEconomicalActivity.name;
-                            },
-                            error: (error, stackTrace) => const CBText(
-                              text: '',
-                            ),
-                            loading: () => const CBText(
-                              text: '',
-                            ),
-                          ),
-
-/*
-                          CBText(
-                            text: economicalActivitiesListStream.when(
-                              data: (data) {
-                                final customerEconomicalActivity =
-                                    data.firstWhere(
-                                  (economicalActivity) {
-                                    return economicalActivity.id ==
-                                        customer.economicalActivityId;
-                                  },
-                                  orElse: () => EconomicalActivity(
-                                    name: 'Non définie',
-                                    createdAt: DateTime.now(),
-                                    updatedAt: DateTime.now(),
-                                  ),
                                 );
 
-                                customer.economicalActivity =
-                                    customerEconomicalActivity;
+                                for (Locality localityData in data) {
+                                  if (localityData.id == customer.localityId) {
+                                    customerLocality = localityData;
+                                    break;
+                                  }
+                                }
 
-                                return customerEconomicalActivity.name;
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            ),
-                          ),
-                        */
-                        ),
-                        DataCell(
-                          CBText(
-                            text: personalStatusListStream.when(
-                              data: (data) {
-                                final customerPersonalStatus = data.firstWhere(
-                                  (personalStatus) {
-                                    return personalStatus.id ==
-                                        customer.personalStatusId;
-                                  },
-                                  orElse: () => PersonalStatus(
-                                    name: 'Non défini',
-                                    createdAt: DateTime.now(),
-                                    updatedAt: DateTime.now(),
-                                  ),
+                                return CBText(
+                                  text: customerLocality.name,
                                 );
-
-                                customer.personalStatus =
-                                    customerPersonalStatus;
-
-                                return customerPersonalStatus.name;
                               },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text: localitiesListStream.when(
-                              data: (data) {
-                                final customerLocality = data.firstWhere(
-                                  (locality) {
-                                    return locality.id == customer.localityId;
-                                  },
-                                  orElse: () => Locality(
-                                    name: 'Non définie',
-                                    createdAt: DateTime.now(),
-                                    updatedAt: DateTime.now(),
-                                  ),
-                                );
-
-                                customer.locality = customerLocality;
-
-                                return customerLocality.name;
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            ),
-                          ),
-                        ),
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
+                              ),
+                              loading: () => const CBText(text: ''),
+                            );
+                          },
+                        )),
                         DataCell(
                           onTap: () {
                             customer.signature != null

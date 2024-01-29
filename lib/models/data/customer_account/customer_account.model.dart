@@ -1,30 +1,21 @@
 import 'dart:convert';
 
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/tables/customer_account/customer_account_table.model.dart';
 
 class CustomerAccount {
   final int? id;
-  Customer? customer;
   final int customerId;
-  Collector? collector;
   final int collectorId;
-  List<CustomerCard> customerCards;
-  final List<dynamic>? customerCardsIds;
+  final List<dynamic> customerCardsIds;
   final DateTime createdAt;
   final DateTime updatedAt;
   CustomerAccount({
     this.id,
-    this.customer,
     required this.customerId,
-    this.collector,
     required this.collectorId,
-    required this.customerCards,
-    this.customerCardsIds,
+    required this.customerCardsIds,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -33,8 +24,7 @@ class CustomerAccount {
     ValueGetter<int?>? id,
     int? customerId,
     int? collectorId,
-    List<CustomerCard>? customerCards,
-    ValueGetter<List<dynamic>?>? customerCardsIds,
+    List<dynamic>? customerCardsIds,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -42,9 +32,7 @@ class CustomerAccount {
       id: id != null ? id() : this.id,
       customerId: customerId ?? this.customerId,
       collectorId: collectorId ?? this.collectorId,
-      customerCards: customerCards ?? this.customerCards,
-      customerCardsIds:
-          customerCardsIds != null ? customerCardsIds() : this.customerCardsIds,
+      customerCardsIds: customerCardsIds ?? this.customerCardsIds,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -54,11 +42,7 @@ class CustomerAccount {
     return {
       CustomerAccountTable.customerId: customerId,
       CustomerAccountTable.collectorId: collectorId,
-      CustomerAccountTable.customerCardsIds: customerCards
-          .map(
-            (customerCard) => customerCard.id,
-          )
-          .toList(),
+      CustomerAccountTable.customerCardsIds: customerCardsIds,
       CustomerAccountTable.createdAt: createdAt.toIso8601String(),
       CustomerAccountTable.updatedAt: updatedAt.toIso8601String(),
     };
@@ -67,11 +51,8 @@ class CustomerAccount {
   factory CustomerAccount.fromMap(Map<String, dynamic> map) {
     return CustomerAccount(
       id: map[CustomerAccountTable.id]?.toInt(),
-      customer: null,
       customerId: map[CustomerAccountTable.customerId]?.toInt() ?? 0,
-      collector: null,
       collectorId: map[CustomerAccountTable.collectorId]?.toInt() ?? 0,
-      customerCards: [],
       customerCardsIds:
           List<dynamic>.from(map[CustomerAccountTable.customerCardsIds]),
       createdAt: DateTime.parse(map[CustomerAccountTable.createdAt]),
@@ -86,7 +67,7 @@ class CustomerAccount {
 
   @override
   String toString() {
-    return 'CustomerAccount(id: $id, customerId: $customerId, collectorId: $collectorId, customerCards: $customerCards, customerCardsIds: $customerCardsIds, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerAccount(id: $id, customerId: $customerId, collectorId: $collectorId, customerCardsIds: $customerCardsIds, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -97,7 +78,6 @@ class CustomerAccount {
         other.id == id &&
         other.customerId == customerId &&
         other.collectorId == collectorId &&
-        listEquals(other.customerCards, customerCards) &&
         listEquals(other.customerCardsIds, customerCardsIds) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -108,7 +88,6 @@ class CustomerAccount {
     return id.hashCode ^
         customerId.hashCode ^
         collectorId.hashCode ^
-        customerCards.hashCode ^
         customerCardsIds.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;

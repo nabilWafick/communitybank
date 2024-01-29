@@ -1,8 +1,4 @@
 import 'dart:convert';
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/models/tables/customer/customer_table.model.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,13 +13,9 @@ class Customer {
   final String address;
   final String profession;
   final int nicNumber;
-  CustomerCategory? category;
   int? categoryId;
-  EconomicalActivity? economicalActivity;
   int? economicalActivityId;
-  PersonalStatus? personalStatus;
   int? personalStatusId;
-  Locality? locality;
   int? localityId;
   final String? profile;
   final String? signature;
@@ -37,14 +29,10 @@ class Customer {
     required this.address,
     required this.profession,
     required this.nicNumber,
-    this.category,
-    /*  required  */ this.categoryId,
-    this.economicalActivity,
-    /*  required  */ this.economicalActivityId,
-    this.personalStatus,
-    /*  required  */ this.personalStatusId,
-    this.locality,
-    /*  required  */ this.localityId,
+    this.categoryId,
+    this.economicalActivityId,
+    this.personalStatusId,
+    this.localityId,
     this.profile,
     this.signature,
     required this.createdAt,

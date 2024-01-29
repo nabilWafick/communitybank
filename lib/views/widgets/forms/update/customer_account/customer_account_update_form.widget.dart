@@ -1,5 +1,7 @@
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/crud/customers_accounts/customers_accounts_crud.fuction.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
+import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
@@ -30,8 +32,6 @@ class _CustomerAccountUpdateFormState
   @override
   Widget build(BuildContext context) {
     final showValidatedButton = useState<bool>(true);
-    final customersListStream = ref.watch(customersListStreamProvider);
-    final collectorsListStream = ref.watch(collectorsListStreamProvider);
     const formCardWidth = 500.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
@@ -87,36 +87,42 @@ class _CustomerAccountUpdateFormState
                             right: 15.0,
                           ),
                           width: formCardWidth / 1.2,
-                          child: CBFormCustomerDropdown(
-                            width: formCardWidth / 1.2,
-                            label: 'Client',
-                            providerName: 'customer-account-update-customer',
-                            dropdownMenuEntriesLabels: customersListStream.when(
-                              data: (data) {
-                                data.remove(widget.customerAccount.customer);
-                                data = [
-                                  widget.customerAccount.customer!,
-                                  ...data
-                                ];
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final customersListStream =
+                                  ref.watch(customersListStreamProvider);
 
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
-                            dropdownMenuEntriesValues: customersListStream.when(
-                              data: (data) {
-                                data.remove(widget.customerAccount.customer);
-                                data = [
-                                  widget.customerAccount.customer!,
-                                  ...data
-                                ];
+                              return customersListStream.when(
+                                data: (data) {
+                                  Customer? accountOwner;
 
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
+                                  for (Customer customer in data) {
+                                    if (customer.id ==
+                                        widget.customerAccount.customerId) {
+                                      accountOwner = customer;
+                                      break;
+                                    }
+                                  }
+
+                                  data = {accountOwner!, ...data}.toList();
+
+                                  return CBFormCustomerDropdown(
+                                    width: formCardWidth / 2.3,
+                                    label: 'Client',
+                                    providerName:
+                                        'customer-account-update-customer',
+                                    dropdownMenuEntriesLabels: data,
+                                    dropdownMenuEntriesValues: data,
+                                  );
+                                },
+                                error: (error, stackTrace) => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                                loading: () => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Container(
@@ -127,42 +133,41 @@ class _CustomerAccountUpdateFormState
                             right: 15.0,
                           ),
                           width: formCardWidth / 1.2,
-                          child: CBFormCollectorDropdown(
-                            width: formCardWidth / 1.2,
-                            label: 'Chargé de compte',
-                            providerName: 'customer-account-update-collector',
-                            dropdownMenuEntriesLabels:
-                                collectorsListStream.when(
-                              data: (data) {
-                                // debugPrint(
-                                //     'accountCollector: ${accountCollector.toString()}');
-                                data.remove(widget.customerAccount.collector);
-                                data = [
-                                  widget.customerAccount.collector!,
-                                  ...data
-                                ];
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final collectorsListStream =
+                                  ref.watch(collectorsListStreamProvider);
+                              return collectorsListStream.when(
+                                data: (data) {
+                                  Collector? accountCollector;
 
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
-                            dropdownMenuEntriesValues:
-                                collectorsListStream.when(
-                              data: (data) {
-                                // debugPrint(
-                                //     'accountCollector: ${accountCollector.toString()}');
-                                data.remove(widget.customerAccount.collector);
-                                data = [
-                                  widget.customerAccount.collector!,
-                                  ...data
-                                ];
+                                  for (Collector collector in data) {
+                                    if (collector.id ==
+                                        widget.customerAccount.collectorId) {
+                                      accountCollector = collector;
+                                      break;
+                                    }
+                                  }
 
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
+                                  data = {accountCollector!, ...data}.toList();
+
+                                  return CBFormCollectorDropdown(
+                                    width: formCardWidth / 2.3,
+                                    label: 'Chargé de compte',
+                                    providerName:
+                                        'customer-account-update-collector',
+                                    dropdownMenuEntriesLabels: data,
+                                    dropdownMenuEntriesValues: data,
+                                  );
+                                },
+                                error: (error, stackTrace) => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                                loading: () => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -204,18 +209,21 @@ class _CustomerAccountUpdateFormState
                       List<Widget> inputsWidgetsList = [];
 
                       for (MapEntry mapEntry in inputsMaps.entries) {
-                        if (widget.customerAccount.customerCards.any(
-                            (customerCard) =>
-                                customerCard.id == mapEntry.key)) {
+                        if (widget.customerAccount.customerCardsIds.any(
+                          (customerCardId) => customerCardId == mapEntry.key,
+                        )) {
                           inputsWidgetsList.add(
                             CustomerAccountOwnerCardSelection(
                               index: mapEntry.key,
                               isVisible: mapEntry.value,
                               customerCardDropdownProvider:
                                   'customer-account-selection-update-customer-card-${mapEntry.key}',
-                              customerCard: widget.customerAccount.customerCards
-                                  .firstWhere((customerCard) =>
-                                      customerCard.id == mapEntry.key),
+                              customerCardId: widget
+                                  .customerAccount.customerCardsIds
+                                  .firstWhere(
+                                (customerCardId) =>
+                                    customerCardId == mapEntry.key,
+                              ),
                               formCardWidth: formCardWidth,
                             ),
                           );

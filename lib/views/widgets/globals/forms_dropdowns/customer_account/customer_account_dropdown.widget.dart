@@ -1,5 +1,3 @@
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
@@ -9,31 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final formCustomerAccountDropdownProvider =
     StateProvider.family<CustomerAccount, String>((ref, dropdown) {
   return CustomerAccount(
-    customer: Customer(
-      name: 'name',
-      firstnames: 'firstnames',
-      phoneNumber: 'phoneNumber',
-      address: 'address',
-      profession: 'profession',
-      nicNumber: 1,
-      categoryId: 0,
-      economicalActivityId: 0,
-      personalStatusId: 0,
-      localityId: 0,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
     customerId: 0,
-    collector: Collector(
-      name: 'name',
-      firstnames: 'firstnames',
-      phoneNumber: 'phoneNumber',
-      address: 'address',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
     collectorId: 0,
-    customerCards: [],
+    customerCardsIds: [],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

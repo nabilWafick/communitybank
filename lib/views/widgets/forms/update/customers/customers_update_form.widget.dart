@@ -3,6 +3,10 @@ import 'package:communitybank/controllers/forms/validators/customer/customer.val
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
@@ -31,13 +35,6 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
   @override
   Widget build(BuildContext context) {
     const formCardWidth = 700.0;
-    final economicalActivitiesListStream =
-        ref.watch(economicalActivityListStreamProvider);
-    final customersCategoriesListStream =
-        ref.watch(custumersCategoriesListStreamProvider);
-    final localitiesListStream = ref.watch(localityListStreamProvider);
-    final personalStatusListStream =
-        ref.watch(personalStatusListStreamProvider);
     final customerProfilePicture = ref.watch(customerProfilePictureProvider);
     final customerSignaturePicture =
         ref.watch(customerSignaturePictureProvider);
@@ -309,77 +306,48 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBFormCustomerCategoryDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Catégorie',
-                            providerName: 'customer-update-form-category',
-                            dropdownMenuEntriesLabels:
-                                customersCategoriesListStream.when(
-                              data: (data) {
-                                // if customer category is undefined, return
-                                // data whith undefined category in first
-                                // position
-                                // In first position, so as to it be setting as
-                                // the default selectedItem of the dropdown
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final customersCategoriesListStream = ref
+                                  .watch(custumersCategoriesListStreamProvider);
 
-                                if (widget.customer.categoryId == null) {
-                                  data = [widget.customer.category!, ...data];
-                                }
-                                //t if the customer category is defined, remove
-                                // it from data and put it as the firt data
-                                // element so as to it be setting as
-                                // the default selectedItem of the dropdown
-                                else {
-                                  data.remove(widget.customer.category);
-                                  data = [widget.customer.category!, ...data];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
-                            dropdownMenuEntriesValues:
-                                customersCategoriesListStream.when(
-                              data: (data) {
-                                //    debugPrint(data.toString());
-                                // if customer category is undefined, return
-                                // data whith undefined category in first
-                                // position
-                                // In first position, so as to it be setting as
-                                // the default selectedItem of the dropdown
+                              return customersCategoriesListStream.when(
+                                data: (data) {
+                                  CustomerCategory customerCategory =
+                                      CustomerCategory(
+                                    name: 'Non définie',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  );
 
-                                if (widget.customer.categoryId == null) {
-                                  data = [
-                                    // CustomerCategory(
-                                    //   name: 'Non définie',
-                                    //   createdAt: DateTime.now(),
-                                    //   updatedAt: DateTime.now(),
-                                    // ),
-                                    widget.customer.category!,
-                                    ...data
-                                  ];
-                                }
-                                //t if the customer category is defined, remove
-                                // it from data and put it as the firt data
-                                // element so as to it be setting as
-                                // the default selectedItem of the dropdown
-                                else {
-                                  /*  final customerCategory = data.firstWhere(
-                                    (category) =>
-                                        category.id ==
-                                        widget.customer.categoryId,
-                                  );*/
-                                  data.remove(widget.customer.category);
-                                  data = [
-                                    widget.customer.category!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
+                                  for (CustomerCategory customerCategoryData
+                                      in data) {
+                                    if (customerCategoryData.id ==
+                                        widget.customer.categoryId) {
+                                      customerCategory = customerCategoryData;
+                                      break;
+                                    }
+                                  }
+
+                                  data = {customerCategory, ...data}.toList();
+
+                                  return CBFormCustomerCategoryDropdown(
+                                    width: formCardWidth / 2.3,
+                                    label: 'Catégorie',
+                                    providerName:
+                                        'customer-update-form-category',
+                                    dropdownMenuEntriesLabels: data,
+                                    dropdownMenuEntriesValues: data,
+                                  );
+                                },
+                                error: (error, stackTrace) => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                                loading: () => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Container(
@@ -387,55 +355,51 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBFormEconomicalActivityDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Activité économique',
-                            providerName:
-                                'customer-update-form-economical-activity',
-                            dropdownMenuEntriesLabels:
-                                economicalActivitiesListStream.when(
-                              data: (data) {
-                                if (widget.customer.economicalActivityId ==
-                                    null) {
-                                  data = [
-                                    widget.customer.economicalActivity!,
-                                    ...data
-                                  ];
-                                } else {
-                                  data.remove(
-                                      widget.customer.economicalActivity);
-                                  data = [
-                                    widget.customer.economicalActivity!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
-                            dropdownMenuEntriesValues:
-                                economicalActivitiesListStream.when(
-                              data: (data) {
-                                if (widget.customer.economicalActivityId ==
-                                    null) {
-                                  data = [
-                                    widget.customer.economicalActivity!,
-                                    ...data
-                                  ];
-                                } else {
-                                  data.remove(
-                                      widget.customer.economicalActivity);
-                                  data = [
-                                    widget.customer.economicalActivity!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final economicalActivitiesListStream = ref
+                                  .watch(economicalActivityListStreamProvider);
+
+                              return economicalActivitiesListStream.when(
+                                data: (data) {
+                                  EconomicalActivity
+                                      customerEconomicalActivity =
+                                      EconomicalActivity(
+                                    name: 'Non définie',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  );
+
+                                  for (EconomicalActivity economicalActivityData
+                                      in data) {
+                                    if (economicalActivityData.id ==
+                                        widget.customer.economicalActivityId) {
+                                      customerEconomicalActivity =
+                                          economicalActivityData;
+                                      break;
+                                    }
+                                  }
+
+                                  data = {customerEconomicalActivity, ...data}
+                                      .toList();
+
+                                  return CBFormEconomicalActivityDropdown(
+                                    width: formCardWidth / 2.3,
+                                    label: 'Acitivité Économique',
+                                    providerName:
+                                        'customer-update-form-economical-activity',
+                                    dropdownMenuEntriesLabels: data,
+                                    dropdownMenuEntriesValues: data,
+                                  );
+                                },
+                                error: (error, stackTrace) => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                                loading: () => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Container(
@@ -443,51 +407,50 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBFormPersonalStatusDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Statut Personnel',
-                            providerName:
-                                'customer-update-form-personal-status',
-                            dropdownMenuEntriesLabels:
-                                personalStatusListStream.when(
-                              data: (data) {
-                                if (widget.customer.personalStatusId == null) {
-                                  data = [
-                                    widget.customer.personalStatus!,
-                                    ...data
-                                  ];
-                                } else {
-                                  data.remove(widget.customer.personalStatus);
-                                  data = [
-                                    widget.customer.personalStatus!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
-                            dropdownMenuEntriesValues:
-                                personalStatusListStream.when(
-                              data: (data) {
-                                if (widget.customer.personalStatusId == null) {
-                                  data = [
-                                    widget.customer.personalStatus!,
-                                    ...data
-                                  ];
-                                } else {
-                                  data.remove(widget.customer.personalStatus);
-                                  data = [
-                                    widget.customer.personalStatus!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final personalStatusListStream =
+                                  ref.watch(personalStatusListStreamProvider);
+
+                              return personalStatusListStream.when(
+                                data: (data) {
+                                  PersonalStatus customerPersonalStatus =
+                                      PersonalStatus(
+                                    name: 'Non défini',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  );
+
+                                  for (PersonalStatus personalStatusData
+                                      in data) {
+                                    if (personalStatusData.id ==
+                                        widget.customer.personalStatusId) {
+                                      customerPersonalStatus =
+                                          personalStatusData;
+                                      break;
+                                    }
+                                  }
+
+                                  data = {customerPersonalStatus, ...data}
+                                      .toList();
+
+                                  return CBFormPersonalStatusDropdown(
+                                    width: formCardWidth / 2.3,
+                                    label: 'Status Personel',
+                                    providerName:
+                                        'customer-update-form-personal-status',
+                                    dropdownMenuEntriesLabels: data,
+                                    dropdownMenuEntriesValues: data,
+                                  );
+                                },
+                                error: (error, stackTrace) => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                                loading: () => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Container(
@@ -495,44 +458,46 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                             vertical: 10.0,
                             horizontal: 5.0,
                           ),
-                          child: CBFormLocalityDropdown(
-                            width: formCardWidth / 2.3,
-                            label: 'Localité',
-                            providerName: 'customer-update-form-locality',
-                            dropdownMenuEntriesLabels:
-                                localitiesListStream.when(
-                              data: (data) {
-                                if (widget.customer.localityId == null) {
-                                  data = [widget.customer.locality!, ...data];
-                                } else {
-                                  data.remove(widget.customer.locality);
-                                  data = [
-                                    widget.customer.locality!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
-                            dropdownMenuEntriesValues:
-                                localitiesListStream.when(
-                              data: (data) {
-                                if (widget.customer.localityId == null) {
-                                  data = [widget.customer.locality!, ...data];
-                                } else {
-                                  data.remove(widget.customer.locality);
-                                  data = [
-                                    widget.customer.locality!,
-                                    ...data,
-                                  ];
-                                }
-                                return data;
-                              },
-                              error: (error, stackTrace) => [],
-                              loading: () => [],
-                            ),
+                          child: Consumer(
+                            builder: (context, ref, child) {
+                              final localitiesListStream =
+                                  ref.watch(localityListStreamProvider);
+
+                              return localitiesListStream.when(
+                                data: (data) {
+                                  Locality customerLocality = Locality(
+                                    name: 'Non définie',
+                                    createdAt: DateTime.now(),
+                                    updatedAt: DateTime.now(),
+                                  );
+
+                                  for (Locality localityData in data) {
+                                    if (localityData.id ==
+                                        widget.customer.localityId) {
+                                      customerLocality = localityData;
+                                      break;
+                                    }
+                                  }
+
+                                  data = {customerLocality, ...data}.toList();
+
+                                  return CBFormLocalityDropdown(
+                                    width: formCardWidth / 2.3,
+                                    label: 'Localité',
+                                    providerName:
+                                        'customer-update-form-locality',
+                                    dropdownMenuEntriesLabels: data,
+                                    dropdownMenuEntriesValues: data,
+                                  );
+                                },
+                                error: (error, stackTrace) => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                                loading: () => const SizedBox(
+                                  width: formCardWidth / 2.3,
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],

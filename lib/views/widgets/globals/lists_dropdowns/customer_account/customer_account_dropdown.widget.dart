@@ -9,7 +9,7 @@ final listCustomerAccountDropdownProvider =
   return CustomerAccount(
     customerId: 0,
     collectorId: 0,
-    customerCards: [],
+    customerCardsIds: [],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

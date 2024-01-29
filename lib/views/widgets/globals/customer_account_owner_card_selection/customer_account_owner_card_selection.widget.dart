@@ -11,14 +11,14 @@ class CustomerAccountOwnerCardSelection extends StatefulHookConsumerWidget {
   final int index;
   final bool isVisible;
   final String customerCardDropdownProvider;
-  final CustomerCard? customerCard;
+  final int? customerCardId;
   final double formCardWidth;
   const CustomerAccountOwnerCardSelection({
     super.key,
     required this.index,
     required this.isVisible,
     required this.customerCardDropdownProvider,
-    this.customerCard,
+    this.customerCardId,
     required this.formCardWidth,
   });
 
@@ -33,106 +33,105 @@ class _CustomerAccountOwnerCardSelectionState
   Widget build(BuildContext context) {
     // const formCardWidth = 50.0;
     final showWidget = useState(widget.isVisible);
-    final customersCardsWithoutOwnerListStream =
-        ref.watch(customersCardsWithoutOwnerListStreamProvider);
+
     final customerAccountSelectedOwnerCards =
         ref.watch(customerAccountSelectedOwnerCardsProvider);
     return showWidget.value
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7.0),
             width: widget.formCardWidth / 2.5,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /* const CBText(
+            child: Consumer(
+              builder: (context, ref, child) {
+                final customersCardsListStream =
+                    ref.watch(customersCardsListStreamProvider);
+
+                return customersCardsListStream.when(
+                  data: (data) {
+                    if (widget.customerCardId != null) {
+                      CustomerCard? accountOwnerCard;
+                      for (CustomerCard customerCard in data) {
+                        if (customerCard.id == widget.customerCardId) {
+                          accountOwnerCard = customerCard;
+                          break;
+                        }
+                      }
+
+                      data = [
+                        accountOwnerCard!,
+                        ...data,
+                      ];
+
+                      data = data.toSet().toList();
+                    }
+
+                    final remainCustomerCards = data
+                        .where(
+                          (customerCard) =>
+                              customerAccountSelectedOwnerCards
+                                  .containsValue(customerCard) ==
+                              false,
+                        )
+                        .toList();
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        /* const CBText(
                   text: 'Customer Card Dropdown',
                 ),*/
-                CBCustomerAccountOwnerCardSelectionDropdown(
-                  width: widget.formCardWidth / 3.5,
-                  label: 'Carte',
-                  providerName: widget.customerCardDropdownProvider,
-                  dropdownMenuEntriesLabels:
-                      customersCardsWithoutOwnerListStream.when(
-                    data: (data) {
-                      // verify if the customerCard isn't null, necessary in the
-                      // the case where it's adding, because any won't be
-                      // passed in case of adding
-                      // the customerCard have been putted in first position so
-                      // as to it selected as the first dropdow element
-                      // after rending
+                        CBCustomerAccountOwnerCardSelectionDropdown(
+                          width: widget.formCardWidth / 3.5,
+                          label: 'Carte',
+                          providerName: widget.customerCardDropdownProvider,
+                          dropdownMenuEntriesLabels: remainCustomerCards,
+                          dropdownMenuEntriesValues: remainCustomerCards,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showWidget.value = false;
+                            ref
+                                .read(
+                                    customerAccountAddedInputsProvider.notifier)
+                                .update((state) {
+                              // if input is visible, hide it
+                              state[widget.index] = showWidget.value;
+                              //  debugPrint('typeAddedInputsProvider');
+                              //  debugPrint(state.toString());
 
-                      if (widget.customerCard != null) {
-                        data.remove(widget.customerCard);
-                        data = [widget.customerCard!, ...data];
-                      }
-                      return data
-                          .where(
-                            (customerCard) =>
-                                customerAccountSelectedOwnerCards
-                                    .containsValue(customerCard) ==
-                                false,
-                          )
-                          .toList();
-                    },
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
-                  dropdownMenuEntriesValues:
-                      customersCardsWithoutOwnerListStream.when(
-                    data: (data) {
-                      if (widget.customerCard != null) {
-                        data.remove(widget.customerCard);
-                        data = [widget.customerCard!, ...data];
-                      }
-                      return data
-                          .where(
-                            (customerCard) =>
-                                customerAccountSelectedOwnerCards
-                                    .containsValue(customerCard) ==
-                                false,
-                          )
-                          .toList();
-                    },
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    showWidget.value = false;
-                    ref
-                        .read(customerAccountAddedInputsProvider.notifier)
-                        .update((state) {
-                      // if input is visible, hide it
-                      state[widget.index] = showWidget.value;
-                      //  debugPrint('typeAddedInputsProvider');
-                      //  debugPrint(state.toString());
+                              return state;
+                            });
 
-                      return state;
-                    });
-
-                    // remove the selected customerCard from customerAccountSelectedCards
-                    ref
-                        .read(
-                            customerAccountSelectedOwnerCardsProvider.notifier)
-                        .update((state) {
-                      // since customerAccountSelectedCards use type selection dropdown provider as key
-                      state.remove(widget.customerCardDropdownProvider);
-                      // debugPrint('customerAccountSelectedCardsProvider');
-                      // debugPrint('length: ${state.length}');
-                      // debugPrint(state.toString());
-                      return state;
-                    });
+                            // remove the selected customerCard from customerAccountSelectedCards
+                            ref
+                                .read(customerAccountSelectedOwnerCardsProvider
+                                    .notifier)
+                                .update((state) {
+                              // since customerAccountSelectedCards use type selection dropdown provider as key
+                              state.remove(widget.customerCardDropdownProvider);
+                              // debugPrint('customerAccountSelectedCardsProvider');
+                              // debugPrint('length: ${state.length}');
+                              // debugPrint(state.toString());
+                              return state;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: CBColors.primaryColor,
+                            size: 25.0,
+                          ),
+                        ),
+                      ],
+                    );
                   },
-                  icon: const Icon(
-                    Icons.close_rounded,
-                    color: CBColors.primaryColor,
-                    size: 25.0,
+                  error: (error, stackTrace) => SizedBox(
+                    width: widget.formCardWidth / 3.5,
                   ),
-                ),
-              ],
-            ),
-          )
+                  loading: () => SizedBox(
+                    width: widget.formCardWidth / 3.5,
+                  ),
+                );
+              },
+            ))
         : const SizedBox();
   }
 }

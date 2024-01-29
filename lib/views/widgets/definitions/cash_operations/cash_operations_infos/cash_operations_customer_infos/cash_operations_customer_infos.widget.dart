@@ -116,9 +116,11 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                   .state = data
                   .where(
                     (customerCard) => ref
-                        .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                            'cash-operations-search-options-customer-account'))!
-                        .customerCardsIds!
+                        .watch(
+                          cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                              'cash-operations-search-options-customer-account'),
+                        )!
+                        .customerCardsIds
                         .contains(customerCard.id!),
                   )
                   .toList();

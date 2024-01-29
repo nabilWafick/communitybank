@@ -36,7 +36,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
   Widget build(BuildContext context) {
     const formCardWidth = 450.0;
     final showWidget = useState(widget.isVisible);
-    final productsListStream = ref.watch(productsListStreamProvider);
+
     final typeSelectedProducts = ref.watch(typeSelectedProductsProvider);
     return showWidget.value
         ? Container(
@@ -44,6 +44,8 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
             width: formCardWidth,
             child: Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                final productsListStream =
+                    ref.watch(productsListStreamProvider);
                 return productsListStream.when(
                   data: (data) {
                     if (widget.productId != null) {
@@ -134,8 +136,12 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                       ],
                     );
                   },
-                  error: (error, stackTrace) => const SizedBox(),
-                  loading: () => const SizedBox(),
+                  error: (error, stackTrace) => const SizedBox(
+                    width: formCardWidth / 2.3,
+                  ),
+                  loading: () => const SizedBox(
+                    width: formCardWidth / 2.3,
+                  ),
                 );
               },
             ),

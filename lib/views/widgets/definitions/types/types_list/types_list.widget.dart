@@ -383,7 +383,7 @@ class TypesList extends ConsumerWidget {
                                 .read(typeSelectedProductsProvider.notifier)
                                 .state = {};
 
-                            // automatically add the type products inputs after rendering
+                            // automatically add the type products input  s after rendering
                             for (dynamic productId in type.productsIds) {
                               ref
                                   .read(typeAddedInputsProvider.notifier)

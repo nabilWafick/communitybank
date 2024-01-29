@@ -146,8 +146,9 @@ class _TypesUpdateFormState extends ConsumerState<TypesUpdateForm> {
                     for (MapEntry mapEntry in inputsMaps.entries) {
                       // verify if the current mapEntry key is equal to
                       // the id of one of type products
-                      if (widget.type.productsIds
-                          .any((productId) => productId == mapEntry.key)) {
+                      if (widget.type.productsIds.any(
+                        (productId) => productId == mapEntry.key,
+                      )) {
                         // if true, add a new type product selection and pass the
                         // equivalent product to it
                         inputsWidgetsList.add(
@@ -157,7 +158,8 @@ class _TypesUpdateFormState extends ConsumerState<TypesUpdateForm> {
                             productSelectionDropdownProvider:
                                 'type-selection-update-product-${mapEntry.key}',
                             productId: widget.type.productsIds.firstWhere(
-                                (productId) => productId! == mapEntry.key),
+                              (productId) => productId! == mapEntry.key,
+                            ),
                             // mapEntry.key is equal to the product id
                             // since the products ids and numbers are stored
                             // in the same order, the index of product the id

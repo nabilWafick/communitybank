@@ -89,7 +89,11 @@ class CustomerAccountCRUDFunctions {
           final customerAccount = CustomerAccount(
             customerId: customerAccountOwner.id!,
             collectorId: customerAccountCollector.id!,
-            customerCards: customerAccountOwnerCards,
+            customerCardsIds: customerAccountOwnerCards
+                .map(
+                  (customerAccountOwnerCard) => customerAccountOwnerCard.id,
+                )
+                .toList(),
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
@@ -239,7 +243,11 @@ class CustomerAccountCRUDFunctions {
           final newCustomerAccount = CustomerAccount(
             customerId: customerAccountOwner.id!,
             collectorId: customerAccountCollector.id!,
-            customerCards: customerAccountOwnerCards,
+            customerCardsIds: customerAccountOwnerCards
+                .map(
+                  (customerAccountOwnerCard) => customerAccountOwnerCard.id,
+                )
+                .toList(),
             createdAt: customerAccountCollector.createdAt,
             updatedAt: DateTime.now(),
           );
