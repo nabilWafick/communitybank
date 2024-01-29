@@ -9,7 +9,8 @@ final listTypeDropdownProvider =
     id: 0,
     name: 'Tous',
     stake: 0,
-    products: [],
+    productsIds: [],
+    productsNumber: [],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

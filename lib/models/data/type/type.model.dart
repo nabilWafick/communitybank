@@ -9,18 +9,16 @@ class Type {
   final int? id;
   final String name;
   final double stake;
-  List<Product> products;
-  final List<dynamic>? productsIds;
-  final List<dynamic>? productsNumber;
+  final List<dynamic> productsIds;
+  final List<dynamic> productsNumber;
   final DateTime createdAt;
   final DateTime updatedAt;
   Type({
     this.id,
     required this.name,
     required this.stake,
-    required this.products,
-    this.productsIds,
-    this.productsNumber,
+    required this.productsIds,
+    required this.productsNumber,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -39,7 +37,6 @@ class Type {
       id: id ?? this.id,
       name: name ?? this.name,
       stake: stake ?? this.stake,
-      products: products ?? this.products,
       productsIds: productsIds ?? this.productsIds,
       productsNumber: productsNumber ?? this.productsNumber,
       createdAt: createdAt ?? this.createdAt,
@@ -58,9 +55,8 @@ class Type {
     return {
       TypeTable.name: name,
       TypeTable.stake: stake,
-      TypeTable.productsIds: products.map((product) => product.id).toList(),
-      TypeTable.productsNumbers:
-          products.map((product) => product.number).toList(),
+      TypeTable.productsIds: productsIds,
+      TypeTable.productsNumbers: productsNumber,
       TypeTable.createdAt: createdAt.toIso8601String(),
       TypeTable.updatedAt: updatedAt.toIso8601String(),
     };
@@ -71,7 +67,6 @@ class Type {
       id: map[TypeTable.id]?.toInt(),
       name: map[TypeTable.name] ?? '',
       stake: map[TypeTable.stake]?.toDouble() ?? 0.0,
-      products: [],
       productsIds: List<dynamic>.from(map[TypeTable.productsIds]),
       productsNumber: List<dynamic>.from(map[TypeTable.productsNumbers]),
       createdAt: DateTime.parse(map[TypeTable.createdAt]),
@@ -85,7 +80,7 @@ class Type {
 
   @override
   String toString() {
-    return 'Type(id: $id, name: $name, stake: $stake, products: $products, productsIds: $productsIds, productsNumber: $productsNumber, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Type(id: $id, name: $name, stake: $stake, productsIds: $productsIds, productsNumber: $productsNumber, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -96,7 +91,6 @@ class Type {
         other.id == id &&
         other.name == name &&
         other.stake == stake &&
-        listEquals(other.products, products) &&
         listEquals(other.productsIds, productsIds) &&
         listEquals(other.productsNumber, productsNumber) &&
         other.createdAt == createdAt &&
@@ -108,7 +102,6 @@ class Type {
     return id.hashCode ^
         name.hashCode ^
         stake.hashCode ^
-        products.hashCode ^
         productsIds.hashCode ^
         productsNumber.hashCode ^
         createdAt.hashCode ^

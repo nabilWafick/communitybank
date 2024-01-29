@@ -1,21 +1,23 @@
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CBElevatedButton extends StatelessWidget {
+class CBElevatedButton extends ConsumerWidget {
   final String text;
   final Color? textColor;
   final Color? backgroundColor;
   final Function() onPressed;
 
-  const CBElevatedButton(
-      {super.key,
-      required this.text,
-      this.textColor,
-      this.backgroundColor,
-      required this.onPressed});
+  const CBElevatedButton({
+    super.key,
+    required this.text,
+    this.textColor,
+    this.backgroundColor,
+    required this.onPressed,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Center(
       child: ElevatedButton(
         onPressed: onPressed,

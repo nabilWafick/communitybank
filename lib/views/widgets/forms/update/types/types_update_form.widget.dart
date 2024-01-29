@@ -138,45 +138,54 @@ class _TypesUpdateFormState extends ConsumerState<TypesUpdateForm> {
                     ],
                   ),
                 ),
-                Consumer(builder: (context, ref, child) {
-                  final inputsMaps = ref.watch(typeAddedInputsProvider);
-                  List<Widget> inputsWidgetsList = [];
+                Consumer(
+                  builder: (context, ref, child) {
+                    final inputsMaps = ref.watch(typeAddedInputsProvider);
+                    List<Widget> inputsWidgetsList = [];
 
-                  for (MapEntry mapEntry in inputsMaps.entries) {
-                    // verify if the current mapEntry key is equal to
-                    // the id of one of type products
-                    if (widget.type.products
-                        .any((product) => product.id == mapEntry.key)) {
-                      // if true, add a new type product selection and pass the
-                      // equivalent product to it
-                      inputsWidgetsList.add(
-                        TypeProductSelection(
-                          index: mapEntry.key,
-                          isVisible: mapEntry.value,
-                          productSelectionDropdownProvider:
-                              'type-selection-update-product-${mapEntry.key}',
-                          product: widget.type.products.firstWhere(
-                              (product) => product.id! == mapEntry.key),
-                          formCardWidth: formCardWidth,
-                        ),
-                      );
-                    } else {
-                      inputsWidgetsList.add(
-                        TypeProductSelection(
-                          index: mapEntry.key,
-                          isVisible: mapEntry.value,
-                          productSelectionDropdownProvider:
-                              'type-selection-update-product-${mapEntry.key}',
-                          formCardWidth: formCardWidth,
-                        ),
-                      );
+                    for (MapEntry mapEntry in inputsMaps.entries) {
+                      // verify if the current mapEntry key is equal to
+                      // the id of one of type products
+                      if (widget.type.productsIds
+                          .any((productId) => productId == mapEntry.key)) {
+                        // if true, add a new type product selection and pass the
+                        // equivalent product to it
+                        inputsWidgetsList.add(
+                          TypeProductSelection(
+                            index: mapEntry.key,
+                            isVisible: mapEntry.value,
+                            productSelectionDropdownProvider:
+                                'type-selection-update-product-${mapEntry.key}',
+                            productId: widget.type.productsIds.firstWhere(
+                                (productId) => productId! == mapEntry.key),
+                            // mapEntry.key is equal to the product id
+                            // since the products ids and numbers are stored
+                            // in the same order, the index of product the id
+                            // is equal to the product number
+                            // that's why
+                            productNumber: widget.type.productsNumber[
+                                widget.type.productsIds.indexOf(mapEntry.key)],
+                            formCardWidth: formCardWidth,
+                          ),
+                        );
+                      } else {
+                        inputsWidgetsList.add(
+                          TypeProductSelection(
+                            index: mapEntry.key,
+                            isVisible: mapEntry.value,
+                            productSelectionDropdownProvider:
+                                'type-selection-update-product-${mapEntry.key}',
+                            formCardWidth: formCardWidth,
+                          ),
+                        );
+                      }
                     }
-                  }
 
-                  return Column(
-                    children: inputsWidgetsList,
-                  );
-                }),
+                    return Column(
+                      children: inputsWidgetsList,
+                    );
+                  },
+                ),
                 const SizedBox(
                   height: 35.0,
                 ),

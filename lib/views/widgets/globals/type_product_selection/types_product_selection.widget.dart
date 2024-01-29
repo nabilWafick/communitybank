@@ -13,14 +13,16 @@ class TypeProductSelection extends StatefulHookConsumerWidget {
   final int index;
   final bool isVisible;
   final String productSelectionDropdownProvider;
-  final Product? product;
+  final int? productId;
+  final int? productNumber;
   final double formCardWidth;
   const TypeProductSelection({
     super.key,
     required this.index,
     required this.isVisible,
     required this.productSelectionDropdownProvider,
-    this.product,
+    this.productId,
+    this.productNumber,
     required this.formCardWidth,
   });
 
@@ -40,104 +42,102 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7.0),
             width: formCardWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    CBTypeProductSelectionDropdown(
-                      width: formCardWidth / 2.3,
-                      label: 'Produit',
-                      providerName: widget.productSelectionDropdownProvider,
-                      dropdownMenuEntriesLabels: productsListStream.when(
-                        data: (data) {
-                          // verify if the product isn't null, necessary in the
-                          // the case where it's adding, because any won't be
-                          // passed in case of adding
-                          // the product have been putted in first position so
-                          // as to it selected as the first dropdow element
-                          // after rending
+            child: Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                return productsListStream.when(
+                  data: (data) {
+                    if (widget.productId != null) {
+                      Product? typeProduct;
+                      for (Product product in data) {
+                        if (product.id == widget.productId) {
+                          typeProduct = product;
+                          break;
+                        }
+                      }
 
-                          if (widget.product != null) {
-                            data.remove(widget.product);
-                            data = [widget.product!, ...data];
-                          }
-                          return data
-                              .where(
-                                (product) =>
-                                    typeSelectedProducts
-                                        .containsValue(product) ==
-                                    false,
-                              )
-                              .toList();
-                        },
-                        error: (error, stackTrace) => [],
-                        loading: () => [],
-                      ),
-                      dropdownMenuEntriesValues: productsListStream.when(
-                        data: (data) {
-                          if (widget.product != null) {
-                            data.remove(widget.product);
-                            data = [widget.product!, ...data];
-                          }
-                          return data
-                              .where(
-                                (product) =>
-                                    typeSelectedProducts
-                                        .containsValue(product) ==
-                                    false,
-                              )
-                              .toList();
-                        },
-                        error: (error, stackTrace) => [],
-                        loading: () => [],
-                      ),
-                    ),
-                    SizedBox(
-                      width: formCardWidth / 2.3,
-                      child: CBTypeProductSelectionTextFormField(
-                        inputIndex: widget.index,
-                        label: 'Nombre',
-                        hintText: 'Nombre de produit',
-                        initialValue: widget.product?.number!.toString(),
-                        textInputType: TextInputType.number,
-                        validator: TypeValidators.typeProductNumber,
-                        onChanged: TypeOnChanged.typeProductNumber,
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    showWidget.value = false;
-                    ref.read(typeAddedInputsProvider.notifier).update((state) {
-                      // if input is visible, hide it
-                      state[widget.index] = showWidget.value;
-                      //  debugPrint('typeAddedInputsProvider');
-                      //  debugPrint(state.toString());
+                      data = [
+                        typeProduct!,
+                        ...data,
+                      ];
 
-                      return state;
-                    });
+                      data = data.toSet().toList();
+                    }
 
-                    // remove the selected product from typeSelectedProducts
-                    ref
-                        .read(typeSelectedProductsProvider.notifier)
-                        .update((state) {
-                      // since typeSelectedProducts use type selection dropdown provider as key
-                      state.remove(widget.productSelectionDropdownProvider);
-                      // debugPrint('typeSelectedProductsProvider');
-                      // debugPrint('length: ${state.length}');
-                      // debugPrint(state.toString());
-                      return state;
-                    });
+                    final remainProducts = data
+                        .where(
+                          (product) =>
+                              typeSelectedProducts.containsValue(product) ==
+                              false,
+                        )
+                        .toList();
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CBTypeProductSelectionDropdown(
+                              width: formCardWidth / 2.3,
+                              label: 'Produit',
+                              providerName:
+                                  widget.productSelectionDropdownProvider,
+                              dropdownMenuEntriesLabels: remainProducts,
+                              dropdownMenuEntriesValues: remainProducts,
+                            ),
+                            SizedBox(
+                              width: formCardWidth / 2.3,
+                              child: CBTypeProductSelectionTextFormField(
+                                inputIndex: widget.index,
+                                label: 'Nombre',
+                                hintText: 'Nombre de produit',
+                                initialValue: widget.productNumber!.toString(),
+                                textInputType: TextInputType.number,
+                                validator: TypeValidators.typeProductNumber,
+                                onChanged: TypeOnChanged.typeProductNumber,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            showWidget.value = false;
+                            ref
+                                .read(typeAddedInputsProvider.notifier)
+                                .update((state) {
+                              // if input is visible, hide it
+                              state[widget.index] = showWidget.value;
+                              //  debugPrint('typeAddedInputsProvider');
+                              //  debugPrint(state.toString());
+
+                              return state;
+                            });
+
+                            // remove the selected product from typeSelectedProducts
+                            ref
+                                .read(typeSelectedProductsProvider.notifier)
+                                .update((state) {
+                              // since typeSelectedProducts use type selection dropdown provider as key
+                              state.remove(
+                                  widget.productSelectionDropdownProvider);
+                              // debugPrint('typeSelectedProductsProvider');
+                              // debugPrint('length: ${state.length}');
+                              // debugPrint(state.toString());
+                              return state;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.close_rounded,
+                            color: CBColors.primaryColor,
+                            size: 30.0,
+                          ),
+                        ),
+                      ],
+                    );
                   },
-                  icon: const Icon(
-                    Icons.close_rounded,
-                    color: CBColors.primaryColor,
-                    size: 30.0,
-                  ),
-                ),
-              ],
+                  error: (error, stackTrace) => const SizedBox(),
+                  loading: () => const SizedBox(),
+                );
+              },
             ),
           )
         : const SizedBox();

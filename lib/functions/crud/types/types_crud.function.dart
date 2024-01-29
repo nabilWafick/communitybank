@@ -108,7 +108,16 @@ class TypeCRUDFunctions {
           final type = Type(
             name: typeName,
             stake: typeStack,
-            products: typeProducts,
+            productsIds: typeProducts
+                .map(
+                  (product) => product.id,
+                )
+                .toList(),
+            productsNumber: typeProducts
+                .map(
+                  (product) => product.number,
+                )
+                .toList(),
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
@@ -240,7 +249,16 @@ class TypeCRUDFunctions {
           final newType = Type(
             name: typeName,
             stake: typeStack,
-            products: typeProducts,
+            productsIds: typeProducts
+                .map(
+                  (product) => product.id,
+                )
+                .toList(),
+            productsNumber: typeProducts
+                .map(
+                  (product) => product.number,
+                )
+                .toList(),
             createdAt: type.createdAt,
             updatedAt: DateTime.now(),
           );

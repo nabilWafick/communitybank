@@ -8,7 +8,8 @@ final formTypeDropdownProvider =
   return Type(
     name: 'Non défini',
     stake: 0,
-    products: [],
+    productsIds: [],
+    productsNumber: [],
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );
