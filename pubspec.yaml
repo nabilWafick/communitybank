@@ -36,6 +36,7 @@ dependencies:
   supabase: ^1.11.11
   supabase_flutter: ^1.10.25
   syncfusion_flutter_charts: ^23.2.6
+  msix: ^3.16.7
 
 dev_dependencies:
   flutter_test:

@@ -23,6 +23,7 @@ class MainAppbar extends ConsumerStatefulWidget {
 }
 
 class _MainAppbarState extends ConsumerState<MainAppbar> {
+  final scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     final authenticatedAgentName = ref.watch(authenticatedAgentNameProvider);
@@ -82,11 +83,33 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
           const SizedBox(
             height: 12.0,
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
+          /* Scrollbar(
+            radius: const Radius.circular(
+              15.0,
+            ),
+            controller: scrollController,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                bottom: 20.0,
+              ),
+              controller: scrollController,
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: selectedSidebarOption.subOptions
+                    .map(
+                      (subOption) =>
+                          SidebarSubOption(sidebarSubOptionData: subOption),
+                    )
+                    .toList(),
+              ),
+            ),
+          ),*/
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 50,
+            child: CustomHorizontalScroller(
               children: selectedSidebarOption.subOptions
                   .map(
                     (subOption) =>
@@ -97,6 +120,71 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CustomHorizontalScroller extends StatefulWidget {
+  final List<Widget> children;
+
+  const CustomHorizontalScroller({super.key, required this.children});
+
+  @override
+  _CustomHorizontalScrollerState createState() =>
+      _CustomHorizontalScrollerState();
+}
+
+class _CustomHorizontalScrollerState extends State<CustomHorizontalScroller> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Center(
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            controller: _scrollController,
+            children: widget.children,
+          ),
+        ),
+        Positioned(
+          left: 0,
+          child: InkWell(
+            onTap: () {
+              _scrollController.animateTo(
+                _scrollController.offset - MediaQuery.of(context).size.width,
+                curve: Curves.linear,
+                duration: const Duration(milliseconds: 100),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: CBColors.primaryColor,
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_forward),
+            onPressed: () {
+              _scrollController.animateTo(
+                _scrollController.offset + MediaQuery.of(context).size.width,
+                curve: Curves.linear,
+                duration: const Duration(milliseconds: 100),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

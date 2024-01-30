@@ -31,10 +31,9 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
 
   @override
   Widget build(BuildContext context) {
-    final settlementsCollectionDate =
-        ref.watch(settlementsCollectionDateProvider);
-    final format = DateFormat.yMMMMEEEEd('fr');
-    //  dynamic data = useState(initialData); //useState();
+    final heigth = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
@@ -43,46 +42,8 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CBText(
-              text: data.toString(),
+              text: 'Heigth: $heigth Width: $width',
             ),
-            const SizedBox(
-              height: 200,
-            ),
-            SizedBox(
-              width: 350.0,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CBIconButton(
-                    icon: Icons.date_range,
-                    text: 'Date de Collecte',
-                    onTap: () async {
-                      await FunctionsController.showDateTime(
-                        context,
-                        ref,
-                        settlementsCollectionDateProvider,
-                      );
-                    },
-                  ),
-                  const SizedBox(
-                    width: 20.0,
-                  ),
-                  Flexible(
-                    child: CBText(
-                      text: settlementsCollectionDate != null
-                          ? '${format.format(settlementsCollectionDate)}  ${settlementsCollectionDate.hour}:${settlementsCollectionDate.minute}'
-                          : '',
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w500,
-                      textOverflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  //   const SizedBox(),
-                ],
-              ),
-            ),
-
             const SizedBox(
               height: 200,
             ),

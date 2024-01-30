@@ -3,6 +3,7 @@ import 'package:communitybank/functions/crud/settlements/settlements_crud.functi
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/settlements/settlements_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/settlement/settlement_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -38,7 +39,7 @@ class _CashOperationsSettlementsState
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
         ref.watch(
             cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
-    final agentListStream = ref.watch(agentsListStreamProvider);
+
     final format = DateFormat.yMMMMEEEEd('fr');
 
     return Container(
@@ -137,13 +138,31 @@ class _CashOperationsSettlementsState
                             text: settlement.id!.toString(),
                           ),
                         ),
-                        DataCell(
-                          CBText(
-                            text:
-                                cashOperationsSelectedCustomerAccountOwnerSelectedCard!
-                                    .label,
-                          ),
-                        ),
+                        DataCell(Consumer(
+                          builder: (context, ref, child) {
+                            final customersCardsListStream =
+                                ref.watch(customersCardsListStreamProvider);
+
+                            return customersCardsListStream.when(
+                              data: (data) {
+                                final realTimeCustomerCardData =
+                                    data.firstWhere(
+                                  (customerCard) =>
+                                      customerCard.id == settlement.cardId,
+                                );
+                                return CBText(
+                                  text: realTimeCustomerCardData.label,
+                                );
+                              },
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
+                              ),
+                              loading: () => const CBText(
+                                text: '',
+                              ),
+                            );
+                          },
+                        )),
                         DataCell(
                           Center(
                             child: CBText(
@@ -172,21 +191,30 @@ class _CashOperationsSettlementsState
                                 '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
                           ),
                         ),
-                        DataCell(
-                          CBText(
-                            text: agentListStream.when(
+                        DataCell(Consumer(
+                          builder: (context, ref, child) {
+                            final agentListStream =
+                                ref.watch(agentsListStreamProvider);
+
+                            return agentListStream.when(
                               data: (data) {
-                                final agent = data.firstWhere(
-                                  (agentData) =>
-                                      agentData.id == settlement.agentId,
+                                final realTimeAgentData = data.firstWhere(
+                                  (agent) => agent.id == settlement.agentId,
                                 );
-                                return "${agent.firstnames} ${agent.name}";
+                                return CBText(
+                                  text:
+                                      '${realTimeAgentData.firstnames} ${realTimeAgentData.name}',
+                                );
                               },
-                              error: (error, stracTrace) => '',
-                              loading: () => '',
-                            ),
-                          ),
-                        ),
+                              error: (error, stackTrace) => const CBText(
+                                text: '',
+                              ),
+                              loading: () => const CBText(
+                                text: '',
+                              ),
+                            );
+                          },
+                        )),
                         DataCell(
                           onTap: () async {
                             await FunctionsController.showAlertDialog(

@@ -36,24 +36,7 @@ class CustomersController {
     Stream<List<Customer>> customersListStream = customersMapListStream.map(
       (customersMapList) => customersMapList.map(
         (customerMap) {
-          return Customer(
-            id: customerMap[CustomerTable.id]?.toInt(),
-            name: customerMap[CustomerTable.name] ?? '',
-            firstnames: customerMap[CustomerTable.firstnames] ?? '',
-            phoneNumber: customerMap[CustomerTable.phoneNumber] ?? '',
-            address: customerMap[CustomerTable.address] ?? '',
-            profession: customerMap[CustomerTable.profession] ?? '',
-            nicNumber: customerMap[CustomerTable.nciNumber]?.toInt() ?? 0,
-            categoryId: customerMap[CustomerTable.categoryId],
-            economicalActivityId:
-                customerMap[CustomerTable.economicalActivityId],
-            personalStatusId: customerMap[CustomerTable.personalStatusId],
-            localityId: customerMap[CustomerTable.localityId],
-            profile: customerMap[CustomerTable.profile],
-            signature: customerMap[CustomerTable.signature],
-            createdAt: DateTime.parse(customerMap[CustomerTable.createdAt]),
-            updatedAt: DateTime.parse(customerMap[CustomerTable.updatedAt]),
-          );
+          return Customer.fromMap(customerMap);
         },
       ).toList(),
     );
