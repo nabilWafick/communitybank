@@ -16,6 +16,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final searchedTypesListProvider = StreamProvider<List<Type>>((ref) async* {
   String searchedType = ref.watch(searchProvider('types'));
@@ -55,11 +56,17 @@ final typesListMapStreamProvider = StreamProvider<List<Map>>((ref) async* {
   );
 });
 
-class TypesList extends ConsumerWidget {
+class TypesList extends StatefulHookConsumerWidget {
   const TypesList({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _TypesListState();
+}
+
+class _TypesListState extends ConsumerState<TypesList> {
+  final ScrollController scrollController = ScrollController();
+  @override
+  Widget build(BuildContext context) {
     //  final isSearching = ref.watch(isSearchingProvider('types'));
 
     final typesListStream = ref.watch(typesListStreamProvider);
@@ -68,9 +75,10 @@ class TypesList extends ConsumerWidget {
     return SizedBox(
       height: 640.0,
       // width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      child: Scrollbar(
+        controller: scrollController,
         child: SingleChildScrollView(
+          controller: scrollController,
           child: /* CBText(
           text: typesListStream.when(
             data: (data) => 'data.length.toString()',
@@ -210,7 +218,7 @@ class TypesList extends ConsumerWidget {
                                       .read(
                                           typeSelectedProductsProvider.notifier)
                                       .state = {};
-
+        
                                   // automatically add the type products inputs after rendering
                                   for (Product product in type.products) {
                                     ref

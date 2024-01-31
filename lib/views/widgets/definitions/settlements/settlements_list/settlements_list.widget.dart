@@ -48,6 +48,8 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
     initializeDateFormatting('fr');
   }
 
+  final ScrollController scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     //  final isSearching = ref.watch(isSearchingProvider('settlements'));
@@ -61,128 +63,134 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
       // alignment: Alignment.center,
       height: 700.0,
       // width: double.infinity,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      child: Scrollbar(
+        controller: scrollController,
         child: SingleChildScrollView(
-          child: DataTable(
-            showCheckboxColumn: true,
-            columns: const [
-              DataColumn(
-                label: CBText(
-                  text: 'Code',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+          padding: const EdgeInsets.symmetric(horizontal: 100.0),
+          controller: scrollController,
+          //  scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+            child: DataTable(
+              showCheckboxColumn: true,
+              columns: const [
+                DataColumn(
+                  label: CBText(
+                    text: 'Code',
+                    textAlign: TextAlign.start,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                DataColumn(
+                  label: CBText(
+                    text: 'Carte',
+                    textAlign: TextAlign.start,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Nombre',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                DataColumn(
+                  label: CBText(
+                    text: 'Nombre',
+                    textAlign: TextAlign.start,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Date de règlement',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                DataColumn(
+                  label: CBText(
+                    text: 'Date de règlement',
+                    textAlign: TextAlign.start,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Date de saisie',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                DataColumn(
+                  label: CBText(
+                    text: 'Date de saisie',
+                    textAlign: TextAlign.start,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Agent',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                DataColumn(
+                  label: CBText(
+                    text: 'Agent',
+                    textAlign: TextAlign.start,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
-            rows: settlementsListStream.when(
-              data: (data) {
-                //  debugPrint('collector Stream Data: $data');
-                return data
-                    .map(
-                      (settlement) => DataRow(
-                        cells: [
-                          DataCell(
-                            CBText(
-                              text: settlement.id!.toString(),
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: customersCardsListStream.when(
-                                  data: (data) => data
-                                      .firstWhere((customerCard) =>
-                                          customerCard.id == settlement.cardId)
-                                      .label,
-                                  error: ((error, stackTrace) => ''),
-                                  loading: () => ''),
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: settlement.number.toString(),
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text:
-                                  '${format.format(settlement.collectedAt)}  ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text:
-                                  '${format.format(settlement.createdAt)}  ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
-                            ),
-                          ),
-                          DataCell(
-                            CBText(
-                              text: agentsListStream.when(
-                                data: (data) {
-                                  final agent = data.firstWhere((agent) =>
-                                      agent.id == settlement.agentId);
-
-                                  return '${agent.firstnames} ${agent.name}';
-                                },
-                                error: (error, stackTrace) => '',
-                                loading: () => '',
+              ],
+              rows: settlementsListStream.when(
+                data: (data) {
+                  //  debugPrint('collector Stream Data: $data');
+                  return data
+                      .map(
+                        (settlement) => DataRow(
+                          cells: [
+                            DataCell(
+                              CBText(
+                                text: settlement.id!.toString(),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList();
-              },
-              error: (error, stack) {
-                //  debugPrint('collectors Stream Error');
-                return [];
-              },
-              loading: () {
-                //  debugPrint('collectors Stream Loading');
-                return [];
-              },
+                            DataCell(
+                              CBText(
+                                text: customersCardsListStream.when(
+                                    data: (data) => data
+                                        .firstWhere((customerCard) =>
+                                            customerCard.id ==
+                                            settlement.cardId)
+                                        .label,
+                                    error: ((error, stackTrace) => ''),
+                                    loading: () => ''),
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text: settlement.number.toString(),
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text:
+                                    '${format.format(settlement.collectedAt)}  ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text:
+                                    '${format.format(settlement.createdAt)}  ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text: agentsListStream.when(
+                                  data: (data) {
+                                    final agent = data.firstWhere((agent) =>
+                                        agent.id == settlement.agentId);
+
+                                    return '${agent.firstnames} ${agent.name}';
+                                  },
+                                  error: (error, stackTrace) => '',
+                                  loading: () => '',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList();
+                },
+                error: (error, stack) {
+                  //  debugPrint('collectors Stream Error');
+                  return [];
+                },
+                loading: () {
+                  //  debugPrint('collectors Stream Loading');
+                  return [];
+                },
+              ),
             ),
           ),
         ),

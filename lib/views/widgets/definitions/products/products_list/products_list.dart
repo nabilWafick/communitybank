@@ -12,6 +12,7 @@ import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropd
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final searchedProductsListProvider =
     StreamProvider<List<Product>>((ref) async* {
@@ -32,20 +33,29 @@ final productsListStreamProvider = StreamProvider<List<Product>>((ref) async* {
   yield* ProductsController.getAll(selectedProductPrice: selectedProductPrice);
 });
 
-class ProductsList extends ConsumerWidget {
+class ProductsList extends StatefulHookConsumerWidget {
   const ProductsList({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductsListState();
+}
+
+class _ProductsListState extends ConsumerState<ProductsList> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('products'));
     final productsListStream = ref.watch(productsListStreamProvider);
     final searchedProductsList = ref.watch(searchedProductsListProvider);
     return SizedBox(
       height: 640.0,
       // width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+      child: Scrollbar(
+        controller: scrollController,
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 100.0),
+          controller: scrollController,
           child: DataTable(
             columns: const [
               DataColumn(

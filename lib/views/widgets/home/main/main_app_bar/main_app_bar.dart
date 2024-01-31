@@ -3,9 +3,14 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar_suboption/sidebar_suboption.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+
+final internetConnectionStatusProvider =
+    StreamProvider<InternetConnectionStatus>((ref) async* {
+  yield* InternetConnectionChecker().onStatusChange;
+});
 
 final authenticatedAgentNameProvider = FutureProvider<String>((ref) async {
   //  set user data in shared preferences
@@ -25,6 +30,7 @@ class MainAppbar extends ConsumerStatefulWidget {
 
 class _MainAppbarState extends ConsumerState<MainAppbar> {
   final scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final authenticatedAgentName = ref.watch(authenticatedAgentNameProvider);
@@ -66,17 +72,75 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                     fontSize: 15.0,
                     fontWeight: FontWeight.w600,
                   ),
-                  /*   SizedBox(
+                  const SizedBox(
                     width: 20.0,
                   ),
-                  Card(
-                    color: CBColors.primaryColor,
-                    elevation: 5.0,
-                    child: SizedBox(
-                      height: 25.0,
-                      width: 25.0,
-                    ),
-                  )*/
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final internetConnectionStatus =
+                          ref.watch(internetConnectionStatusProvider);
+
+                      return internetConnectionStatus.when(
+                        data: (data) {
+                          switch (data) {
+                            case InternetConnectionStatus.connected:
+                              return InkWell(
+                                onTap: () async {
+                                  /*  final lastTryResult =await
+                                      InternetConnectionChecker()
+                                          .connectionStatus;
+
+                                        //  InternetConnectionChecker()
+                                        */
+                                },
+                                child: const Card(
+                                  color: CBColors.primaryColor,
+                                  elevation: 5.0,
+                                  child: SizedBox(
+                                    height: 25.0,
+                                    width: 25.0,
+                                  ),
+                                ),
+                              );
+
+                            case InternetConnectionStatus.disconnected:
+                              Card(
+                                color: Colors.red[700],
+                                elevation: 5.0,
+                                child: const SizedBox(
+                                  height: 25.0,
+                                  width: 25.0,
+                                ),
+                              );
+                              return const Card(
+                                color: CBColors.tertiaryColor,
+                                elevation: 5.0,
+                                child: SizedBox(
+                                  height: 25.0,
+                                  width: 25.0,
+                                ),
+                              );
+                          }
+                        },
+                        error: (error, stackTrace) => const Card(
+                          color: CBColors.secondaryColor,
+                          elevation: 5.0,
+                          child: SizedBox(
+                            height: 25.0,
+                            width: 25.0,
+                          ),
+                        ),
+                        loading: () => const Card(
+                          color: CBColors.tertiaryColor,
+                          elevation: 5.0,
+                          child: SizedBox(
+                            height: 25.0,
+                            width: 25.0,
+                          ),
+                        ),
+                      );
+                    },
+                  )
                 ],
               )
             ],

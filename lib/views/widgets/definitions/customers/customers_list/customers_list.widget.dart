@@ -63,6 +63,7 @@ class CustomersList extends ConsumerStatefulWidget {
 
 class _CustomersListState extends ConsumerState<CustomersList> {
   final ScrollController horizontallScrollController = ScrollController();
+  final ScrollController verticalScrollController = ScrollController();
 
   @override
   Widget build(
@@ -71,7 +72,6 @@ class _CustomersListState extends ConsumerState<CustomersList> {
     //   final isSearching = ref.watch(isSearchingProvider('customers'));
     final customersListStream = ref.watch(customersListStreamProvider);
     //   final searchedCustomers = ref.watch(searchedCustomersListProvider);
-    final ScrollController verticalScrollController = ScrollController();
 
     return SizedBox(
       height: 640.0,

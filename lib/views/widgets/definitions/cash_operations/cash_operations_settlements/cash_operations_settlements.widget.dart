@@ -30,8 +30,6 @@ class _CashOperationsSettlementsState
 
   @override
   Widget build(BuildContext context) {
-    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
-        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
         ref.watch(
       cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider,
