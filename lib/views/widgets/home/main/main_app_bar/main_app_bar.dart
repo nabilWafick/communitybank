@@ -112,10 +112,10 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                                   width: 25.0,
                                 ),
                               );
-                              return const Card(
-                                color: CBColors.tertiaryColor,
+                              return Card(
+                                color: Colors.red[700],
                                 elevation: 5.0,
-                                child: SizedBox(
+                                child: const SizedBox(
                                   height: 25.0,
                                   width: 25.0,
                                 ),
