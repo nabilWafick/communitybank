@@ -4,6 +4,7 @@ import 'package:communitybank/views/widgets/home/sidebar/sidebar.widget.dart';
 import 'package:communitybank/views/widgets/home/sidebar/sidebar_suboption/sidebar_suboption.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final authenticatedAgentNameProvider = FutureProvider<String>((ref) async {
@@ -124,25 +125,31 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
   }
 }
 
-class CustomHorizontalScroller extends StatefulWidget {
+class CustomHorizontalScroller extends StatefulHookConsumerWidget {
   final List<Widget> children;
 
   const CustomHorizontalScroller({super.key, required this.children});
 
   @override
-  _CustomHorizontalScrollerState createState() =>
+  ConsumerState<ConsumerStatefulWidget> createState() =>
       _CustomHorizontalScrollerState();
 }
 
-class _CustomHorizontalScrollerState extends State<CustomHorizontalScroller> {
+class _CustomHorizontalScrollerState
+    extends ConsumerState<CustomHorizontalScroller> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Center(
+        Align(
+          alignment: Alignment.center,
           child: ListView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 50.0,
+            ),
+            physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
             children: widget.children,
@@ -158,30 +165,47 @@ class _CustomHorizontalScrollerState extends State<CustomHorizontalScroller> {
                 duration: const Duration(milliseconds: 100),
               );
             },
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                color: CBColors.primaryColor,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
+            child: const Card(
+              elevation: 10.0,
+              color: CBColors.backgroundColor,
+              //  color: CBColors.primaryColor,
+              shadowColor: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  //  color: Colors.white,
+                  color: CBColors.primaryColor,
+                  size: 25.0,
+                ),
               ),
             ),
           ),
         ),
         Positioned(
           right: 0,
-          child: IconButton(
-            icon: const Icon(Icons.arrow_forward),
-            onPressed: () {
+          child: InkWell(
+            onTap: () {
               _scrollController.animateTo(
                 _scrollController.offset + MediaQuery.of(context).size.width,
                 curve: Curves.linear,
                 duration: const Duration(milliseconds: 100),
               );
             },
+            child: const Card(
+              elevation: 10.0,
+              color: CBColors.backgroundColor,
+              // color: CBColors.primaryColor,
+              child: Padding(
+                padding: EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  //  color: Colors.white,
+                  color: CBColors.primaryColor,
+                  size: 25.0,
+                ),
+              ),
+            ),
           ),
         ),
       ],
