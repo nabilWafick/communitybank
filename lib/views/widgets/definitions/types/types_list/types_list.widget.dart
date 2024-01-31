@@ -14,7 +14,6 @@ import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/prod
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -73,7 +72,7 @@ class _TypesListState extends ConsumerState<TypesList> {
     // final typesListMapStream = ref.watch(typesListMapStreamProvider);
     //  final searchedTypesList = ref.watch(searchedTypesListProvider);
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       // width: MediaQuery.of(context).size.width,
       child: Scrollbar(
         controller: scrollController,
@@ -284,7 +283,7 @@ class _TypesListState extends ConsumerState<TypesList> {
                       cells: [
                         DataCell(
                           CBText(
-                            text: type.id!.toString(),
+                            text: '${data.indexOf(type) + 1}',
                           ),
                         ),
                         DataCell(
@@ -297,11 +296,12 @@ class _TypesListState extends ConsumerState<TypesList> {
                             );
                           },
                           Container(
-                              alignment: Alignment.center,
-                              child: const Icon(
-                                Icons.photo,
-                                color: CBColors.primaryColor,
-                              )),
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.photo,
+                              color: CBColors.primaryColor,
+                            ),
+                          ),
                         ),
                         DataCell(
                           CBText(text: type.name),

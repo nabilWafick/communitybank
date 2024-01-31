@@ -74,7 +74,9 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                         ),
                         IconButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            showValidatedButton.value
+                                ? Navigator.of(context).pop()
+                                : () {};
                           },
                           icon: const Icon(
                             Icons.close_rounded,
@@ -468,7 +470,9 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                         text: 'Fermer',
                         backgroundColor: CBColors.sidebarTextColor,
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          showValidatedButton.value
+                              ? Navigator.of(context).pop()
+                              : () {};
                         },
                       ),
                     ),

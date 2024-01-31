@@ -74,7 +74,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
     //   final searchedCustomers = ref.watch(searchedCustomersListProvider);
 
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       child: Scrollbar(
         controller: horizontallScrollController,
         child: SingleChildScrollView(
@@ -197,7 +197,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                         return DataRow(
                           cells: [
                             DataCell(
-                              CBText(text: customer.id!.toString()),
+                              CBText(text: '${data.indexOf(customer) + 1}'),
                             ),
                             DataCell(
                               onTap: () {

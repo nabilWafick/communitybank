@@ -14,7 +14,6 @@ import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/c
 import 'package:communitybank/views/widgets/forms/update/customer_account/customer_account_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final searchedCustomersAccountsListProvider =
@@ -59,7 +58,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
         ref.watch(customersAccountsListStreamProvider);
 
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       child: Scrollbar(
         controller: scrollController,
         child: SingleChildScrollView(
@@ -258,7 +257,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                         cells: [
                           DataCell(
                             CBText(
-                              text: customerAccount.id!.toString(),
+                              text: '${data.indexOf(customerAccount) + 1}',
                             ),
                           ),
                           DataCell(

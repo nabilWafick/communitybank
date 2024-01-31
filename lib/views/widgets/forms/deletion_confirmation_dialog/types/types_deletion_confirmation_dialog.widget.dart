@@ -50,7 +50,9 @@ class TypeDeletionConfirmationDialog extends HookConsumerWidget {
                     ),
                     IconButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        showConfirmationButton.value
+                            ? Navigator.of(context).pop()
+                            : () {};
                       },
                       icon: const Icon(
                         Icons.close_rounded,
@@ -99,7 +101,9 @@ class TypeDeletionConfirmationDialog extends HookConsumerWidget {
                     text: 'Annuler',
                     backgroundColor: CBColors.sidebarTextColor,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      showConfirmationButton.value
+                          ? Navigator.of(context).pop()
+                          : () {};
                     },
                   ),
                 ),

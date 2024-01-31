@@ -61,7 +61,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
     final format = DateFormat.yMMMMEEEEd('fr');
     return SizedBox(
       // alignment: Alignment.center,
-      height: 700.0,
+      height: 680.0,
       // width: double.infinity,
       child: Scrollbar(
         controller: scrollController,
@@ -131,7 +131,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                           cells: [
                             DataCell(
                               CBText(
-                                text: settlement.id!.toString(),
+                                text: '${data.indexOf(settlement) + 1}',
                               ),
                             ),
                             DataCell(

@@ -56,7 +56,9 @@ class _CustomerCategoryUpdateFormState
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          showValidatedButton.value
+                              ? Navigator.of(context).pop()
+                              : () {};
                         },
                         icon: const Icon(
                           Icons.close_rounded,
@@ -105,7 +107,9 @@ class _CustomerCategoryUpdateFormState
                       text: 'Fermer',
                       backgroundColor: CBColors.sidebarTextColor,
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        showValidatedButton.value
+                            ? Navigator.of(context).pop()
+                            : () {};
                       },
                     ),
                   ),

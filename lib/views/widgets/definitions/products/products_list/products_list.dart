@@ -11,7 +11,6 @@ import 'package:communitybank/views/widgets/forms/update/products/products_updat
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final searchedProductsListProvider =
@@ -45,11 +44,11 @@ class _ProductsListState extends ConsumerState<ProductsList> {
 
   @override
   Widget build(BuildContext context) {
-    final isSearching = ref.watch(isSearchingProvider('products'));
+    //  final isSearching = ref.watch(isSearchingProvider('products'));
     final productsListStream = ref.watch(productsListStreamProvider);
-    final searchedProductsList = ref.watch(searchedProductsListProvider);
+    //  final searchedProductsList = ref.watch(searchedProductsListProvider);
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       // width: MediaQuery.of(context).size.width,
       child: Scrollbar(
         controller: scrollController,
@@ -93,7 +92,8 @@ class _ProductsListState extends ConsumerState<ProductsList> {
               DataColumn(label: SizedBox()),
               DataColumn(label: SizedBox()),
             ],
-            rows: isSearching
+            rows:
+                /* isSearching
                 ? searchedProductsList.when(
                     data: (data) {
                       //  debugPrint('Product Stream Data: $data');
@@ -189,101 +189,97 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                       return [];
                     },
                   )
-                : productsListStream.when(
-                    data: (data) {
-                      //  debugPrint('Product Stream Data: $data');
-                      return data
-                          .map(
-                            (product) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: product.id!.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    product.picture != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: product.picture!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: product.picture != null
-                                        ? const Icon(
-                                            Icons.photo,
-                                            color: CBColors.primaryColor,
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(text: product.name),
-                                ),
-                                DataCell(
-                                  CBText(
-                                      text:
-                                          '${product.purchasePrice.ceil()} f'),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    ref
-                                        .read(productPictureProvider.notifier)
-                                        .state = null;
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          ProductUpdateForm(product: product),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          ProductDeletionConfirmationDialog(
-                                        product: product,
-                                        confirmToDelete:
-                                            ProductCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                :*/
+                productsListStream.when(
+              data: (data) {
+                //  debugPrint('Product Stream Data: $data');
+                return data
+                    .map(
+                      (product) => DataRow(
+                        cells: [
+                          DataCell(
+                            CBText(
+                              text: '${data.indexOf(product) + 1}',
                             ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('Products Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('Products Stream Loading');
-                      return [];
-                    },
-                  ),
+                          ),
+                          DataCell(
+                            onTap: () {
+                              product.picture != null
+                                  ? FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog: SingleImageShower(
+                                        imageSource: product.picture!,
+                                      ),
+                                    )
+                                  : () {};
+                            },
+                            Container(
+                              alignment: Alignment.center,
+                              child: product.picture != null
+                                  ? const Icon(
+                                      Icons.photo,
+                                      color: CBColors.primaryColor,
+                                    )
+                                  : const SizedBox(),
+                            ),
+                          ),
+                          DataCell(
+                            CBText(text: product.name),
+                          ),
+                          DataCell(
+                            CBText(text: '${product.purchasePrice.ceil()} f'),
+                          ),
+                          DataCell(
+                            onTap: () {
+                              ref.read(productPictureProvider.notifier).state =
+                                  null;
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog:
+                                    ProductUpdateForm(product: product),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              ),
+                            ),
+                            // showEditIcon: true,
+                          ),
+                          DataCell(
+                            onTap: () async {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog: ProductDeletionConfirmationDialog(
+                                  product: product,
+                                  confirmToDelete: ProductCRUDFunctions.delete,
+                                ),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.delete_sharp,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList();
+              },
+              error: (error, stack) {
+                //  debugPrint('Products Stream Error');
+                return [];
+              },
+              loading: () {
+                //  debugPrint('Products Stream Loading');
+                return [];
+              },
+            ),
           ),
         ),
       ),

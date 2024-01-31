@@ -51,7 +51,9 @@ class _PersonalStatusAddingFormState
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          showValidatedButton.value
+                              ? Navigator.of(context).pop()
+                              : () {};
                         },
                         icon: const Icon(
                           Icons.close_rounded,
@@ -98,7 +100,9 @@ class _PersonalStatusAddingFormState
                       text: 'Fermer',
                       backgroundColor: CBColors.sidebarTextColor,
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        showValidatedButton.value
+                            ? Navigator.of(context).pop()
+                            : () {};
                       },
                     ),
                   ),

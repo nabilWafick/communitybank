@@ -69,7 +69,9 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                         ),
                         IconButton(
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            showValidatedButton.value
+                                ? Navigator.of(context).pop()
+                                : () {};
                           },
                           icon: const Icon(
                             Icons.close_rounded,

@@ -37,14 +37,14 @@ class EconomicalActivitiesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('economical-actvities'));
+    //  final isSearching = ref.watch(isSearchingProvider('economical-actvities'));
     final economicalActivitiesListStream =
         ref.watch(economicalActivityListStreamProvider);
-    final searchedEconomicalActivitiesList =
-        ref.watch(searchedEconomicalActivitiesListProvider);
+    //  final searchedEconomicalActivitiesList =
+    //      ref.watch(searchedEconomicalActivitiesListProvider);
 
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
@@ -74,7 +74,9 @@ class EconomicalActivitiesList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows: isSearching
+            rows:
+
+                /* isSearching
                 ? searchedEconomicalActivitiesList.when(
                     data: (data) {
                       //  debugPrint('EconomicalActivity Stream Data: $data');
@@ -143,74 +145,74 @@ class EconomicalActivitiesList extends ConsumerWidget {
                       return [];
                     },
                   )
-                : economicalActivitiesListStream.when(
-                    data: (data) {
-                      //  debugPrint('EconomicalActivity Stream Data: $data');
-                      return data
-                          .map(
-                            (economicalActivity) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: economicalActivity.id!.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(text: economicalActivity.name),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: EconomicalActivityUpdateForm(
-                                          economicalActivity:
-                                              economicalActivity),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          EconomicalActivityDeletionConfirmationDialog(
-                                        economicalActivity: economicalActivity,
-                                        confirmToDelete:
-                                            EconomicalActivityCRUDFunctions
-                                                .delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                :
+              */
+                economicalActivitiesListStream.when(
+              data: (data) {
+                //  debugPrint('EconomicalActivity Stream Data: $data');
+                return data
+                    .map(
+                      (economicalActivity) => DataRow(
+                        cells: [
+                          DataCell(
+                            CBText(
+                              text: '${data.indexOf(economicalActivity) + 1}',
                             ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('EconomicalActivitys Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('EconomicalActivitys Stream Loading');
-                      return [];
-                    },
-                  ),
+                          ),
+                          DataCell(
+                            CBText(text: economicalActivity.name),
+                          ),
+                          DataCell(
+                            onTap: () {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog: EconomicalActivityUpdateForm(
+                                    economicalActivity: economicalActivity),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              ),
+                            ),
+                            // showEditIcon: true,
+                          ),
+                          DataCell(
+                            onTap: () async {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog:
+                                    EconomicalActivityDeletionConfirmationDialog(
+                                  economicalActivity: economicalActivity,
+                                  confirmToDelete:
+                                      EconomicalActivityCRUDFunctions.delete,
+                                ),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.delete_sharp,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList();
+              },
+              error: (error, stack) {
+                //  debugPrint('EconomicalActivitys Stream Error');
+                return [];
+              },
+              loading: () {
+                //  debugPrint('EconomicalActivitys Stream Loading');
+                return [];
+              },
+            ),
           ),
         ),
       ),

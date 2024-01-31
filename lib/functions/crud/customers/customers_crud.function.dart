@@ -76,7 +76,7 @@ class CustomerCRUDFunctions {
 
 //String
 
-          //      customerStatus = await CustomersController.create(customer: customer);
+          customerStatus = await CustomersController.create(customer: customer);
         } else if (customerProfilePicture == null) {
           final customerSignatureRemotePath =
               await CustomersController.uploadSignaturePicture(

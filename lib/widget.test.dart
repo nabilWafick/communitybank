@@ -1,12 +1,9 @@
-import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {

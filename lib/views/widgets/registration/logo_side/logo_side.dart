@@ -24,7 +24,7 @@ class LogoSide extends ConsumerWidget {
               horizontal: 50.0,
             ),
             child: CBLogo(
-              fontSize: 50.0,
+              fontSize: 30.0,
               bankColor: CBColors.tertiaryColor.withOpacity(.5),
             ),
           ),

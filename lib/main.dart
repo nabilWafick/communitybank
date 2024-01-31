@@ -2,12 +2,12 @@ import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final windowSizeProvider =
@@ -63,10 +63,31 @@ class CommunityBankApp extends ConsumerWidget {
         Locale('fr', 'FR'),
         Locale('en', 'US'),
       ],
+      /* builder: (context, child) => ResponsiveBreakpoints.builder(
+        child: child!,
+        breakpoints: [
+         /* const Breakpoint(start: 0, end: 450, name: MOBILE),
+          const Breakpoint(start: 451, end: 800, name: TABLET),
+          const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          const Breakpoint(start: 1921, end: double.infinity, name: '4K'),*/
+       ],
+      ),*/
+      builder: (context, widget) => ResponsiveWrapper.builder(
+        ClampingScrollWrapper.builder(context, widget!),
+        breakpoints: const [
+          ResponsiveBreakpoint.resize(350, name: MOBILE),
+          ResponsiveBreakpoint.resize(600, name: TABLET),
+          ResponsiveBreakpoint.resize(800, name: DESKTOP),
+          ResponsiveBreakpoint.resize(1200, name: '1200'),
+          ResponsiveBreakpoint.resize(1400, name: '1400'),
+          ResponsiveBreakpoint.resize(1700, name: 'XL'),
+          ResponsiveBreakpoint.resize(1900, name: '2XL'),
+          ResponsiveBreakpoint.resize(double.infinity, name: '4K'),
+        ],
+      ),
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
       home:
-
           // const WidgetTest(),
           //  const RegistrationPage(),
           //  const LoginPage(),

@@ -31,12 +31,12 @@ class LocalitiesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('localities'));
+    //  final isSearching = ref.watch(isSearchingProvider('localities'));
     final localitiesListStream = ref.watch(localityListStreamProvider);
-    final searchedLocalitiesList = ref.watch(searchedLocalitiesListProvider);
+    //  final searchedLocalitiesList = ref.watch(searchedLocalitiesListProvider);
 
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
@@ -66,7 +66,8 @@ class LocalitiesList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows: isSearching
+            rows:
+                /*  isSearching
                 ? searchedLocalitiesList.when(
                     data: (data) {
                       //  debugPrint('Locality Stream Data: $data');
@@ -133,72 +134,71 @@ class LocalitiesList extends ConsumerWidget {
                       return [];
                     },
                   )
-                : localitiesListStream.when(
-                    data: (data) {
-                      //  debugPrint('Locality Stream Data: $data');
-                      return data
-                          .map(
-                            (locality) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: locality.id!.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(text: locality.name),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: LocalityUpdateForm(
-                                          locality: locality),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          LocalityDeletionConfirmationDialog(
-                                        locality: locality,
-                                        confirmToDelete:
-                                            LocalityCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                :*/
+                localitiesListStream.when(
+              data: (data) {
+                //  debugPrint('Locality Stream Data: $data');
+                return data
+                    .map(
+                      (locality) => DataRow(
+                        cells: [
+                          DataCell(
+                            CBText(
+                              text: '${data.indexOf(locality) + 1}',
                             ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('Localitys Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('Localitys Stream Loading');
-                      return [];
-                    },
-                  ),
+                          ),
+                          DataCell(
+                            CBText(text: locality.name),
+                          ),
+                          DataCell(
+                            onTap: () {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog:
+                                    LocalityUpdateForm(locality: locality),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              ),
+                            ),
+                            // showEditIcon: true,
+                          ),
+                          DataCell(
+                            onTap: () async {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog: LocalityDeletionConfirmationDialog(
+                                  locality: locality,
+                                  confirmToDelete: LocalityCRUDFunctions.delete,
+                                ),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.delete_sharp,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList();
+              },
+              error: (error, stack) {
+                //  debugPrint('Localitys Stream Error');
+                return [];
+              },
+              loading: () {
+                //  debugPrint('Localitys Stream Loading');
+                return [];
+              },
+            ),
           ),
         ),
       ),

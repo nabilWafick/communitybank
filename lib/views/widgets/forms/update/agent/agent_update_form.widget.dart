@@ -59,7 +59,9 @@ class _AgentUpdateFormState extends ConsumerState<AgentUpdateForm> {
                       ),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          showValidatedButton.value
+                              ? Navigator.of(context).pop()
+                              : () {};
                         },
                         icon: const Icon(
                           Icons.close_rounded,
@@ -247,7 +249,9 @@ class _AgentUpdateFormState extends ConsumerState<AgentUpdateForm> {
                       text: 'Fermer',
                       backgroundColor: CBColors.sidebarTextColor,
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        showValidatedButton.value
+                            ? Navigator.of(context).pop()
+                            : () {};
                       },
                     ),
                   ),

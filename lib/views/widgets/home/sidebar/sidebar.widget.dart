@@ -172,7 +172,8 @@ class _SidebarState extends ConsumerState<Sidebar> {
       child: Column(
         //  crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(
+          Container(
+            alignment: Alignment.center,
             height: screenSize.height / 6,
             width: double.infinity,
             child: const CBLogo(

@@ -34,14 +34,14 @@ class PersonalStatusList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isSearching = ref.watch(isSearchingProvider('personal-status'));
+    //  final isSearching = ref.watch(isSearchingProvider('personal-status'));
     final personalStatusListStream =
         ref.watch(personalStatusListStreamProvider);
-    final searchedPersonalStatusList =
-        ref.watch(searchedPersonalStatusListProvider);
+    //  final searchedPersonalStatusList =
+    //      ref.watch(searchedPersonalStatusListProvider);
 
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
@@ -71,7 +71,8 @@ class PersonalStatusList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows: isSearching
+            rows:
+                /* isSearching
                 ? searchedPersonalStatusList.when(
                     data: (data) {
                       //  debugPrint('PersonalStatus Stream Data: $data');
@@ -138,72 +139,74 @@ class PersonalStatusList extends ConsumerWidget {
                       return [];
                     },
                   )
-                : personalStatusListStream.when(
-                    data: (data) {
-                      //  debugPrint('PersonalStatus Stream Data: $data');
-                      return data
-                          .map(
-                            (personalStatus) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: personalStatus.id!.toString(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(text: personalStatus.name),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: PersonalStatusUpdateForm(
-                                          personalStatus: personalStatus),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          PersonalStatusDeletionConfirmationDialog(
-                                        personalStatus: personalStatus,
-                                        confirmToDelete:
-                                            PersonalStatusCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                : 
+                */
+                personalStatusListStream.when(
+              data: (data) {
+                //  debugPrint('PersonalStatus Stream Data: $data');
+                return data
+                    .map(
+                      (personalStatus) => DataRow(
+                        cells: [
+                          DataCell(
+                            CBText(
+                              text: '${data.indexOf(personalStatus) + 1}',
                             ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('PersonalStatuss Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('PersonalStatuss Stream Loading');
-                      return [];
-                    },
-                  ),
+                          ),
+                          DataCell(
+                            CBText(text: personalStatus.name),
+                          ),
+                          DataCell(
+                            onTap: () {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog: PersonalStatusUpdateForm(
+                                    personalStatus: personalStatus),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.green,
+                              ),
+                            ),
+                            // showEditIcon: true,
+                          ),
+                          DataCell(
+                            onTap: () async {
+                              FunctionsController.showAlertDialog(
+                                context: context,
+                                alertDialog:
+                                    PersonalStatusDeletionConfirmationDialog(
+                                  personalStatus: personalStatus,
+                                  confirmToDelete:
+                                      PersonalStatusCRUDFunctions.delete,
+                                ),
+                              );
+                            },
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: const Icon(
+                                Icons.delete_sharp,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList();
+              },
+              error: (error, stack) {
+                //  debugPrint('PersonalStatuss Stream Error');
+                return [];
+              },
+              loading: () {
+                //  debugPrint('PersonalStatuss Stream Loading');
+                return [];
+              },
+            ),
           ),
         ),
       ),

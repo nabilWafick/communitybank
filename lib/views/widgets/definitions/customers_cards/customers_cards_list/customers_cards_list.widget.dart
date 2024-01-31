@@ -78,7 +78,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
     */
 
     return SizedBox(
-      height: 640.0,
+      height: 600.0,
       child: Scrollbar(
         controller: scrollController,
         child: SingleChildScrollView(
@@ -237,7 +237,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                         cells: [
                           DataCell(
                             CBText(
-                              text: customerCard.id!.toString(),
+                              text: '${data.indexOf(customerCard) + 1}',
                             ),
                           ),
                           DataCell(

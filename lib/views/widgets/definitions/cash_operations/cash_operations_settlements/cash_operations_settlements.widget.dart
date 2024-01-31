@@ -133,7 +133,7 @@ class _CashOperationsSettlementsState
                       cells: [
                         DataCell(
                           CBText(
-                            text: settlement.id!.toString(),
+                            text: '${data.indexOf(settlement) + 1}',
                           ),
                         ),
                         DataCell(Consumer(

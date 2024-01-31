@@ -33,30 +33,29 @@ class _FormSideState extends ConsumerState<FormSide> {
           Container(
             alignment: Alignment.centerLeft,
             margin: const EdgeInsetsDirectional.symmetric(vertical: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
+            child: Wrap(
+              //  mainAxisAlignment: MainAxisAlignment.center,
+              //  crossAxisAlignment: CrossAxisAlignment.center,
+              //  mainAxisSize: MainAxisSize.min,
+              runSpacing: 5.0,
+              spacing: 5.0,
               children: [
                 const CBText(
                   text: 'Bienvenue sur',
                   fontSize: 25.0,
                 ),
                 const SizedBox(
-                  width: 15.0,
+                  width: 5.0,
                 ),
                 const CBText(
                   text: 'Community',
-                  fontSize: 35.0,
+                  fontSize: 25.0,
                   fontWeight: FontWeight.w600,
                   color: CBColors.primaryColor,
                 ),
-                const SizedBox(
-                  width: 5.0,
-                ),
                 CBText(
                   text: 'Bank',
-                  fontSize: 35.0,
+                  fontSize: 25.0,
                   fontWeight: FontWeight.w600,
                   color: CBColors.tertiaryColor.withOpacity(.5),
                 ),
@@ -108,14 +107,15 @@ class _FormSideState extends ConsumerState<FormSide> {
                 const SizedBox(
                   height: 25.0,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  //  mainAxisAlignment: MainAxisAlignment.center,
+                  runSpacing: 5.0,
+                  spacing: 5.0,
                   children: [
                     const CBText(
-                      text: 'Vous avez déjà un compte',
-                    ),
-                    const SizedBox(
-                      width: 10.0,
+                      text: 'Vous avez déjà un compte ?',
                     ),
                     InkWell(
                       onTap: () {

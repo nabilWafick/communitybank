@@ -17,7 +17,7 @@ class CBLogo extends ConsumerWidget {
     //  final pageController = ref.watch(pageControllerProvider);
 
     return InkWell(
-      onTap: () {
+      /*  onTap: () {
         // ref.read(currentPageIndexProvider.notifier).state = 0;
         /* pageController.animateToPage(
           0,
@@ -25,9 +25,10 @@ class CBLogo extends ConsumerWidget {
           curve: Curves.easeIn,
         );*/
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
+      */
+      child: Wrap(
+        runSpacing: 5.0,
+        spacing: .0,
         children: [
           CBText(
             text: 'Community',

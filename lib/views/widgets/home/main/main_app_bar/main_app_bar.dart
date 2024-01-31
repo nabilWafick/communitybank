@@ -207,12 +207,13 @@ class _CustomHorizontalScrollerState
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Align(
+        Container(
+          width: MediaQuery.of(context).size.width,
           alignment: Alignment.center,
+          margin: const EdgeInsets.symmetric(
+            horizontal: 55.0,
+          ),
           child: ListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 50.0,
-            ),
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
@@ -224,7 +225,8 @@ class _CustomHorizontalScrollerState
           child: InkWell(
             onTap: () {
               _scrollController.animateTo(
-                _scrollController.offset - MediaQuery.of(context).size.width,
+                _scrollController.offset -
+                    MediaQuery.of(context).size.width / 5,
                 curve: Curves.linear,
                 duration: const Duration(milliseconds: 100),
               );
@@ -251,7 +253,8 @@ class _CustomHorizontalScrollerState
           child: InkWell(
             onTap: () {
               _scrollController.animateTo(
-                _scrollController.offset + MediaQuery.of(context).size.width,
+                _scrollController.offset +
+                    MediaQuery.of(context).size.width / 5,
                 curve: Curves.linear,
                 duration: const Duration(milliseconds: 100),
               );
