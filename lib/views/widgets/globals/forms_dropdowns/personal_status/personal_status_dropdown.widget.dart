@@ -18,10 +18,12 @@ class CBFormPersonalStatusDropdown extends ConsumerStatefulWidget {
   final List<PersonalStatus> dropdownMenuEntriesLabels;
   final List<PersonalStatus> dropdownMenuEntriesValues;
   final double? width;
+  final double? menuHeigth;
 
   const CBFormPersonalStatusDropdown({
     super.key,
     this.width,
+    this.menuHeigth,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -63,6 +65,7 @@ class _CBFormPersonalStatusDropdownState
       ),
       child: DropdownMenu(
         width: widget.width,
+        menuHeight: widget.menuHeigth,
         label: CBText(
           text: widget.label,
         ),

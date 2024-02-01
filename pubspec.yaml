@@ -38,6 +38,7 @@ dependencies:
   syncfusion_flutter_charts: ^23.2.6
   msix: ^3.16.7
   internet_connection_checker: ^1.0.0+1
+  text_similarity: ^1.0.1
 
 dev_dependencies:
   flutter_test:

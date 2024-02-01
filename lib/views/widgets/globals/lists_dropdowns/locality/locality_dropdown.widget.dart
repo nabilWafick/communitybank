@@ -19,10 +19,12 @@ class CBListLocalityDropdown extends ConsumerStatefulWidget {
   final List<Locality> dropdownMenuEntriesLabels;
   final List<Locality> dropdownMenuEntriesValues;
   final double? width;
+  final double? menuHeigth;
 
   const CBListLocalityDropdown({
     super.key,
     this.width,
+    this.menuHeigth,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -46,6 +48,7 @@ class _CBListLocalityDropdownState
       ),
       child: DropdownMenu(
         width: widget.width,
+        menuHeight: widget.menuHeigth,
         label: CBText(
           text: widget.label,
         ),

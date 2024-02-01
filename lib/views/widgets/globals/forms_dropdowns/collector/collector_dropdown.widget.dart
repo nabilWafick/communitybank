@@ -21,10 +21,12 @@ class CBFormCollectorDropdown extends ConsumerStatefulWidget {
   final List<Collector> dropdownMenuEntriesLabels;
   final List<Collector> dropdownMenuEntriesValues;
   final double? width;
+  final double? menuHeigth;
 
   const CBFormCollectorDropdown({
     super.key,
     this.width,
+    this.menuHeigth,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -65,6 +67,7 @@ class _CBFormCollectorDropdownState
       ),
       child: DropdownMenu(
         width: widget.width,
+        menuHeight: widget.menuHeigth,
         label: CBText(
           text: widget.label,
         ),

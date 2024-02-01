@@ -2,6 +2,7 @@ import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -75,24 +76,27 @@ class CommunityBankApp extends ConsumerWidget {
       builder: (context, widget) => ResponsiveWrapper.builder(
         ClampingScrollWrapper.builder(context, widget!),
         breakpoints: const [
-          ResponsiveBreakpoint.resize(350, name: MOBILE),
-          ResponsiveBreakpoint.resize(600, name: TABLET),
-          ResponsiveBreakpoint.resize(800, name: DESKTOP),
-          ResponsiveBreakpoint.resize(1200, name: '1200'),
-          ResponsiveBreakpoint.resize(1400, name: '1400'),
-          ResponsiveBreakpoint.resize(1700, name: 'XL'),
+          ResponsiveBreakpoint.autoScaleDown(350, name: MOBILE),
+          ResponsiveBreakpoint.autoScaleDown(600, name: TABLET),
+          ResponsiveBreakpoint.autoScaleDown(800, name: DESKTOP),
+          ResponsiveBreakpoint.autoScaleDown(1200, name: '1200'),
+          ResponsiveBreakpoint.autoScaleDown(1400, name: '1400'),
+          ResponsiveBreakpoint.autoScaleDown(1700, name: 'XL'),
+          ResponsiveBreakpoint.resize(1870, name: '1870'),
           ResponsiveBreakpoint.resize(1900, name: '2XL'),
-          ResponsiveBreakpoint.resize(double.infinity, name: '4K'),
+          ResponsiveBreakpoint.resize(2000, name: '2000'),
+          //  ResponsiveBreakpoint.autoScale(double.infinity, name: '4K'),
         ],
       ),
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
       home:
+
           // const WidgetTest(),
           //  const RegistrationPage(),
           //  const LoginPage(),
           const MainApp(),
-      // const LoginPage(),
+      //  const LoginPage(),
     );
   }
 }

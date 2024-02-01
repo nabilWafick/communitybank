@@ -2,6 +2,8 @@
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 //import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_infos.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/settlements/settlements_list/settlements_list.widget.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 //import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
 import 'package:flutter/material.dart';
@@ -49,15 +51,18 @@ class _SettlementsSortOptionsState
       width: double.maxFinite,
       child: Column(
         children: [
-          /* CBAddButton(
-            onTap: () {
-              //   ref.read(collectorPictureProvider.notifier).state = null;
-              //   FunctionsController.showAlertDialog(
-              //     context: context,
-              //     alertDialog: const (),
-              //   );
-            },
-          ),*/
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CBIconButton(
+                icon: Icons.refresh,
+                text: 'Rafraichir',
+                onTap: () {
+                  ref.invalidate(settlementsListStreamProvider);
+                },
+              ),
+            ],
+          ),
           Container(
             margin: const EdgeInsets.only(
               top: 20.0,

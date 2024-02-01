@@ -215,24 +215,31 @@ class _AgentUpdateFormState extends ConsumerState<AgentUpdateForm> {
                         ),
                       ),
                       Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 10.0,
+                        ),
+                        width: formCardWidth / 2.3,
+                        child: CBFormStringDropdown(
                           width: formCardWidth / 2.3,
-                          child: const CBFormStringDropdown(
-                            label: 'Role',
-                            providerName: 'agent-adding-role',
-                            dropdownMenuEntriesLabels: [
+                          label: 'Role',
+                          providerName: 'agent-update-role',
+                          dropdownMenuEntriesLabels: [
+                            ...{
+                              widget.agent.role,
                               AgentRole.simpleUser,
-                              AgentRole.semiAdmin,
                               AgentRole.admin
-                            ],
-                            dropdownMenuEntriesValues: [
+                            }
+                          ],
+                          dropdownMenuEntriesValues: [
+                            ...{
+                              widget.agent.role,
                               AgentRole.simpleUser,
-                              AgentRole.semiAdmin,
                               AgentRole.admin
-                            ],
-                          )),
+                            }
+                          ],
+                        ),
+                      ),
                     ],
                   )
                 ],

@@ -1,6 +1,8 @@
+import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/localities/localities_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,15 +18,27 @@ class LocalitiesSortOptions extends ConsumerWidget {
       width: double.maxFinite,
       child: Column(
         children: [
-          CBAddButton(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) => const LocalityAddingForm(),
-                // CustomersForm(),
-                // FormCard(),
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CBIconButton(
+                icon: Icons.refresh,
+                text: 'Rafraichir',
+                onTap: () {
+                  ref.invalidate(localityListStreamProvider);
+                },
+              ),
+              CBAddButton(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const LocalityAddingForm(),
+                    // CustomersForm(),
+                    // FormCard(),
+                  );
+                },
+              ),
+            ],
           ),
           Row(
             mainAxisSize: MainAxisSize.max,

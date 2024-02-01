@@ -80,25 +80,23 @@ class CustomerValidators {
   static String? customerAddress(String? value, WidgetRef ref) {
     if (ref.watch(customerAddressProvider) == '') {
       return 'Entrez l\'adresse du client';
-    } else if (ref.watch(customerAddressProvider).length < 3) {
-      return "L'adresse doit contenir au moins 3 lettres";
+    } else if (ref.watch(customerAddressProvider).length < 5) {
+      return "L'adresse doit contenir au moins 5 lettres";
     }
     return null;
   }
 
   static String? customerProfession(String? value, WidgetRef ref) {
-    if (ref.watch(customerProfessionProvider) == '') {
-      return 'Entrez la profession du client';
-    } else if (ref.watch(customerProfessionProvider).length < 3) {
-      return "La profession doit contenir au moins 3 lettres";
+    if (ref.watch(customerProfessionProvider) != '' &&
+        ref.watch(customerProfessionProvider).length < 5) {
+      return "La profession doit contenir au moins 5 lettres";
     }
     return null;
   }
 
   static String? customerNicNumber(String? value, WidgetRef ref) {
-    if (ref.watch(customerNicNumberProvider) == 0) {
-      return 'Entrez le numéro de la CNI du client';
-    } else if (ref.watch(customerNicNumberProvider).toString().length < 10) {
+    if (ref.watch(customerNicNumberProvider) != 0 &&
+        ref.watch(customerNicNumberProvider).toString().length < 10) {
       return 'Entrez un numéro NCI valide';
     }
     return null;

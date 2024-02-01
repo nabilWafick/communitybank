@@ -114,9 +114,9 @@ class AgentCRUDFunctions {
       final agentEmail = ref.watch(agentEmailProvider);
       final agentAddress = ref.watch(agentAddressProvider);
       final agentRole =
-          ref.watch(formStringDropdownProvider('agent-adding-role'));
+          ref.watch(formStringDropdownProvider('agent-update-role'));
 
-      ServiceResponse lastagentStatus;
+      ServiceResponse lastAgentStatus;
 
       if (agentPicture == null) {
         final newAgent = Agent(
@@ -131,7 +131,7 @@ class AgentCRUDFunctions {
           updatedAt: DateTime.now(),
         );
 
-        lastagentStatus = await AgentsController.update(
+        lastAgentStatus = await AgentsController.update(
           id: agent.id!,
           agent: newAgent,
         );
@@ -142,7 +142,8 @@ class AgentCRUDFunctions {
         // if the Agent haven't a picture before
         if (agent.profile == null) {
           agentRemotePath = await AgentsController.uploadPicture(
-              agentPicturePath: agentPicture);
+            agentPicturePath: agentPicture,
+          );
         } else {
           agentRemotePath = await AgentsController.updateUploadedPicture(
             agentPictureLink: agent.profile!,
@@ -162,23 +163,23 @@ class AgentCRUDFunctions {
           updatedAt: DateTime.now(),
         );
 
-        lastagentStatus = await AgentsController.update(
+        lastAgentStatus = await AgentsController.update(
           id: agent.id!,
           agent: newAgent,
         );
 
         //  debugPrint('new agent: $agentStatus');
       }
-      if (lastagentStatus == ServiceResponse.success) {
+      if (lastAgentStatus == ServiceResponse.success) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastagentStatus,
+          serviceResponse: lastAgentStatus,
           response: 'Opération réussie',
         );
         showValidatedButton.value = true;
         Navigator.of(context).pop();
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastagentStatus,
+          serviceResponse: lastAgentStatus,
           response: 'Opération échouée',
         );
         showValidatedButton.value = true;

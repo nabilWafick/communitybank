@@ -1,16 +1,20 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:communitybank/controllers/customers/customers.controller.dart';
 import 'package:communitybank/controllers/forms/on_changed/customer/customer.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
+import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
 import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding_confirmation_dialog/customers/customers.adding_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category/customer_category_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -19,6 +23,7 @@ import 'package:communitybank/views/widgets/globals/forms_dropdowns/personal_sta
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:text_similarity/implementation/text_similarity.dart';
 
 class CustomerAddingForm extends StatefulHookConsumerWidget {
   const CustomerAddingForm({super.key});
@@ -235,7 +240,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                           width: formCardWidth / 2.3,
                           child: const CBTextFormField(
                             label: 'Téléphone',
-                            hintText: '+229|00229--------',
+                            hintText: '+229|00229XXXXXXXX',
                             isMultilineTextForm: false,
                             obscureText: false,
                             textInputType: TextInputType.name,
@@ -425,14 +430,15 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             dropdownMenuEntriesLabels:
                                 localitiesListStream.when(
                               data: (data) {
-                                return [
+                                return data;
+                                /*[
                                   Locality(
                                     name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
                                   ...data
-                                ];
+                                ];*/
                               },
                               error: (error, stackTrace) => [],
                               loading: () => [],
@@ -440,14 +446,15 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             dropdownMenuEntriesValues:
                                 localitiesListStream.when(
                               data: (data) {
-                                return [
+                                return data;
+                                /* [
                                   Locality(
                                     name: 'Non définie',
                                     createdAt: DateTime.now(),
                                     updatedAt: DateTime.now(),
                                   ),
                                   ...data
-                                ];
+                                ];*/
                               },
                               error: (error, stackTrace) => [],
                               loading: () => [],
@@ -485,12 +492,100 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             child: CBElevatedButton(
                               text: 'Valider',
                               onPressed: () async {
-                                CustomerCRUDFunctions.create(
-                                  context: context,
-                                  formKey: formKey,
-                                  ref: ref,
-                                  showValidatedButton: showValidatedButton,
-                                );
+                                final isFormValid =
+                                    formKey.currentState!.validate();
+                                if (isFormValid) {
+                                  // get customer name and firstnames
+                                  final customerName =
+                                      ref.watch(customerNameProvider);
+                                  final customerFirstnames =
+                                      ref.watch(customerFirstnamesProvider);
+
+                                  // check if the customer isn't already in the database
+
+                                  // get all registered customers
+                                  final registeredCustomers =
+                                      await CustomersController.getAll(
+                                    selectedCustomerCategoryId: null,
+                                    selectedCustomerEconomicalActivityId: null,
+                                    selectedCustomerLocalityId: null,
+                                    selectedCustomerPersonalStatusId: null,
+                                  ).first;
+
+                                  // store customers names
+                                  final registerdCustomersNames =
+                                      registeredCustomers
+                                          .map(
+                                            (customer) => customer.name,
+                                          )
+                                          .toList();
+
+                                  // store customers firstnames
+                                  final registerdCustomersFirstnames =
+                                      registeredCustomers
+                                          .map(
+                                            (customer) => customer.firstnames,
+                                          )
+                                          .toList();
+
+                                  const textSimilarity = TextSimilarity();
+
+                                  // test the new customer name with registered cutomer names
+                                  final namesResults =
+                                      textSimilarity.similarities(
+                                    input: customerName,
+                                    candidates: registerdCustomersNames,
+                                    distance: 2,
+                                  );
+
+                                  // test the new customer firstnames with registered cutomer firstnames
+                                  final firstnamesResults =
+                                      textSimilarity.similarities(
+                                    input: customerFirstnames,
+                                    candidates: registerdCustomersFirstnames,
+                                    distance: 2,
+                                  );
+
+                                  List<Customer> similarCustomers = [];
+
+                                  // store customers with similar name ou firstnames
+
+                                  for (Customer customer in similarCustomers) {
+                                    if (namesResults.contains(customer.name)) {
+                                      similarCustomers.add(customer);
+                                    }
+                                    if (firstnamesResults
+                                        .contains(customer.firstnames)) {
+                                      similarCustomers.add(customer);
+                                    }
+                                  }
+
+                                  // filter cutomers list
+                                  similarCustomers =
+                                      similarCustomers.toSet().toList();
+
+                                  if (similarCustomers.isEmpty) {
+                                    await CustomerCRUDFunctions.create(
+                                      context: context,
+                                      formKey: formKey,
+                                      ref: ref,
+                                      showValidatedButton: showValidatedButton,
+                                    );
+                                  } else {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog:
+                                          CustomerAddingConfirmationDialog(
+                                        formKey: formKey,
+                                        similarCustomers: similarCustomers,
+                                        showValidatedButton:
+                                            showValidatedButton,
+                                        confirmToAdd:
+                                            CustomerCRUDFunctions.create,
+                                      ),
+                                    );
+                                  }
+                                }
                               },
                             ),
                           )

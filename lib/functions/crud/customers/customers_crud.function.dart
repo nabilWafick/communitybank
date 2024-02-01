@@ -65,17 +65,6 @@ class CustomerCRUDFunctions {
             updatedAt: DateTime.now(),
           );
 
-// check if the customer isn't already in the database
-
-          /*    final registeredCustomers = await CustomersController.getAll(
-            selectedCustomerCategoryId: null,
-            selectedCustomerEconomicalActivityId: null,
-            selectedCustomerLocalityId: null,
-            selectedCustomerPersonalStatusId: null,
-          ).first; */
-
-//String
-
           customerStatus = await CustomersController.create(customer: customer);
         } else if (customerProfilePicture == null) {
           final customerSignatureRemotePath =

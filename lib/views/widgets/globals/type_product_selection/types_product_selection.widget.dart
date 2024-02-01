@@ -80,6 +80,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                           children: [
                             CBTypeProductSelectionDropdown(
                               width: formCardWidth / 2.3,
+                              menuHeigth: 500.0,
                               label: 'Produit',
                               providerName:
                                   widget.productSelectionDropdownProvider,

@@ -13,10 +13,12 @@ class CBListStringDropdown extends ConsumerStatefulWidget {
   final List<String> dropdownMenuEntriesLabels;
   final List<String> dropdownMenuEntriesValues;
   final double? width;
+  final double? menuHeigth;
 
   const CBListStringDropdown({
     super.key,
     this.width,
+    this.menuHeigth,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -38,6 +40,7 @@ class _CBListStringDropdownState extends ConsumerState<CBListStringDropdown> {
       ),
       child: DropdownMenu(
         width: widget.width,
+        menuHeight: widget.menuHeigth,
         label: CBText(
           text: widget.label,
         ),

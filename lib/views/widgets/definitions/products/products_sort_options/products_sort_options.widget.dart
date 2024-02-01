@@ -1,8 +1,10 @@
 import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
 import 'package:communitybank/controllers/products/products.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/products/products_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,14 +35,26 @@ class ProductsSortOptions extends ConsumerWidget {
       width: double.maxFinite,
       child: Column(
         children: [
-          CBAddButton(
-            onTap: () {
-              ref.read(productPictureProvider.notifier).state = null;
-              FunctionsController.showAlertDialog(
-                context: context,
-                alertDialog: const ProductAddingForm(),
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CBIconButton(
+                icon: Icons.refresh,
+                text: 'Rafraichir',
+                onTap: () {
+                  ref.invalidate(productsListStreamProvider);
+                },
+              ),
+              CBAddButton(
+                onTap: () {
+                  ref.read(productPictureProvider.notifier).state = null;
+                  FunctionsController.showAlertDialog(
+                    context: context,
+                    alertDialog: const ProductAddingForm(),
+                  );
+                },
+              ),
+            ],
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -60,6 +74,7 @@ class ProductsSortOptions extends ConsumerWidget {
                   ),
                   CBListStringDropdown(
                       label: 'Prix',
+                      menuHeigth: 500.0,
                       providerName: 'products-price',
                       dropdownMenuEntriesLabels: productsPurchasePrices.when(
                         data: (data) {

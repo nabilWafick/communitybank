@@ -37,11 +37,11 @@ class CustomersCategoriesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //  final isSearching = ref.watch(isSearchingProvider('customers-categories'));
+    final isSearching = ref.watch(isSearchingProvider('customers-categories'));
     final customersCategoriesListStream =
         ref.watch(custumersCategoriesListStreamProvider);
-    //  final searchedCustomersCategoriesList =
-    //      ref.watch(searchedCustomersCategoriesListProvider);
+    final searchedCustomersCategoriesList =
+        ref.watch(searchedCustomersCategoriesListProvider);
 
     return SizedBox(
       height: 600.0,
@@ -74,8 +74,7 @@ class CustomersCategoriesList extends ConsumerWidget {
                 label: SizedBox(),
               ),
             ],
-            rows:
-                /* isSearching
+            rows: isSearching
                 ? searchedCustomersCategoriesList.when(
                     data: (data) {
                       //  debugPrint('customerCategory Stream Data: $data');
@@ -85,7 +84,8 @@ class CustomersCategoriesList extends ConsumerWidget {
                               cells: [
                                 DataCell(
                                   CBText(
-                                    text: customerCategory.id!.toString(),
+                                    text:
+                                        '${data.indexOf(customerCategory) + 1}',
                                   ),
                                 ),
                                 DataCell(
@@ -143,74 +143,74 @@ class CustomersCategoriesList extends ConsumerWidget {
                       return [];
                     },
                   )
-                :
-                */
-                customersCategoriesListStream.when(
-              data: (data) {
-                //  debugPrint('customerCategory Stream Data: $data');
-                return data
-                    .map(
-                      (customerCategory) => DataRow(
-                        cells: [
-                          DataCell(
-                            CBText(
-                              text: '${data.indexOf(customerCategory) + 1}',
-                            ),
-                          ),
-                          DataCell(
-                            CBText(text: customerCategory.name),
-                          ),
-                          DataCell(
-                            onTap: () {
-                              FunctionsController.showAlertDialog(
-                                context: context,
-                                alertDialog: CustomerCategoryUpdateForm(
-                                    customerCategory: customerCategory),
-                              );
-                            },
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.green,
-                              ),
-                            ),
-                            // showEditIcon: true,
-                          ),
-                          DataCell(
-                            onTap: () async {
-                              FunctionsController.showAlertDialog(
-                                context: context,
-                                alertDialog:
-                                    CustomerCategoryDeletionConfirmationDialog(
-                                  customerCategory: customerCategory,
-                                  confirmToDelete:
-                                      CustomerCategoryCRUDFunctions.delete,
+                : customersCategoriesListStream.when(
+                    data: (data) {
+                      //  debugPrint('customerCategory Stream Data: $data');
+                      return data
+                          .map(
+                            (customerCategory) => DataRow(
+                              cells: [
+                                DataCell(
+                                  CBText(
+                                    text:
+                                        '${data.indexOf(customerCategory) + 1}',
+                                  ),
                                 ),
-                              );
-                            },
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.delete_sharp,
-                                color: Colors.red,
-                              ),
+                                DataCell(
+                                  CBText(text: customerCategory.name),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog: CustomerCategoryUpdateForm(
+                                          customerCategory: customerCategory),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  // showEditIcon: true,
+                                ),
+                                DataCell(
+                                  onTap: () async {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog:
+                                          CustomerCategoryDeletionConfirmationDialog(
+                                        customerCategory: customerCategory,
+                                        confirmToDelete:
+                                            CustomerCategoryCRUDFunctions
+                                                .delete,
+                                      ),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.delete_sharp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList();
-              },
-              error: (error, stack) {
-                //  debugPrint('customerCategorys Stream Error');
-                return [];
-              },
-              loading: () {
-                //  debugPrint('customerCategorys Stream Loading');
-                return [];
-              },
-            ),
+                          )
+                          .toList();
+                    },
+                    error: (error, stack) {
+                      //  debugPrint('customerCategorys Stream Error');
+                      return [];
+                    },
+                    loading: () {
+                      //  debugPrint('customerCategorys Stream Loading');
+                      return [];
+                    },
+                  ),
           ),
         ),
       ),

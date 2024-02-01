@@ -18,10 +18,12 @@ class CBFormEconomicalActivityDropdown extends StatefulHookConsumerWidget {
   final List<EconomicalActivity> dropdownMenuEntriesLabels;
   final List<EconomicalActivity> dropdownMenuEntriesValues;
   final double? width;
+  final double? menuHeigth;
 
   const CBFormEconomicalActivityDropdown({
     super.key,
     this.width,
+    this.menuHeigth,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -63,6 +65,7 @@ class _CBFormEconomicalActivityDropdownState
       ),
       child: DropdownMenu(
         width: widget.width,
+        menuHeight: widget.menuHeigth,
         label: CBText(
           text: widget.label,
         ),

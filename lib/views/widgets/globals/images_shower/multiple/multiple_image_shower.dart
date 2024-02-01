@@ -96,11 +96,20 @@ class MultipleImageShower extends ConsumerWidget {
                         margin: const EdgeInsets.symmetric(
                           vertical: 25.0,
                         ),
-                        child: Image.network(
-                          products[0].picture!,
-                          height: 400.0,
-                          width: 400.0,
-                        ),
+                        child: products[0].picture != null
+                            ? Image.network(
+                                products[0].picture!,
+                                height: 400.0,
+                                width: 400.0,
+                              )
+                            : Container(
+                                padding: const EdgeInsets.all(30.0),
+                                child: const Icon(
+                                  Icons.photo,
+                                  size: 70.0,
+                                  color: CBColors.primaryColor,
+                                ),
+                              ),
                       ),
               ],
             ),

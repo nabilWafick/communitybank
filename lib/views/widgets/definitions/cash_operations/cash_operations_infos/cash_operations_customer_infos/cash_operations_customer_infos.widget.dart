@@ -328,7 +328,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                               );
                               return OtherInfos(
                                 label: 'Profession',
-                                value: realTimeCustomerData.profession,
+                                value: realTimeCustomerData.profession ?? '',
                               );
                             },
                             error: (error, stackTrace) => const OtherInfos(
@@ -359,8 +359,9 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                               );
                               return OtherInfos(
                                 label: 'CNI/NPI',
-                                value:
-                                    realTimeCustomerData.nicNumber.toString(),
+                                value: realTimeCustomerData.nicNumber
+                                        ?.toString() ??
+                                    '',
                               );
                             },
                             error: (error, stackTrace) => const OtherInfos(

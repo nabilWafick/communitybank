@@ -141,6 +141,9 @@ class CBThemeData {
         fontWeight: FontWeight.w400,
       ),
       menuStyle: const MenuStyle(
+        /*   maximumSize: MaterialStatePropertyAll(
+          Size(double.maxFinite, 200.0),
+        ),*/
         backgroundColor: MaterialStatePropertyAll(
           CBColors.backgroundColor,
         ),

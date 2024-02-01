@@ -3,8 +3,10 @@ import 'package:communitybank/controllers/types/types.controller.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
+import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/types/types_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
 import 'package:flutter/material.dart';
@@ -29,17 +31,29 @@ class TypesSortOptions extends ConsumerWidget {
       width: double.maxFinite,
       child: Column(
         children: [
-          CBAddButton(
-            onTap: () {
-              ref.read(typeAddedInputsProvider.notifier).state = {};
-              ref.read(typeSelectedProductsProvider.notifier).state = {};
-              showDialog(
-                context: context,
-                builder: (context) => const TypesAddingForm(),
-                // CustomersForm(),
-                // FormCard(),
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CBIconButton(
+                icon: Icons.refresh,
+                text: 'Rafraichir',
+                onTap: () {
+                  ref.invalidate(typesListStreamProvider);
+                },
+              ),
+              CBAddButton(
+                onTap: () {
+                  ref.read(typeAddedInputsProvider.notifier).state = {};
+                  ref.read(typeSelectedProductsProvider.notifier).state = {};
+                  showDialog(
+                    context: context,
+                    builder: (context) => const TypesAddingForm(),
+                    // CustomersForm(),
+                    // FormCard(),
+                  );
+                },
+              ),
+            ],
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -59,6 +73,7 @@ class TypesSortOptions extends ConsumerWidget {
                   ),
                   CBListStringDropdown(
                     width: 120.0,
+                    menuHeigth: 500.0,
                     label: 'Mise',
                     providerName: 'types-stackes',
                     dropdownMenuEntriesLabels: typesStakes.when(
@@ -107,7 +122,8 @@ class TypesSortOptions extends ConsumerWidget {
                     ,
                   ),
                   CBListProductDropdown(
-                    width: 150.0,
+                    width: 200.0,
+                    menuHeigth: 500.0,
                     label: 'Produit',
                     providerName: 'types-products',
                     dropdownMenuEntriesLabels: productsListStream.when(

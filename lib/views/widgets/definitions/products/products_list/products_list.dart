@@ -44,9 +44,9 @@ class _ProductsListState extends ConsumerState<ProductsList> {
 
   @override
   Widget build(BuildContext context) {
-    //  final isSearching = ref.watch(isSearchingProvider('products'));
+    final isSearching = ref.watch(isSearchingProvider('products'));
     final productsListStream = ref.watch(productsListStreamProvider);
-    //  final searchedProductsList = ref.watch(searchedProductsListProvider);
+    final searchedProductsList = ref.watch(searchedProductsListProvider);
     return SizedBox(
       height: 600.0,
       // width: MediaQuery.of(context).size.width,
@@ -92,8 +92,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
               DataColumn(label: SizedBox()),
               DataColumn(label: SizedBox()),
             ],
-            rows:
-                /* isSearching
+            rows: isSearching
                 ? searchedProductsList.when(
                     data: (data) {
                       //  debugPrint('Product Stream Data: $data');
@@ -103,7 +102,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                               cells: [
                                 DataCell(
                                   CBText(
-                                    text: product.id!.toString(),
+                                    text: '${data.indexOf(product) + 1}',
                                   ),
                                 ),
                                 DataCell(
@@ -189,97 +188,101 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                       return [];
                     },
                   )
-                :*/
-                productsListStream.when(
-              data: (data) {
-                //  debugPrint('Product Stream Data: $data');
-                return data
-                    .map(
-                      (product) => DataRow(
-                        cells: [
-                          DataCell(
-                            CBText(
-                              text: '${data.indexOf(product) + 1}',
-                            ),
-                          ),
-                          DataCell(
-                            onTap: () {
-                              product.picture != null
-                                  ? FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: SingleImageShower(
-                                        imageSource: product.picture!,
-                                      ),
-                                    )
-                                  : () {};
-                            },
-                            Container(
-                              alignment: Alignment.center,
-                              child: product.picture != null
-                                  ? const Icon(
-                                      Icons.photo,
-                                      color: CBColors.primaryColor,
-                                    )
-                                  : const SizedBox(),
-                            ),
-                          ),
-                          DataCell(
-                            CBText(text: product.name),
-                          ),
-                          DataCell(
-                            CBText(text: '${product.purchasePrice.ceil()} f'),
-                          ),
-                          DataCell(
-                            onTap: () {
-                              ref.read(productPictureProvider.notifier).state =
-                                  null;
-                              FunctionsController.showAlertDialog(
-                                context: context,
-                                alertDialog:
-                                    ProductUpdateForm(product: product),
-                              );
-                            },
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.green,
-                              ),
-                            ),
-                            // showEditIcon: true,
-                          ),
-                          DataCell(
-                            onTap: () async {
-                              FunctionsController.showAlertDialog(
-                                context: context,
-                                alertDialog: ProductDeletionConfirmationDialog(
-                                  product: product,
-                                  confirmToDelete: ProductCRUDFunctions.delete,
+                : productsListStream.when(
+                    data: (data) {
+                      //  debugPrint('Product Stream Data: $data');
+                      return data
+                          .map(
+                            (product) => DataRow(
+                              cells: [
+                                DataCell(
+                                  CBText(
+                                    text: '${data.indexOf(product) + 1}',
+                                  ),
                                 ),
-                              );
-                            },
-                            Container(
-                              alignment: Alignment.centerRight,
-                              child: const Icon(
-                                Icons.delete_sharp,
-                                color: Colors.red,
-                              ),
+                                DataCell(
+                                  onTap: () {
+                                    product.picture != null
+                                        ? FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog: SingleImageShower(
+                                              imageSource: product.picture!,
+                                            ),
+                                          )
+                                        : () {};
+                                  },
+                                  Container(
+                                    alignment: Alignment.center,
+                                    child: product.picture != null
+                                        ? const Icon(
+                                            Icons.photo,
+                                            color: CBColors.primaryColor,
+                                          )
+                                        : const SizedBox(),
+                                  ),
+                                ),
+                                DataCell(
+                                  CBText(text: product.name),
+                                ),
+                                DataCell(
+                                  CBText(
+                                      text:
+                                          '${product.purchasePrice.ceil()} f'),
+                                ),
+                                DataCell(
+                                  onTap: () {
+                                    ref
+                                        .read(productPictureProvider.notifier)
+                                        .state = null;
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog:
+                                          ProductUpdateForm(product: product),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  // showEditIcon: true,
+                                ),
+                                DataCell(
+                                  onTap: () async {
+                                    FunctionsController.showAlertDialog(
+                                      context: context,
+                                      alertDialog:
+                                          ProductDeletionConfirmationDialog(
+                                        product: product,
+                                        confirmToDelete:
+                                            ProductCRUDFunctions.delete,
+                                      ),
+                                    );
+                                  },
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    child: const Icon(
+                                      Icons.delete_sharp,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList();
-              },
-              error: (error, stack) {
-                //  debugPrint('Products Stream Error');
-                return [];
-              },
-              loading: () {
-                //  debugPrint('Products Stream Loading');
-                return [];
-              },
-            ),
+                          )
+                          .toList();
+                    },
+                    error: (error, stack) {
+                      //  debugPrint('Products Stream Error');
+                      return [];
+                    },
+                    loading: () {
+                      //  debugPrint('Products Stream Loading');
+                      return [];
+                    },
+                  ),
           ),
         ),
       ),

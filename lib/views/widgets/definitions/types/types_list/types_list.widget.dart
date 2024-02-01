@@ -63,388 +63,434 @@ class TypesList extends StatefulHookConsumerWidget {
 }
 
 class _TypesListState extends ConsumerState<TypesList> {
-  final ScrollController scrollController = ScrollController();
+  final ScrollController horizontallScrollController = ScrollController();
+  final ScrollController verticalScrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    //  final isSearching = ref.watch(isSearchingProvider('types'));
-
+    final isSearching = ref.watch(isSearchingProvider('types'));
     final typesListStream = ref.watch(typesListStreamProvider);
-    // final typesListMapStream = ref.watch(typesListMapStreamProvider);
-    //  final searchedTypesList = ref.watch(searchedTypesListProvider);
+    final searchedTypesList = ref.watch(searchedTypesListProvider);
     return SizedBox(
       height: 600.0,
       // width: MediaQuery.of(context).size.width,
       child: Scrollbar(
-        controller: scrollController,
+        controller: horizontallScrollController,
         child: SingleChildScrollView(
-          controller: scrollController,
-          child: /* CBText(
-          text: typesListStream.when(
-            data: (data) => 'data.length.toString()',
-            error: (error, stackTrace) => '',
-            loading: () => '',
-          ),
-        )*/
+          scrollDirection: Axis.horizontal,
+          controller: horizontallScrollController,
+          child: Scrollbar(
+            controller: verticalScrollController,
+            child: SingleChildScrollView(
+              controller: verticalScrollController,
+              child: DataTable(
+                columns: const [
+                  DataColumn(
+                    label: CBText(
+                      text: 'Code',
+                      textAlign: TextAlign.start,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  DataColumn(
+                    label: CBText(
+                      text: 'Photos',
+                      textAlign: TextAlign.start,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  DataColumn(
+                    label: CBText(
+                      text: 'Nom',
+                      textAlign: TextAlign.start,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  DataColumn(
+                    label: CBText(
+                      text: 'Mise',
+                      textAlign: TextAlign.start,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  DataColumn(
+                    label: CBText(
+                      text: 'Produits',
+                      textAlign: TextAlign.start,
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  DataColumn(label: SizedBox()),
+                  DataColumn(label: SizedBox()),
+                ],
+                rows: isSearching
+                    ? searchedTypesList.when(
+                        data: (data) {
+                          return data.map(
+                            (type) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    CBText(
+                                      text: '${data.indexOf(type) + 1}',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog: const MultipleImageShower(
+                                          products: [],
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.photo,
+                                        color: CBColors.primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(text: type.name),
+                                  ),
+                                  DataCell(
+                                    CBText(text: '${type.stake.ceil()} f/Jour'),
+                                  ),
+                                  DataCell(
+                                    Consumer(builder: (BuildContext context,
+                                            WidgetRef ref, Widget? child) {
+                                      final productsListStream =
+                                          ref.watch(productsListStreamProvider);
+                                      return productsListStream.when(
+                                        data: (data) {
+                                          String typeProducts = '';
+                                          //  type.products.clear();
+                                          for (Product product in data) {
+                                            for (var productId
+                                                in type.productsIds) {
+                                              if (product.id! == productId) {
+                                                final typeProductNumber =
+                                                    type.productsNumber[type
+                                                        .productsIds
+                                                        .indexOf(productId)];
 
-              DataTable(
-            columns: const [
-              DataColumn(
-                label: CBText(
-                  text: 'Code',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Photos',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Nom',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Mise',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Produits',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(label: SizedBox()),
-              DataColumn(label: SizedBox()),
-            ],
-            rows:
-                /*
-            isSearching
-                ? searchedTypesList.when(
-                    data: (data) {
-                      return data.map(
-                        (type) {
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                CBText(
-                                  text: type.id!.toString(),
-                                ),
-                              ),
-                              DataCell(
-                                onTap: () {
-                                  FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog: MultipleImageShower(
-                                        products: type.products),
-                                  );
-                                },
-                                Container(
-                                    alignment: Alignment.center,
-                                    child: const Icon(
-                                      Icons.photo,
-                                      color: CBColors.primaryColor,
-                                    )),
-                              ),
-                              DataCell(
-                                CBText(text: type.name),
-                              ),
-                              DataCell(
-                                CBText(text: '${type.stake.ceil()} f/Jour'),
-                              ),
-                              DataCell(
-                                CBText(
-                                    text: productsListStream.when(
-                                  data: (data) {
-                                    // reset type products list for avoiding mutilple product adding which will be caused by stream
-                                    type.products = [];
-                                    String typeProducts = '';
-                                    //  type.products.clear();
-                                    for (Product product in data) {
-                                      for (var productId in type.productsIds!) {
-                                        if (product.id! == productId) {
-                                          // get product number in type.productsNumber
-                                          // by using the index of product id in type.productsIds
-                                          final typeProductNumber =
-                                              type.productsNumber![type
-                                                  .productsIds!
-                                                  .indexOf(productId)]; 
-                                          type.products.add(
-                                            product.copyWith(
-                                                number: typeProductNumber),
-                                          );
-                                          if (typeProducts.isEmpty) {
-                                            typeProducts =
-                                                '$typeProductNumber ${product.name}';
-                                          } else {
-                                            typeProducts =
-                                                '$typeProducts, $typeProductNumber ${product.name}';
+                                                if (typeProducts.isEmpty) {
+                                                  typeProducts =
+                                                      '$typeProductNumber ${product.name}';
+                                                } else {
+                                                  typeProducts =
+                                                      '$typeProducts, $typeProductNumber ${product.name}';
+                                                }
+                                              }
+                                            }
+                                          }
+                                          //  debugPrint('type products: ${type.products}');
+                                          return CBText(text: typeProducts);
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(text: ''),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    } // typeProducts,
+                                        //  type.products.length.toString(),
+                                        //   )
+
+                                        // },))
+                                        /*
+                                    CBText(
+                                        text: productsListStream.when(
+                                      data: (data) {
+                                        String typeProducts = '';
+                                        //  type.products.clear();
+                                        for (Product product in data) {
+                                          for (var productId in type.productsIds) {
+                                            if (product.id! == productId) {
+                                              
+                                              final typeProductNumber =
+                                                  type.productsNumber[type
+                                                      .productsIds
+                                                      .indexOf(productId)];
+                                              
+                                              if (typeProducts.isEmpty) {
+                                                typeProducts =
+                                                    '$typeProductNumber ${product.name}';
+                                              } else {
+                                                typeProducts =
+                                                    '$typeProducts, $typeProductNumber ${product.name}';
+                                              }
+                                            }
                                           }
                                         }
+                                        //  debugPrint('type products: ${type.products}');
+                                        return typeProducts;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    )*/
+                                        // typeProducts,
+                                        //  type.products.length.toString(),
+                                        ),
+                                  ),
+                                  DataCell(
+                                    onTap: () async {
+                                      ref
+                                          .read(
+                                              typeAddedInputsProvider.notifier)
+                                          .state = {};
+                                      // refresh typSelectedProducts provider
+                                      ref
+                                          .read(typeSelectedProductsProvider
+                                              .notifier)
+                                          .state = {};
+
+                                      // automatically add the type products input  s after rendering
+                                      for (dynamic productId
+                                          in type.productsIds) {
+                                        ref
+                                            .read(typeAddedInputsProvider
+                                                .notifier)
+                                            .update((state) {
+                                          state[productId!] = true;
+                                          return state;
+                                        });
                                       }
-                                    }
-                                    //  debugPrint('type products: ${type.products}');
-                                    return typeProducts;
-                                  },
-                                  error: (error, stackTrace) => '',
-                                  loading: () => '',
-                                )
-                                    // typeProducts,
-                                    //  type.products.length.toString(),
+                                      await FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            TypesUpdateForm(type: type),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
                                     ),
-                              ),
-                              DataCell(
-                                onTap: () {
-                                  ref
-                                      .read(typeAddedInputsProvider.notifier)
-                                      .state = {};
-                                  // refresh typSelectedProducts provider
-                                  ref
-                                      .read(
-                                          typeSelectedProductsProvider.notifier)
-                                      .state = {};
-        
-                                  // automatically add the type products inputs after rendering
-                                  for (Product product in type.products) {
-                                    ref
-                                        .read(typeAddedInputsProvider.notifier)
-                                        .update((state) {
-                                      state[product.id!] = true;
-                                      return state;
-                                    });
-                                  }
-                                  FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog: TypesUpdateForm(type: type),
-                                  );
-                                },
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.green,
+                                    // showEditIcon: true,
                                   ),
-                                ),
-                                // showEditIcon: true,
-                              ),
-                              DataCell(
-                                onTap: () async {
-                                  FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog: TypeDeletionConfirmationDialog(
-                                      type: type,
-                                      confirmToDelete: TypeCRUDFunctions.delete,
+                                  DataCell(
+                                    onTap: () async {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            TypeDeletionConfirmationDialog(
+                                          type: type,
+                                          confirmToDelete:
+                                              TypeCRUDFunctions.delete,
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.delete_sharp,
+                                        color: Colors.red,
+                                      ),
                                     ),
-                                  );
-                                },
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  child: const Icon(
-                                    Icons.delete_sharp,
-                                    color: Colors.red,
                                   ),
-                                ),
-                              ),
-                            ],
-                          );
+                                ],
+                              );
+                            },
+                          ).toList();
                         },
-                      ).toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('types Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('types Stream Loading');
-                      return [];
-                    },
-                  )
-                :
-                */
-                typesListStream.when(
-              data: (data) {
-                return data.map(
-                  (type) {
-                    return DataRow(
-                      cells: [
-                        DataCell(
-                          CBText(
-                            text: '${data.indexOf(type) + 1}',
-                          ),
-                        ),
-                        DataCell(
-                          onTap: () {
-                            FunctionsController.showAlertDialog(
-                              context: context,
-                              alertDialog: const MultipleImageShower(
-                                products: [],
-                              ),
-                            );
-                          },
-                          Container(
-                            alignment: Alignment.center,
-                            child: const Icon(
-                              Icons.photo,
-                              color: CBColors.primaryColor,
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          CBText(text: type.name),
-                        ),
-                        DataCell(
-                          CBText(text: '${type.stake.ceil()} f/Jour'),
-                        ),
-                        DataCell(
-                          Consumer(builder: (BuildContext context,
-                                  WidgetRef ref, Widget? child) {
-                            final productsListStream =
-                                ref.watch(productsListStreamProvider);
-                            return productsListStream.when(
-                              data: (data) {
-                                String typeProducts = '';
-                                //  type.products.clear();
-                                for (Product product in data) {
-                                  for (var productId in type.productsIds) {
-                                    if (product.id! == productId) {
-                                      final typeProductNumber = type
-                                              .productsNumber[
-                                          type.productsIds.indexOf(productId)];
+                        error: (error, stack) {
+                          //  debugPrint('types Stream Error');
+                          return [];
+                        },
+                        loading: () {
+                          //  debugPrint('types Stream Loading');
+                          return [];
+                        },
+                      )
+                    : typesListStream.when(
+                        data: (data) {
+                          return data.map(
+                            (type) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    CBText(
+                                      text: '${data.indexOf(type) + 1}',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog: const MultipleImageShower(
+                                          products: [],
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.photo,
+                                        color: CBColors.primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(text: type.name),
+                                  ),
+                                  DataCell(
+                                    CBText(text: '${type.stake.ceil()} f/Jour'),
+                                  ),
+                                  DataCell(
+                                    Consumer(builder: (BuildContext context,
+                                            WidgetRef ref, Widget? child) {
+                                      final productsListStream =
+                                          ref.watch(productsListStreamProvider);
+                                      return productsListStream.when(
+                                        data: (data) {
+                                          String typeProducts = '';
+                                          //  type.products.clear();
+                                          for (Product product in data) {
+                                            for (var productId
+                                                in type.productsIds) {
+                                              if (product.id! == productId) {
+                                                final typeProductNumber =
+                                                    type.productsNumber[type
+                                                        .productsIds
+                                                        .indexOf(productId)];
 
-                                      if (typeProducts.isEmpty) {
-                                        typeProducts =
-                                            '$typeProductNumber ${product.name}';
-                                      } else {
-                                        typeProducts =
-                                            '$typeProducts, $typeProductNumber ${product.name}';
-                                      }
-                                    }
-                                  }
-                                }
-                                //  debugPrint('type products: ${type.products}');
-                                return CBText(text: typeProducts);
-                              },
-                              error: (error, stackTrace) =>
-                                  const CBText(text: ''),
-                              loading: () => const CBText(text: ''),
-                            );
-                          } // typeProducts,
-                              //  type.products.length.toString(),
-                              //   )
+                                                if (typeProducts.isEmpty) {
+                                                  typeProducts =
+                                                      '$typeProductNumber ${product.name}';
+                                                } else {
+                                                  typeProducts =
+                                                      '$typeProducts, $typeProductNumber ${product.name}';
+                                                }
+                                              }
+                                            }
+                                          }
+                                          //  debugPrint('type products: ${type.products}');
+                                          return CBText(text: typeProducts);
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(text: ''),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    } // typeProducts,
+                                        //  type.products.length.toString(),
+                                        //   )
 
-                              // },))
-                              /*
-                                CBText(
-                                    text: productsListStream.when(
-                                  data: (data) {
-                                    String typeProducts = '';
-                                    //  type.products.clear();
-                                    for (Product product in data) {
-                                      for (var productId in type.productsIds) {
-                                        if (product.id! == productId) {
-                                          
-                                          final typeProductNumber =
-                                              type.productsNumber[type
-                                                  .productsIds
-                                                  .indexOf(productId)];
-                                          
-                                          if (typeProducts.isEmpty) {
-                                            typeProducts =
-                                                '$typeProductNumber ${product.name}';
-                                          } else {
-                                            typeProducts =
-                                                '$typeProducts, $typeProductNumber ${product.name}';
+                                        // },))
+                                        /*
+                                    CBText(
+                                        text: productsListStream.when(
+                                      data: (data) {
+                                        String typeProducts = '';
+                                        //  type.products.clear();
+                                        for (Product product in data) {
+                                          for (var productId in type.productsIds) {
+                                            if (product.id! == productId) {
+                                              
+                                              final typeProductNumber =
+                                                  type.productsNumber[type
+                                                      .productsIds
+                                                      .indexOf(productId)];
+                                              
+                                              if (typeProducts.isEmpty) {
+                                                typeProducts =
+                                                    '$typeProductNumber ${product.name}';
+                                              } else {
+                                                typeProducts =
+                                                    '$typeProducts, $typeProductNumber ${product.name}';
+                                              }
+                                            }
                                           }
                                         }
-                                      }
-                                    }
-                                    //  debugPrint('type products: ${type.products}');
-                                    return typeProducts;
-                                  },
-                                  error: (error, stackTrace) => '',
-                                  loading: () => '',
-                                )*/
-                              // typeProducts,
-                              //  type.products.length.toString(),
-                              ),
-                        ),
-                        DataCell(
-                          onTap: () async {
-                            ref.read(typeAddedInputsProvider.notifier).state =
-                                {};
-                            // refresh typSelectedProducts provider
-                            ref
-                                .read(typeSelectedProductsProvider.notifier)
-                                .state = {};
+                                        //  debugPrint('type products: ${type.products}');
+                                        return typeProducts;
+                                      },
+                                      error: (error, stackTrace) => '',
+                                      loading: () => '',
+                                    )*/
+                                        // typeProducts,
+                                        //  type.products.length.toString(),
+                                        ),
+                                  ),
+                                  DataCell(
+                                    onTap: () async {
+                                      ref
+                                          .read(
+                                              typeAddedInputsProvider.notifier)
+                                          .state = {};
+                                      // refresh typSelectedProducts provider
+                                      ref
+                                          .read(typeSelectedProductsProvider
+                                              .notifier)
+                                          .state = {};
 
-                            // automatically add the type products input  s after rendering
-                            for (dynamic productId in type.productsIds) {
-                              ref
-                                  .read(typeAddedInputsProvider.notifier)
-                                  .update((state) {
-                                state[productId!] = true;
-                                return state;
-                              });
-                            }
-                            await FunctionsController.showAlertDialog(
-                              context: context,
-                              alertDialog: TypesUpdateForm(type: type),
-                            );
-                          },
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.edit,
-                              color: Colors.green,
-                            ),
-                          ),
-                          // showEditIcon: true,
-                        ),
-                        DataCell(
-                          onTap: () async {
-                            FunctionsController.showAlertDialog(
-                              context: context,
-                              alertDialog: TypeDeletionConfirmationDialog(
-                                type: type,
-                                confirmToDelete: TypeCRUDFunctions.delete,
-                              ),
-                            );
-                          },
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.delete_sharp,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ).toList();
-              },
-              error: (error, stack) {
-                //  debugPrint('types Stream Error');
-                return [];
-              },
-              loading: () {
-                //  debugPrint('types Stream Loading');
-                return [];
-              },
+                                      // automatically add the type products input  s after rendering
+                                      for (dynamic productId
+                                          in type.productsIds) {
+                                        ref
+                                            .read(typeAddedInputsProvider
+                                                .notifier)
+                                            .update((state) {
+                                          state[productId!] = true;
+                                          return state;
+                                        });
+                                      }
+                                      await FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            TypesUpdateForm(type: type),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    // showEditIcon: true,
+                                  ),
+                                  DataCell(
+                                    onTap: () async {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            TypeDeletionConfirmationDialog(
+                                          type: type,
+                                          confirmToDelete:
+                                              TypeCRUDFunctions.delete,
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.delete_sharp,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList();
+                        },
+                        error: (error, stack) {
+                          //  debugPrint('types Stream Error');
+                          return [];
+                        },
+                        loading: () {
+                          //  debugPrint('types Stream Loading');
+                          return [];
+                        },
+                      ),
+              ),
             ),
           ),
         ),

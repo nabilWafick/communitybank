@@ -4,6 +4,7 @@ import 'package:communitybank/models/data/customers_category/customers_category.
 import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
 import 'package:communitybank/models/data/locality/locality.model.dart';
 import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
+import 'package:communitybank/views/widgets/definitions/customers/customers.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
@@ -11,6 +12,7 @@ import 'package:communitybank/views/widgets/definitions/personal_status/personal
 import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/add_button/add_button.widget.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_category/customer_category_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality/locality_dropdown.widget.dart';
@@ -39,15 +41,29 @@ class CustomersSortOptions extends ConsumerWidget {
       width: double.maxFinite,
       child: Column(
         children: [
-          CBAddButton(
-            onTap: () {
-              ref.read(customerProfilePictureProvider.notifier).state = null;
-              ref.read(customerSignaturePictureProvider.notifier).state = null;
-              FunctionsController.showAlertDialog(
-                context: context,
-                alertDialog: const CustomerAddingForm(),
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CBIconButton(
+                icon: Icons.refresh,
+                text: 'Rafraichir',
+                onTap: () {
+                  ref.invalidate(customersListStreamProvider);
+                },
+              ),
+              CBAddButton(
+                onTap: () {
+                  ref.read(customerProfilePictureProvider.notifier).state =
+                      null;
+                  ref.read(customerSignaturePictureProvider.notifier).state =
+                      null;
+                  FunctionsController.showAlertDialog(
+                    context: context,
+                    alertDialog: const CustomerAddingForm(),
+                  );
+                },
+              ),
+            ],
           ),
           Row(
             mainAxisSize: MainAxisSize.max,
@@ -65,6 +81,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBListCustomerCategoryDropdown(
                     width: 200.0,
+                    menuHeigth: 500.0,
                     label: 'Catégorie',
                     providerName: 'customer-list-sort-category',
                     dropdownMenuEntriesLabels:
@@ -112,6 +129,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBListEconomicalActivityDropdown(
                     width: 200.0,
+                    menuHeigth: 500.0,
                     label: 'Activité économique',
                     providerName: 'customer-list-sort-economical-activity',
                     dropdownMenuEntriesLabels:
@@ -159,6 +177,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBListPersonalStatusDropdown(
                     width: 200.0,
+                    menuHeigth: 500.0,
                     label: 'Statut Personnel',
                     providerName: 'customer-list-sort-personal-status',
                     dropdownMenuEntriesLabels: personalStatusListStream.when(
@@ -204,6 +223,7 @@ class CustomersSortOptions extends ConsumerWidget {
                   ),
                   CBListLocalityDropdown(
                     width: 200.0,
+                    menuHeigth: 500.0,
                     label: 'Localité',
                     providerName: 'customer-list-sort-locality',
                     dropdownMenuEntriesLabels: localitiesListStream.when(

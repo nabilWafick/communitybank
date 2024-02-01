@@ -209,12 +209,10 @@ class _AgentAddingFormState extends ConsumerState<AgentAddingForm> {
                           providerName: 'agent-adding-role',
                           dropdownMenuEntriesLabels: [
                             AgentRole.simpleUser,
-                            AgentRole.semiAdmin,
                             AgentRole.admin
                           ],
                           dropdownMenuEntriesValues: [
                             AgentRole.simpleUser,
-                            AgentRole.semiAdmin,
                             AgentRole.admin
                           ],
                         ),

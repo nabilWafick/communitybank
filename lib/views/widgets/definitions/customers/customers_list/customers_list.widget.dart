@@ -69,9 +69,9 @@ class _CustomersListState extends ConsumerState<CustomersList> {
   Widget build(
     BuildContext context,
   ) {
-    //   final isSearching = ref.watch(isSearchingProvider('customers'));
+    final isSearching = ref.watch(isSearchingProvider('customers'));
     final customersListStream = ref.watch(customersListStreamProvider);
-    //   final searchedCustomers = ref.watch(searchedCustomersListProvider);
+    final searchedCustomers = ref.watch(searchedCustomersListProvider);
 
     return SizedBox(
       height: 600.0,
@@ -190,264 +190,549 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                     label: SizedBox(),
                   ),
                 ],
-                rows: customersListStream.when(
-                  data: (data) {
-                    return data.map(
-                      (customer) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              CBText(text: '${data.indexOf(customer) + 1}'),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                customer.profile != null
-                                    ? FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: SingleImageShower(
-                                          imageSource: customer.profile!,
+                rows: isSearching
+                    ? searchedCustomers.when(
+                        data: (data) {
+                          return data.map(
+                            (customer) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    CBText(
+                                        text: '${data.indexOf(customer) + 1}'),
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      customer.profile != null
+                                          ? FunctionsController.showAlertDialog(
+                                              context: context,
+                                              alertDialog: SingleImageShower(
+                                                imageSource: customer.profile!,
+                                              ),
+                                            )
+                                          : () {};
+                                    },
+                                    customer.profile != null
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            child: const Icon(
+                                              Icons.account_circle_sharp,
+                                              size: 35.0,
+                                              color: CBColors.primaryColor,
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                        text:
+                                            '${customer.firstnames} ${customer.name}'),
+                                  ),
+                                  DataCell(
+                                    CBText(text: customer.phoneNumber),
+                                  ),
+                                  DataCell(
+                                    CBText(text: customer.address),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                      text: customer.profession ?? '',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                      text:
+                                          customer.nicNumber?.toString() ?? '',
+                                    ),
+                                  ),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final customersCategoriesListStream =
+                                          ref.watch(
+                                              custumersCategoriesListStreamProvider);
+
+                                      return customersCategoriesListStream.when(
+                                        data: (data) {
+                                          CustomerCategory customerCategory =
+                                              CustomerCategory(
+                                            name: 'Non définie',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (CustomerCategory customerCategoryData
+                                              in data) {
+                                            if (customerCategoryData.id ==
+                                                customer.categoryId) {
+                                              customerCategory =
+                                                  customerCategoryData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: customerCategory.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
                                         ),
-                                      )
-                                    : () {};
-                              },
-                              customer.profile != null
-                                  ? Container(
-                                      alignment: Alignment.center,
-                                      child: const Icon(
-                                        Icons.account_circle_sharp,
-                                        size: 35.0,
-                                        color: CBColors.primaryColor,
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                            ),
-                            DataCell(
-                              CBText(
-                                  text:
-                                      '${customer.firstnames} ${customer.name}'),
-                            ),
-                            DataCell(
-                              CBText(text: customer.phoneNumber),
-                            ),
-                            DataCell(
-                              CBText(text: customer.address),
-                            ),
-                            DataCell(
-                              CBText(
-                                text: customer.profession,
-                              ),
-                            ),
-                            DataCell(
-                              CBText(
-                                text: customer.nicNumber.toString(),
-                              ),
-                            ),
-                            DataCell(Consumer(
-                              builder: (BuildContext context, WidgetRef ref,
-                                  Widget? child) {
-                                final customersCategoriesListStream = ref.watch(
-                                    custumersCategoriesListStreamProvider);
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final economicalActivitiesListStream =
+                                          ref.watch(
+                                              economicalActivityListStreamProvider);
 
-                                return customersCategoriesListStream.when(
-                                  data: (data) {
-                                    CustomerCategory customerCategory =
-                                        CustomerCategory(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    );
+                                      return economicalActivitiesListStream
+                                          .when(
+                                        data: (data) {
+                                          EconomicalActivity
+                                              economicalActivity =
+                                              EconomicalActivity(
+                                            name: 'Non définie',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
 
-                                    for (CustomerCategory customerCategoryData
-                                        in data) {
-                                      if (customerCategoryData.id ==
-                                          customer.categoryId) {
-                                        customerCategory = customerCategoryData;
-                                        break;
-                                      }
-                                    }
+                                          for (EconomicalActivity economicalActivityData
+                                              in data) {
+                                            if (economicalActivityData.id ==
+                                                customer.economicalActivityId) {
+                                              economicalActivity =
+                                                  economicalActivityData;
+                                              break;
+                                            }
+                                          }
 
-                                    return CBText(
-                                      text: customerCategory.name,
-                                    );
-                                  },
-                                  error: (error, stackTrace) => const CBText(
-                                    text: '',
-                                  ),
-                                  loading: () => const CBText(text: ''),
-                                );
-                              },
-                            )),
-                            DataCell(Consumer(
-                              builder: (BuildContext context, WidgetRef ref,
-                                  Widget? child) {
-                                final economicalActivitiesListStream =
-                                    ref.watch(
-                                        economicalActivityListStreamProvider);
-
-                                return economicalActivitiesListStream.when(
-                                  data: (data) {
-                                    EconomicalActivity economicalActivity =
-                                        EconomicalActivity(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    );
-
-                                    for (EconomicalActivity economicalActivityData
-                                        in data) {
-                                      if (economicalActivityData.id ==
-                                          customer.economicalActivityId) {
-                                        economicalActivity =
-                                            economicalActivityData;
-                                        break;
-                                      }
-                                    }
-
-                                    return CBText(
-                                      text: economicalActivity.name,
-                                    );
-                                  },
-                                  error: (error, stackTrace) => const CBText(
-                                    text: '',
-                                  ),
-                                  loading: () => const CBText(text: ''),
-                                );
-                              },
-                            )),
-                            DataCell(Consumer(
-                              builder: (BuildContext context, WidgetRef ref,
-                                  Widget? child) {
-                                final personalStatusListStream =
-                                    ref.watch(personalStatusListStreamProvider);
-
-                                return personalStatusListStream.when(
-                                  data: (data) {
-                                    PersonalStatus personalStatus =
-                                        PersonalStatus(
-                                      name: 'Non défini',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    );
-
-                                    for (PersonalStatus personalStatusData
-                                        in data) {
-                                      if (personalStatusData.id ==
-                                          customer.personalStatusId) {
-                                        personalStatus = personalStatusData;
-                                        break;
-                                      }
-                                    }
-
-                                    return CBText(
-                                      text: personalStatus.name,
-                                    );
-                                  },
-                                  error: (error, stackTrace) => const CBText(
-                                    text: '',
-                                  ),
-                                  loading: () => const CBText(text: ''),
-                                );
-                              },
-                            )),
-                            DataCell(Consumer(
-                              builder: (BuildContext context, WidgetRef ref,
-                                  Widget? child) {
-                                final localitiesListStream =
-                                    ref.watch(localityListStreamProvider);
-
-                                return localitiesListStream.when(
-                                  data: (data) {
-                                    Locality customerLocality = Locality(
-                                      name: 'Non définie',
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    );
-
-                                    for (Locality localityData in data) {
-                                      if (localityData.id ==
-                                          customer.localityId) {
-                                        customerLocality = localityData;
-                                        break;
-                                      }
-                                    }
-
-                                    return CBText(
-                                      text: customerLocality.name,
-                                    );
-                                  },
-                                  error: (error, stackTrace) => const CBText(
-                                    text: '',
-                                  ),
-                                  loading: () => const CBText(text: ''),
-                                );
-                              },
-                            )),
-                            DataCell(
-                              onTap: () {
-                                customer.signature != null
-                                    ? FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: SingleImageShower(
-                                          imageSource: customer.signature!,
+                                          return CBText(
+                                            text: economicalActivity.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
                                         ),
-                                      )
-                                    : () {};
-                              },
-                              customer.signature != null
-                                  ? Container(
-                                      alignment: Alignment.center,
-                                      child: const Icon(
-                                        Icons.photo,
-                                        color: CBColors.primaryColor,
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                            ),
-                            DataCell(
-                              onTap: () async {
-                                await FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      CustomerUpdateForm(customer: customer),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              // showEditIcon: true,
-                            ),
-                            DataCell(
-                              onTap: () {
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      CustomerDeletionConfirmationDialog(
-                                    customer: customer,
-                                    confirmToDelete:
-                                        CustomerCRUDFunctions.delete,
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final personalStatusListStream =
+                                          ref.watch(
+                                              personalStatusListStreamProvider);
+
+                                      return personalStatusListStream.when(
+                                        data: (data) {
+                                          PersonalStatus personalStatus =
+                                              PersonalStatus(
+                                            name: 'Non défini',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (PersonalStatus personalStatusData
+                                              in data) {
+                                            if (personalStatusData.id ==
+                                                customer.personalStatusId) {
+                                              personalStatus =
+                                                  personalStatusData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: personalStatus.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final localitiesListStream =
+                                          ref.watch(localityListStreamProvider);
+
+                                      return localitiesListStream.when(
+                                        data: (data) {
+                                          Locality customerLocality = Locality(
+                                            name: 'Non définie',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (Locality localityData in data) {
+                                            if (localityData.id ==
+                                                customer.localityId) {
+                                              customerLocality = localityData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: customerLocality.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(
+                                    onTap: () {
+                                      customer.signature != null
+                                          ? FunctionsController.showAlertDialog(
+                                              context: context,
+                                              alertDialog: SingleImageShower(
+                                                imageSource:
+                                                    customer.signature!,
+                                              ),
+                                            )
+                                          : () {};
+                                    },
+                                    customer.signature != null
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            child: const Icon(
+                                              Icons.photo,
+                                              color: CBColors.primaryColor,
+                                            ),
+                                          )
+                                        : const SizedBox(),
                                   ),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.delete_sharp,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ).toList();
-                  },
-                  error: (error, stackTrace) => [],
-                  loading: () => [],
-                ),
+                                  DataCell(
+                                    onTap: () async {
+                                      await FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog: CustomerUpdateForm(
+                                            customer: customer),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    // showEditIcon: true,
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            CustomerDeletionConfirmationDialog(
+                                          customer: customer,
+                                          confirmToDelete:
+                                              CustomerCRUDFunctions.delete,
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.delete_sharp,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList();
+                        },
+                        error: (error, stackTrace) => [],
+                        loading: () => [],
+                      )
+                    : customersListStream.when(
+                        data: (data) {
+                          return data.map(
+                            (customer) {
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    CBText(
+                                        text: '${data.indexOf(customer) + 1}'),
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      customer.profile != null
+                                          ? FunctionsController.showAlertDialog(
+                                              context: context,
+                                              alertDialog: SingleImageShower(
+                                                imageSource: customer.profile!,
+                                              ),
+                                            )
+                                          : () {};
+                                    },
+                                    customer.profile != null
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            child: const Icon(
+                                              Icons.account_circle_sharp,
+                                              size: 35.0,
+                                              color: CBColors.primaryColor,
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                        text:
+                                            '${customer.firstnames} ${customer.name}'),
+                                  ),
+                                  DataCell(
+                                    CBText(text: customer.phoneNumber),
+                                  ),
+                                  DataCell(
+                                    CBText(text: customer.address),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                      text: customer.profession ?? '',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                      text:
+                                          customer.nicNumber?.toString() ?? '',
+                                    ),
+                                  ),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final customersCategoriesListStream =
+                                          ref.watch(
+                                              custumersCategoriesListStreamProvider);
+
+                                      return customersCategoriesListStream.when(
+                                        data: (data) {
+                                          CustomerCategory customerCategory =
+                                              CustomerCategory(
+                                            name: 'Non définie',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (CustomerCategory customerCategoryData
+                                              in data) {
+                                            if (customerCategoryData.id ==
+                                                customer.categoryId) {
+                                              customerCategory =
+                                                  customerCategoryData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: customerCategory.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final economicalActivitiesListStream =
+                                          ref.watch(
+                                              economicalActivityListStreamProvider);
+
+                                      return economicalActivitiesListStream
+                                          .when(
+                                        data: (data) {
+                                          EconomicalActivity
+                                              economicalActivity =
+                                              EconomicalActivity(
+                                            name: 'Non définie',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (EconomicalActivity economicalActivityData
+                                              in data) {
+                                            if (economicalActivityData.id ==
+                                                customer.economicalActivityId) {
+                                              economicalActivity =
+                                                  economicalActivityData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: economicalActivity.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final personalStatusListStream =
+                                          ref.watch(
+                                              personalStatusListStreamProvider);
+
+                                      return personalStatusListStream.when(
+                                        data: (data) {
+                                          PersonalStatus personalStatus =
+                                              PersonalStatus(
+                                            name: 'Non défini',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (PersonalStatus personalStatusData
+                                              in data) {
+                                            if (personalStatusData.id ==
+                                                customer.personalStatusId) {
+                                              personalStatus =
+                                                  personalStatusData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: personalStatus.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(Consumer(
+                                    builder: (BuildContext context,
+                                        WidgetRef ref, Widget? child) {
+                                      final localitiesListStream =
+                                          ref.watch(localityListStreamProvider);
+
+                                      return localitiesListStream.when(
+                                        data: (data) {
+                                          Locality customerLocality = Locality(
+                                            name: 'Non définie',
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                          );
+
+                                          for (Locality localityData in data) {
+                                            if (localityData.id ==
+                                                customer.localityId) {
+                                              customerLocality = localityData;
+                                              break;
+                                            }
+                                          }
+
+                                          return CBText(
+                                            text: customerLocality.name,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )),
+                                  DataCell(
+                                    onTap: () {
+                                      customer.signature != null
+                                          ? FunctionsController.showAlertDialog(
+                                              context: context,
+                                              alertDialog: SingleImageShower(
+                                                imageSource:
+                                                    customer.signature!,
+                                              ),
+                                            )
+                                          : () {};
+                                    },
+                                    customer.signature != null
+                                        ? Container(
+                                            alignment: Alignment.center,
+                                            child: const Icon(
+                                              Icons.photo,
+                                              color: CBColors.primaryColor,
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                  ),
+                                  DataCell(
+                                    onTap: () async {
+                                      await FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog: CustomerUpdateForm(
+                                            customer: customer),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    // showEditIcon: true,
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            CustomerDeletionConfirmationDialog(
+                                          customer: customer,
+                                          confirmToDelete:
+                                              CustomerCRUDFunctions.delete,
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.delete_sharp,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ).toList();
+                        },
+                        error: (error, stackTrace) => [],
+                        loading: () => [],
+                      ),
               ),
             ),
           ),

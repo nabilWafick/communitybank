@@ -11,8 +11,8 @@ class Customer {
   final String firstnames;
   final String phoneNumber;
   final String address;
-  final String profession;
-  final int nicNumber;
+  final String? profession;
+  final int? nicNumber;
   int? categoryId;
   int? economicalActivityId;
   int? personalStatusId;
@@ -27,8 +27,8 @@ class Customer {
     required this.firstnames,
     required this.phoneNumber,
     required this.address,
-    required this.profession,
-    required this.nicNumber,
+    this.profession,
+    this.nicNumber,
     this.categoryId,
     this.economicalActivityId,
     this.personalStatusId,
@@ -83,7 +83,7 @@ class Customer {
       CustomerTable.phoneNumber: phoneNumber,
       CustomerTable.address: address,
       CustomerTable.profession: profession,
-      CustomerTable.nciNumber: nicNumber,
+      CustomerTable.nciNumber: nicNumber == 0 ? null : nicNumber,
       CustomerTable.categoryId: categoryId,
       CustomerTable.economicalActivityId: economicalActivityId,
       CustomerTable.personalStatusId: personalStatusId,
@@ -103,7 +103,7 @@ class Customer {
       phoneNumber: map[CustomerTable.phoneNumber] ?? '',
       address: map[CustomerTable.address] ?? '',
       profession: map[CustomerTable.profession] ?? '',
-      nicNumber: map[CustomerTable.nciNumber]?.toInt() ?? 0,
+      nicNumber: map[CustomerTable.nciNumber]?.toInt(),
       categoryId: map[CustomerTable.categoryId],
       economicalActivityId: map[CustomerTable.economicalActivityId],
       personalStatusId: map[CustomerTable.personalStatusId],

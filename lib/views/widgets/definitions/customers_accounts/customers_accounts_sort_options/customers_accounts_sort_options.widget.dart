@@ -4,8 +4,10 @@ import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/customer_account/customer_account_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer/customer_dropdown.widget.dart';
 import 'package:flutter/material.dart';
@@ -25,17 +27,30 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
       width: double.maxFinite,
       child: Column(
         children: [
-          CBAddButton(
-            onTap: () {
-              ref.read(customerAccountAddedInputsProvider.notifier).state = {};
-              ref
-                  .read(customerAccountSelectedOwnerCardsProvider.notifier)
-                  .state = {};
-              FunctionsController.showAlertDialog(
-                context: context,
-                alertDialog: const CustomerAccountAddingForm(),
-              );
-            },
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CBIconButton(
+                icon: Icons.refresh,
+                text: 'Rafraichir',
+                onTap: () {
+                  ref.invalidate(customersAccountsListStreamProvider);
+                },
+              ),
+              CBAddButton(
+                onTap: () {
+                  ref.read(customerAccountAddedInputsProvider.notifier).state =
+                      {};
+                  ref
+                      .read(customerAccountSelectedOwnerCardsProvider.notifier)
+                      .state = {};
+                  FunctionsController.showAlertDialog(
+                    context: context,
+                    alertDialog: const CustomerAccountAddingForm(),
+                  );
+                },
+              ),
+            ],
           ),
           Row(
             mainAxisSize: MainAxisSize.max,

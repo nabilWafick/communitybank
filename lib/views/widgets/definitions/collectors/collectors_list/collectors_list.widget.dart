@@ -42,8 +42,8 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
   final ScrollController scrollController = ScrollController();
   @override
   Widget build(BuildContext buildContext) {
-    //  final isSearching = ref.watch(isSearchingProvider('collectors'));
-    //  final searchedCollectorsList = ref.watch(searchedCollectorsListProvider);
+    final isSearching = ref.watch(isSearchingProvider('collectors'));
+    final searchedCollectorsList = ref.watch(searchedCollectorsListProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
     return SizedBox(
       height: 600.0,
@@ -104,7 +104,7 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                   label: SizedBox(),
                 ),
               ],
-              rows: /* isSearching
+              rows: isSearching
                   ? searchedCollectorsList.when(
                       data: (data) {
                         //  debugPrint('collector Stream Data: $data');
@@ -114,7 +114,7 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                                 cells: [
                                   DataCell(
                                     CBText(
-                                      text: collector.id!.toString(),
+                                      text: '${data.indexOf(collector) + 1}',
                                     ),
                                   ),
                                   DataCell(
@@ -151,10 +151,6 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                                   ),
                                   DataCell(
                                     onTap: () {
-                                      ref
-                                          .read(
-                                              collectorPictureProvider.notifier)
-                                          .state = null;
                                       ref
                                           .read(
                                               collectorPictureProvider.notifier)
@@ -209,107 +205,106 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                         return [];
                       },
                     )
-                  :
-                  */
-                  collectorsListStream.when(
-                data: (data) {
-                  //  debugPrint('collector Stream Data: $data');
-                  return data
-                      .map(
-                        (collector) => DataRow(
-                          cells: [
-                            DataCell(
-                              CBText(
-                                text: '${data.indexOf(collector) + 1}',
-                              ),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                collector.profile != null
-                                    ? FunctionsController.showAlertDialog(
+                  : collectorsListStream.when(
+                      data: (data) {
+                        //  debugPrint('collector Stream Data: $data');
+                        return data
+                            .map(
+                              (collector) => DataRow(
+                                cells: [
+                                  DataCell(
+                                    CBText(
+                                      text: '${data.indexOf(collector) + 1}',
+                                    ),
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      collector.profile != null
+                                          ? FunctionsController.showAlertDialog(
+                                              context: context,
+                                              alertDialog: SingleImageShower(
+                                                imageSource: collector.profile!,
+                                              ),
+                                            )
+                                          : () {};
+                                    },
+                                    Container(
+                                      alignment: Alignment.center,
+                                      child: collector.profile != null
+                                          ? const Icon(
+                                              Icons.photo,
+                                              color: CBColors.primaryColor,
+                                            )
+                                          : const SizedBox(),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                        text:
+                                            '${collector.name} ${collector.firstnames}'),
+                                  ),
+                                  DataCell(
+                                    CBText(text: collector.phoneNumber),
+                                  ),
+                                  DataCell(
+                                    CBText(text: collector.address),
+                                  ),
+                                  DataCell(
+                                    onTap: () {
+                                      ref
+                                          .read(
+                                              collectorPictureProvider.notifier)
+                                          .state = null;
+                                      FunctionsController.showAlertDialog(
                                         context: context,
-                                        alertDialog: SingleImageShower(
-                                          imageSource: collector.profile!,
+                                        alertDialog: CollectorUpdateForm(
+                                          collector: collector,
                                         ),
-                                      )
-                                    : () {};
-                              },
-                              Container(
-                                alignment: Alignment.center,
-                                child: collector.profile != null
-                                    ? const Icon(
-                                        Icons.photo,
-                                        color: CBColors.primaryColor,
-                                      )
-                                    : const SizedBox(),
-                              ),
-                            ),
-                            DataCell(
-                              CBText(
-                                  text:
-                                      '${collector.name} ${collector.firstnames}'),
-                            ),
-                            DataCell(
-                              CBText(text: collector.phoneNumber),
-                            ),
-                            DataCell(
-                              CBText(text: collector.address),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                ref
-                                    .read(collectorPictureProvider.notifier)
-                                    .state = null;
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog: CollectorUpdateForm(
-                                    collector: collector,
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    // showEditIcon: true,
                                   ),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              // showEditIcon: true,
-                            ),
-                            DataCell(
-                              onTap: () async {
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      CollectorDeletionConfirmationDialog(
-                                    collector: collector,
-                                    confirmToDelete:
-                                        CollectorCRUDFunctions.delete,
+                                  DataCell(
+                                    onTap: () async {
+                                      FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog:
+                                            CollectorDeletionConfirmationDialog(
+                                          collector: collector,
+                                          confirmToDelete:
+                                              CollectorCRUDFunctions.delete,
+                                        ),
+                                      );
+                                    },
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      child: const Icon(
+                                        Icons.delete_sharp,
+                                        color: Colors.red,
+                                      ),
+                                    ),
                                   ),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.delete_sharp,
-                                  color: Colors.red,
-                                ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                      .toList();
-                },
-                error: (error, stack) {
-                  //  debugPrint('collectors Stream Error');
-                  return [];
-                },
-                loading: () {
-                  //  debugPrint('collectors Stream Loading');
-                  return [];
-                },
-              ),
+                            )
+                            .toList();
+                      },
+                      error: (error, stack) {
+                        //  debugPrint('collectors Stream Error');
+                        return [];
+                      },
+                      loading: () {
+                        //  debugPrint('collectors Stream Loading');
+                        return [];
+                      },
+                    ),
             ),
           ),
         ),

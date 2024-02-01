@@ -21,10 +21,12 @@ class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
   final List<Product> dropdownMenuEntriesLabels;
   final List<Product> dropdownMenuEntriesValues;
   final double? width;
+  final double? menuHeigth;
 
   const CBTypeProductSelectionDropdown({
     super.key,
     this.width,
+    this.menuHeigth,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -88,6 +90,7 @@ class _CBTypeProductSelectionDropdownState
         ),
       ),
       width: widget.width,
+      menuHeight: widget.menuHeigth,
       label: CBText(
         text: widget.label,
       ),

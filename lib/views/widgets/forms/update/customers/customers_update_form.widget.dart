@@ -295,7 +295,8 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                           child: CBTextFormField(
                             label: 'Numéro CNI',
                             hintText: 'Numéro CNI',
-                            initialValue: widget.customer.nicNumber.toString(),
+                            initialValue:
+                                widget.customer.nicNumber?.toString() ?? '',
                             isMultilineTextForm: false,
                             obscureText: false,
                             textInputType: TextInputType.name,
