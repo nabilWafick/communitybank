@@ -69,6 +69,7 @@ class _CBFormProductDropdownState extends ConsumerState<CBFormProductDropdown> {
           text: widget.label,
         ),
         hintText: widget.label,
+        enableFilter: true,
         initialSelection: selectedDropdownItem,
         dropdownMenuEntries: widget.dropdownMenuEntriesLabels
             .map(

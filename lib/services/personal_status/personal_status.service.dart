@@ -52,7 +52,7 @@ class PersonalStatusService {
 
       var query = supabase
           .from(PersonalStatusTable.tableName)
-          .stream(primaryKey: [PersonalStatusTable.id]).order(
+          .stream(primaryKey: [PersonalStatusTable.name]).order(
         PersonalStatusTable.id,
         ascending: true,
       );

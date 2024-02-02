@@ -58,9 +58,7 @@ class _CollectorUpdateFormState extends ConsumerState<CollectorUpdateForm> {
                       ),
                       IconButton(
                         onPressed: () {
-                          showValidatedButton.value
-                              ? Navigator.of(context).pop()
-                              : () {};
+                          Navigator.of(context).pop();
                         },
                         icon: const Icon(
                           Icons.close_rounded,
@@ -214,9 +212,7 @@ class _CollectorUpdateFormState extends ConsumerState<CollectorUpdateForm> {
                       text: 'Fermer',
                       backgroundColor: CBColors.sidebarTextColor,
                       onPressed: () {
-                        showValidatedButton.value
-                            ? Navigator.of(context).pop()
-                            : () {};
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),

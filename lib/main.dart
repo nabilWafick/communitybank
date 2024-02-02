@@ -29,9 +29,6 @@ Future<void> main() async {
     ),
   );
 
-  // debugPrint('simple access: ${dotenv.env['SUPABASE_URL']}');
-  // debugPrint('get access: ${dotenv.get('SUPABASE_URL')}');
-
   await DesktopWindow.setMinWindowSize(
     const Size(1280.0, 700.0),
   );
@@ -91,8 +88,7 @@ class CommunityBankApp extends ConsumerWidget {
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
       home:
-
-          // const WidgetTest(),
+          //  const WidgetTest(),
           //  const RegistrationPage(),
           //  const LoginPage(),
           const MainApp(),

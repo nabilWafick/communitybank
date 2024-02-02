@@ -87,9 +87,7 @@ class _SettlementUpdateFormState extends ConsumerState<SettlementUpdateForm> {
                       ),
                       IconButton(
                         onPressed: () {
-                          showValidatedButton.value
-                              ? Navigator.of(context).pop()
-                              : () {};
+                          Navigator.of(context).pop();
                         },
                         icon: const Icon(
                           Icons.close_rounded,
@@ -196,9 +194,7 @@ class _SettlementUpdateFormState extends ConsumerState<SettlementUpdateForm> {
                       text: 'Fermer',
                       backgroundColor: CBColors.sidebarTextColor,
                       onPressed: () {
-                        showValidatedButton.value
-                            ? Navigator.of(context).pop()
-                            : () {};
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),

@@ -68,6 +68,7 @@ class _CBFormCollectorDropdownState
       child: DropdownMenu(
         width: widget.width,
         menuHeight: widget.menuHeigth,
+        enableFilter: true,
         label: CBText(
           text: widget.label,
         ),

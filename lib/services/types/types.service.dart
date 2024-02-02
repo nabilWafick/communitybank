@@ -57,7 +57,7 @@ class TypesService {
       var query = supabase
           .from(TypeTable.tableName)
           .stream(primaryKey: [TypeTable.id]).order(
-        TypeTable.id,
+        TypeTable.name,
         ascending: true,
       );
 

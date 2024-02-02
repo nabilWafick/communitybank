@@ -91,6 +91,7 @@ class _CBTypeProductSelectionDropdownState
       ),
       width: widget.width,
       menuHeight: widget.menuHeigth,
+      enableFilter: true,
       label: CBText(
         text: widget.label,
       ),

@@ -1,4 +1,5 @@
 import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
+import 'package:communitybank/services/auth/auth.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CBText(
-              text: 'Heigth: $heigth Width: $width',
+              text: 'Result: $data',
             ),
             const SizedBox(
               height: 200,
@@ -51,22 +52,18 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  final supabase = Supabase.instance.client;
-                  final fetchedData =
-                      await supabase.from(SettlementTable.tableName).select(
-                            SettlementTable.number,
-                            const FetchOptions(
-                              count: CountOption.exact,
-                            ),
-                          );
+                  final result = await AuthService.resetPasswordForEmail(
+                    email: 'nabilsoumanou7@gmail.com',
+                    //  password: 'p@ssword',
+                  );
                   //;
                   //  .eq(SettlementTable.cardId, 14);
                   debugPrint(
-                    'data: ${fetchedData.count.toString()}',
+                    'data: ${result.runtimeType.toString()}',
                   );
 
                   setState(() {
-                    data = fetchedData.count;
+                    data = result.runtimeType;
                   });
                 },
               ),

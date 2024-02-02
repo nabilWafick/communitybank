@@ -52,7 +52,7 @@ class CustomerCardsService {
 
       var query = supabase
           .from(CustomerCardTable.tableName)
-          .stream(primaryKey: [CustomerCardTable.id]).order(
+          .stream(primaryKey: [CustomerCardTable.label]).order(
         CustomerCardTable.id,
         ascending: true,
       );

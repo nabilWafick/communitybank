@@ -56,7 +56,7 @@ class ProductsService {
       var query = supabase
           .from(ProductTable.tableName)
           .stream(primaryKey: [ProductTable.id]).order(
-        ProductTable.id,
+        ProductTable.name,
         ascending: true,
       );
 

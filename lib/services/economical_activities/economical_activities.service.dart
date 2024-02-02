@@ -52,7 +52,7 @@ class EconomicalActivtiesService {
 
       var query = supabase
           .from(EconomicalActivityTable.tableName)
-          .stream(primaryKey: [EconomicalActivityTable.id]).order(
+          .stream(primaryKey: [EconomicalActivityTable.name]).order(
         EconomicalActivityTable.id,
         ascending: true,
       );

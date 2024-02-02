@@ -61,9 +61,7 @@ class _CustomerAddingConfirmationDialogState
                     ),
                     IconButton(
                       onPressed: () {
-                        showConfirmationButton.value
-                            ? Navigator.of(context).pop()
-                            : () {};
+                        Navigator.of(context).pop();
                       },
                       icon: const Icon(
                         Icons.close_rounded,
@@ -141,9 +139,7 @@ class _CustomerAddingConfirmationDialogState
                     text: 'Annuler',
                     backgroundColor: CBColors.sidebarTextColor,
                     onPressed: () {
-                      showConfirmationButton.value
-                          ? Navigator.of(context).pop()
-                          : () {};
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),

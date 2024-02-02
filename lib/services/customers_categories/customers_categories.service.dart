@@ -52,7 +52,7 @@ class CustomersCategoriesService {
 
       var query = supabase
           .from(CustomerCategoryTable.tableName)
-          .stream(primaryKey: [CustomerCategoryTable.id]).order(
+          .stream(primaryKey: [CustomerCategoryTable.name]).order(
         CustomerCategoryTable.id,
         ascending: true,
       );

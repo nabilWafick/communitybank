@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:communitybank/controllers/agent/agent.controller.dart';
+import 'package:communitybank/controllers/auth/auth.controller.dart';
 import 'package:communitybank/controllers/forms/validators/login/login.validator.dart';
 import 'package:communitybank/controllers/forms/validators/registration/registration.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
@@ -12,7 +13,6 @@ import 'package:communitybank/views/widgets/forms/response_dialog/response_dialo
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthFunctions {
   static Future<void> register({
@@ -36,16 +36,14 @@ class AuthFunctions {
       if (agent == null) {
         newUserStatus = ServiceResponse.failed;
         authResponseMessage =
-            'Opération annulée \nCompte non créé : Email Inconnu';
+            'Opération annulée \nCompte non créé: Email Inconnu';
       } else {
-        final supabase = Supabase.instance.client;
-
-        final authResponse = await supabase.auth.signUp(
+        final registeringStatus = await AuthController.signUp(
           email: newUserEmail,
           password: newUserPassword,
         );
 
-        if (authResponse.user != null) {
+        if (registeringStatus == ServiceResponse.success) {
           newUserStatus = ServiceResponse.success;
           authResponseMessage = 'Opération réussie \nCompte créé avec succès !';
         } else {
@@ -91,7 +89,7 @@ class AuthFunctions {
       final userEmail = ref.watch(userEmailProvider);
       final userPassword = ref.watch(userPasswordProvider);
 
-      ServiceResponse userStatus;
+      ServiceResponse userStatus = ServiceResponse.waiting;
 
       final agent = await AgentsController.getOneByEmail(email: userEmail);
 
@@ -100,21 +98,22 @@ class AuthFunctions {
       if (agent == null) {
         userStatus = ServiceResponse.failed;
         authResponseMessage =
-            'Opération annulée \nNon connecté : Email Inconnu';
+            'Opération annulée \nNon connecté(e): Email Inconnu';
       } else {
-        final supabase = Supabase.instance.client;
-
-        final authResponse = await supabase.auth.signInWithPassword(
+        final loginStatus = await AuthController.signIn(
           email: userEmail,
           password: userPassword,
         );
 
-        if (authResponse.user != null) {
+        debugPrint('loginStatus: $loginStatus');
+
+        if (loginStatus == ServiceResponse.success) {
           userStatus = ServiceResponse.success;
-          authResponseMessage = 'Opération réussie \nConnecté avec succès !';
+          authResponseMessage = 'Opération réussie \nConnecté(e) avec succès !';
         } else {
           userStatus = ServiceResponse.failed;
-          authResponseMessage = 'Opération échouée \nNon connecté';
+          authResponseMessage =
+              'Opération échouée \nNon connecté(e): Identifiants incorrects';
         }
       }
 
@@ -160,11 +159,8 @@ class AuthFunctions {
   }
 
   static Future<void> logout(BuildContext context) async {
-    final supabase = Supabase.instance.client;
+    await AuthController.signOut();
 
-    await supabase.auth.signOut();
-
-    //  set user data in shared preferences
     final prefs = await SharedPreferences.getInstance();
 
     // remove the agent id so as to facilitate some tasks like settlements adding
@@ -177,12 +173,5 @@ class AuthFunctions {
     prefs.remove(CBConstants.agentFirstnamesPrefKey);
 
     // remove the agent email
-    prefs.remove(CBConstants.agentEmailPrefKey);
-
-    //  Navigator.of(context).push(
-    //    MaterialPageRoute(
-    //      builder: (context) => const MainApp(),
-    //    ),
-    //  );
   }
 }

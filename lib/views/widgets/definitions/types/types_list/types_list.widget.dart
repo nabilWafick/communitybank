@@ -3,7 +3,6 @@ import 'package:communitybank/controllers/types/types.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/types/types_crud.function.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
-import 'package:communitybank/services/types/types.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/images_shower/multiple/multiple_image_shower.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
@@ -40,18 +39,6 @@ final typesListStreamProvider = StreamProvider<List<Type>>((ref) async* {
     // ref: ref,
     selectedTypeStake: selectedTypePrice,
     selectedProductId: selectedTypeProduct.id,
-  );
-});
-
-final typesListMapStreamProvider = StreamProvider<List<Map>>((ref) async* {
-  final selectedTypePrice =
-      ref.watch(listStringDropdownProvider('types-stackes'));
-  // final selectedTypeProduct =
-  //     ref.watch(listProductDropdownProvider('type-products'));
-  yield* TypesService.getAll(
-    // ref: ref,
-    selectedTypeStake: selectedTypePrice,
-    //  selectedProductId: selectedTypeProduct.id,
   );
 });
 

@@ -52,7 +52,7 @@ class LocalitiesService {
 
       var query = supabase
           .from(LocalityTable.tableName)
-          .stream(primaryKey: [LocalityTable.id]).order(
+          .stream(primaryKey: [LocalityTable.name]).order(
         LocalityTable.id,
         ascending: true,
       );

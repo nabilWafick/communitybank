@@ -50,9 +50,7 @@ class _LocalityAddingFormState extends ConsumerState<LocalityAddingForm> {
                       ),
                       IconButton(
                         onPressed: () {
-                          showValidatedButton.value
-                              ? Navigator.of(context).pop()
-                              : () {};
+                          Navigator.of(context).pop();
                         },
                         icon: const Icon(
                           Icons.close_rounded,
@@ -98,9 +96,7 @@ class _LocalityAddingFormState extends ConsumerState<LocalityAddingForm> {
                       text: 'Fermer',
                       backgroundColor: CBColors.sidebarTextColor,
                       onPressed: () {
-                        showValidatedButton.value
-                            ? Navigator.of(context).pop()
-                            : () {};
+                        Navigator.of(context).pop();
                       },
                     ),
                   ),
