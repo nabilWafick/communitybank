@@ -46,17 +46,22 @@ class Collector {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       //  CollectorTable.id: id,
       CollectorTable.name: name,
       CollectorTable.firstnames: firstnames,
       CollectorTable.phoneNumber: phoneNumber,
       CollectorTable.address: address,
       CollectorTable.profile: profile,
-      CollectorTable.createdAt: createdAt.toIso8601String(),
-      CollectorTable.updatedAt: updatedAt.toIso8601String(),
     };
+    if (!isAdding) {
+      map[CollectorTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Collector.fromMap(Map<String, dynamic> map) {
@@ -72,7 +77,9 @@ class Collector {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(
+        isAdding: true,
+      ));
 
   factory Collector.fromJson(String source) =>
       Collector.fromMap(json.decode(source));

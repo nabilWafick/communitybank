@@ -42,15 +42,20 @@ class Settlement {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       SettlementTable.number: number,
       SettlementTable.cardId: cardId,
       SettlementTable.agentId: agentId,
       SettlementTable.collecteAt: collectedAt.toIso8601String(),
-      SettlementTable.createdAt: createdAt.toIso8601String(),
-      SettlementTable.updatedAt: updatedAt.toIso8601String(),
     };
+    if (!isAdding) {
+      map[SettlementTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Settlement.fromMap(Map<String, dynamic> map) {
@@ -65,7 +70,9 @@ class Settlement {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(
+        isAdding: true,
+      ));
 
   factory Settlement.fromJson(String source) =>
       Settlement.fromMap(json.decode(source));

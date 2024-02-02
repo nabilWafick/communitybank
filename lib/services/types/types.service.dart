@@ -13,7 +13,9 @@ class TypesService {
       response = await supabase
           .from(TypeTable.tableName)
           .insert(
-            type.toMap(),
+            type.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the type data as Map<String,dynamic>
@@ -125,8 +127,10 @@ class TypesService {
       // update a specific line
       response = await supabase.from(TypeTable.tableName).update(
         {
-          ...type.toMap(),
-          TypeTable.updatedAt: DateTime.now().toIso8601String(),
+          ...type.toMap(
+            isAdding: false,
+          ),
+          //  TypeTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

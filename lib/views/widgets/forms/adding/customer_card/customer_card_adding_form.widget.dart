@@ -1,5 +1,5 @@
-import 'package:communitybank/controllers/forms/on_changed/customer_card/customer_card.on_changed.dart';
-import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+//import 'package:communitybank/controllers/forms/on_changed/customer_card/customer_card.on_changed.dart';
+//import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
@@ -69,7 +69,7 @@ class _CustomerCardAddingFormState
                   ),
                   Wrap(
                     children: [
-                      Container(
+                      /*  Container(
                         margin: const EdgeInsets.symmetric(
                           horizontal: 10.0,
                         ),
@@ -83,9 +83,9 @@ class _CustomerCardAddingFormState
                           validator: CustomerCardValidators.customerCardLabel,
                           onChanged: CustomerCardOnChanged.customerCardLabel,
                         ),
-                      ),
+                      ),*/
                       Container(
-                        alignment: Alignment.center,
+                        alignment: Alignment.centerLeft,
                         margin: const EdgeInsets.only(
                           top: 10.0,
                           bottom: 10.0,
@@ -95,6 +95,7 @@ class _CustomerCardAddingFormState
                         width: formCardWidth / 1.16,
                         child: CBFormTypeDropdown(
                           width: formCardWidth / 1.16,
+                          menuHeigth: 500.0,
                           label: 'Type',
                           providerName: 'customer-card-adding-type',
                           dropdownMenuEntriesLabels: typeListStream.when(
@@ -138,6 +139,11 @@ class _CustomerCardAddingFormState
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
+                              debugPrint(
+                                DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                              );
                               CustomerCardCRUDFunctions.create(
                                 context: context,
                                 formKey: formKey,

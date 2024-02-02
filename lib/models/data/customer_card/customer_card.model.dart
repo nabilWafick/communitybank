@@ -48,16 +48,22 @@ class CustomerCard {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       CustomerCardTable.label: label,
       CustomerCardTable.typeId: typeId,
       CustomerCardTable.customerAccountId: customerAccountId,
       CustomerCardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
       CustomerCardTable.repaidAt: repaidAt?.toIso8601String(),
-      CustomerCardTable.createdAt: createdAt.toIso8601String(),
-      CustomerCardTable.updatedAt: updatedAt.toIso8601String(),
     };
+
+    if (!isAdding) {
+      map[CustomerCardTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory CustomerCard.fromMap(Map<String, dynamic> map) {
@@ -88,7 +94,7 @@ class CustomerCard {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(isAdding: true));
 
   factory CustomerCard.fromJson(String source) =>
       CustomerCard.fromMap(json.decode(source));

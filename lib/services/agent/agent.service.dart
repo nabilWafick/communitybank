@@ -15,7 +15,9 @@ class AgentsService {
       response = await supabase
           .from(AgentTable.tableName)
           .insert(
-            agent.toMap(),
+            agent.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -120,8 +122,10 @@ class AgentsService {
       // update a specific line
       response = await supabase.from(AgentTable.tableName).update(
         {
-          ...agent.toMap(),
-          AgentTable.updatedAt: DateTime.now().toIso8601String(),
+          ...agent.toMap(
+            isAdding: false,
+          ),
+          //  AgentTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

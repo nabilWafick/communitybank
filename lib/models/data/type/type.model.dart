@@ -44,22 +44,20 @@ class Type {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    //  List<int> typeProductsIds = [];
-    //  List<int> typeProductsNumbers = [];
-
-    //  for (int i = 0; i < products.length; i++) {
-    //    typeProductsIds.add(products[i].id!);
-    //    typeProductsNumbers.add(products[i].number!);
-    // }
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       TypeTable.name: name,
       TypeTable.stake: stake,
       TypeTable.productsIds: productsIds,
       TypeTable.productsNumbers: productsNumber,
-      TypeTable.createdAt: createdAt.toIso8601String(),
-      TypeTable.updatedAt: updatedAt.toIso8601String(),
     };
+    if (!isAdding) {
+      map[TypeTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Type.fromMap(Map<String, dynamic> map) {
@@ -74,7 +72,9 @@ class Type {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(
+        isAdding: true,
+      ));
 
   factory Type.fromJson(String source) => Type.fromMap(json.decode(source));
 

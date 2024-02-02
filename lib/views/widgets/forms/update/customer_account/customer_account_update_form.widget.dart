@@ -108,6 +108,7 @@ class _CustomerAccountUpdateFormState
 
                                   return CBFormCustomerDropdown(
                                     width: formCardWidth / 1.2,
+                                    menuHeigth: 500.0,
                                     label: 'Client',
                                     providerName:
                                         'customer-account-update-customer',
@@ -153,6 +154,7 @@ class _CustomerAccountUpdateFormState
 
                                   return CBFormCollectorDropdown(
                                     width: formCardWidth / 1.2,
+                                    menuHeigth: 500.0,
                                     label: 'Chargé de compte',
                                     providerName:
                                         'customer-account-update-collector',

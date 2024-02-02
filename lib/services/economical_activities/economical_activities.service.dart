@@ -14,7 +14,9 @@ class EconomicalActivtiesService {
       response = await supabase
           .from(EconomicalActivityTable.tableName)
           .insert(
-            economicalActivity.toMap(),
+            economicalActivity.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -52,8 +54,8 @@ class EconomicalActivtiesService {
 
       var query = supabase
           .from(EconomicalActivityTable.tableName)
-          .stream(primaryKey: [EconomicalActivityTable.name]).order(
-        EconomicalActivityTable.id,
+          .stream(primaryKey: [EconomicalActivityTable.id]).order(
+        EconomicalActivityTable.name,
         ascending: true,
       );
 
@@ -95,8 +97,10 @@ class EconomicalActivtiesService {
       // update a specific line
       response = await supabase.from(EconomicalActivityTable.tableName).update(
         {
-          ...economicalActivity.toMap(),
-          EconomicalActivityTable.updatedAt: DateTime.now().toIso8601String(),
+          ...economicalActivity.toMap(
+            isAdding: false,
+          ),
+          //  EconomicalActivityTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

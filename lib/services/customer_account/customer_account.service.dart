@@ -14,7 +14,7 @@ class CustomersAccountsService {
       response = await supabase
           .from(CustomerAccountTable.tableName)
           .insert(
-            customerAccount.toMap(),
+            customerAccount.toMap(isAdding: true),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -101,8 +101,10 @@ class CustomersAccountsService {
       // update a specific line
       response = await supabase.from(CustomerAccountTable.tableName).update(
         {
-          ...customerAccount.toMap(),
-          CustomerAccountTable.updatedAt: DateTime.now().toIso8601String(),
+          ...customerAccount.toMap(
+            isAdding: false,
+          ),
+          //  CustomerAccountTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

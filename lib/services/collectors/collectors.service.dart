@@ -16,7 +16,7 @@ class CollectorsService {
       response = await supabase
           .from(CollectorTable.tableName)
           .insert(
-            collector.toMap(),
+            collector.toMap(isAdding: true),
             /* {
           CollectorTable.name: collector.name,
           CollectorTable.purchasePrice: collector.purchasePrice,
@@ -108,8 +108,8 @@ class CollectorsService {
       // update a specific line
       response = await supabase.from(CollectorTable.tableName).update(
         {
-          ...collector.toMap(),
-          CollectorTable.updatedAt: DateTime.now().toIso8601String(),
+          ...collector.toMap(isAdding: false),
+          //  CollectorTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

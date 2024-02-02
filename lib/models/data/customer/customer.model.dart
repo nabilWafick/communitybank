@@ -75,8 +75,10 @@ class Customer {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       //  CustomerTable.id: id,
       CustomerTable.name: name,
       CustomerTable.firstnames: firstnames,
@@ -90,9 +92,13 @@ class Customer {
       CustomerTable.localityId: localityId,
       CustomerTable.profile: profile,
       CustomerTable.signature: signature,
-      CustomerTable.createdAt: createdAt.toIso8601String(),
-      CustomerTable.updatedAt: updatedAt.toIso8601String(),
     };
+
+    if (!isAdding) {
+      map[CustomerTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Customer.fromMap(Map<String, dynamic> map) {
@@ -115,7 +121,9 @@ class Customer {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(
+        isAdding: true,
+      ));
 
   factory Customer.fromJson(String source) =>
       Customer.fromMap(json.decode(source));

@@ -118,6 +118,7 @@ class _CustomerCardUpdateFormState
                         width: formCardWidth / 1.16,
                         child: CBFormTypeDropdown(
                           width: formCardWidth / 1.16,
+                          menuHeigth: 500.0,
                           label: 'Type',
                           providerName: 'customer-card-update-type',
                           dropdownMenuEntriesLabels: typeListStream.when(

@@ -16,7 +16,9 @@ class ProductsService {
       response = await supabase
           .from(ProductTable.tableName)
           .insert(
-            product.toMap(),
+            product.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -123,8 +125,10 @@ class ProductsService {
       // update a specific line
       response = await supabase.from(ProductTable.tableName).update(
         {
-          ...product.toMap(),
-          ProductTable.updatedAt: DateTime.now().toIso8601String(),
+          ...product.toMap(
+            isAdding: false,
+          ),
+          //  ProductTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

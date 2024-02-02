@@ -14,7 +14,9 @@ class LocalitiesService {
       response = await supabase
           .from(LocalityTable.tableName)
           .insert(
-            locality.toMap(),
+            locality.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -52,8 +54,8 @@ class LocalitiesService {
 
       var query = supabase
           .from(LocalityTable.tableName)
-          .stream(primaryKey: [LocalityTable.name]).order(
-        LocalityTable.id,
+          .stream(primaryKey: [LocalityTable.id]).order(
+        LocalityTable.name,
         ascending: true,
       );
 
@@ -95,8 +97,10 @@ class LocalitiesService {
       // update a specific line
       response = await supabase.from(LocalityTable.tableName).update(
         {
-          ...locality.toMap(),
-          LocalityTable.updatedAt: DateTime.now().toIso8601String(),
+          ...locality.toMap(
+            isAdding: false,
+          ),
+          //  LocalityTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

@@ -14,7 +14,9 @@ class SettlementsService {
       response = await supabase
           .from(SettlementTable.tableName)
           .insert(
-            settlement.toMap(),
+            settlement.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -105,8 +107,10 @@ class SettlementsService {
       // update a specific line
       response = await supabase.from(SettlementTable.tableName).update(
         {
-          ...settlement.toMap(),
-          SettlementTable.updatedAt: DateTime.now().toIso8601String(),
+          ...settlement.toMap(
+            isAdding: false,
+          ),
+          //  SettlementTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

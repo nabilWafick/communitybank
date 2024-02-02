@@ -29,13 +29,17 @@ class Locality {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      //  LocalityTable.id: id,
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       LocalityTable.name: name,
-      LocalityTable.createdAt: createdAt.toIso8601String(),
-      LocalityTable.updatedAt: updatedAt.toIso8601String(),
     };
+    if (!isAdding) {
+      map[LocalityTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Locality.fromMap(Map<String, dynamic> map) {
@@ -47,7 +51,7 @@ class Locality {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(isAdding: true));
 
   factory Locality.fromJson(String source) =>
       Locality.fromMap(json.decode(source));

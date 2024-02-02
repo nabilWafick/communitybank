@@ -38,14 +38,20 @@ class CustomerAccount {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       CustomerAccountTable.customerId: customerId,
       CustomerAccountTable.collectorId: collectorId,
       CustomerAccountTable.customerCardsIds: customerCardsIds,
-      CustomerAccountTable.createdAt: createdAt.toIso8601String(),
-      CustomerAccountTable.updatedAt: updatedAt.toIso8601String(),
     };
+
+    if (!isAdding) {
+      map[CustomerAccountTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory CustomerAccount.fromMap(Map<String, dynamic> map) {
@@ -60,7 +66,9 @@ class CustomerAccount {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(
+        isAdding: true,
+      ));
 
   factory CustomerAccount.fromJson(String source) =>
       CustomerAccount.fromMap(json.decode(source));

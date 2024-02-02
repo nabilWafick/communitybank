@@ -14,7 +14,9 @@ class PersonalStatusService {
       response = await supabase
           .from(PersonalStatusTable.tableName)
           .insert(
-            personalStatus.toMap(),
+            personalStatus.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -52,8 +54,8 @@ class PersonalStatusService {
 
       var query = supabase
           .from(PersonalStatusTable.tableName)
-          .stream(primaryKey: [PersonalStatusTable.name]).order(
-        PersonalStatusTable.id,
+          .stream(primaryKey: [PersonalStatusTable.id]).order(
+        PersonalStatusTable.name,
         ascending: true,
       );
 
@@ -95,8 +97,10 @@ class PersonalStatusService {
       // update a specific line
       response = await supabase.from(PersonalStatusTable.tableName).update(
         {
-          ...personalStatus.toMap(),
-          PersonalStatusTable.updatedAt: DateTime.now().toIso8601String(),
+          ...personalStatus.toMap(
+            isAdding: false,
+          ),
+          //  PersonalStatusTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

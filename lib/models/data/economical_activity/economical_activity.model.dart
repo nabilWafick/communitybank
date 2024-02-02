@@ -29,13 +29,17 @@ class EconomicalActivity {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      //  EconomicalActivityTable.id: id,
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       EconomicalActivityTable.name: name,
-      EconomicalActivityTable.createdAt: createdAt.toIso8601String(),
-      EconomicalActivityTable.updatedAt: updatedAt.toIso8601String(),
     };
+    if (!isAdding) {
+      map[EconomicalActivityTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory EconomicalActivity.fromMap(Map<String, dynamic> map) {
@@ -47,7 +51,7 @@ class EconomicalActivity {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(isAdding: true));
 
   factory EconomicalActivity.fromJson(String source) =>
       EconomicalActivity.fromMap(json.decode(source));

@@ -80,7 +80,7 @@ class _CustomerAccountOwnerCardSelectionState
                   text: 'Customer Card Dropdown',
                 ),*/
                         CBCustomerAccountOwnerCardSelectionDropdown(
-                          width: widget.formCardWidth / 3.5,
+                          width: widget.formCardWidth / 2,
                           label: 'Carte',
                           providerName: widget.customerCardDropdownProvider,
                           dropdownMenuEntriesLabels: remainCustomerCards,

@@ -40,16 +40,20 @@ class Product {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      // ProductTable.id: id,
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       ProductTable.name: name,
       ProductTable.purchasePrice: purchasePrice,
       ProductTable.picture: picture,
-      //   'number': number,
-      ProductTable.createdAt: createdAt.toIso8601String(),
-      ProductTable.updatedAt: updatedAt.toIso8601String(),
     };
+
+    if (!isAdding) {
+      map[ProductTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Product.fromMap(Map<String, dynamic> map) {
@@ -64,7 +68,9 @@ class Product {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(
+        isAdding: true,
+      ));
 
   factory Product.fromJson(String source) =>
       Product.fromMap(json.decode(source));

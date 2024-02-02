@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:math';
+
 import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
@@ -21,7 +23,8 @@ class CustomerCardCRUDFunctions {
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
-      final customerCardLabel = ref.watch(customerCardLabelProvider);
+      //  final customerCardLabel = ref.watch(customerCardLabelProvider);
+      final customerCardLabel = generateRandomStringFromDateTimeNowMillis();
       final customerCardType =
           ref.watch(formTypeDropdownProvider('customer-card-adding-type'));
 
@@ -232,4 +235,22 @@ class CustomerCardCRUDFunctions {
     );
     return;
   }
+}
+
+String generateRandomStringFromDateTimeNowMillis() {
+  String millisecondsString = DateTime.now().millisecondsSinceEpoch.toString();
+  String result = '';
+  Random random = Random();
+
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  for (int i = 0; i < millisecondsString.length; i++) {
+    result += millisecondsString[i];
+    if ((i + 1) % 3 == 0 && i != millisecondsString.length - 1) {
+      // add a random letter  after each three letters
+      result += characters[random.nextInt(characters.length)];
+    }
+  }
+
+  return result;
 }

@@ -29,7 +29,7 @@ class AuthController {
 
     debugPrint('response runimeType:${response.runtimeType}');
 
-    return response.runtimeType != AuthResponse && response.user != null
+    return response.runtimeType == AuthResponse
         ? ServiceResponse.success
         : ServiceResponse.failed;
   }

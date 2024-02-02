@@ -29,13 +29,18 @@ class PersonalStatus {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      //   PersonalStatusTable.id: id,
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       PersonalStatusTable.name: name,
-      PersonalStatusTable.createdAt: createdAt.toIso8601String(),
-      PersonalStatusTable.updatedAt: updatedAt.toIso8601String(),
     };
+
+    if (!isAdding) {
+      map[PersonalStatusTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory PersonalStatus.fromMap(Map<String, dynamic> map) {
@@ -47,7 +52,7 @@ class PersonalStatus {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(isAdding: true));
 
   factory PersonalStatus.fromJson(String source) =>
       PersonalStatus.fromMap(json.decode(source));

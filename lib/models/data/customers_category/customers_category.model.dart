@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
 import 'package:communitybank/models/tables/customers_category/customers_category_table.model.dart';
 import 'package:flutter/widgets.dart';
 
@@ -29,13 +30,17 @@ class CustomerCategory {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      //  CustomerCategoryTable.id: id,
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       CustomerCategoryTable.name: name,
-      CustomerCategoryTable.createdAt: createdAt.toIso8601String(),
-      CustomerCategoryTable.updatedAt: updatedAt.toIso8601String(),
     };
+    if (!isAdding) {
+      map[CustomerCardTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory CustomerCategory.fromMap(Map<String, dynamic> map) {
@@ -47,7 +52,7 @@ class CustomerCategory {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(isAdding: true));
 
   factory CustomerCategory.fromJson(String source) =>
       CustomerCategory.fromMap(json.decode(source));

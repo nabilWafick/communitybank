@@ -14,7 +14,9 @@ class CustomerCardsService {
       response = await supabase
           .from(CustomerCardTable.tableName)
           .insert(
-            customerCard.toMap(),
+            customerCard.toMap(
+              isAdding: true,
+            ),
           )
           .select<List<Map<String, dynamic>>>();
       // return the insertion result, the poduct data as Map<String,dynamic>
@@ -52,8 +54,8 @@ class CustomerCardsService {
 
       var query = supabase
           .from(CustomerCardTable.tableName)
-          .stream(primaryKey: [CustomerCardTable.label]).order(
-        CustomerCardTable.id,
+          .stream(primaryKey: [CustomerCardTable.id]).order(
+        CustomerCardTable.label,
         ascending: true,
       );
 
@@ -99,8 +101,10 @@ class CustomerCardsService {
       // update a specific line
       response = await supabase.from(CustomerCardTable.tableName).update(
         {
-          ...customerCard.toMap(),
-          CustomerCardTable.updatedAt: DateTime.now().toIso8601String(),
+          ...customerCard.toMap(
+            isAdding: false,
+          ),
+          //  CustomerCardTable.updatedAt: DateTime.now().toIso8601String(),
         },
       ).match(
         {

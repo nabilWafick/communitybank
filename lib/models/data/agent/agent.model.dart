@@ -53,8 +53,10 @@ class Agent {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap({required bool isAdding}) {
+    // hide creation and update date for avoiding time hacking
+    // by unsetting the system datetime
+    final map = {
       AgentTable.name: name,
       AgentTable.firstnames: firstnames,
       AgentTable.phoneNumber: phoneNumber,
@@ -62,9 +64,13 @@ class Agent {
       AgentTable.address: address,
       AgentTable.profile: profile,
       AgentTable.role: role,
-      AgentTable.createdAt: createdAt.toIso8601String(),
-      AgentTable.updatedAt: updatedAt.toIso8601String(),
     };
+
+    if (!isAdding) {
+      map[AgentTable.createdAt] = createdAt.toIso8601String();
+    }
+
+    return map;
   }
 
   factory Agent.fromMap(Map<String, dynamic> map) {
@@ -81,7 +87,7 @@ class Agent {
       updatedAt: DateTime.parse(map[AgentTable.updatedAt]),
     );
   }
-  String toJson() => json.encode(toMap());
+  String toJson() => json.encode(toMap(isAdding: true));
 
   factory Agent.fromJson(String source) => Agent.fromMap(json.decode(source));
 

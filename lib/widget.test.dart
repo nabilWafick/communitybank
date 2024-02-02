@@ -1,11 +1,9 @@
-import 'package:communitybank/models/tables/settlement/settlement_table.model.dart';
 import 'package:communitybank/services/auth/auth.service.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {
   return;
@@ -29,8 +27,8 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
 
   @override
   Widget build(BuildContext context) {
-    final heigth = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
+    //  final heigth = MediaQuery.of(context).size.height;
+    //  final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: SizedBox(
