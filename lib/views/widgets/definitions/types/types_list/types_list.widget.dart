@@ -169,10 +169,10 @@ class _TypesListState extends ConsumerState<TypesList> {
 
                                                 if (typeProducts.isEmpty) {
                                                   typeProducts =
-                                                      '$typeProductNumber ${product.name}';
+                                                      '$typeProductNumber * ${product.name}';
                                                 } else {
                                                   typeProducts =
-                                                      '$typeProducts, $typeProductNumber ${product.name}';
+                                                      '$typeProducts, $typeProductNumber * ${product.name}';
                                                 }
                                               }
                                             }
@@ -206,10 +206,10 @@ class _TypesListState extends ConsumerState<TypesList> {
                                               
                                               if (typeProducts.isEmpty) {
                                                 typeProducts =
-                                                    '$typeProductNumber ${product.name}';
+                                                    '$typeProductNumber * ${product.name}';
                                               } else {
                                                 typeProducts =
-                                                    '$typeProducts, $typeProductNumber ${product.name}';
+                                                    '$typeProducts, $typeProductNumber * ${product.name}';
                                               }
                                             }
                                           }
@@ -350,10 +350,10 @@ class _TypesListState extends ConsumerState<TypesList> {
 
                                                 if (typeProducts.isEmpty) {
                                                   typeProducts =
-                                                      '$typeProductNumber ${product.name}';
+                                                      '$typeProductNumber * ${product.name}';
                                                 } else {
                                                   typeProducts =
-                                                      '$typeProducts, $typeProductNumber ${product.name}';
+                                                      '$typeProducts, $typeProductNumber * ${product.name}';
                                                 }
                                               }
                                             }
@@ -387,10 +387,10 @@ class _TypesListState extends ConsumerState<TypesList> {
                                               
                                               if (typeProducts.isEmpty) {
                                                 typeProducts =
-                                                    '$typeProductNumber ${product.name}';
+                                                    '$typeProductNumber * ${product.name}';
                                               } else {
                                                 typeProducts =
-                                                    '$typeProducts, $typeProductNumber ${product.name}';
+                                                    '$typeProducts, $typeProductNumber * ${product.name}';
                                               }
                                             }
                                           }
