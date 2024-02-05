@@ -226,7 +226,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                                   DataCell(
                                     CBText(
                                         text:
-                                            '${customer.firstnames} ${customer.name}'),
+                                            '${customer.name} ${customer.firstnames}',),
                                   ),
                                   DataCell(
                                     CBText(text: customer.phoneNumber),

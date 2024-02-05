@@ -8,7 +8,7 @@ import 'package:communitybank/views/widgets/definitions/collectors/collectors_li
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/customer_account_owner_card_selection/customer_account_owner_card_selection.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/collector/collector_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_dropdown/customer_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer/customer_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -218,8 +218,8 @@ class _CustomerAccountUpdateFormState
                             CustomerAccountOwnerCardSelection(
                               index: mapEntry.key,
                               isVisible: mapEntry.value,
-                              customerCardDropdownProvider:
-                                  'customer-account-selection-update-customer-card-${mapEntry.key}',
+                              customerCardTypeSelectionDropdownProvider:
+                                  'customer-account-selection-update-customer-card-type-${mapEntry.key}',
                               customerCardId: widget
                                   .customerAccount.customerCardsIds
                                   .firstWhere(
@@ -234,7 +234,7 @@ class _CustomerAccountUpdateFormState
                             CustomerAccountOwnerCardSelection(
                               index: mapEntry.key,
                               isVisible: mapEntry.value,
-                              customerCardDropdownProvider:
+                              customerCardTypeSelectionDropdownProvider:
                                   'customer-account-selection-update-customer-card-${mapEntry.key}',
                               formCardWidth: formCardWidth,
                             ),

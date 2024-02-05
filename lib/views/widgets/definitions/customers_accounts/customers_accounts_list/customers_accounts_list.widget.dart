@@ -108,146 +108,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                   label: SizedBox(),
                 ),
               ],
-              rows:
-                  /* isSearching
-                  ? searchedCustomersAccountsList.when(
-                      data: (data) {
-                        //  debugPrint('customersAccount Stream Data: $data');
-                        return data
-                            .map(
-                              (customerAccount) => DataRow(
-                                cells: [
-                                  DataCell(
-                                    CBText(
-                                      text: customerAccount.id!.toString(),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customersListStream.when(
-                                        data: (data) {
-                                          final accountOwner = data.firstWhere(
-                                              (customer) =>
-                                                  customer.id ==
-                                                  customerAccount.customerId);
-                                          return '${accountOwner.firstnames} ${accountOwner.name}';
-                                        },
-                                        error: (error, stackTrace) => '',
-                                        loading: () => '',
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: collectorsListStream.when(
-                                        data: (data) {
-                                          final accountCollector =
-                                              data.firstWhere((collector) =>
-                                                  collector.id ==
-                                                  customerAccount.collectorId);
-                                          return '${accountCollector.firstnames} ${accountCollector.name}';
-                                        },
-                                        error: (error, stackTrace) => '',
-                                        loading: () => '',
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                        text: customersCardListStream.when(
-                                      data: (data) {
-                                        // reset type products list for avoiding mutilple product adding which will be caused by stream
-                                        customerAccount.customerCards = [];
-                                        String customerAccountOwnerCards = '';
-                                        //  type.products.clear();
-                                        for (CustomerCard customerCard in data) {
-                                          for (var customerCardId
-                                              in customerAccount
-                                                  .customerCardsIds!) {
-                                            if (customerCard.id! ==
-                                                customerCardId) {
-                                              // get product number in type.productsNumber
-                                              // by using the index of product id in type.productsIds
-        
-                                              customerAccount.customerCards
-                                                  .add(customerCard);
-        
-                                              if (customerAccountOwnerCards
-                                                  .isEmpty) {
-                                                customerAccountOwnerCards =
-                                                    customerCard.label;
-                                              } else {
-                                                customerAccountOwnerCards =
-                                                    '$customerAccountOwnerCards  ${customerCard.label}';
-                                              }
-                                            }
-                                          }
-                                        }
-                                        //  debugPrint('type products: ${type.products}');
-                                        return customerAccountOwnerCards;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    )
-                                        // typeProducts,
-                                        //  type.products.length.toString(),
-                                        ),
-                                  ),
-                                  DataCell(
-                                    onTap: () {
-                                      FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: CustomerAccountUpdateForm(
-                                          customerAccount: customerAccount,
-                                        ),
-                                      );
-                                    },
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    // showEditIcon: true,
-                                  ),
-                                  DataCell(
-                                    onTap: () async {
-                                      FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog:
-                                            CustomerAccountDeletionConfirmationDialog(
-                                          customerAccount: customerAccount,
-                                          confirmToDelete:
-                                              CustomerAccountCRUDFunctions.delete,
-                                        ),
-                                      );
-                                    },
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: const Icon(
-                                        Icons.delete_sharp,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                            .toList();
-                      },
-                      error: (error, stack) {
-                        //  debugPrint('customersAccounts Stream Error');
-                        return [];
-                      },
-                      loading: () {
-                        //  debugPrint('customersAccounts Stream Loading');
-                        return [];
-                      },
-                    )
-                  : 
-                  */
-                  customersAccountsListStream.when(
+              rows: customersAccountsListStream.when(
                 data: (data) {
                   //  debugPrint('customersAccount Stream Data');
                   return data.map(
@@ -274,7 +135,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                                       if (customer.id ==
                                           customerAccount.customerId) {
                                         accountOwner =
-                                            '${customer.firstnames} ${customer.name}';
+                                            ' ${customer.name} ${customer.firstnames}';
                                         break;
                                       }
                                     }
@@ -304,7 +165,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                                       if (collector.id ==
                                           customerAccount.collectorId) {
                                         accountCollector =
-                                            '${collector.firstnames} ${collector.name}';
+                                            ' ${collector.name} ${collector.firstnames}';
                                         break;
                                       }
                                     }
@@ -362,7 +223,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                                   .state = {};
                               ref
                                   .read(
-                                      customerAccountSelectedOwnerCardsProvider
+                                      customerAccountOwnerSelectedCardsTypesProvider
                                           .notifier)
                                   .state = {};
                               // automatically add the type products inputs after rendering

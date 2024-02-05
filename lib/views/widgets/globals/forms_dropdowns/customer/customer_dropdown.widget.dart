@@ -86,7 +86,7 @@ class _CBFormCustomerDropdownState
                     .dropdownMenuEntriesLabels
                     .indexOf(dropdownMenuEntryLabel)],
                 label:
-                    '${dropdownMenuEntryLabel.firstnames} ${dropdownMenuEntryLabel.name}',
+                    '${dropdownMenuEntryLabel.name} ${dropdownMenuEntryLabel.firstnames} ',
                 style: const ButtonStyle(
                   textStyle: MaterialStatePropertyAll(
                     TextStyle(

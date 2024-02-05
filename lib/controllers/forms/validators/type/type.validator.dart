@@ -26,7 +26,7 @@ final typeSelectedProductsProvider = StateProvider<Map<String, Product>>(
 );
 
 final typeProductNumberProvider = StateProvider.family<int, int>(
-  (ref, productName) {
+  (ref, productIndex) {
     return 0;
   },
 );

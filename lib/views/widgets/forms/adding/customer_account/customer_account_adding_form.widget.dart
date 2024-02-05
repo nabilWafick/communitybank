@@ -5,7 +5,7 @@ import 'package:communitybank/views/widgets/definitions/collectors/collectors_li
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/customer_account_owner_card_selection/customer_account_owner_card_selection.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/collector/collector_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_dropdown/customer_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer/customer_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -27,7 +27,7 @@ class _CustomerAccountAddingFormState
     final showValidatedButton = useState<bool>(true);
     final customersListStream = ref.watch(customersListStreamProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
-    const formCardWidth = 500.0;
+    const formCardWidth = 590.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -84,6 +84,7 @@ class _CustomerAccountAddingFormState
                           width: formCardWidth / 1.2,
                           child: CBFormCustomerDropdown(
                             width: formCardWidth / 1.2,
+                            menuHeigth: 500.0,
                             label: 'Client',
                             providerName: 'customer-account-adding-customer',
                             dropdownMenuEntriesLabels: customersListStream.when(
@@ -108,6 +109,7 @@ class _CustomerAccountAddingFormState
                           width: formCardWidth / 1.2,
                           child: CBFormCollectorDropdown(
                             width: formCardWidth / 1.2,
+                            menuHeigth: 500.0,
                             label: 'Chargé de compte',
                             providerName: 'customer-account-adding-collector',
                             dropdownMenuEntriesLabels:
@@ -166,8 +168,8 @@ class _CustomerAccountAddingFormState
                           CustomerAccountOwnerCardSelection(
                             index: mapEntry.key,
                             isVisible: mapEntry.value,
-                            customerCardDropdownProvider:
-                                'customer-account-selection-adding-customer-card-${mapEntry.key}',
+                            customerCardTypeSelectionDropdownProvider:
+                                'customer-account-selection-adding-customer-card-type-${mapEntry.key}',
                             formCardWidth: formCardWidth,
                           ),
                         );

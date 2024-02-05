@@ -12,7 +12,7 @@ import 'package:communitybank/models/tables/customer_account/customer_account_ta
 import 'package:communitybank/services/customer_account/customer_account.service.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/collector/collector_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_dropdown/customer_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer/customer_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,12 +23,15 @@ class CustomerAccountCRUDFunctions {
     required WidgetRef ref,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
+    // save the the generwted card label
+    formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
-      final customerAccountSelectedOwnerCards =
-          ref.watch(customerAccountSelectedOwnerCardsProvider);
-//  if  any  customer card have  been  selected
-      if (customerAccountSelectedOwnerCards.isEmpty) {
+      final customerAccountOwnerSelectedCardsTypes =
+          ref.watch(customerAccountOwnerSelectedCardsTypesProvider);
+
+      //  if  any  customer card have not  been  added
+      if (customerAccountOwnerSelectedCardsTypes.isEmpty) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: ServiceResponse.failed,
           response: 'Le compte client doit avoir au moins une carte',
@@ -48,7 +51,7 @@ class CustomerAccountCRUDFunctions {
 
         // store selected customerCards
 
-        customerAccountSelectedOwnerCards.forEach((key, customerCard) {
+        customerAccountOwnerSelectedCardsTypes.forEach((key, customerCard) {
           customerAccountOwnerCards.add(customerCard);
         });
 
@@ -179,10 +182,10 @@ class CustomerAccountCRUDFunctions {
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
-      final customerAccountSelectedOwnerCards =
-          ref.watch(customerAccountSelectedOwnerCardsProvider);
+      /*    final customerAccountOwnerSelectedCardsTypes =
+          ref.watch(customerAccountOwnerSelectedCardsTypesProvider);
 //  if  any  customer card have  been  selected
-      if (customerAccountSelectedOwnerCards.isEmpty) {
+      if (customerAccountOwnerSelectedCardsTypes.isEmpty) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: ServiceResponse.failed,
           response: 'Le compte client doit avoir au moins une carte',
@@ -202,7 +205,7 @@ class CustomerAccountCRUDFunctions {
 
         // store selected customerCards
 
-        customerAccountSelectedOwnerCards.forEach((key, customerCard) {
+        customerAccountOwnerSelectedCardsTypes.forEach((key, customerCard) {
           customerAccountOwnerCards.add(customerCard);
         });
 
@@ -307,6 +310,7 @@ class CustomerAccountCRUDFunctions {
           );
         }
       }
+   */
     }
   }
 

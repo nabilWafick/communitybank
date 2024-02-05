@@ -42,7 +42,8 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                   ref.read(customerAccountAddedInputsProvider.notifier).state =
                       {};
                   ref
-                      .read(customerAccountSelectedOwnerCardsProvider.notifier)
+                      .read(customerAccountOwnerSelectedCardsTypesProvider
+                          .notifier)
                       .state = {};
                   FunctionsController.showAlertDialog(
                     context: context,
@@ -56,10 +57,6 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              /*  CBSearchInput(
-                hintText: 'Rechercher un compte client',
-                searchProvider: searchProvider('customers-accounts'),
-              ),*/
               const SizedBox(
                 width: 10.0,
               ),
