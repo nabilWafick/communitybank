@@ -332,7 +332,7 @@ class _TypesListState extends ConsumerState<TypesList> {
                                   ),
                                   DataCell(
                                     Consumer(builder: (BuildContext context,
-                                            WidgetRef ref, Widget? child) {
+                                        WidgetRef ref, Widget? child) {
                                       final productsListStream =
                                           ref.watch(productsListStreamProvider);
                                       return productsListStream.when(
@@ -365,45 +365,7 @@ class _TypesListState extends ConsumerState<TypesList> {
                                             const CBText(text: ''),
                                         loading: () => const CBText(text: ''),
                                       );
-                                    } // typeProducts,
-                                        //  type.products.length.toString(),
-                                        //   )
-
-                                        // },))
-                                        /*
-                                    CBText(
-                                        text: productsListStream.when(
-                                      data: (data) {
-                                        String typeProducts = '';
-                                        //  type.products.clear();
-                                        for (Product product in data) {
-                                          for (var productId in type.productsIds) {
-                                            if (product.id! == productId) {
-                                              
-                                              final typeProductNumber =
-                                                  type.productsNumber[type
-                                                      .productsIds
-                                                      .indexOf(productId)];
-                                              
-                                              if (typeProducts.isEmpty) {
-                                                typeProducts =
-                                                    '$typeProductNumber * ${product.name}';
-                                              } else {
-                                                typeProducts =
-                                                    '$typeProducts, $typeProductNumber * ${product.name}';
-                                              }
-                                            }
-                                          }
-                                        }
-                                        //  debugPrint('type products: ${type.products}');
-                                        return typeProducts;
-                                      },
-                                      error: (error, stackTrace) => '',
-                                      loading: () => '',
-                                    )*/
-                                        // typeProducts,
-                                        //  type.products.length.toString(),
-                                        ),
+                                    }),
                                   ),
                                   DataCell(
                                     onTap: () async {

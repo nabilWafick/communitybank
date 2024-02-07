@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:communitybank/controllers/customer_account/customer_account.controller.dart';
-import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
@@ -26,7 +25,7 @@ class CustomerAccountCRUDFunctions {
     required WidgetRef ref,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
-    // save the the generwted card label
+    // save the the genereted card label
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
@@ -142,6 +141,8 @@ class CustomerAccountCRUDFunctions {
             customerAccount: customerAccount,
           );
 
+          // will store every customer card adding status;
+          List<ServiceResponse> customerCardsAddingStatus = [];
           // will be used to check if all customer card have been created successfully
           bool isAllCustomerCardsAddedSuccessfully = false;
 
@@ -155,7 +156,7 @@ class CustomerAccountCRUDFunctions {
               /* customerAccountOwnerCards[i].customerAccountId =
                   newCustomerAccountMap[CustomerAccountTable.id];
                */
-              // set the customer account
+              // set the customer account for all customer cards
               customerAccountOwnerCards[i] =
                   customerAccountOwnerCards[i].copyWith(
                 customerAccountId:
@@ -182,9 +183,21 @@ class CustomerAccountCRUDFunctions {
                 newCustomerCardAddingStatus = ServiceResponse.success;
               }
 
+              customerCardsAddingStatus.add(newCustomerCardAddingStatus);
+
               // set the customer creation status
-              isAllCustomerCardsAddedSuccessfully =
-                  newCustomerCardAddingStatus == ServiceResponse.success;
+              //  isAllCustomerCardsAddedSuccessfully =
+              //      newCustomerCardAddingStatus == ServiceResponse.success;
+            }
+
+            // check if all adding is finished with success
+            for (ServiceResponse customerAddingStatus
+                in customerCardsAddingStatus) {
+              if (customerAddingStatus == ServiceResponse.success) {
+                isAllCustomerCardsAddedSuccessfully = true;
+              } else {
+                isAllCustomerCardsAddedSuccessfully = false;
+              }
             }
 
             // check if the account have been successfully created
@@ -258,15 +271,16 @@ class CustomerAccountCRUDFunctions {
     required BuildContext context,
     required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required CustomerAccount customerAccount,
+    required CustomerAccount customerAccountLast,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
     formKey.currentState!.save();
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
-      /*    final customerAccountOwnerSelectedCardsTypes =
+      final customerAccountOwnerSelectedCardsTypes =
           ref.watch(customerAccountOwnerSelectedCardsTypesProvider);
-//  if  any  customer card have  been  selected
+
+      //  if  any  customer card have not  been  added
       if (customerAccountOwnerSelectedCardsTypes.isEmpty) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: ServiceResponse.failed,
@@ -283,21 +297,63 @@ class CustomerAccountCRUDFunctions {
         final customerAccountCollector = ref.watch(
             formCollectorDropdownProvider('customer-account-update-collector'));
 
-        List<CustomerCard> customerAccountOwnerCards = [];
+        List<Type> customerAccountOwnerCardsTypes = [];
 
-        // store selected customerCards
-
-        customerAccountOwnerSelectedCardsTypes.forEach((key, customerCard) {
-          customerAccountOwnerCards.add(customerCard);
+        // store selected customerCards type
+        customerAccountOwnerSelectedCardsTypes.forEach((key, customerCardType) {
+          customerAccountOwnerCardsTypes.add(customerCardType);
         });
+
+        // get all input added (customer card input)
+        final customerAccountAddedInputs =
+            ref.watch(customerAccountAddedInputsProvider);
+
+        // store  all customer account owner cards labels
+        List<String> customerAccounOwnerCardsLabels = [];
+
+        // customerAccountCards ids are used as customerAccountAddedInputs keys
+        // while creating customerCard inputs widgets in customerAccount update
+        // form, if in update a new customerCard is created,
+        // we use DateTime.now().fromMicrosecondsSinceEpoch as key
+        // In update crud function, customerAccountAddedInputs keys will
+        // help to detect and know the customerCards which existed in database
+        // and update them. If a new customerCard is added it will have
+        // DateTime.now().fromMicrosecondsSinceEpoch as id which will possible
+        // not be in the database. In that case, the new product will be added
+        // in database
+        // store all customerCard ids (if it existed)
+        List<dynamic> customerAccountOwnerCardsIds = [];
+
+        for (MapEntry customerAccountAddedInputsEntry
+            in customerAccountAddedInputs.entries) {
+          // verify if the input is visible
+          if (customerAccountAddedInputsEntry.value) {
+            // store the customerCards labels
+            customerAccounOwnerCardsLabels.add(
+              ref.watch(
+                customerAccountOwnerCardLabelProvider(
+                  customerAccountAddedInputsEntry.key,
+                ),
+              ),
+            );
+
+            // store the customerCard ids which will be added to customerCard
+            // model in instanciation
+            customerAccountOwnerCardsIds.add(
+              customerAccountAddedInputsEntry.key,
+            );
+          }
+        }
+
+        // verify if a  customer card(label) is not repeated
 
         bool isCustomerCardRepeated = false;
         int customerCardNumber = 0;
 
-        for (CustomerCard customerCardF in customerAccountOwnerCards) {
+        for (String customerCardF in customerAccounOwnerCardsLabels) {
           isCustomerCardRepeated = false;
           customerCardNumber = 0;
-          for (CustomerCard customerCardL in customerAccountOwnerCards) {
+          for (String customerCardL in customerAccounOwnerCardsLabels) {
             if (customerCardF == customerCardL) {
               ++customerCardNumber;
             }
@@ -314,7 +370,7 @@ class CustomerAccountCRUDFunctions {
           showValidatedButton.value = true;
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
             serviceResponse: ServiceResponse.failed,
-            response: 'Répétition de carte dans le compte',
+            response: 'Répétition de carte (libellé) dans le compte',
           );
           FunctionsController.showAlertDialog(
             context: context,
@@ -323,76 +379,217 @@ class CustomerAccountCRUDFunctions {
           isCustomerCardRepeated = false;
           customerCardNumber = 0;
         } else {
-          ServiceResponse lastCustomerAccountStatus;
+          ServiceResponse customerAccountFirstUpdateStatus;
 
-          final newCustomerAccount = CustomerAccount(
+          List<CustomerCard> customerAccountOwnerCards = [];
+
+          // added the customer card
+          for (int i = 0; i < customerAccounOwnerCardsLabels.length; ++i) {
+            customerAccountOwnerCards.add(
+              CustomerCard(
+                id: customerAccountOwnerCardsIds[i],
+                label: customerAccounOwnerCardsLabels[i],
+                typeId: customerAccountOwnerCardsTypes[i].id!,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
+            );
+          }
+
+          // create the customer account model
+          CustomerAccount lastCustomerAccount = CustomerAccount(
             customerId: customerAccountOwner.id!,
             collectorId: customerAccountCollector.id!,
-            customerCardsIds: customerAccountOwnerCards
-                .map(
-                  (customerAccountOwnerCard) => customerAccountOwnerCard.id,
-                )
-                .toList(),
-            createdAt: customerAccountCollector.createdAt,
+            customerCardsIds: customerAccountLast.customerCardsIds,
+            createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
 
-          lastCustomerAccountStatus = await CustomersAccountsController.update(
-            id: customerAccount.id!,
-            customerAccount: newCustomerAccount,
+          // update the customer account in the database (may be the
+          // account collector have been replaced )
+          final lastCustomerAccountMap = await CustomersAccountsService.update(
+            id: customerAccountLast.id!,
+            customerAccount: lastCustomerAccount,
           );
 
-          // update the owner account id of each customer card
-          // will store all customerCard update status
-          List<ServiceResponse> customerCardsUpdateStatus = [];
-          for (CustomerCard customerCard in customerAccountOwnerCards) {
-            customerCard.customerAccountId = customerAccount.id!;
-            final customerCardUpdateStatus =
-                await CustomersCardsController.update(
-              id: customerCard.id!,
-              customerCard: customerCard,
-            );
-            customerCardsUpdateStatus.add(customerCardUpdateStatus);
-          }
+          // will store every customer card update or adding status;
+          List<ServiceResponse> customerCardsOperationStatus = [];
 
-          // debugPrint('new CustomerAccount: $customerAccountStatus');
+          // will be used to check if all customer card have been
+          // updated or created successfully
+          bool isAllCustomerCardsOperationDoneSuccessfully = false;
 
-          bool isAllCustomerCardsUpdatedSuccessfully = false;
+          // if the customer account have been updated successfully
+          if (lastCustomerAccountMap != null &&
+              lastCustomerAccountMap[CustomerAccountTable.id] != null) {
+            customerAccountFirstUpdateStatus = ServiceResponse.success;
 
-          for (ServiceResponse customerCardStatus
-              in customerCardsUpdateStatus) {
-            if (customerCardStatus == ServiceResponse.success) {
-              isAllCustomerCardsUpdatedSuccessfully = true;
-            } else {
-              isAllCustomerCardsUpdatedSuccessfully = false;
+            // fetch all customerCards for detecting new customerCards
+            // get all customerCards
+            final allCustomerCards =
+                await CustomersAccountsController.getAll().first;
+            // store customer cards ids ( ids are used instead of customer
+            // card because customer cards labels are may be changed )
+            final allCustomerCardsIds = allCustomerCards
+                .map(
+                  (customerCard) => customerCard.id!,
+                )
+                .toList();
+
+            // update or create every customer card with the after setting
+            // customer account id
+            for (int i = 0; i < customerAccountOwnerCards.length; ++i) {
+              // set the customer account for all customer cards
+              customerAccountOwnerCards[i] =
+                  customerAccountOwnerCards[i].copyWith(
+                customerAccountId:
+                    lastCustomerAccountMap[CustomerAccountTable.id],
+              );
+
+              // ************
+
+              // if the customer card have been stored in database
+              if (allCustomerCardsIds
+                  .contains(customerAccountOwnerCards[i].id!)) {
+                // try to update the customer card
+
+                // update the customer card in the database
+                final lastCustomerCardMap = await CustomerCardsService.update(
+                  id: customerAccountOwnerCards[i].id!,
+                  customerCard: customerAccountOwnerCards[i],
+                );
+
+                ServiceResponse lastCustomerCardUpdateStatus =
+                    ServiceResponse.failed;
+
+                // if the customer card have been updated succesfully
+                if (lastCustomerCardMap != null &&
+                    lastCustomerCardMap[CustomerCardTable.id] != null) {
+                  // set the id of the customer card,
+                  // that is necessary for updating customer account
+                  // not necessary copy - paste code
+                  customerAccountOwnerCards[i] =
+                      customerAccountOwnerCards[i].copyWith(
+                    id: lastCustomerCardMap[CustomerCardTable.id],
+                  );
+                  lastCustomerCardUpdateStatus = ServiceResponse.success;
+                }
+
+                customerCardsOperationStatus.add(lastCustomerCardUpdateStatus);
+
+                // set the customer creation status
+                //  isAllCustomerCardsUpdatedSuccessfully =
+                //      lastCustomerCardUpdateStatus == ServiceResponse.success;
+              }
+              // else, it's a new customer card
+              else {
+                // try to create the customer card and update his id since
+                // his current id is DateTime.now().fromMillisecondsSinceEpoch
+
+                // add the customer card to the database
+                final newCustomerCardMap = await CustomerCardsService.create(
+                  customerCard: customerAccountOwnerCards[i],
+                );
+
+                ServiceResponse newCustomerCardAddingStatus =
+                    ServiceResponse.failed;
+
+                // if the customer card is added succesfully
+                if (newCustomerCardMap != null &&
+                    newCustomerCardMap[CustomerCardTable.id] != null) {
+                  // set the id of the customer card,
+                  // that is necessary for updating customer account
+                  customerAccountOwnerCards[i] =
+                      customerAccountOwnerCards[i].copyWith(
+                    id: newCustomerCardMap[CustomerCardTable.id],
+                  );
+                  newCustomerCardAddingStatus = ServiceResponse.success;
+                }
+
+                customerCardsOperationStatus.add(newCustomerCardAddingStatus);
+
+                // set the customer creation status
+                //  isAllCustomerCardsUpdatedSuccessfully =
+                //      newCustomerCardAddingStatus == ServiceResponse.success;
+              }
+
+              // ************
             }
-          }
 
-          // if the customer account and all customer cards have been updated successfully
-          if (lastCustomerAccountStatus == ServiceResponse.success &&
-              isAllCustomerCardsUpdatedSuccessfully == true) {
-            ref.read(responseDialogProvider.notifier).state =
-                ResponseDialogModel(
-              serviceResponse: lastCustomerAccountStatus,
-              response: 'Opération réussie',
-            );
-            showValidatedButton.value = true;
-            Navigator.of(context).pop();
+            // check if all adding is finished with success
+            for (ServiceResponse customerAddingStatus
+                in customerCardsOperationStatus) {
+              if (customerAddingStatus == ServiceResponse.success) {
+                isAllCustomerCardsOperationDoneSuccessfully = true;
+              } else {
+                isAllCustomerCardsOperationDoneSuccessfully = false;
+              }
+            }
+
+            // check if the account have been successfully updated
+            // and every customer cards have been sucessfuly updated or created
+            if (customerAccountFirstUpdateStatus == ServiceResponse.success &&
+                isAllCustomerCardsOperationDoneSuccessfully == true) {
+              // update customer account by setting its customers card ids
+              lastCustomerAccount = lastCustomerAccount.copyWith(
+                customerCardsIds: customerAccountOwnerCards
+                    .map(
+                      (customerCard) => customerCard.id!,
+                    )
+                    .toList(),
+              );
+
+              final customerAccountUpdateStatus =
+                  await CustomersAccountsController.update(
+                id: lastCustomerAccountMap[CustomerAccountTable.id],
+                customerAccount: lastCustomerAccount,
+              );
+
+              // if the customer account is updated successfully
+              if (customerAccountUpdateStatus == ServiceResponse.success) {
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: customerAccountUpdateStatus,
+                  response: 'Opération réussie',
+                );
+                showValidatedButton.value = true;
+                Navigator.of(context).pop();
+              } else {
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: customerAccountUpdateStatus,
+                  response: 'Opération échouée',
+                );
+                showValidatedButton.value = true;
+              }
+            } else {
+              // if account is created successfully but the customer cards
+              // are not created succesfully
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.failed,
+                response: 'Opération échouée',
+              );
+              showValidatedButton.value = true;
+            }
           } else {
+            // the account haven't been created
+            customerAccountFirstUpdateStatus = ServiceResponse.failed;
+
             ref.read(responseDialogProvider.notifier).state =
                 ResponseDialogModel(
-              serviceResponse: lastCustomerAccountStatus,
+              serviceResponse: customerAccountFirstUpdateStatus,
               response: 'Opération échouée',
             );
             showValidatedButton.value = true;
           }
+
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
           );
         }
       }
-   */
     }
   }
 

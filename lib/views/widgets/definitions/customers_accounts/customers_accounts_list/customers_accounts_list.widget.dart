@@ -216,7 +216,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                             ),
                           ),
                           DataCell(
-                            onTap: () {
+                            onTap: () async {
                               ref
                                   .read(customerAccountAddedInputsProvider
                                       .notifier)
@@ -230,16 +230,31 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                               for (dynamic customerCardId
                                   in customerAccount.customerCardsIds) {
                                 ref
-                                    .read(customerAccountAddedInputsProvider
-                                        .notifier)
+                                    .read(
+                                  customerAccountAddedInputsProvider.notifier,
+                                )
                                     .update((state) {
                                   state[customerCardId] = true;
                                   return state;
                                 });
                               }
-                              // debugPrint(
-                              //     'accouts Cards: ${customerAccount.customerCards.toString()}');
-                              FunctionsController.showAlertDialog(
+
+/*
+                              debugPrint('Milliseconds');
+                              debugPrint(
+                                DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                              );
+                              debugPrint('Microseconds');
+                              debugPrint(
+                                DateTime.now()
+                                    .microsecondsSinceEpoch
+                                    .toString(),
+                              );
+                              */
+
+                              await FunctionsController.showAlertDialog(
                                 context: context,
                                 alertDialog: CustomerAccountUpdateForm(
                                   customerAccount: customerAccount,

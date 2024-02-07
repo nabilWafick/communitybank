@@ -1,7 +1,5 @@
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/crud/customers_accounts/customers_accounts_crud.fuction.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
@@ -16,10 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class CustomerAccountUpdateForm extends StatefulHookConsumerWidget {
   final CustomerAccount customerAccount;
-  const CustomerAccountUpdateForm({
-    super.key,
-    required this.customerAccount,
-  });
+  const CustomerAccountUpdateForm({super.key, required this.customerAccount});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -32,7 +27,9 @@ class _CustomerAccountUpdateFormState
   @override
   Widget build(BuildContext context) {
     final showValidatedButton = useState<bool>(true);
-    const formCardWidth = 500.0;
+    final customersListStream = ref.watch(customersListStreamProvider);
+    final collectorsListStream = ref.watch(collectorsListStreamProvider);
+    const formCardWidth = 590.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -87,43 +84,21 @@ class _CustomerAccountUpdateFormState
                             right: 15.0,
                           ),
                           width: formCardWidth / 1.2,
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              final customersListStream =
-                                  ref.watch(customersListStreamProvider);
-
-                              return customersListStream.when(
-                                data: (data) {
-                                  Customer? accountOwner;
-
-                                  for (Customer customer in data) {
-                                    if (customer.id ==
-                                        widget.customerAccount.customerId) {
-                                      accountOwner = customer;
-                                      break;
-                                    }
-                                  }
-
-                                  data = {accountOwner!, ...data}.toList();
-
-                                  return CBFormCustomerDropdown(
-                                    width: formCardWidth / 1.2,
-                                    menuHeigth: 500.0,
-                                    label: 'Client',
-                                    providerName:
-                                        'customer-account-update-customer',
-                                    dropdownMenuEntriesLabels: data,
-                                    dropdownMenuEntriesValues: data,
-                                  );
-                                },
-                                error: (error, stackTrace) => const SizedBox(
-                                  width: formCardWidth / 1.2,
-                                ),
-                                loading: () => const SizedBox(
-                                  width: formCardWidth / 1.2,
-                                ),
-                              );
-                            },
+                          child: CBFormCustomerDropdown(
+                            width: formCardWidth / 1.2,
+                            menuHeigth: 500.0,
+                            label: 'Client',
+                            providerName: 'customer-account-update-customer',
+                            dropdownMenuEntriesLabels: customersListStream.when(
+                              data: (data) => data,
+                              error: (error, stackTrace) => [],
+                              loading: () => [],
+                            ),
+                            dropdownMenuEntriesValues: customersListStream.when(
+                              data: (data) => data,
+                              error: (error, stackTrace) => [],
+                              loading: () => [],
+                            ),
                           ),
                         ),
                         Container(
@@ -134,42 +109,23 @@ class _CustomerAccountUpdateFormState
                             right: 15.0,
                           ),
                           width: formCardWidth / 1.2,
-                          child: Consumer(
-                            builder: (context, ref, child) {
-                              final collectorsListStream =
-                                  ref.watch(collectorsListStreamProvider);
-                              return collectorsListStream.when(
-                                data: (data) {
-                                  Collector? accountCollector;
-
-                                  for (Collector collector in data) {
-                                    if (collector.id ==
-                                        widget.customerAccount.collectorId) {
-                                      accountCollector = collector;
-                                      break;
-                                    }
-                                  }
-
-                                  data = {accountCollector!, ...data}.toList();
-
-                                  return CBFormCollectorDropdown(
-                                    width: formCardWidth / 1.2,
-                                    menuHeigth: 500.0,
-                                    label: 'Chargé de compte',
-                                    providerName:
-                                        'customer-account-update-collector',
-                                    dropdownMenuEntriesLabels: data,
-                                    dropdownMenuEntriesValues: data,
-                                  );
-                                },
-                                error: (error, stackTrace) => const SizedBox(
-                                  width: formCardWidth / 1.2,
-                                ),
-                                loading: () => const SizedBox(
-                                  width: formCardWidth / 1.2,
-                                ),
-                              );
-                            },
+                          child: CBFormCollectorDropdown(
+                            width: formCardWidth / 1.2,
+                            menuHeigth: 500.0,
+                            label: 'Chargé de compte',
+                            providerName: 'customer-account-update-collector',
+                            dropdownMenuEntriesLabels:
+                                collectorsListStream.when(
+                              data: (data) => data,
+                              error: (error, stackTrace) => [],
+                              loading: () => [],
+                            ),
+                            dropdownMenuEntriesValues:
+                                collectorsListStream.when(
+                              data: (data) => data,
+                              error: (error, stackTrace) => [],
+                              loading: () => [],
+                            ),
                           ),
                         ),
                       ],
@@ -193,12 +149,14 @@ class _CustomerAccountUpdateFormState
                               ref
                                   .read(customerAccountAddedInputsProvider
                                       .notifier)
-                                  .update((state) {
-                                return {
-                                  ...state,
-                                  DateTime.now().millisecondsSinceEpoch: true,
-                                };
-                              });
+                                  .update(
+                                (state) {
+                                  return {
+                                    ...state,
+                                    DateTime.now().microsecondsSinceEpoch: true,
+                                  };
+                                },
+                              );
                             },
                           )
                         ],
@@ -207,13 +165,17 @@ class _CustomerAccountUpdateFormState
                     Consumer(builder: (context, ref, child) {
                       final inputsMaps =
                           ref.watch(customerAccountAddedInputsProvider);
-
                       List<Widget> inputsWidgetsList = [];
 
                       for (MapEntry mapEntry in inputsMaps.entries) {
-                        if (widget.customerAccount.customerCardsIds.any(
-                          (customerCardId) => customerCardId == mapEntry.key,
-                        )) {
+                        // verify if the current mapEntry key is equal to
+                        // the id of one of the customerAccount customerCard
+
+                        if (widget.customerAccount.customerCardsIds
+                            .contains(mapEntry.key)) {
+                          // if true, add a new customer card input and pass the
+                          // equivalent id to it
+
                           inputsWidgetsList.add(
                             CustomerAccountOwnerCardSelection(
                               index: mapEntry.key,
@@ -235,7 +197,7 @@ class _CustomerAccountUpdateFormState
                               index: mapEntry.key,
                               isVisible: mapEntry.value,
                               customerCardTypeSelectionDropdownProvider:
-                                  'customer-account-selection-update-customer-card-${mapEntry.key}',
+                                  'customer-account-selection-update-customer-card-type-${mapEntry.key}',
                               formCardWidth: formCardWidth,
                             ),
                           );
@@ -273,11 +235,11 @@ class _CustomerAccountUpdateFormState
                             child: CBElevatedButton(
                               text: 'Valider',
                               onPressed: () async {
-                                CustomerAccountCRUDFunctions.update(
+                                await CustomerAccountCRUDFunctions.update(
                                   context: context,
                                   formKey: formKey,
                                   ref: ref,
-                                  customerAccount: widget.customerAccount,
+                                  customerAccountLast: widget.customerAccount,
                                   showValidatedButton: showValidatedButton,
                                 );
                               },

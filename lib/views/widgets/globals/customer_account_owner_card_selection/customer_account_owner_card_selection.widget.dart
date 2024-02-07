@@ -19,7 +19,7 @@ class CustomerAccountOwnerCardSelection extends StatefulHookConsumerWidget {
   final bool isVisible;
   final String customerCardTypeSelectionDropdownProvider;
   final int? customerCardId;
-  final int? customerCardTypeId;
+
   final double formCardWidth;
   const CustomerAccountOwnerCardSelection({
     super.key,
@@ -27,7 +27,6 @@ class CustomerAccountOwnerCardSelection extends StatefulHookConsumerWidget {
     required this.isVisible,
     required this.customerCardTypeSelectionDropdownProvider,
     this.customerCardId,
-    this.customerCardTypeId,
     required this.formCardWidth,
   });
 
@@ -114,7 +113,8 @@ class _CustomerAccountOwnerCardSelectionState
                                     Type? accountOwnerCardType;
                                     if (accountOwnerCard != null) {
                                       for (Type type in data) {
-                                        if (type.id == accountOwnerCard.id) {
+                                        if (type.id ==
+                                            accountOwnerCard.typeId) {
                                           accountOwnerCardType = type;
                                           break;
                                         }
