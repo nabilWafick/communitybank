@@ -89,7 +89,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
             ),
           ),
           CBCashOperationsSearchOptionsCustumerCardDropdown(
-            width: 200.0,
+            width: 300.0,
             label: 'Carte',
             providerName: 'cash-operations-search-option-customer-card',
             dropdownMenuEntriesLabels: customersCardsWithOwners.when(

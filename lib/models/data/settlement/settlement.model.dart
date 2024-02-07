@@ -49,7 +49,7 @@ class Settlement {
       SettlementTable.number: number,
       SettlementTable.cardId: cardId,
       SettlementTable.agentId: agentId,
-      SettlementTable.collecteAt: collectedAt.toIso8601String(),
+      SettlementTable.collectedAt: collectedAt.toIso8601String(),
     };
     if (!isAdding) {
       map[SettlementTable.createdAt] = createdAt.toIso8601String();
@@ -64,7 +64,7 @@ class Settlement {
       number: map[SettlementTable.number]?.toInt() ?? 0,
       cardId: map[SettlementTable.cardId]?.toInt() ?? 0,
       agentId: map[SettlementTable.agentId]?.toInt() ?? 0,
-      collectedAt: DateTime.parse(map[SettlementTable.collecteAt]),
+      collectedAt: DateTime.parse(map[SettlementTable.collectedAt]),
       createdAt: DateTime.parse(map[SettlementTable.createdAt]),
       updatedAt: DateTime.parse(map[SettlementTable.updatedAt]),
     );
