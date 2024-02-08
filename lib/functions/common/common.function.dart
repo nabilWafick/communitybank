@@ -63,9 +63,6 @@ class FunctionsController {
         day: selectedDate.day,
       );
 
-      debugPrint(selectedDate.toIso8601String());
-      debugPrint(selectedTime.toString());
-
       dateTime = dateTime.copyWith(
         hour: selectedTime != null ? selectedTime.hour : 0,
         minute: selectedTime != null ? selectedTime.minute : 0,

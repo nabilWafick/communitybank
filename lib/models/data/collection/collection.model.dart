@@ -8,7 +8,7 @@ class Collection {
   final int collectorId;
   final double amount;
   final double rest;
-  final double agentId;
+  final int agentId;
   final DateTime collectedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -28,7 +28,7 @@ class Collection {
     int? collectorId,
     double? amount,
     double? rest,
-    double? agentId,
+    int? agentId,
     DateTime? collectedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -62,14 +62,14 @@ class Collection {
 
   factory Collection.fromMap(Map<String, dynamic> map) {
     return Collection(
-      id: map['id']?.toInt(),
-      collectorId: map['collectorId']?.toInt() ?? 0,
-      amount: map['amount']?.toDouble() ?? 0.0,
-      rest: map['rest']?.toDouble() ?? 0.0,
-      agentId: map['agentId']?.toDouble() ?? 0.0,
-      collectedAt: DateTime.parse(map['collectedAt']),
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
+      id: map[CollectionTable.id]?.toInt(),
+      collectorId: map[CollectionTable.collectorId]?.toInt() ?? 0,
+      amount: map[CollectionTable.amount]?.toDouble() ?? 0.0,
+      rest: map[CollectionTable.rest]?.toDouble() ?? 0.0,
+      agentId: map[CollectionTable.agentId]?.toInt() ?? 0.0,
+      collectedAt: DateTime.parse(map[CollectionTable.collectedAt]),
+      createdAt: DateTime.parse(map[CollectionTable.createdAt]),
+      updatedAt: DateTime.parse(map[CollectionTable.updatedAt]),
     );
   }
 

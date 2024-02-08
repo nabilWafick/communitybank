@@ -94,11 +94,16 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       subOptions: [
         SidebarSubOptionModel(
           index: 12,
+          icon: Icons.payments,
+          name: 'Collectes',
+        ),
+        SidebarSubOptionModel(
+          index: 13,
           icon: Icons.account_balance,
           name: 'Opérations Caisse',
         ),
         SidebarSubOptionModel(
-          index: 13,
+          index: 14,
           icon: Icons.money,
           name: 'Règlements',
         ),
@@ -110,7 +115,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       name: 'Saisies',
       subOptions: [
         SidebarSubOptionModel(
-          index: 14,
+          index: 15,
           icon: Icons.keyboard,
           name: 'Saisie',
         ),
@@ -122,7 +127,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       name: 'Fichier',
       subOptions: [
         SidebarSubOptionModel(
-          index: 15,
+          index: 16,
           icon: Icons.file_present,
           name: 'Fichier',
         )

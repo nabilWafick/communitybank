@@ -46,10 +46,12 @@ class CollectionsService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll({
+  static Stream<List<Map<String, dynamic>>> getAll(
+      /*{
     required int? collectorId,
     required int? agentId,
-  }) async* {
+  }*/
+      ) async* {
     final supabase = Supabase.instance.client;
 
     try {
@@ -61,20 +63,6 @@ class CollectionsService {
         CollectionTable.id,
         ascending: true,
       );
-
-      if (collectorId != null) {
-        query = query.eq(
-          CollectionTable.collectorId,
-          collectorId,
-        );
-      }
-
-      if (agentId != null) {
-        query = query.eq(
-          CollectionTable.agentId,
-          agentId,
-        );
-      }
 
       // return the result as stream
       yield* query.asBroadcastStream();

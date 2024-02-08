@@ -6,14 +6,14 @@ final collectionAmountProvider = StateProvider<double>(
   },
 );
 
-final collectionCollectionDateProvider = StateProvider<DateTime?>(
+final collectionDateProvider = StateProvider<DateTime?>(
   (ref) {
     return;
   },
 );
 
 class CollectionValidors {
-  static String? collectionNumber(String? value, WidgetRef ref) {
+  static String? collectionAmount(String? value, WidgetRef ref) {
     final collectionNumber = ref.watch(collectionAmountProvider);
     if (collectionNumber == .0) {
       return 'Entrez un montant valide';

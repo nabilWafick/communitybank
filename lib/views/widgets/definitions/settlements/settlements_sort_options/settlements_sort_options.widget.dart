@@ -54,12 +54,17 @@ class _SettlementsSortOptionsState
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              CBIconButton(
-                icon: Icons.refresh,
-                text: 'Rafraichir',
-                onTap: () {
-                  ref.invalidate(settlementsListStreamProvider);
-                },
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 20.0,
+                ),
+                child: CBIconButton(
+                  icon: Icons.refresh,
+                  text: 'Rafraichir',
+                  onTap: () {
+                    ref.invalidate(settlementsListStreamProvider);
+                  },
+                ),
               ),
             ],
           ),
