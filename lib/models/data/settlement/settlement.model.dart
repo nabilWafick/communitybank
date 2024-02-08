@@ -9,6 +9,7 @@ class Settlement {
   final int number;
   final int cardId;
   final int agentId;
+  final int collectionId;
   final DateTime collectedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -17,6 +18,7 @@ class Settlement {
     required this.number,
     required this.cardId,
     required this.agentId,
+    required this.collectionId,
     required this.collectedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -27,6 +29,7 @@ class Settlement {
     int? number,
     int? cardId,
     int? agentId,
+    int? collectionId,
     DateTime? collectedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -36,6 +39,7 @@ class Settlement {
       number: number ?? this.number,
       cardId: cardId ?? this.cardId,
       agentId: agentId ?? this.agentId,
+      collectionId: collectionId ?? this.collectionId,
       collectedAt: collectedAt ?? this.collectedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -49,6 +53,7 @@ class Settlement {
       SettlementTable.number: number,
       SettlementTable.cardId: cardId,
       SettlementTable.agentId: agentId,
+      SettlementTable.collectionId: collectionId,
       SettlementTable.collectedAt: collectedAt.toIso8601String(),
     };
     if (!isAdding) {
@@ -64,6 +69,7 @@ class Settlement {
       number: map[SettlementTable.number]?.toInt() ?? 0,
       cardId: map[SettlementTable.cardId]?.toInt() ?? 0,
       agentId: map[SettlementTable.agentId]?.toInt() ?? 0,
+      collectionId: map[SettlementTable.collectionId]?.toInt() ?? 0,
       collectedAt: DateTime.parse(map[SettlementTable.collectedAt]),
       createdAt: DateTime.parse(map[SettlementTable.createdAt]),
       updatedAt: DateTime.parse(map[SettlementTable.updatedAt]),
@@ -79,7 +85,7 @@ class Settlement {
 
   @override
   String toString() {
-    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, collectedAt:$collectedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, collectionId: $collectionId, collectedAt:$collectedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -91,6 +97,7 @@ class Settlement {
         other.number == number &&
         other.cardId == cardId &&
         other.agentId == agentId &&
+        other.collectionId == collectionId &&
         other.collectedAt == collectedAt &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -102,6 +109,7 @@ class Settlement {
         number.hashCode ^
         cardId.hashCode ^
         agentId.hashCode ^
+        collectionId.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

@@ -55,7 +55,7 @@ class Collection {
     };
 
     if (!isAdding) {
-      map[CollectionTable.createdAt] = collectedAt.toIso8601String();
+      map[CollectionTable.createdAt] = createdAt.toIso8601String();
     }
     return map;
   }

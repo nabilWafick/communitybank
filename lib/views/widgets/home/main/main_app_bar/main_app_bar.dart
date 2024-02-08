@@ -174,7 +174,7 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 50,
-            child: CustomHorizontalScroller(
+            child: AppBarHorizontalScroller(
               children: selectedSidebarOption.subOptions
                   .map(
                     (subOption) =>
@@ -189,18 +189,18 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
   }
 }
 
-class CustomHorizontalScroller extends StatefulHookConsumerWidget {
+class AppBarHorizontalScroller extends StatefulHookConsumerWidget {
   final List<Widget> children;
 
-  const CustomHorizontalScroller({super.key, required this.children});
+  const AppBarHorizontalScroller({super.key, required this.children});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CustomHorizontalScrollerState();
+      _AppBarHorizontalScrollerState();
 }
 
-class _CustomHorizontalScrollerState
-    extends ConsumerState<CustomHorizontalScroller> {
+class _AppBarHorizontalScrollerState
+    extends ConsumerState<AppBarHorizontalScroller> {
   final ScrollController _scrollController = ScrollController();
 
   @override

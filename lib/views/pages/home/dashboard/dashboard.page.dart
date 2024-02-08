@@ -7,11 +7,21 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: CBText(
-        text: 'Dashboard',
-        fontSize: 25.0,
-      ),
-    );
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: const Center(
+          child: CBText(
+            text: 'Dashboard',
+            fontSize: 25.0,
+          ),
+        ) /* Wrap(
+        children: [
+          DashboardCard(
+            value: 10000,
+            label: 'Clients',
+          ),
+        ],
+      ),*/
+        );
   }
 }

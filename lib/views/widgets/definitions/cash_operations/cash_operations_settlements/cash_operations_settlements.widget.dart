@@ -28,6 +28,9 @@ class _CashOperationsSettlementsState
     initializeDateFormatting('fr');
   }
 
+  final ScrollController verticalScrollController = ScrollController();
+  final ScrollController horizontalScrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
@@ -58,203 +61,217 @@ class _CashOperationsSettlementsState
       ),
       height: 370.0,
       width: double.infinity,
-      child: SingleChildScrollView(
-        child: DataTable(
-            columns: const [
-              DataColumn(
-                label: CBText(
-                  text: 'Code',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Nombre de Mise',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Montant',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Date Collecte',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Date Saisie',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: CBText(
-                  text: 'Agent',
-                  textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              DataColumn(
-                label: SizedBox(),
-              ),
-              DataColumn(
-                label: SizedBox(),
-              ),
-            ],
-            rows:
-                cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                    .when(
-              data: (data) => data
-                  .map(
-                    (settlement) => DataRow(
-                      cells: [
-                        DataCell(
-                          CBText(
-                            text: '${data.indexOf(settlement) + 1}',
-                          ),
-                        ),
-                        DataCell(Consumer(
-                          builder: (context, ref, child) {
-                            final customersCardsListStream =
-                                ref.watch(customersCardsListStreamProvider);
-
-                            return customersCardsListStream.when(
-                              data: (data) {
-                                final realTimeCustomerCardData =
-                                    data.firstWhere(
-                                  (customerCard) =>
-                                      customerCard.id == settlement.cardId,
-                                );
-                                return CBText(
-                                  text: realTimeCustomerCardData.label,
-                                );
-                              },
-                              error: (error, stackTrace) => const CBText(
-                                text: '',
-                              ),
-                              loading: () => const CBText(
-                                text: '',
-                              ),
-                            );
-                          },
-                        )),
-                        DataCell(
-                          Center(
-                            child: CBText(
-                              text: settlement.number.toString(),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Center(
-                            child: CBText(
-                              text:
-                                  '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text:
-                                '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
-                          ),
-                        ),
-                        DataCell(
-                          CBText(
-                            text:
-                                '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
-                          ),
-                        ),
-                        DataCell(Consumer(
-                          builder: (context, ref, child) {
-                            final agentListStream =
-                                ref.watch(agentsListStreamProvider);
-
-                            return agentListStream.when(
-                              data: (data) {
-                                final realTimeAgentData = data.firstWhere(
-                                  (agent) => agent.id == settlement.agentId,
-                                );
-                                return CBText(
-                                  text:
-                                      '${realTimeAgentData.firstnames} ${realTimeAgentData.name}',
-                                );
-                              },
-                              error: (error, stackTrace) => const CBText(
-                                text: '',
-                              ),
-                              loading: () => const CBText(
-                                text: '',
-                              ),
-                            );
-                          },
-                        )),
-                        DataCell(
-                          onTap: () async {
-                            await FunctionsController.showAlertDialog(
-                              context: context,
-                              alertDialog:
-                                  SettlementUpdateForm(settlement: settlement),
-                            );
-                          },
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.edit,
-                              color: Colors.green,
-                            ),
-                          ),
-                          // showEditIcon: true,
-                        ),
-                        DataCell(
-                          onTap: () async {
-                            await FunctionsController.showAlertDialog(
-                              context: context,
-                              alertDialog: SettlementDeletionConfirmationDialog(
-                                settlement: settlement,
-                                confirmToDelete: SettlementCRUDFunctions.delete,
-                              ),
-                            );
-                          },
-                          Container(
-                            alignment: Alignment.centerRight,
-                            child: const Icon(
-                              Icons.delete_sharp,
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ],
+      child: Scrollbar(
+        controller: horizontalScrollController,
+        child: SingleChildScrollView(
+          controller: horizontalScrollController,
+          child: Scrollbar(
+            controller: verticalScrollController,
+            child: SingleChildScrollView(
+              controller: verticalScrollController,
+              child: DataTable(
+                  columns: const [
+                    DataColumn(
+                      label: CBText(
+                        text: 'Code',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  )
-                  .toList(),
-              error: (error, stackTrace) => [],
-              loading: () => [],
-            )),
+                    DataColumn(
+                      label: CBText(
+                        text: 'Carte',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CBText(
+                        text: 'Mise',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CBText(
+                        text: 'Montant',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CBText(
+                        text: 'Date Collecte',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CBText(
+                        text: 'Date Saisie',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: CBText(
+                        text: 'Agent',
+                        textAlign: TextAlign.start,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    DataColumn(
+                      label: SizedBox(),
+                    ),
+                    DataColumn(
+                      label: SizedBox(),
+                    ),
+                  ],
+                  rows:
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                          .when(
+                    data: (data) => data
+                        .map(
+                          (settlement) => DataRow(
+                            cells: [
+                              DataCell(
+                                CBText(
+                                  text: '${data.indexOf(settlement) + 1}',
+                                ),
+                              ),
+                              DataCell(Consumer(
+                                builder: (context, ref, child) {
+                                  final customersCardsListStream = ref
+                                      .watch(customersCardsListStreamProvider);
+
+                                  return customersCardsListStream.when(
+                                    data: (data) {
+                                      final realTimeCustomerCardData =
+                                          data.firstWhere(
+                                        (customerCard) =>
+                                            customerCard.id ==
+                                            settlement.cardId,
+                                      );
+                                      return CBText(
+                                        text: realTimeCustomerCardData.label,
+                                      );
+                                    },
+                                    error: (error, stackTrace) => const CBText(
+                                      text: '',
+                                    ),
+                                    loading: () => const CBText(
+                                      text: '',
+                                    ),
+                                  );
+                                },
+                              )),
+                              DataCell(
+                                Center(
+                                  child: CBText(
+                                    text: settlement.number.toString(),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Center(
+                                  child: CBText(
+                                    text:
+                                        '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                CBText(
+                                  text:
+                                      '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
+                                ),
+                              ),
+                              DataCell(
+                                CBText(
+                                  text:
+                                      '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                                ),
+                              ),
+                              DataCell(Consumer(
+                                builder: (context, ref, child) {
+                                  final agentListStream =
+                                      ref.watch(agentsListStreamProvider);
+
+                                  return agentListStream.when(
+                                    data: (data) {
+                                      final realTimeAgentData = data.firstWhere(
+                                        (agent) =>
+                                            agent.id == settlement.agentId,
+                                      );
+                                      return CBText(
+                                        text:
+                                            '${realTimeAgentData.firstnames} ${realTimeAgentData.name}',
+                                      );
+                                    },
+                                    error: (error, stackTrace) => const CBText(
+                                      text: '',
+                                    ),
+                                    loading: () => const CBText(
+                                      text: '',
+                                    ),
+                                  );
+                                },
+                              )),
+                              DataCell(
+                                onTap: () async {
+                                  await FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog: SettlementUpdateForm(
+                                        settlement: settlement),
+                                  );
+                                },
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                                // showEditIcon: true,
+                              ),
+                              DataCell(
+                                onTap: () async {
+                                  await FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog:
+                                        SettlementDeletionConfirmationDialog(
+                                      settlement: settlement,
+                                      confirmToDelete:
+                                          SettlementCRUDFunctions.delete,
+                                    ),
+                                  );
+                                },
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: const Icon(
+                                    Icons.delete_sharp,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                    error: (error, stackTrace) => [],
+                    loading: () => [],
+                  )),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -221,11 +221,12 @@ class CollectionCRUDFunctions {
         collectorId: collection.collectorId,
         amount: collectorCollection.amount + collectionAmount,
         rest: collectorCollection.rest + collectionAmount,
-        agentId: collection.collectorId,
+        agentId: collection.agentId,
         collectedAt: collection.collectedAt,
         createdAt: collection.createdAt,
         updatedAt: DateTime.now(),
       );
+      debugPrint('newCollection: $newCollection');
 
       lastCollectionStatus = await CollectionsController.update(
         id: collection.id!,

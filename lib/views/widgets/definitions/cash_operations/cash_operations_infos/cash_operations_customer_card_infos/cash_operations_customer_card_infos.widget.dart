@@ -11,6 +11,7 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_card/cash_operations_customer_card_card.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_data/cash_operations_customer_card_data.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_date_data/cash_operations_customer_card_date_data.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_horizontal_scroller/cash_operations_customer_card_horizontal_scroller.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
@@ -119,11 +120,13 @@ class _CashOperationsCustomerCardInfosState
                 fontSize: 14.0,
                 fontWeight: FontWeight.w600,
               ),
+              const SizedBox(
+                width: 20.0,
+              ),
               SizedBox(
-                width: widget.width * .88,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+                  width: widget.width * .85,
+                  height: 40.0,
+                  child: CashOperationsCustomerCardsHorizontalScroller(
                     children:
                         cashOperationsSelectedCustomerAccountOwnerCustomerCards
                             .map(
@@ -142,9 +145,16 @@ class _CashOperationsCustomerCardInfosState
                               ),
                             )
                             .toList(),
+                  )
+
+                  /* SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children:
+                     
                   ),
-                ),
-              ),
+                ),*/
+                  ),
             ],
           ),
           SizedBox(

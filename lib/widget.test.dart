@@ -1,5 +1,6 @@
-import 'package:communitybank/services/auth/auth.service.dart';
+import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -37,38 +38,29 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CBText(
-              text: 'Result: $data',
+            const Card(
+              color: Colors.grey,
+              child: SizedBox(
+                height: 200,
+                width: 200,
+              ),
             ),
             const SizedBox(
               height: 200,
             ),
-
             Container(
               alignment: Alignment.center,
               width: 500.0,
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  final result = await AuthService.resetPasswordForEmail(
-                    email: 'nabilsoumanou7@gmail.com',
-                    //  password: 'p@ssword',
+                  FunctionsController.showAlertDialog(
+                    context: context,
+                    alertDialog: const ResponseDialog(),
                   );
-                  //;
-                  //  .eq(SettlementTable.cardId, 14);
-                  debugPrint(
-                    'data: ${result.runtimeType.toString()}',
-                  );
-
-                  setState(() {
-                    data = result.runtimeType;
-                  });
                 },
               ),
             ),
-
-            /// const TypeProductSelection()
-            /* FormCard(),*/
           ],
         ),
       ),

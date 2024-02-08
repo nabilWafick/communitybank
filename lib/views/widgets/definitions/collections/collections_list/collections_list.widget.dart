@@ -1,9 +1,13 @@
 import 'package:communitybank/controllers/collection/collection.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/collections/collections_crud.function.dart';
 import 'package:communitybank/models/data/collection/collection.model.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/collections/collections_sort_options/collections_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors.widgets.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/collections/collections_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/collections/collection_amount/collections_amount_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/collections/collections_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/agent/agent_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
@@ -217,12 +221,10 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                               DataCell(
                                 onTap: () {
                                   FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog: const SizedBox(),
-                                    /* LocalityUpdateForm(
-                                            locality: locality),
-                                            */
-                                  );
+                                      context: context,
+                                      alertDialog: CollectionAmountUpdateForm(
+                                        collection: collection,
+                                      ));
                                 },
                                 Container(
                                   alignment: Alignment.centerRight,
@@ -236,12 +238,10 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                               DataCell(
                                 onTap: () {
                                   FunctionsController.showAlertDialog(
-                                    context: context,
-                                    alertDialog: const SizedBox(),
-                                    /* LocalityUpdateForm(
-                                            locality: locality),
-                                            */
-                                  );
+                                      context: context,
+                                      alertDialog: CollectionUpdateForm(
+                                        collection: collection,
+                                      ));
                                 },
                                 Container(
                                   alignment: Alignment.centerRight,
@@ -255,15 +255,14 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                               DataCell(
                                 onTap: () async {
                                   FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog: const SizedBox()
-                                      /*   LocalityDeletionConfirmationDialog(
-                                          locality: locality,
-                                          confirmToDelete:
-                                              LocalityCRUDFunctions.delete,
-                                        ),
-                                        */
-                                      );
+                                    context: context,
+                                    alertDialog:
+                                        CollectionDeletionConfirmationDialog(
+                                      collection: collection,
+                                      confirmToDelete:
+                                          CollectionCRUDFunctions.delete,
+                                    ),
+                                  );
                                 },
                                 Container(
                                   alignment: Alignment.centerRight,

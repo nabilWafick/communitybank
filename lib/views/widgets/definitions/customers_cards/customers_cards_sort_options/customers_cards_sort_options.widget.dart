@@ -1,7 +1,5 @@
-import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/adding/customer_card/customer_card_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
@@ -22,21 +20,26 @@ class CustomersCardsSortOptions extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CBIconButton(
-                icon: Icons.refresh,
-                text: 'Rafraichir',
-                onTap: () {
-                  ref.invalidate(customersCardsListStreamProvider);
-                },
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 20.0,
+                ),
+                child: CBIconButton(
+                  icon: Icons.refresh,
+                  text: 'Rafraichir',
+                  onTap: () {
+                    ref.invalidate(customersCardsListStreamProvider);
+                  },
+                ),
               ),
-              CBAddButton(
+              /* CBAddButton(
                 onTap: () {
                   FunctionsController.showAlertDialog(
                     context: context,
                     alertDialog: const CustomerCardAddingForm(),
                   );
                 },
-              ),
+              ),*/
             ],
           ),
           Row(
