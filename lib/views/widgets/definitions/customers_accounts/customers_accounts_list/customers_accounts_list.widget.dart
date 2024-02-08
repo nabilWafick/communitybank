@@ -64,6 +64,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
         controller: horizontalScrollController,
         child: SingleChildScrollView(
           controller: horizontalScrollController,
+          scrollDirection: Axis.horizontal,
           child: SingleChildScrollView(
             child: Scrollbar(
               controller: verticalScrollController,

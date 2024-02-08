@@ -68,125 +68,116 @@ class _SettlementsSortOptionsState
               ),
             ],
           ),
-          Container(
-            margin: const EdgeInsets.only(
-              top: 20.0,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /*  CBSearchInput(
-                  hintText: 'Rechercher un règlement',
-                  searchProvider: searchProvider('settlements'),
-                ),*/
-                const SizedBox(
-                  width: 10.0,
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(
+                width: 10.0,
+              ),
+              /*   SizedBox(
+                width: 320.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CBIconButton(
+                      icon: Icons.date_range,
+                      text: 'Date de Collecte',
+                      onTap: () async {
+                        await FunctionsController.showDateTime(
+                          context,
+                          ref,
+                          settlementsListCollectionDateProvider,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    Flexible(
+                      child: CBText(
+                        text: settlementsListCollectionDate != null
+                            ? '${format.format(settlementsListCollectionDate)}  ${settlementsListCollectionDate.hour}:${settlementsListCollectionDate.minute}'
+                            : '',
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w500,
+                        textOverflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    //   const SizedBox(),
+                  ],
                 ),
-                /*   SizedBox(
-                  width: 320.0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CBIconButton(
-                        icon: Icons.date_range,
-                        text: 'Date de Collecte',
-                        onTap: () async {
-                          await FunctionsController.showDateTime(
-                            context,
-                            ref,
-                            settlementsListCollectionDateProvider,
-                          );
-                        },
+              ),
+              SizedBox(
+                width: 320.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CBIconButton(
+                      icon: Icons.date_range,
+                      text: 'Date de Saisie',
+                      onTap: () async {
+                        await FunctionsController.showDateTime(
+                          context,
+                          ref,
+                          settlementsListEntryDateProvider,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    Flexible(
+                      child: CBText(
+                        text: settlementsListEntryDate != null
+                            ? '${format.format(settlementsListEntryDate)}  ${settlementsListEntryDate.hour}:${settlementsListEntryDate.minute}'
+                            : '',
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w500,
+                        textOverflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      Flexible(
-                        child: CBText(
-                          text: settlementsListCollectionDate != null
-                              ? '${format.format(settlementsListCollectionDate)}  ${settlementsListCollectionDate.hour}:${settlementsListCollectionDate.minute}'
-                              : '',
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w500,
-                          textOverflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      //   const SizedBox(),
-                    ],
-                  ),
+                    ),
+                    //   const SizedBox(),
+                  ],
                 ),
-                SizedBox(
-                  width: 320.0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CBIconButton(
-                        icon: Icons.date_range,
-                        text: 'Date de Saisie',
-                        onTap: () async {
-                          await FunctionsController.showDateTime(
-                            context,
-                            ref,
-                            settlementsListEntryDateProvider,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      Flexible(
-                        child: CBText(
-                          text: settlementsListEntryDate != null
-                              ? '${format.format(settlementsListEntryDate)}  ${settlementsListEntryDate.hour}:${settlementsListEntryDate.minute}'
-                              : '',
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w500,
-                          textOverflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      //   const SizedBox(),
-                    ],
-                  ),
+              ),
+             */
+              CBListCustomerCardDropdown(
+                width: 200.0,
+                label: 'Carte',
+                providerName: 'settlements-card',
+                dropdownMenuEntriesLabels:
+                    customersCardsWithOwnerListStream.when(
+                  data: (data) => [
+                    CustomerCard(
+                      label: 'Tous',
+                      typeId: 0,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
                 ),
-               */
-                CBListCustomerCardDropdown(
-                  width: 200.0,
-                  label: 'Carte',
-                  providerName: 'settlements-card',
-                  dropdownMenuEntriesLabels:
-                      customersCardsWithOwnerListStream.when(
-                    data: (data) => [
-                      CustomerCard(
-                        label: 'Tous',
-                        typeId: 0,
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                      ...data
-                    ],
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
-                  dropdownMenuEntriesValues:
-                      customersCardsWithOwnerListStream.when(
-                    data: (data) => [
-                      CustomerCard(
-                        label: 'Tous',
-                        typeId: 0,
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                      ...data
-                    ],
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
-                )
-              ],
-            ),
+                dropdownMenuEntriesValues:
+                    customersCardsWithOwnerListStream.when(
+                  data: (data) => [
+                    CustomerCard(
+                      label: 'Tous',
+                      typeId: 0,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
+                ),
+              )
+            ],
           ),
         ],
       ),

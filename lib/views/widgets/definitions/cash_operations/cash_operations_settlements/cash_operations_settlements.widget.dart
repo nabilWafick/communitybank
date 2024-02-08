@@ -65,6 +65,7 @@ class _CashOperationsSettlementsState
         controller: horizontalScrollController,
         child: SingleChildScrollView(
           controller: horizontalScrollController,
+          scrollDirection: Axis.horizontal,
           child: Scrollbar(
             controller: verticalScrollController,
             child: SingleChildScrollView(
