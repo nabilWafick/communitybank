@@ -144,7 +144,11 @@ class CustomerAccountCRUDFunctions {
                   ),
                 );
                 customerAccountOwnerCardsTypesNumbers.add(
-                  ref.watch(customerAccountAddedInputsEntry.key),
+                  ref.watch(
+                    customerAccountOwnerCardTypeNumberProvider(
+                      customerAccountAddedInputsEntry.key,
+                    ),
+                  ),
                 );
               }
             }
@@ -379,7 +383,10 @@ class CustomerAccountCRUDFunctions {
           customerAccountOwnerCardsTypes.add(customerCardType);
         });
 
-// verify if a  customer card type is not repeated
+        //  debugPrint('selected types');
+        //  debugPrint(customerAccountOwnerCardsTypes.toString());
+
+        // verify if a customer card type is not repeated
         bool isCustomerCardTypesRepeated = false;
         int customerCardTypesNumber = 0;
 
@@ -446,7 +453,11 @@ class CustomerAccountCRUDFunctions {
                 ),
               );
               customerAccountOwnerCardsTypesNumbers.add(
-                ref.watch(customerAccountAddedInputsEntry.key),
+                ref.watch(
+                  customerAccountOwnerCardTypeNumberProvider(
+                    customerAccountAddedInputsEntry.key,
+                  ),
+                ),
               );
 
               // store the customerCard ids that will be added to customerCard
