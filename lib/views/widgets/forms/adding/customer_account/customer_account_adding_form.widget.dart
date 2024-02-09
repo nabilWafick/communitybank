@@ -27,7 +27,7 @@ class _CustomerAccountAddingFormState
     final showValidatedButton = useState<bool>(true);
     final customersListStream = ref.watch(customersListStreamProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
-    const formCardWidth = 590.0;
+    const formCardWidth = 650.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -158,27 +158,29 @@ class _CustomerAccountAddingFormState
                         ],
                       ),
                     ),
-                    Consumer(builder: (context, ref, child) {
-                      final inputsMaps =
-                          ref.watch(customerAccountAddedInputsProvider);
-                      List<Widget> inputsWidgetsList = [];
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final inputsMaps =
+                            ref.watch(customerAccountAddedInputsProvider);
+                        List<Widget> inputsWidgetsList = [];
 
-                      for (MapEntry mapEntry in inputsMaps.entries) {
-                        inputsWidgetsList.add(
-                          CustomerAccountOwnerCardSelection(
-                            index: mapEntry.key,
-                            isVisible: mapEntry.value,
-                            customerCardTypeSelectionDropdownProvider:
-                                'customer-account-selection-adding-customer-card-type-${mapEntry.key}',
-                            formCardWidth: formCardWidth,
-                          ),
+                        for (MapEntry mapEntry in inputsMaps.entries) {
+                          inputsWidgetsList.add(
+                            CustomerAccountOwnerCardSelection(
+                              index: mapEntry.key,
+                              isVisible: mapEntry.value,
+                              customerCardTypeSelectionDropdownProvider:
+                                  'customer-account-selection-adding-customer-card-type-${mapEntry.key}',
+                              formCardWidth: formCardWidth,
+                            ),
+                          );
+                        }
+
+                        return Wrap(
+                          children: inputsWidgetsList,
                         );
-                      }
-
-                      return Wrap(
-                        children: inputsWidgetsList,
-                      );
-                    }),
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(
@@ -206,7 +208,7 @@ class _CustomerAccountAddingFormState
                             child: CBElevatedButton(
                               text: 'Valider',
                               onPressed: () async {
-                                CustomerAccountCRUDFunctions.create(
+                                await CustomerAccountCRUDFunctions.create(
                                   context: context,
                                   formKey: formKey,
                                   ref: ref,

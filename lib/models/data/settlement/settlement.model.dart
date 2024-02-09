@@ -44,7 +44,7 @@ class Settlement {
       agentId: agentId ?? this.agentId,
       collectionId: collectionId ?? this.collectionId,
       collectedAt: collectedAt ?? this.collectedAt,
-      isValiated: isValiated ?? isValiated,
+      isValiated: isValiated,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

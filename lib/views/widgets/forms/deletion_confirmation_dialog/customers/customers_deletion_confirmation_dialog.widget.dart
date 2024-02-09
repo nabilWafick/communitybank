@@ -97,7 +97,7 @@ class CustomerDeletionConfirmationDialog extends HookConsumerWidget {
                 SizedBox(
                   width: 170.0,
                   child: CBElevatedButton(
-                    text: 'Annuler',
+                    text: 'Fermer',
                     backgroundColor: CBColors.sidebarTextColor,
                     onPressed: () {
                       Navigator.of(context).pop();

@@ -1,22 +1,23 @@
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
+import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class PersonalStatusDeletionConfirmationDialog extends HookConsumerWidget {
-  final PersonalStatus personalStatus;
+class SettlementValidationStatusUpdateConfirmationDialog
+    extends HookConsumerWidget {
+  final Settlement settlement;
   final Future<void> Function({
     required BuildContext context,
     required WidgetRef ref,
-    required PersonalStatus personalStatus,
+    required Settlement settlement,
     required ValueNotifier<bool> showConfirmationButton,
   }) confirmToDelete;
 
-  const PersonalStatusDeletionConfirmationDialog({
+  const SettlementValidationStatusUpdateConfirmationDialog({
     super.key,
-    required this.personalStatus,
+    required this.settlement,
     required this.confirmToDelete,
   });
   @override
@@ -77,7 +78,7 @@ class PersonalStatusDeletionConfirmationDialog extends HookConsumerWidget {
                       const Flexible(
                         child: CBText(
                           text:
-                              'Êtes-vous sûr de vouloir supprimer cette catégorie de client ?',
+                              'Êtes-vous sûr de vouloir modifier l\'état de ce règlement ?',
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
                           textOverflow: TextOverflow.ellipsis,
@@ -97,7 +98,7 @@ class PersonalStatusDeletionConfirmationDialog extends HookConsumerWidget {
                 SizedBox(
                   width: 170.0,
                   child: CBElevatedButton(
-                    text: 'Fermer',
+                    text: 'Annuler',
                     backgroundColor: CBColors.sidebarTextColor,
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -116,7 +117,7 @@ class PersonalStatusDeletionConfirmationDialog extends HookConsumerWidget {
                             confirmToDelete(
                               context: context,
                               ref: ref,
-                              personalStatus: personalStatus,
+                              settlement: settlement,
                               showConfirmationButton: showConfirmationButton,
                             );
                           },

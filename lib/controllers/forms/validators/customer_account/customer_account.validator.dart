@@ -20,19 +20,37 @@ final customerAccountOwnerCardLabelProvider = StateProvider.family<String, int>(
   },
 );
 
+final customerAccountOwnerCardTypeNumberProvider =
+    StateProvider.family<int, int>(
+  (ref, customerCardIndex) {
+    return 1;
+  },
+);
+
 class CustomerAccountValidators {
   static String? customerAccountOwnerCardLabel(
     String? value,
-    int productIndex,
+    int cardIndex,
     WidgetRef ref,
   ) {
-    if (ref.watch(customerAccountOwnerCardLabelProvider(productIndex)) == '') {
+    if (ref.watch(customerAccountOwnerCardLabelProvider(cardIndex)) == '') {
       return 'Entrez le libellé de la carte';
     } else if (ref
-            .watch(customerAccountOwnerCardLabelProvider(productIndex))
+            .watch(customerAccountOwnerCardLabelProvider(cardIndex))
             .length <
         6) {
       return 'Le libellé doit comporter au moins 6 lettres';
+    }
+    return null;
+  }
+
+  static String? customerAccountOwnerCardTypeNumber(
+    String? value,
+    int cardIndex,
+    WidgetRef ref,
+  ) {
+    if (ref.watch(customerAccountOwnerCardTypeNumberProvider(cardIndex)) == 0) {
+      return 'Entrez un nombre valide';
     }
     return null;
   }

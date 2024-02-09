@@ -9,7 +9,8 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/customer_account_owner_card_selection_dropdown/customer_account_owner_card_selection_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/customer_account_owner_card_selection_textformfield/customer_account_owner_card_selection_textformfield.widget.dart';
+import 'package:communitybank/views/widgets/globals/customer_account_owner_card_label_textformfield/customer_account_owner_card_label_textformfield.widget.dart';
+import 'package:communitybank/views/widgets/globals/customer_account_owner_card_type_number_textformfield/customer_account_owner_card_type_number_textformfield.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -89,7 +90,7 @@ class _CustomerAccountOwnerCardSelectionState
                         Row(
                           children: [
                             SizedBox(
-                              width: widget.formCardWidth / 2.5,
+                              width: widget.formCardWidth / 2.7,
                               child:
                                   CBCustomerAccountOwnerCardLabelTextFormField(
                                 inputIndex: widget.index,
@@ -101,6 +102,21 @@ class _CustomerAccountOwnerCardSelectionState
                                     .customerAccountOwnerCardLabel,
                                 onChanged: CustomerAccountOnChanged
                                     .customerAccountOwnerCardLabel,
+                              ),
+                            ),
+                            SizedBox(
+                              width: widget.formCardWidth / 5.5,
+                              child:
+                                  CBCustomerAccountOwnerCardTypeNumberTextFormField(
+                                inputIndex: widget.index,
+                                label: 'Nombre',
+                                hintText: 'Nombre de Type',
+                                initialValue: 1.toString(),
+                                textInputType: TextInputType.number,
+                                validator: CustomerAccountValidators
+                                    .customerAccountOwnerCardTypeNumber,
+                                onChanged: CustomerAccountOnChanged
+                                    .customerAccountOwnerCardTypeNumber,
                               ),
                             ),
                             Consumer(
@@ -127,7 +143,6 @@ class _CustomerAccountOwnerCardSelectionState
 
                                       data.toSet().toSet();
                                     }
-
                                     final remainProducts = data
                                         .where(
                                           (customerCard) =>
@@ -137,9 +152,8 @@ class _CustomerAccountOwnerCardSelectionState
                                               false,
                                         )
                                         .toList();
-
                                     return CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                      width: widget.formCardWidth / 2.5,
+                                      width: widget.formCardWidth / 3.55,
                                       menuHeigth: 500.0,
                                       label: 'Type',
                                       providerName: widget

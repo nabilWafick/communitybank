@@ -65,7 +65,7 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
         controller: horizontalScrollController,
         child: SingleChildScrollView(
           controller: horizontalScrollController,
-          //  scrollDirection: Axis.horizontal,
+          scrollDirection: Axis.horizontal,
           child: Scrollbar(
             controller: verticalScrollController,
             child: SingleChildScrollView(

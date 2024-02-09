@@ -6,15 +6,9 @@ final customerCardLabelProvider = StateProvider<String>(
   },
 );
 
-final isCustomerCardSatisfiedProvider = StateProvider<bool>(
+final customerCardTypeNumberProvider = StateProvider<int>(
   (ref) {
-    return false;
-  },
-);
-
-final isCustomerCardRepaidProvider = StateProvider<bool>(
-  (ref) {
-    return false;
+    return 0;
   },
 );
 
@@ -36,6 +30,13 @@ class CustomerCardValidators {
       return 'Entrez le libellé de l\'customerCard';
     } else if (ref.watch(customerCardLabelProvider).length < 3) {
       return "Le nom doit contenir au moins 5 lettres";
+    }
+    return null;
+  }
+
+  static String? customerCardTypeNumber(String? value, WidgetRef ref) {
+    if (ref.watch(customerCardTypeNumberProvider) == 0) {
+      return 'Entrez un nombre valide';
     }
     return null;
   }

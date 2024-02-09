@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-
-import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
 
 class CustomerCard {
   final int? id;
   final String label;
   final int typeId;
+  final int typeNumber;
   int? customerAccountId;
   final DateTime? satisfiedAt;
   final DateTime? repaidAt;
@@ -18,6 +17,7 @@ class CustomerCard {
     this.id,
     required this.label,
     required this.typeId,
+    required this.typeNumber,
     this.customerAccountId,
     this.satisfiedAt,
     this.repaidAt,
@@ -29,7 +29,7 @@ class CustomerCard {
     int? id,
     String? label,
     int? typeId,
-    Type? type,
+    int? typeNumber,
     int? customerAccountId,
     DateTime? satisfiedAt,
     DateTime? repaidAt,
@@ -40,6 +40,7 @@ class CustomerCard {
       id: id ?? this.id,
       label: label ?? this.label,
       typeId: typeId ?? this.typeId,
+      typeNumber: typeNumber ?? this.typeNumber,
       customerAccountId: customerAccountId ?? this.customerAccountId,
       satisfiedAt: satisfiedAt ?? this.satisfiedAt,
       repaidAt: repaidAt ?? this.repaidAt,
@@ -67,30 +68,20 @@ class CustomerCard {
   }
 
   factory CustomerCard.fromMap(Map<String, dynamic> map) {
-    try {
-      return CustomerCard(
-        id: map[CustomerCardTable.id]?.toInt(),
-        label: map[CustomerCardTable.label] ?? '',
-        typeId: map[CustomerCardTable.typeId]?.toInt(),
-        customerAccountId: map[CustomerCardTable.customerAccountId],
-        satisfiedAt: map[CustomerCardTable.satisfiedAt] != null
-            ? DateTime.parse(map[CustomerCardTable.satisfiedAt]!)
-            : null,
-        repaidAt: map[CustomerCardTable.repaidAt] != null
-            ? DateTime.parse(map[CustomerCardTable.repaidAt]!)
-            : null,
-        createdAt: DateTime.parse(map[CustomerCardTable.createdAt]),
-        updatedAt: DateTime.parse(map[CustomerCardTable.updatedAt]),
-      );
-    } catch (error) {
-      debugPrint(error.toString());
-    }
-
     return CustomerCard(
-      label: 'Undefined',
-      typeId: 20,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+      id: map[CustomerCardTable.id]?.toInt(),
+      label: map[CustomerCardTable.label] ?? '',
+      typeId: map[CustomerCardTable.typeId]?.toInt(),
+      typeNumber: map[CustomerCardTable.typeNumber],
+      customerAccountId: map[CustomerCardTable.customerAccountId]?.toInt(),
+      satisfiedAt: map[CustomerCardTable.satisfiedAt] != null
+          ? DateTime.parse(map[CustomerCardTable.satisfiedAt]!)
+          : null,
+      repaidAt: map[CustomerCardTable.repaidAt] != null
+          ? DateTime.parse(map[CustomerCardTable.repaidAt]!)
+          : null,
+      createdAt: DateTime.parse(map[CustomerCardTable.createdAt]),
+      updatedAt: DateTime.parse(map[CustomerCardTable.updatedAt]),
     );
   }
 
@@ -101,7 +92,7 @@ class CustomerCard {
 
   @override
   String toString() {
-    return 'CustomerCard(id: $id, label: $label, typeId: $typeId, customerAccountId: $customerAccountId,  satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerCard(id: $id, label: $label, typeId: $typeId, typeNumber: $typeNumber, customerAccountId: $customerAccountId,  satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -112,6 +103,7 @@ class CustomerCard {
         other.id == id &&
         other.label == label &&
         other.typeId == typeId &&
+        other.typeNumber == typeNumber &&
         other.satisfiedAt == satisfiedAt &&
         other.repaidAt == repaidAt &&
         other.createdAt == createdAt &&
@@ -123,6 +115,7 @@ class CustomerCard {
     return id.hashCode ^
         label.hashCode ^
         typeId.hashCode ^
+        typeNumber.hashCode ^
         satisfiedAt.hashCode ^
         repaidAt.hashCode ^
         createdAt.hashCode ^

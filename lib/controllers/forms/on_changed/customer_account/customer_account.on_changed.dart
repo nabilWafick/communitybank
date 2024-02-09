@@ -10,4 +10,12 @@ class CustomerAccountOnChanged {
         ref,
         customerAccountOwnerCardLabelProvider(customerCardIndex),
       );
+
+  static customerAccountOwnerCardTypeNumber(
+          String? value, int customerCardIndex, WidgetRef ref) =>
+      CommonOnChangedFunction.onIntTextInputValueChanged(
+        value,
+        ref,
+        customerAccountOwnerCardTypeNumberProvider(customerCardIndex),
+      );
 }

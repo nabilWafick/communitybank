@@ -8,7 +8,7 @@ final listCustomerCardDropdownProvider =
   return CustomerCard(
     label: 'Tous',
     typeId: 0,
-
+    typeNumber: 1,
     satisfiedAt: DateTime.now(), // nullable value
     repaidAt: DateTime.now(), // nullable value
     createdAt: DateTime.now(),

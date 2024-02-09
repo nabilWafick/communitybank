@@ -527,7 +527,9 @@ class SettlementCRUDFunctions {
     required BuildContext context,
     required WidgetRef ref,
     required Settlement settlement,
+    required ValueNotifier<bool> showConfirmationButton,
   }) async {
+    showConfirmationButton.value = false;
     if (settlement.isValiated) {
       final settlementType = ref.watch(
           cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
@@ -559,7 +561,7 @@ class SettlementCRUDFunctions {
           serviceResponse: settlementUpdateStatus,
           response: 'Opération échouée',
         );
-
+        showConfirmationButton.value = true;
         FunctionsController.showAlertDialog(
           context: context,
           alertDialog: const ResponseDialog(),
@@ -594,6 +596,8 @@ class SettlementCRUDFunctions {
                 'Opération échouée \n La collecte du collector n\'a pas été mise à jour',
           );
 
+          showConfirmationButton.value = true;
+          Navigator.of(context).pop();
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
@@ -603,7 +607,8 @@ class SettlementCRUDFunctions {
             serviceResponse: collectorCollectionUpdateStatus,
             response: 'Opération réussie',
           );
-
+          showConfirmationButton.value = true;
+          Navigator.of(context).pop();
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
@@ -634,7 +639,7 @@ class SettlementCRUDFunctions {
           serviceResponse: ServiceResponse.failed,
           response: 'Le nombre de règlement à ajouter est supérieur au restant',
         );
-
+        showConfirmationButton.value = true;
         FunctionsController.showAlertDialog(
           context: context,
           alertDialog: const ResponseDialog(),
@@ -670,6 +675,7 @@ class SettlementCRUDFunctions {
             serviceResponse: settlementUpdateStatus,
             response: 'Opération échouée',
           );
+          showConfirmationButton.value = true;
 
           FunctionsController.showAlertDialog(
             context: context,
@@ -705,7 +711,7 @@ class SettlementCRUDFunctions {
               response:
                   'Opération échouée \n La collecte du collector n\'a pas été mise à jour',
             );
-
+            showConfirmationButton.value = true;
             FunctionsController.showAlertDialog(
               context: context,
               alertDialog: const ResponseDialog(),
@@ -716,6 +722,8 @@ class SettlementCRUDFunctions {
               serviceResponse: collectorCollectionUpdateStatus,
               response: 'Opération réussie',
             );
+            showConfirmationButton.value = true;
+            Navigator.of(context).pop();
 
             FunctionsController.showAlertDialog(
               context: context,
@@ -780,12 +788,13 @@ class SettlementCRUDFunctions {
           collection: newCollectorCollection,
         );
 
-        if (collectorCollectionUpdateStatus != ServiceResponse.failed) {
+        if (collectorCollectionUpdateStatus != ServiceResponse.success) {
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
             serviceResponse: collectorCollectionUpdateStatus,
             response:
                 'Opération échouée \n La collecte du collecteur  n\'a pas pu  être mise à jour',
           );
+          showConfirmationButton.value = true;
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
@@ -795,6 +804,7 @@ class SettlementCRUDFunctions {
             serviceResponse: collectorCollectionUpdateStatus,
             response: 'Opération réussie',
           );
+          showConfirmationButton.value = true;
           Navigator.of(context).pop();
           FunctionsController.showAlertDialog(
             context: context,

@@ -8,6 +8,7 @@ final formCustomerCardDropdownProvider =
   return CustomerCard(
     label: 'Non défini',
     typeId: 0,
+    typeNumber: 1,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
   );

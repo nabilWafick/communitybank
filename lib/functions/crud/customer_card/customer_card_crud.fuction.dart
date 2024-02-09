@@ -24,6 +24,7 @@ class CustomerCardCRUDFunctions {
     if (isFormValid) {
       showValidatedButton.value = false;
       //  final customerCardLabel = ref.watch(customerCardLabelProvider);
+      final customerCardTypeNumber = ref.watch(customerCardTypeNumberProvider);
       final customerCardLabel = generateRandomStringFromDateTimeNowMillis();
       final customerCardType =
           ref.watch(formTypeDropdownProvider('customer-card-adding-type'));
@@ -33,6 +34,7 @@ class CustomerCardCRUDFunctions {
       final customerCard = CustomerCard(
         label: customerCardLabel,
         typeId: customerCardType.id!,
+        typeNumber: customerCardTypeNumber,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -74,6 +76,7 @@ class CustomerCardCRUDFunctions {
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
       showValidatedButton.value = false;
+      final customerCardTypeNumber = ref.watch(customerCardTypeNumberProvider);
       final customerCardLabel = ref.watch(customerCardLabelProvider);
       final customerCardType =
           ref.watch(formTypeDropdownProvider('customer-card-update-type'));
@@ -83,6 +86,7 @@ class CustomerCardCRUDFunctions {
       final newCustomerCard = CustomerCard(
         label: customerCardLabel,
         typeId: customerCardType.id!,
+        typeNumber: customerCardTypeNumber,
         createdAt: customerCard.createdAt,
         updatedAt: DateTime.now(),
       );
@@ -130,6 +134,7 @@ class CustomerCardCRUDFunctions {
     final newCustomerCard = CustomerCard(
       label: customerCard.label,
       typeId: customerCard.typeId,
+      typeNumber: customerCard.typeNumber,
       repaidAt: customerCardRepaymentDate!,
       createdAt: customerCard.createdAt,
       updatedAt: DateTime.now(),
@@ -171,8 +176,7 @@ class CustomerCardCRUDFunctions {
 
     final newCustomerCard = CustomerCard(
       label: customerCard.label,
-
-      typeId: customerCard.typeId,
+      typeId: customerCard.typeId, typeNumber: customerCard.typeNumber,
       createdAt: customerCard.createdAt,
       //  repaidAt: customerCardRepaymentDate!, // it's not defined
       satisfiedAt: customerCardSatisfactionDate!,

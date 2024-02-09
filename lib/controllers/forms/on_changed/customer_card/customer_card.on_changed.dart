@@ -9,4 +9,11 @@ class CustomerCardOnChanged {
         ref,
         customerCardLabelProvider,
       );
+
+  static customerTypeNumber(String? value, WidgetRef ref) =>
+      CommonOnChangedFunction.onIntTextInputValueChanged(
+        value,
+        ref,
+        customerCardTypeNumberProvider,
+      );
 }

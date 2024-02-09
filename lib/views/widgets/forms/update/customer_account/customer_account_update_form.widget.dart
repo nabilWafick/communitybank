@@ -29,7 +29,7 @@ class _CustomerAccountUpdateFormState
     final showValidatedButton = useState<bool>(true);
     final customersListStream = ref.watch(customersListStreamProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
-    const formCardWidth = 590.0;
+    const formCardWidth = 650.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -85,6 +85,7 @@ class _CustomerAccountUpdateFormState
                           ),
                           width: formCardWidth / 1.2,
                           child: CBFormCustomerDropdown(
+                            enabled: false,
                             width: formCardWidth / 1.2,
                             menuHeigth: 500.0,
                             label: 'Client',

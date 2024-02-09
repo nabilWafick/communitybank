@@ -25,12 +25,6 @@ class _CustomerCardUpdateFormState
   @override
   void initState() {
     Future.delayed(const Duration(milliseconds: 100), () {
-      ref.read(isCustomerCardSatisfiedProvider.notifier).state =
-          widget.customerCard.satisfiedAt != null;
-
-      ref.read(isCustomerCardRepaidProvider.notifier).state =
-          widget.customerCard.repaidAt != null;
-
       ref.read(customerCardSatisfactionDateProvider.notifier).state =
           widget.customerCard.satisfiedAt;
 

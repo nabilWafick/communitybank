@@ -204,28 +204,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-
-                /*  CustomerCardData(
-                  label: 'Carte',
-                  value:
-                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                              null
-                          ? customersCardsListStream.when(
-                              data: (data) => data
-                                  .firstWhere(
-                                    (customerCard) =>
-                                        customerCard.id ==
-                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                            .id,
-                                  )
-                                  .label,
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            )
-                          : '',
-                ),
-              */
-
                 Consumer(
                   builder: (context, ref, child) {
                     return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -313,7 +291,7 @@ class _CashOperationsCustomerCardInfosState
                               return CustomerCardData(
                                 label: 'Montant Payé',
                                 value:
-                                    '${settlementsNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}f',
+                                    '${cashOperationsSelectedCustomerAccountOwnerSelectedCard.typeNumber * (settlementsNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil())}f',
                               );
                             },
                             error: (error, stackTrace) =>
@@ -377,20 +355,44 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-                const SizedBox(),
                 Consumer(
                   builder: (context, ref, child) {
                     return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
                             null
-                        ?
-                        /*
-                         isRepaid
-                            ? CustomerCardData(
-                                label: 'Reste à Payer',
-                                value: '0f',
-                              )
-                            : */
-                        cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+                        ? customersCardsListStream.when(
+                            data: (data) {
+                              final customerCard = data.firstWhere(
+                                (customerCard) =>
+                                    customerCard.id ==
+                                    cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                        .id,
+                              );
+                              return CustomerCardData(
+                                label: 'Nombre de Types',
+                                value: customerCard.typeNumber.toString(),
+                              );
+                            },
+                            error: (error, stackTrace) =>
+                                const CustomerCardData(
+                              label: 'Nombre de Types',
+                              value: '',
+                            ),
+                            loading: () => const CustomerCardData(
+                              label: 'Nombre de Types',
+                              value: '',
+                            ),
+                          )
+                        : const CustomerCardData(
+                            label: 'Nombre de Types',
+                            value: '',
+                          );
+                  },
+                ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                            null
+                        ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
                             .when(
                             data: (data) {
                               int settlementsNumber = 0;
@@ -403,7 +405,7 @@ class _CashOperationsCustomerCardInfosState
                               return CustomerCardData(
                                 label: 'Reste à Payer',
                                 value:
-                                    '${(372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}f',
+                                    '${cashOperationsSelectedCustomerAccountOwnerSelectedCard.typeNumber * ((372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil())}f',
                               );
                             },
                             error: (error, stackTrace) =>

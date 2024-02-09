@@ -154,6 +154,7 @@ class _SettlementsSortOptionsState
                     CustomerCard(
                       label: 'Tous',
                       typeId: 0,
+                      typeNumber: 1,
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
@@ -168,6 +169,7 @@ class _SettlementsSortOptionsState
                     CustomerCard(
                       label: 'Tous',
                       typeId: 0,
+                      typeNumber: 1,
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
