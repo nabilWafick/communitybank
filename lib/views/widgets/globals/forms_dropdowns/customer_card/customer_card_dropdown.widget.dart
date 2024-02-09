@@ -20,11 +20,13 @@ class CBFormCustomerCardDropdown extends ConsumerStatefulWidget {
   final List<CustomerCard> dropdownMenuEntriesValues;
   final double? width;
   final double? menuHeigth;
+  final bool? enabled;
 
   const CBFormCustomerCardDropdown({
     super.key,
     this.width,
     this.menuHeigth,
+    this.enabled,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -66,6 +68,7 @@ class _CBFormCustomerCardDropdownState
       child: DropdownMenu(
         width: widget.width,
         menuHeight: widget.menuHeigth,
+        enabled: widget.enabled ?? true,
         enableFilter: true,
         label: CBText(
           text: widget.label,

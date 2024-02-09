@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:communitybank/controllers/customer_account/customer_account.controller.dart';
+import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
@@ -292,8 +293,6 @@ class CustomerAccountCRUDFunctions {
         );
       } else {
         showValidatedButton.value = false;
-        final customerAccountOwner = ref.watch(
-            formCustomerDropdownProvider('customer-account-update-customer'));
         final customerAccountCollector = ref.watch(
             formCollectorDropdownProvider('customer-account-update-collector'));
 
@@ -337,7 +336,7 @@ class CustomerAccountCRUDFunctions {
               ),
             );
 
-            // store the customerCard ids which will be added to customerCard
+            // store the customerCard ids that will be added to customerCard
             // model in instanciation
             customerAccountOwnerCardsIds.add(
               customerAccountAddedInputsEntry.key,
@@ -398,10 +397,10 @@ class CustomerAccountCRUDFunctions {
 
           // create the customer account model
           CustomerAccount lastCustomerAccount = CustomerAccount(
-            customerId: customerAccountOwner.id!,
+            customerId: customerAccountLast.customerId,
             collectorId: customerAccountCollector.id!,
             customerCardsIds: customerAccountLast.customerCardsIds,
-            createdAt: DateTime.now(),
+            createdAt: customerAccountLast.createdAt,
             updatedAt: DateTime.now(),
           );
 
@@ -419,7 +418,8 @@ class CustomerAccountCRUDFunctions {
           // updated or created successfully
           bool isAllCustomerCardsOperationDoneSuccessfully = false;
 
-          // if the customer account have been updated successfully
+          // if the customer account have been updated
+          // for the first time successfully
           if (lastCustomerAccountMap != null &&
               lastCustomerAccountMap[CustomerAccountTable.id] != null) {
             customerAccountFirstUpdateStatus = ServiceResponse.success;
@@ -427,16 +427,16 @@ class CustomerAccountCRUDFunctions {
             // fetch all customerCards for detecting new customerCards
             // get all customerCards
             final allCustomerCards =
-                await CustomersAccountsController.getAll().first;
+                await CustomersCardsController.getAll().first;
             // store customer cards ids ( ids are used instead of customer
-            // card because customer cards labels are may be changed )
+            // card because customer cards labels  may be changed )
             final allCustomerCardsIds = allCustomerCards
                 .map(
                   (customerCard) => customerCard.id!,
                 )
                 .toList();
 
-            // update or create every customer card with the after setting
+            // update or create every customer card after setting
             // customer account id
             for (int i = 0; i < customerAccountOwnerCards.length; ++i) {
               // set the customer account for all customer cards
@@ -452,7 +452,15 @@ class CustomerAccountCRUDFunctions {
               if (allCustomerCardsIds
                   .contains(customerAccountOwnerCards[i].id!)) {
                 // try to update the customer card
-
+                // update the customerCard created date
+                // since it have been with DateTime.now
+                customerAccountOwnerCards[i] =
+                    customerAccountOwnerCards[i].copyWith(
+                  createdAt: allCustomerCards
+                      .firstWhere((customerCard) =>
+                          customerCard.id! == customerAccountOwnerCards[i].id!)
+                      .createdAt,
+                );
                 // update the customer card in the database
                 final lastCustomerCardMap = await CustomerCardsService.update(
                   id: customerAccountOwnerCards[i].id!,
@@ -467,7 +475,7 @@ class CustomerAccountCRUDFunctions {
                     lastCustomerCardMap[CustomerCardTable.id] != null) {
                   // set the id of the customer card,
                   // that is necessary for updating customer account
-                  // not necessary copy - paste code
+                  // not necessary here copy - paste code
                   customerAccountOwnerCards[i] =
                       customerAccountOwnerCards[i].copyWith(
                     id: lastCustomerCardMap[CustomerCardTable.id],
@@ -485,14 +493,13 @@ class CustomerAccountCRUDFunctions {
               else {
                 // try to create the customer card and update his id since
                 // his current id is DateTime.now().fromMillisecondsSinceEpoch
+                ServiceResponse newCustomerCardAddingStatus =
+                    ServiceResponse.failed;
 
                 // add the customer card to the database
                 final newCustomerCardMap = await CustomerCardsService.create(
                   customerCard: customerAccountOwnerCards[i],
                 );
-
-                ServiceResponse newCustomerCardAddingStatus =
-                    ServiceResponse.failed;
 
                 // if the customer card is added succesfully
                 if (newCustomerCardMap != null &&
@@ -573,7 +580,8 @@ class CustomerAccountCRUDFunctions {
               showValidatedButton.value = true;
             }
           } else {
-            // the account haven't been created
+            debugPrint('the account haven\'t been updated');
+            // the account haven't been updated
             customerAccountFirstUpdateStatus = ServiceResponse.failed;
 
             ref.read(responseDialogProvider.notifier).state =

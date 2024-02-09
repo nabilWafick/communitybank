@@ -24,11 +24,13 @@ class CBListAgentDropdown extends ConsumerStatefulWidget {
   final List<Agent> dropdownMenuEntriesValues;
   final double? width;
   final double? menuHeigth;
+  final bool? enabled;
 
   const CBListAgentDropdown({
     super.key,
     this.width,
     this.menuHeigth,
+    this.enabled,
     required this.label,
     required this.providerName,
     required this.dropdownMenuEntriesLabels,
@@ -70,6 +72,7 @@ class _CBListAgentDropdownState extends ConsumerState<CBListAgentDropdown> {
         width: widget.width,
         menuHeight: widget.menuHeigth,
         enableFilter: true,
+        enabled: widget.enabled ?? true,
         label: CBText(
           text: widget.label,
         ),
