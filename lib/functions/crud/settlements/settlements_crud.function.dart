@@ -70,11 +70,9 @@ class SettlementCRUDFunctions {
             alertDialog: const ResponseDialog(),
           );
         } else {
-          debugPrint('Collector');
-          debugPrint(settlementCollector!.toJson());
           // check if the collector have made a collection that day
           final collectorsCollections = await CollectionsController.getAll(
-            collectorId: settlementCollector.id!,
+            collectorId: settlementCollector!.id!,
             collectedAt: settlementCollectionDate,
             agentId: 0,
           ).first;
@@ -151,6 +149,7 @@ class SettlementCRUDFunctions {
                   agentId: agentId ?? 0,
                   collectionId: collectorCollection.id!,
                   collectedAt: settlementCollectionDate,
+                  isValiated: true,
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(),
                 );
@@ -193,54 +192,26 @@ class SettlementCRUDFunctions {
     required Settlement settlement,
     required ValueNotifier<bool> showValidatedButton,
   }) async {
-    formKey.currentState!.save();
-    final isFormValid = formKey.currentState!.validate();
-    if (isFormValid) {
-      showValidatedButton.value = false;
-      final settlementNumber = ref.watch(settlementNumberProvider);
-      final settlementType = ref.watch(
-          cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
-      final settlementCustomerCard = ref.watch(
-          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
-      final settlementCollector =
-          ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
-      final settlementCollectionDate =
-          ref.watch(settlementCollectionDateProvider);
+    if (settlement.isValiated) {
+      formKey.currentState!.save();
+      final isFormValid = formKey.currentState!.validate();
+      if (isFormValid) {
+        showValidatedButton.value = false;
+        final settlementNumber = ref.watch(settlementNumberProvider);
+        final settlementType = ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+        final settlementCustomerCard = ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+        final settlementCollector =
+            ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
+        final settlementCollectionDate =
+            ref.watch(settlementCollectionDateProvider);
 
-      // if collection date have not been selected
-      if (settlementCollectionDate == null) {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: ServiceResponse.failed,
-          response: 'La date de collecte n\'a  pas été selectionnée',
-        );
-        showValidatedButton.value = true;
-        FunctionsController.showAlertDialog(
-          context: context,
-          alertDialog: const ResponseDialog(),
-        );
-      } else {
-        final customerCardSettlements = await SettlementsController.getAll(
-                customerCardId: settlementCustomerCard!.id)
-            .first;
-
-        int customerCardSettlementsNumbersTotal = 0;
-
-        for (Settlement settlement in customerCardSettlements) {
-          customerCardSettlementsNumbersTotal += settlement.number;
-        }
-
-        // if the number of settlement added (in which we substract the
-        // previous settlement) plus the number of settlement to add is
-        // greater than 372 (the total number of settelements
-        // of a customer card)
-
-        if ((customerCardSettlementsNumbersTotal - settlement.number) +
-                settlementNumber >
-            372) {
+        // if collection date have not been selected
+        if (settlementCollectionDate == null) {
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
             serviceResponse: ServiceResponse.failed,
-            response:
-                'Le nombre de règlement à ajouter est supérieur au restant',
+            response: 'La date de collecte n\'a  pas été selectionnée',
           );
           showValidatedButton.value = true;
           FunctionsController.showAlertDialog(
@@ -248,19 +219,29 @@ class SettlementCRUDFunctions {
             alertDialog: const ResponseDialog(),
           );
         } else {
-          // check if the collector have made a collection that day
-          final collectorsCollections = await CollectionsController.getAll(
-            collectorId: settlementCollector!.id!,
-            collectedAt: settlementCollectionDate,
-            agentId: 0,
-          ).first;
+          final customerCardSettlements = await SettlementsController.getAll(
+                  customerCardId: settlementCustomerCard!.id)
+              .first;
 
-          if (collectorsCollections.isEmpty) {
+          int customerCardSettlementsNumbersTotal = 0;
+
+          for (Settlement settlement in customerCardSettlements) {
+            customerCardSettlementsNumbersTotal += settlement.number;
+          }
+
+          // if the number of settlement added (in which we substract the
+          // previous settlement) plus the number of settlement to add is
+          // greater than 372 (the total number of settelements
+          // of a customer card)
+
+          if ((customerCardSettlementsNumbersTotal - settlement.number) +
+                  settlementNumber >
+              372) {
             ref.read(responseDialogProvider.notifier).state =
                 ResponseDialogModel(
               serviceResponse: ServiceResponse.failed,
               response:
-                  'Opération échouée \n Le collecteur n\'a pas effectué  de collecte ce jour',
+                  'Le nombre de règlement à ajouter est supérieur au restant',
             );
             showValidatedButton.value = true;
             FunctionsController.showAlertDialog(
@@ -268,123 +249,47 @@ class SettlementCRUDFunctions {
               alertDialog: const ResponseDialog(),
             );
           } else {
-            final collectorCollection = collectorsCollections.first;
+            // check if the collector have made a collection that day
+            final collectorsCollections = await CollectionsController.getAll(
+              collectorId: settlementCollector!.id!,
+              collectedAt: settlementCollectionDate,
+              agentId: 0,
+            ).first;
 
-            // check if settlement update date is the same as the previous date
-            // (the collection date of the settlement before update)
-
-            if (settlement.collectedAt.year == settlementCollectionDate.year &&
-                settlement.collectedAt.month ==
-                    settlementCollectionDate.month &&
-                settlement.collectedAt.day == settlementCollectionDate.day) {
-              // check if the rest of amount of that collection  (on which we  add  the previous settlement amount ) is enough for
-              // updating the settlement
-              if ((collectorCollection.rest +
-                          settlement.number * settlementType!.stake) -
-                      settlementNumber * settlementType.stake <
-                  0) {
-                ref.read(responseDialogProvider.notifier).state =
-                    ResponseDialogModel(
-                  serviceResponse: ServiceResponse.failed,
-                  response:
-                      'Opération échouée \n Le montant restant de la collecte du collecteur est insuffisant',
-                );
-                showValidatedButton.value = true;
-                FunctionsController.showAlertDialog(
-                  context: context,
-                  alertDialog: const ResponseDialog(),
-                );
-              } else {
-                // ready for updating the settlement
-                // update collection rest amount
-                ServiceResponse collectionUpdateStatus;
-
-                // add the previous settlement amount and substract the new settlement amount from collectorCollection rest
-                final newCollectorCollection = collectorCollection.copyWith(
-                  rest: (collectorCollection.rest +
-                          settlement.number * settlementType.stake) -
-                      settlementNumber * settlementType.stake,
-                  updatedAt: DateTime.now(),
-                );
-
-                collectionUpdateStatus = await CollectionsController.update(
-                  id: collectorCollection.id!,
-                  collection: newCollectorCollection,
-                );
-
-                if (collectionUpdateStatus == ServiceResponse.failed) {
-                  ref.read(responseDialogProvider.notifier).state =
-                      ResponseDialogModel(
-                    serviceResponse: ServiceResponse.failed,
-                    response:
-                        'Opération échouée \n Le montant restant de la collecte du collecteur n\'a pas pu été mis à jour',
-                  );
-                  showValidatedButton.value = true;
-                  FunctionsController.showAlertDialog(
-                    context: context,
-                    alertDialog: const ResponseDialog(),
-                  );
-                } else {
-                  ServiceResponse lastSettlementStatus;
-
-                  final newSettlement = Settlement(
-                    number: settlementNumber,
-                    cardId: settlement.cardId,
-                    agentId: settlement.agentId,
-                    collectionId: collectorCollection.id!,
-                    collectedAt: settlementCollectionDate,
-                    createdAt: settlement.createdAt,
-                    updatedAt: DateTime.now(),
-                  );
-
-                  lastSettlementStatus = await SettlementsController.update(
-                    id: settlement.id!,
-                    settlement: newSettlement,
-                  );
-
-                  if (lastSettlementStatus == ServiceResponse.success) {
-                    ref.read(responseDialogProvider.notifier).state =
-                        ResponseDialogModel(
-                      serviceResponse: lastSettlementStatus,
-                      response: 'Opération réussie',
-                    );
-                    showValidatedButton.value = true;
-                    Navigator.of(context).pop();
-                  } else {
-                    ref.read(responseDialogProvider.notifier).state =
-                        ResponseDialogModel(
-                      serviceResponse: lastSettlementStatus,
-                      response: 'Opération échouée',
-                    );
-                    showValidatedButton.value = true;
-                  }
-                  FunctionsController.showAlertDialog(
-                    context: context,
-                    alertDialog: const ResponseDialog(),
-                  );
-                }
-              }
+            if (collectorsCollections.isEmpty) {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.failed,
+                response:
+                    'Opération échouée \n Le collecteur n\'a pas effectué  de collecte ce jour',
+              );
+              showValidatedButton.value = true;
+              FunctionsController.showAlertDialog(
+                context: context,
+                alertDialog: const ResponseDialog(),
+              );
             } else {
-              // it is not  the same collection date
-              {
-                // get the collections at the previous settlementDate
-                final previousCollections = await CollectionsController.getAll(
-                  collectorId: settlementCollector.id,
-                  collectedAt: settlement.collectedAt,
-                  agentId: 0,
-                ).first;
+              final collectorCollection = collectorsCollections.first;
 
-                final previousCollection = previousCollections.first;
-                // check if the rest of amount of the new collection  is enough for adding the settlement
-                // collectorCollection is the the collection at the new date
-                if (collectorCollection.rest -
-                        settlementNumber * settlementType!.stake <
+              // check if settlement update date is the same as the previous date
+              // (the collection date of the settlement before update)
+
+              if (settlement.collectedAt.year ==
+                      settlementCollectionDate.year &&
+                  settlement.collectedAt.month ==
+                      settlementCollectionDate.month &&
+                  settlement.collectedAt.day == settlementCollectionDate.day) {
+                // check if the rest of amount of that collection  (on which we  add  the previous settlement amount ) is enough for
+                // updating the settlement
+                if ((collectorCollection.rest +
+                            settlement.number * settlementType!.stake) -
+                        settlementNumber * settlementType.stake <
                     0) {
                   ref.read(responseDialogProvider.notifier).state =
                       ResponseDialogModel(
                     serviceResponse: ServiceResponse.failed,
                     response:
-                        'Opération échouée \n Le montant restant de la collecte du collecteur à la nouvelle date est insuffisant',
+                        'Opération échouée \n Le montant restant de la collecte du collecteur est insuffisant',
                   );
                   showValidatedButton.value = true;
                   FunctionsController.showAlertDialog(
@@ -392,31 +297,29 @@ class SettlementCRUDFunctions {
                     alertDialog: const ResponseDialog(),
                   );
                 } else {
-                  // update the previous collection
+                  // ready for updating the settlement
+                  // update collection rest amount
+                  ServiceResponse collectionUpdateStatus;
 
-                  ServiceResponse previousCollectionUpdateStatus;
-                  // add the previous settlement amount to the collection
-                  // rest amount
-                  final previousCollectorCollection =
-                      previousCollection.copyWith(
-                    rest: previousCollection.rest +
-                        settlement.number * settlementType.stake,
+                  // add the previous settlement amount and substract the new settlement amount from collectorCollection rest
+                  final newCollectorCollection = collectorCollection.copyWith(
+                    rest: (collectorCollection.rest +
+                            settlement.number * settlementType.stake) -
+                        settlementNumber * settlementType.stake,
                     updatedAt: DateTime.now(),
                   );
 
-                  previousCollectionUpdateStatus =
-                      await CollectionsController.update(
-                    id: previousCollection.id!,
-                    collection: previousCollectorCollection,
+                  collectionUpdateStatus = await CollectionsController.update(
+                    id: collectorCollection.id!,
+                    collection: newCollectorCollection,
                   );
 
-                  if (previousCollectionUpdateStatus !=
-                      ServiceResponse.success) {
+                  if (collectionUpdateStatus == ServiceResponse.failed) {
                     ref.read(responseDialogProvider.notifier).state =
                         ResponseDialogModel(
                       serviceResponse: ServiceResponse.failed,
                       response:
-                          'Opération échouée \n Le montant restant de l\'ancienne collecte du collecteur n\'a pas pu été mis à jour',
+                          'Opération échouée \n Le montant restant de la collecte du collecteur n\'a pas pu été mis à jour',
                     );
                     showValidatedButton.value = true;
                     FunctionsController.showAlertDialog(
@@ -424,32 +327,100 @@ class SettlementCRUDFunctions {
                       alertDialog: const ResponseDialog(),
                     );
                   } else {
-                    // ready for updation the new collection amount since the previous have been succesfully update
+                    ServiceResponse lastSettlementStatus;
 
-                    // ready for updating the settlement
-
-                    // update the new collection rest amount
-                    ServiceResponse newCollectionUpdateStatus;
-
-                    // and substract the new settlement amount from newCollectorCollection rest
-                    final newCollectorCollection = collectorCollection.copyWith(
-                      rest: collectorCollection.rest +
-                          -settlementNumber * settlementType.stake,
+                    final newSettlement = Settlement(
+                      number: settlementNumber,
+                      cardId: settlement.cardId,
+                      agentId: settlement.agentId,
+                      collectionId: collectorCollection.id!,
+                      collectedAt: settlementCollectionDate,
+                      isValiated: settlement.isValiated,
+                      createdAt: settlement.createdAt,
                       updatedAt: DateTime.now(),
                     );
 
-                    newCollectionUpdateStatus =
-                        await CollectionsController.update(
-                      id: collectorCollection.id!,
-                      collection: newCollectorCollection,
+                    lastSettlementStatus = await SettlementsController.update(
+                      id: settlement.id!,
+                      settlement: newSettlement,
                     );
 
-                    if (newCollectionUpdateStatus == ServiceResponse.failed) {
+                    if (lastSettlementStatus == ServiceResponse.success) {
+                      ref.read(responseDialogProvider.notifier).state =
+                          ResponseDialogModel(
+                        serviceResponse: lastSettlementStatus,
+                        response: 'Opération réussie',
+                      );
+                      showValidatedButton.value = true;
+                      Navigator.of(context).pop();
+                    } else {
+                      ref.read(responseDialogProvider.notifier).state =
+                          ResponseDialogModel(
+                        serviceResponse: lastSettlementStatus,
+                        response: 'Opération échouée',
+                      );
+                      showValidatedButton.value = true;
+                    }
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: const ResponseDialog(),
+                    );
+                  }
+                }
+              } else {
+                // it is not  the same collection date
+                {
+                  // get the collections at the previous settlementDate
+                  final previousCollections =
+                      await CollectionsController.getAll(
+                    collectorId: settlementCollector.id,
+                    collectedAt: settlement.collectedAt,
+                    agentId: 0,
+                  ).first;
+
+                  final previousCollection = previousCollections.first;
+                  // check if the rest of amount of the new collection  is enough for adding the settlement
+                  // collectorCollection is the the collection at the new date
+                  if (collectorCollection.rest -
+                          settlementNumber * settlementType!.stake <
+                      0) {
+                    ref.read(responseDialogProvider.notifier).state =
+                        ResponseDialogModel(
+                      serviceResponse: ServiceResponse.failed,
+                      response:
+                          'Opération échouée \n Le montant restant de la collecte du collecteur à la nouvelle date est insuffisant',
+                    );
+                    showValidatedButton.value = true;
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: const ResponseDialog(),
+                    );
+                  } else {
+                    // update the previous collection
+
+                    ServiceResponse previousCollectionUpdateStatus;
+                    // add the previous settlement amount to the collection
+                    // rest amount
+                    final previousCollectorCollection =
+                        previousCollection.copyWith(
+                      rest: previousCollection.rest +
+                          settlement.number * settlementType.stake,
+                      updatedAt: DateTime.now(),
+                    );
+
+                    previousCollectionUpdateStatus =
+                        await CollectionsController.update(
+                      id: previousCollection.id!,
+                      collection: previousCollectorCollection,
+                    );
+
+                    if (previousCollectionUpdateStatus !=
+                        ServiceResponse.success) {
                       ref.read(responseDialogProvider.notifier).state =
                           ResponseDialogModel(
                         serviceResponse: ServiceResponse.failed,
                         response:
-                            'Opération échouée \n Le montant restant de la nouvelle collecte du collecteur n\'a pas pu été mis à jour',
+                            'Opération échouée \n Le montant restant de l\'ancienne collecte du collecteur n\'a pas pu été mis à jour',
                       );
                       showValidatedButton.value = true;
                       FunctionsController.showAlertDialog(
@@ -457,48 +428,299 @@ class SettlementCRUDFunctions {
                         alertDialog: const ResponseDialog(),
                       );
                     } else {
-                      ServiceResponse lastSettlementStatus;
+                      // ready for updation the new collection amount since the previous have been succesfully update
 
-                      final newSettlement = Settlement(
-                        number: settlementNumber,
-                        cardId: settlement.cardId,
-                        agentId: settlement.agentId,
-                        collectionId: collectorCollection.id!,
-                        collectedAt: settlementCollectionDate,
-                        createdAt: settlement.createdAt,
+                      // ready for updating the settlement
+
+                      // update the new collection rest amount
+                      ServiceResponse newCollectionUpdateStatus;
+
+                      // and substract the new settlement amount from newCollectorCollection rest
+                      final newCollectorCollection =
+                          collectorCollection.copyWith(
+                        rest: collectorCollection.rest +
+                            -settlementNumber * settlementType.stake,
                         updatedAt: DateTime.now(),
                       );
 
-                      lastSettlementStatus = await SettlementsController.update(
-                        id: settlement.id!,
-                        settlement: newSettlement,
+                      newCollectionUpdateStatus =
+                          await CollectionsController.update(
+                        id: collectorCollection.id!,
+                        collection: newCollectorCollection,
                       );
 
-                      if (lastSettlementStatus == ServiceResponse.success) {
+                      if (newCollectionUpdateStatus == ServiceResponse.failed) {
                         ref.read(responseDialogProvider.notifier).state =
                             ResponseDialogModel(
-                          serviceResponse: lastSettlementStatus,
-                          response: 'Opération réussie',
+                          serviceResponse: ServiceResponse.failed,
+                          response:
+                              'Opération échouée \n Le montant restant de la nouvelle collecte du collecteur n\'a pas pu été mis à jour',
                         );
                         showValidatedButton.value = true;
-                        Navigator.of(context).pop();
+                        FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog: const ResponseDialog(),
+                        );
                       } else {
-                        ref.read(responseDialogProvider.notifier).state =
-                            ResponseDialogModel(
-                          serviceResponse: lastSettlementStatus,
-                          response: 'Opération échouée',
+                        ServiceResponse lastSettlementStatus;
+
+                        final newSettlement = Settlement(
+                          number: settlementNumber,
+                          cardId: settlement.cardId,
+                          agentId: settlement.agentId,
+                          collectionId: collectorCollection.id!,
+                          collectedAt: settlementCollectionDate,
+                          isValiated: settlement.isValiated,
+                          createdAt: settlement.createdAt,
+                          updatedAt: DateTime.now(),
                         );
-                        showValidatedButton.value = true;
+
+                        lastSettlementStatus =
+                            await SettlementsController.update(
+                          id: settlement.id!,
+                          settlement: newSettlement,
+                        );
+
+                        if (lastSettlementStatus == ServiceResponse.success) {
+                          ref.read(responseDialogProvider.notifier).state =
+                              ResponseDialogModel(
+                            serviceResponse: lastSettlementStatus,
+                            response: 'Opération réussie',
+                          );
+                          showValidatedButton.value = true;
+                          Navigator.of(context).pop();
+                        } else {
+                          ref.read(responseDialogProvider.notifier).state =
+                              ResponseDialogModel(
+                            serviceResponse: lastSettlementStatus,
+                            response: 'Opération échouée',
+                          );
+                          showValidatedButton.value = true;
+                        }
+                        FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog: const ResponseDialog(),
+                        );
                       }
-                      FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog: const ResponseDialog(),
-                      );
                     }
                   }
                 }
               }
             }
+          }
+        }
+      }
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: ServiceResponse.failed,
+        response: 'Opération échouée \n Le règlement n\'est pas validé',
+      );
+      showValidatedButton.value = true;
+      FunctionsController.showAlertDialog(
+        context: context,
+        alertDialog: const ResponseDialog(),
+      );
+    }
+  }
+
+  static Future<void> updateValidationStatus({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Settlement settlement,
+  }) async {
+    if (settlement.isValiated) {
+      final settlementType = ref.watch(
+          cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+      final settlementCollector =
+          ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
+
+      // update settlement by swith off the vaidation
+
+      ServiceResponse settlementUpdateStatus;
+
+      final newSettlement = Settlement(
+        number: settlement.number,
+        cardId: settlement.cardId,
+        agentId: settlement.agentId,
+        collectionId: settlement.collectionId,
+        collectedAt: settlement.collectedAt,
+        isValiated: !settlement.isValiated,
+        createdAt: settlement.createdAt,
+        updatedAt: DateTime.now(),
+      );
+
+      settlementUpdateStatus = await SettlementsController.update(
+        id: settlement.id!,
+        settlement: newSettlement,
+      );
+
+      if (settlementUpdateStatus != ServiceResponse.success) {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: settlementUpdateStatus,
+          response: 'Opération échouée',
+        );
+
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
+      } else {
+        // update collector collection
+
+        final collectorsCollections = await CollectionsController.getAll(
+          collectorId: settlementCollector!.id!,
+          collectedAt: settlement.collectedAt,
+          agentId: 0,
+        ).first;
+
+        final collectorCollection = collectorsCollections.first;
+
+        ServiceResponse collectorCollectionUpdateStatus;
+
+        final newCollectorCollection = collectorCollection.copyWith(
+          rest: collectorCollection.rest +
+              settlement.number * settlementType!.stake,
+        );
+
+        collectorCollectionUpdateStatus = await CollectionsController.update(
+          id: collectorCollection.id!,
+          collection: newCollectorCollection,
+        );
+
+        if (collectorCollectionUpdateStatus != ServiceResponse.success) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: collectorCollectionUpdateStatus,
+            response:
+                'Opération échouée \n La collecte du collector n\'a pas été mise à jour',
+          );
+
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: collectorCollectionUpdateStatus,
+            response: 'Opération réussie',
+          );
+
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        }
+      }
+    } else {
+      final settlementCustomerCard = ref.watch(
+          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+      // update the settlement by switch on the validation status
+
+      // before update check if the total number of settlemet on the customer card  + the number of the settlement to validate is not greather thant 372
+
+      final customerCardSettlements = await SettlementsController.getAll(
+        customerCardId: settlementCustomerCard!.id,
+      ).first;
+
+      int customerCardSettlementsNumbersTotal = 0;
+
+      for (Settlement settlement in customerCardSettlements) {
+        customerCardSettlementsNumbersTotal += settlement.number;
+      }
+
+      // if the number of settlement added  plus the number of settlement to add is greater than 372 (the total number of settelements of a customer card)
+
+      if (customerCardSettlementsNumbersTotal + settlement.number > 372) {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: ServiceResponse.failed,
+          response: 'Le nombre de règlement à ajouter est supérieur au restant',
+        );
+
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
+      } else {
+        final settlementType = ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+        final settlementCollector =
+            ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
+
+        // update settlement by swith off the vaidation
+
+        ServiceResponse settlementUpdateStatus;
+
+        final newSettlement = Settlement(
+          number: settlement.number,
+          cardId: settlement.cardId,
+          agentId: settlement.agentId,
+          collectionId: settlement.collectionId,
+          collectedAt: settlement.collectedAt,
+          isValiated: !settlement.isValiated,
+          createdAt: settlement.createdAt,
+          updatedAt: DateTime.now(),
+        );
+
+        settlementUpdateStatus = await SettlementsController.update(
+          id: settlement.id!,
+          settlement: newSettlement,
+        );
+
+        if (settlementUpdateStatus != ServiceResponse.success) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: settlementUpdateStatus,
+            response: 'Opération échouée',
+          );
+
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        } else {
+          // update collector collection
+
+          final collectorsCollections = await CollectionsController.getAll(
+            collectorId: settlementCollector!.id!,
+            collectedAt: settlement.collectedAt,
+            agentId: 0,
+          ).first;
+
+          final collectorCollection = collectorsCollections.first;
+
+          ServiceResponse collectorCollectionUpdateStatus;
+
+          final newCollectorCollection = collectorCollection.copyWith(
+            rest: collectorCollection.rest -
+                settlement.number * settlementType!.stake,
+          );
+
+          collectorCollectionUpdateStatus = await CollectionsController.update(
+            id: collectorCollection.id!,
+            collection: newCollectorCollection,
+          );
+
+          if (collectorCollectionUpdateStatus != ServiceResponse.success) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: collectorCollectionUpdateStatus,
+              response:
+                  'Opération échouée \n La collecte du collector n\'a pas été mise à jour',
+            );
+
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: collectorCollectionUpdateStatus,
+              response: 'Opération réussie',
+            );
+
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
           }
         }
       }
@@ -511,6 +733,11 @@ class SettlementCRUDFunctions {
     required Settlement settlement,
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
+    final settlementType = ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider,
+    );
+    final settlementCollector =
+        ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
     showConfirmationButton.value = false;
 
     ServiceResponse settlementStatus;
@@ -518,23 +745,63 @@ class SettlementCRUDFunctions {
     settlementStatus =
         await SettlementsController.delete(settlement: settlement);
 
-    if (settlementStatus == ServiceResponse.success) {
-      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: settlementStatus,
-        response: 'Opération réussie',
-      );
-      Navigator.of(context).pop();
-    } else {
+    if (settlementStatus != ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: settlementStatus,
         response: 'Opération échouée',
       );
       showConfirmationButton.value = true;
+      FunctionsController.showAlertDialog(
+        context: context,
+        alertDialog: const ResponseDialog(),
+      );
+    } else {
+      if (settlement.isValiated) {
+        // should update collector collection
+
+        final collectorsCollections = await CollectionsController.getAll(
+          collectorId: settlementCollector!.id!,
+          collectedAt: settlement.collectedAt,
+          agentId: 0,
+        ).first;
+
+        // store collector collection
+        final collectorCollection = collectorsCollections.first;
+
+        ServiceResponse collectorCollectionUpdateStatus;
+
+        final newCollectorCollection = collectorCollection.copyWith(
+          rest: collectorCollection.rest +
+              settlement.number * settlementType!.stake,
+        );
+
+        collectorCollectionUpdateStatus = await CollectionsController.update(
+          id: collectorCollection.id!,
+          collection: newCollectorCollection,
+        );
+
+        if (collectorCollectionUpdateStatus != ServiceResponse.failed) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: collectorCollectionUpdateStatus,
+            response:
+                'Opération échouée \n La collecte du collecteur  n\'a pas pu  être mise à jour',
+          );
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: collectorCollectionUpdateStatus,
+            response: 'Opération réussie',
+          );
+          Navigator.of(context).pop();
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        }
+      }
     }
-    FunctionsController.showAlertDialog(
-      context: context,
-      alertDialog: const ResponseDialog(),
-    );
-    return;
   }
 }

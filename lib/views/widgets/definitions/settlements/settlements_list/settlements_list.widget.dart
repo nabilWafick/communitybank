@@ -60,10 +60,10 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
     final agentsListStream = ref.watch(agentsListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
-    return Container(
+    return SizedBox(
       // alignment: Alignment.center,
       height: 620.0,
-      color: Colors.blueGrey,
+
       // width: double.infinity,
       child: Scrollbar(
         controller: horizontalScrollController,

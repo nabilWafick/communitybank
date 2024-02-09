@@ -130,7 +130,10 @@ class _CashOperationsCustomerCardInfosState
                     children:
                         cashOperationsSelectedCustomerAccountOwnerCustomerCards
                             .map(
-                              (customerCard) => CustomerCardCard(
+                      (customerCard) {
+                        return customerCard.satisfiedAt == null &&
+                                customerCard.repaidAt == null
+                            ? CustomerCardCard(
                                 customerCard: customersCardsListStream.when(
                                   data: (data) {
                                     return data.firstWhere(
@@ -142,9 +145,10 @@ class _CashOperationsCustomerCardInfosState
                                   error: (error, stackTrace) => customerCard,
                                   loading: () => customerCard,
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                            : const SizedBox();
+                      },
+                    ).toList(),
                   )
 
                   /* SingleChildScrollView(
@@ -251,32 +255,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-                /*   CustomerCardData(
-                  label: 'Mise',
-                  value:
-                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                              null
-                          ? 
-                          typesListStream.when(
-                              data: (data) {
-                                final stake = data
-                                    .firstWhere(
-                                      (type) {
-                                        return type.id ==
-                                            cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                                .typeId;
-                                      },
-                                    )
-                                    .stake
-                                    .ceil();
-                                return '${stake}f';
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            )
-                          : '',
-                ),
-             */
                 Consumer(
                   builder: (context, ref, child) =>
                       cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -290,18 +268,6 @@ class _CashOperationsCustomerCardInfosState
                               value: '',
                             ),
                 ),
-
-/*
-             CustomerCardData(
-                  label: 'Total Règlements',
-                  value:
-                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                              null
-                          ? '372'
-                          : '',
-                ),
-           */
-
                 Consumer(
                   builder: (context, ref, child) {
                     return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -330,29 +296,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-
-/*
-           CustomerCardData(
-                  label: 'Type',
-                  value:
-                      cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                              null
-                          ? typesListStream.when(
-                              data: (data) => data
-                                  .firstWhere(
-                                    (type) =>
-                                        type.id ==
-                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                            .typeId,
-                                  )
-                                  .name,
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            )
-                          : '',
-                ),
-          */
-
                 Consumer(
                   builder: (context, ref, child) {
                     return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -363,7 +306,9 @@ class _CashOperationsCustomerCardInfosState
                               int settlementsNumber = 0;
 
                               for (Settlement settlement in data) {
-                                settlementsNumber += settlement.number;
+                                if (settlement.isValiated) {
+                                  settlementsNumber += settlement.number;
+                                }
                               }
                               return CustomerCardData(
                                 label: 'Montant Payé',
@@ -387,30 +332,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-
-/*
-           CustomerCardData(
-
-                  label: 'Montant Payé',
-                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                          null
-                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                          .when(
-                          data: (data) {
-                            int settlementsNumber = 0;
-
-                            for (Settlement settlement in data) {
-                              settlementsNumber += settlement.number;
-                            }
-                            return '${settlementsNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
-                          },
-                          error: (error, stackTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
-                ),
-          */
-
                 Consumer(
                   builder: (context, ref, child) {
                     return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -421,7 +342,9 @@ class _CashOperationsCustomerCardInfosState
                               int settlementsNumbersT = 0;
 
                               for (Settlement settlement in data) {
-                                settlementsNumbersT += settlement.number;
+                                if (settlement.isValiated) {
+                                  settlementsNumbersT += settlement.number;
+                                }
                               }
                               Future.delayed(
                                 const Duration(milliseconds: 100),
@@ -454,37 +377,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-
-                /* CustomerCardData(
-                  label: 'Règlements Effectués',
-                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                          null
-                      ? cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                          .when(
-                          data: (data) {
-                            int settlementsNumbersT = 0;
-
-                            for (Settlement settlement in data) {
-                              settlementsNumbersT += settlement.number;
-                            }
-                            Future.delayed(
-                              const Duration(milliseconds: 100),
-                              () {
-                                ref
-                                    .read(settlementsNumbersTotalProvider
-                                        .notifier)
-                                    .state = settlementsNumbersT;
-                              },
-                            );
-
-                            return settlementsNumbersT.toString();
-                          },
-                          error: (error, stackTrace) => '',
-                          loading: () => '',
-                        )
-                      : '',
-                ),
-             */
                 const SizedBox(),
                 Consumer(
                   builder: (context, ref, child) {
@@ -504,7 +396,9 @@ class _CashOperationsCustomerCardInfosState
                               int settlementsNumber = 0;
 
                               for (Settlement settlement in data) {
-                                settlementsNumber += settlement.number;
+                                if (settlement.isValiated) {
+                                  settlementsNumber += settlement.number;
+                                }
                               }
                               return CustomerCardData(
                                 label: 'Reste à Payer',
@@ -528,29 +422,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-                /*   CustomerCardData(
-                  label: 'Reste à Payer',
-                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                          null
-                      ? isRepaid
-                          ? '0'
-                          : cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                              .when(
-                              data: (data) {
-                                int settlementsNumber = 0;
-
-                                for (Settlement settlement in data) {
-                                  settlementsNumber += settlement.number;
-                                }
-                                return '${(372 - settlementsNumber) * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}';
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            )
-                      : '',
-                ),
-             */
-
                 Consumer(
                   builder: (context, ref, child) {
                     return cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
@@ -568,10 +439,12 @@ class _CashOperationsCustomerCardInfosState
                               int settlementsNumber = 0;
 
                               for (Settlement settlement in data) {
-                                settlementsNumber += settlement.number;
+                                if (settlement.isValiated) {
+                                  settlementsNumber += settlement.number;
+                                }
                               }
                               return CustomerCardData(
-                                label: 'Reste à Payer',
+                                label: 'Règlements Restants',
                                 value: '${(372 - settlementsNumber)}',
                               );
                             },
@@ -591,27 +464,6 @@ class _CashOperationsCustomerCardInfosState
                           );
                   },
                 ),
-                /*    CustomerCardData(
-                  label: 'Règlements Restants',
-                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                          null
-                      ? isRepaid
-                          ? '0'
-                          : cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-                              .when(
-                              data: (data) {
-                                int settlementsNumber = 0;
-                                for (Settlement settlement in data) {
-                                  settlementsNumber += settlement.number;
-                                }
-                                return '${372 - settlementsNumber}';
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            )
-                      : '',
-                ),
-            */
               ],
             ),
           ),

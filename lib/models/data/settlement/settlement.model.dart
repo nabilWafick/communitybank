@@ -11,6 +11,7 @@ class Settlement {
   final int agentId;
   final int collectionId;
   final DateTime collectedAt;
+  final bool isValiated;
   final DateTime createdAt;
   final DateTime updatedAt;
   Settlement({
@@ -21,6 +22,7 @@ class Settlement {
     required this.collectionId,
     required this.collectedAt,
     required this.createdAt,
+    required this.isValiated,
     required this.updatedAt,
   });
 
@@ -31,6 +33,7 @@ class Settlement {
     int? agentId,
     int? collectionId,
     DateTime? collectedAt,
+    bool? isValidated,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -41,6 +44,7 @@ class Settlement {
       agentId: agentId ?? this.agentId,
       collectionId: collectionId ?? this.collectionId,
       collectedAt: collectedAt ?? this.collectedAt,
+      isValiated: isValiated ?? isValiated,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -55,6 +59,7 @@ class Settlement {
       SettlementTable.agentId: agentId,
       SettlementTable.collectionId: collectionId,
       SettlementTable.collectedAt: collectedAt.toIso8601String(),
+      SettlementTable.isValidated: isValiated,
     };
     if (!isAdding) {
       map[SettlementTable.createdAt] = createdAt.toIso8601String();
@@ -71,21 +76,24 @@ class Settlement {
       agentId: map[SettlementTable.agentId]?.toInt() ?? 0,
       collectionId: map[SettlementTable.collectionId]?.toInt() ?? 0,
       collectedAt: DateTime.parse(map[SettlementTable.collectedAt]),
+      isValiated: map[SettlementTable.isValidated] ?? false,
       createdAt: DateTime.parse(map[SettlementTable.createdAt]),
       updatedAt: DateTime.parse(map[SettlementTable.updatedAt]),
     );
   }
 
-  String toJson() => json.encode(toMap(
-        isAdding: true,
-      ));
+  String toJson() => json.encode(
+        toMap(
+          isAdding: true,
+        ),
+      );
 
   factory Settlement.fromJson(String source) =>
       Settlement.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, collectionId: $collectionId, collectedAt:$collectedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Settlement(id: $id, number: $number, cardId: $cardId, agentId: $agentId, collectionId: $collectionId, collectedAt:$collectedAt, isValidated: $isValiated, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -99,6 +107,7 @@ class Settlement {
         other.agentId == agentId &&
         other.collectionId == collectionId &&
         other.collectedAt == collectedAt &&
+        other.isValiated == isValiated &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -110,6 +119,7 @@ class Settlement {
         cardId.hashCode ^
         agentId.hashCode ^
         collectionId.hashCode ^
+        isValiated.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

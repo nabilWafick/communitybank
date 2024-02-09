@@ -134,6 +134,9 @@ class _CashOperationsSettlementsState
                     DataColumn(
                       label: SizedBox(),
                     ),
+                    DataColumn(
+                      label: SizedBox(),
+                    ),
                   ],
                   rows:
                       cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
@@ -201,31 +204,58 @@ class _CashOperationsSettlementsState
                                       '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
                                 ),
                               ),
-                              DataCell(Consumer(
-                                builder: (context, ref, child) {
-                                  final agentListStream =
-                                      ref.watch(agentsListStreamProvider);
+                              DataCell(
+                                Consumer(
+                                  builder: (context, ref, child) {
+                                    final agentListStream =
+                                        ref.watch(agentsListStreamProvider);
 
-                                  return agentListStream.when(
-                                    data: (data) {
-                                      final realTimeAgentData = data.firstWhere(
-                                        (agent) =>
-                                            agent.id == settlement.agentId,
-                                      );
-                                      return CBText(
-                                        text:
-                                            '${realTimeAgentData.firstnames} ${realTimeAgentData.name}',
-                                      );
-                                    },
-                                    error: (error, stackTrace) => const CBText(
-                                      text: '',
-                                    ),
-                                    loading: () => const CBText(
-                                      text: '',
-                                    ),
+                                    return agentListStream.when(
+                                      data: (data) {
+                                        final realTimeAgentData =
+                                            data.firstWhere(
+                                          (agent) =>
+                                              agent.id == settlement.agentId,
+                                        );
+                                        return CBText(
+                                          text:
+                                              '${realTimeAgentData.firstnames} ${realTimeAgentData.name}',
+                                        );
+                                      },
+                                      error: (error, stackTrace) =>
+                                          const CBText(
+                                        text: '',
+                                      ),
+                                      loading: () => const CBText(
+                                        text: '',
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              DataCell(
+                                onTap: () async {
+                                  await SettlementCRUDFunctions
+                                      .updateValidationStatus(
+                                    context: context,
+                                    ref: ref,
+                                    settlement: settlement,
                                   );
                                 },
-                              )),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: settlement.isValiated
+                                      ? const Icon(
+                                          Icons.check,
+                                          color: Colors.green,
+                                        )
+                                      : const Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                        ),
+                                ),
+                                // showEditIcon: true,
+                              ),
                               DataCell(
                                 onTap: () async {
                                   await FunctionsController.showAlertDialog(

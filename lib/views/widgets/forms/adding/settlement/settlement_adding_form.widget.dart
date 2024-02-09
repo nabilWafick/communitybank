@@ -2,8 +2,10 @@ import 'package:communitybank/controllers/forms/on_changed/settlement/settlement
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
+import 'package:communitybank/models/data/collection/collection.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/definitions/collections/collections.widgets.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +160,79 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                               ),
                             ),
                             //   const SizedBox(),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                          vertical: 10.0,
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const CBText(
+                              text: 'Montant Collecte Restant: ',
+                              fontSize: 12.0,
+                            ),
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            settlementCollectionDate != null
+                                ? Consumer(
+                                    builder: (context, ref, child) {
+                                      final settlementCollector = ref.watch(
+                                          cashOperationsSelectedCustomerAccountCollectorProvider);
+
+                                      final collectorsCollections = ref
+                                          .watch(collectionsListStreamProvider);
+
+                                      return collectorsCollections.when(
+                                        data: (data) {
+                                          // store the collector collection
+                                          // that have the same date whith the
+                                          // selected settlement date
+                                          final collectorCollection =
+                                              data.firstWhere(
+                                            (collection) =>
+                                                collection.collectorId ==
+                                                    settlementCollector!.id! &&
+                                                collection.collectedAt.year ==
+                                                    settlementCollectionDate
+                                                        .year &&
+                                                collection.collectedAt.month ==
+                                                    settlementCollectionDate
+                                                        .month &&
+                                                collection.collectedAt.day ==
+                                                    settlementCollectionDate
+                                                        .day,
+                                            orElse: () => Collection(
+                                              collectorId:
+                                                  settlementCollector!.id!,
+                                              amount: 0,
+                                              rest: 0,
+                                              agentId: 0,
+                                              collectedAt:
+                                                  settlementCollectionDate,
+                                              createdAt: DateTime.now(),
+                                              updatedAt: DateTime.now(),
+                                            ),
+                                          );
+                                          return CBText(
+                                            text:
+                                                '${collectorCollection.rest.ceil().toString()}f',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          );
+                                        },
+                                        error: (error, stackTrace) =>
+                                            const CBText(text: ''),
+                                        loading: () => const CBText(text: ''),
+                                      );
+                                    },
+                                  )
+                                : const CBText(text: ''),
                           ],
                         ),
                       ),

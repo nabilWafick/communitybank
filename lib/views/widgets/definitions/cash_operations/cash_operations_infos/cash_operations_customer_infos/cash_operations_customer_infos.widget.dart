@@ -51,6 +51,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
+    final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
 
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
@@ -598,6 +600,40 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                         label: 'Localité',
                         value: '',
                       ),
+                cashOperationsSelectedCustomerAccountOwner != null
+                    ? Consumer(
+                        builder: (context, ref, child) {
+                          int cashOperationsSelectedCustomerAccountOwnerUsableCustomerCard =
+                              0;
+
+                          for (int i = 0;
+                              i <
+                                  cashOperationsSelectedCustomerAccountOwnerCustomerCards
+                                      .length;
+                              i++) {
+                            if (cashOperationsSelectedCustomerAccountOwnerCustomerCards[
+                                            i]
+                                        .satisfiedAt ==
+                                    null &&
+                                cashOperationsSelectedCustomerAccountOwnerCustomerCards[
+                                            i]
+                                        .repaidAt ==
+                                    null) {
+                              ++cashOperationsSelectedCustomerAccountOwnerUsableCustomerCard;
+                            }
+                          }
+                          return OtherInfos(
+                            label: 'Nombre de Cartes Non Statisfait',
+                            value:
+                                cashOperationsSelectedCustomerAccountOwnerUsableCustomerCard
+                                    .toString(),
+                          );
+                        },
+                      )
+                    : const OtherInfos(
+                        label: 'Nombre de Cartes Non Statisfait',
+                        value: '',
+                      )
               ],
             ),
           ),
