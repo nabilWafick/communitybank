@@ -38,7 +38,7 @@ final agentPictureProvider = StateProvider<String?>(
 
 class AgentValidators {
   static String? agentName(String? value, WidgetRef ref) {
-    if (ref.watch(agentNameProvider) == '') {
+    if (ref.watch(agentNameProvider).trim() == '') {
       return 'Entrez le nom de l\'agent';
     } else if (ref.watch(agentNameProvider).length < 3) {
       return "Le nom doit contenir au moins 3 lettres";
@@ -47,7 +47,7 @@ class AgentValidators {
   }
 
   static String? agentFirstnames(String? value, WidgetRef ref) {
-    if (ref.watch(agentFirstnamesProvider) == '') {
+    if (ref.watch(agentFirstnamesProvider).trim() == '') {
       return 'Entrez le(s) prénom(s) de l\'agent';
     } else if (ref.watch(agentFirstnamesProvider).length < 3) {
       return "Le(s) prénom(s) doit contenir au moins 3 lettres";
@@ -56,7 +56,7 @@ class AgentValidators {
   }
 
   static String? agentPhoneNumber(String? value, WidgetRef ref) {
-    if (ref.watch(agentPhoneNumberProvider) == '') {
+    if (ref.watch(agentPhoneNumberProvider).trim() == '') {
       return 'Entrez le numéro de téléphone de  l\'agent';
     } else if (!RegExp(r'^(\+229|00229)[4569]\d{7}$')
         .hasMatch(ref.watch(agentPhoneNumberProvider))) {
@@ -73,7 +73,7 @@ class AgentValidators {
   }
 
   static String? agentAddress(String? value, WidgetRef ref) {
-    if (ref.watch(agentAddressProvider) == '') {
+    if (ref.watch(agentAddressProvider).trim() == '') {
       return 'Entrez l\'adresse de l\'agent';
     } else if (ref.watch(agentAddressProvider).length < 3) {
       return "L'adresse doit contenir au moins 3 lettres";

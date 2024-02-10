@@ -6,7 +6,7 @@ final personalStatusNameProvider = StateProvider<String>((ref) {
 
 class PersonalStatusValidators {
   static String? personalStatusName(String? value, WidgetRef ref) {
-    if (ref.watch(personalStatusNameProvider) == '') {
+    if (ref.watch(personalStatusNameProvider).trim() == '') {
       return 'Entrez le nom d\'un status personnel';
     } else if (ref.watch(personalStatusNameProvider).length < 3) {
       return "Le status personnel doit contenir au moins 3 lettres";
@@ -18,7 +18,7 @@ class PersonalStatusValidators {
 /*
 
 static String? personalStatusName(String? value, WidgetRef ref) {
-    if (ref.watch(personalStatusNameProvider) == '') {
+    if (ref.watch(personalStatusNameProvider).trim() == '') {
       return 'Entrez un nom de parcours';
     } else if (ref.watch(personalStatusNameProvider).length < 3) {
       return "Le nom du parcours doit contenir au moins trois caractères";
@@ -31,7 +31,7 @@ static String? personalStatusName(String? value, WidgetRef ref) {
 /*
 
  static String? nomParcours(String? value, WidgetRef ref) {
-    if (ref.watch(nomParcoursProvider) == '') {
+    if (ref.watch(nomParcoursProvider).trim() == '') {
       return 'Entrez un nom de parcours';
     } else if (ref.watch(nomParcoursProvider).length < 3) {
       return "Le nom du parcours doit contenir au moins trois caractères";

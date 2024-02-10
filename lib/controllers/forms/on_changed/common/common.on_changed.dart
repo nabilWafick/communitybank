@@ -25,7 +25,7 @@ class CommonOnChangedFunction {
       String? value, WidgetRef ref, StateProvider provider) {
     if (value == null ||
         value.isEmpty ||
-        value == ' ' ||
+        value.trim() == '' ||
         !hasSpecialCharactersOrLettersForInt(value)) {
       ref.read(provider.notifier).state = int.tryParse(value!) ?? 0;
     }
@@ -35,7 +35,7 @@ class CommonOnChangedFunction {
       String? value, WidgetRef ref, StateProvider provider) {
     if (value == null ||
         value.isEmpty ||
-        value == ' ' ||
+        value.trim() == '' ||
         !hasSpecialCharactersOrLettersForDouble(value)) {
       ref.read(provider.notifier).state = double.tryParse(value!) ?? .0;
     }
@@ -43,7 +43,7 @@ class CommonOnChangedFunction {
 
   static void onStringTextInputValueChanged(
       String? value, WidgetRef ref, StateProvider provider) {
-    if (value == null || value.isEmpty || value == ' ') {
+    if (value == null || value.isEmpty || value.trim() == '') {
       ref.read(provider.notifier).state = '';
     }
     ref.read(provider.notifier).state = value;

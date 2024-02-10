@@ -33,7 +33,8 @@ class CustomerAccountValidators {
     int cardIndex,
     WidgetRef ref,
   ) {
-    if (ref.watch(customerAccountOwnerCardLabelProvider(cardIndex)) == '') {
+    if (ref.watch(customerAccountOwnerCardLabelProvider(cardIndex)).trim() ==
+        '') {
       return 'Entrez le libellé de la carte';
     } else if (ref
             .watch(customerAccountOwnerCardLabelProvider(cardIndex))

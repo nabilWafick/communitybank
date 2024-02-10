@@ -6,7 +6,7 @@ final economicalActivityNameProvider = StateProvider<String>((ref) {
 
 class EconomicalActivityValidators {
   static String? economicalActivityName(String? value, WidgetRef ref) {
-    if (ref.watch(economicalActivityNameProvider) == '') {
+    if (ref.watch(economicalActivityNameProvider).trim() == '') {
       return 'Entrez le nom d\'une activité économique';
     } else if (ref.watch(economicalActivityNameProvider).length < 3) {
       return "L'activité économique doit contenir au moins 3 lettres";

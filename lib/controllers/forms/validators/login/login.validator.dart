@@ -21,7 +21,7 @@ class LoginValidators {
   }
 
   static String? userPassword(String? value, WidgetRef ref) {
-    if (ref.watch(userPasswordProvider) == '') {
+    if (ref.watch(userPasswordProvider).trim() == '') {
       return 'Entrez votre mot de  passe ';
     } else if (ref.watch(userPasswordProvider).length < 7) {
       return "Le mot de  passe doit contenir au moins 7 lettres";

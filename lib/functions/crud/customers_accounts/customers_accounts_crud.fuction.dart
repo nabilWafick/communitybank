@@ -53,8 +53,10 @@ class CustomerAccountCRUDFunctions {
         final customerAccountCollector = ref.watch(
             formCollectorDropdownProvider('customer-account-adding-collector'));
 
-        final customersAccounts =
-            await CustomersAccountsController.getAll().first;
+        final customersAccounts = await CustomersAccountsController.getAll(
+          selectedCustomerId: 0,
+          selectedCollectorId: 0,
+        ).first;
 
         final existedCustomerAccount = customersAccounts.firstWhere(
           (customerAccount) =>

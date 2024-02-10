@@ -44,7 +44,10 @@ class CustomersAccountsService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll() async* {
+  static Stream<List<Map<String, dynamic>>> getAll({
+    required int selectedCustomerId,
+    required int selectedCollectorId,
+  }) async* {
     final supabase = Supabase.instance.client;
 
     try {
@@ -57,6 +60,19 @@ class CustomersAccountsService {
         ascending: true,
       );
 
+      if (selectedCustomerId != 0) {
+        query.eq(
+          CustomerAccountTable.customerId,
+          selectedCustomerId,
+        );
+      }
+
+      if (selectedCollectorId != 0) {
+        query.eq(
+          CustomerAccountTable.collectorId,
+          selectedCollectorId,
+        );
+      }
       // return the result as stream
       yield* query.asBroadcastStream();
     } catch (error) {

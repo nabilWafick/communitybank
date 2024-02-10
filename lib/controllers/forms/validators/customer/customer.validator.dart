@@ -50,7 +50,7 @@ final customerProfilePictureProvider = StateProvider<String?>(
 
 class CustomerValidators {
   static String? customerName(String? value, WidgetRef ref) {
-    if (ref.watch(customerNameProvider) == '') {
+    if (ref.watch(customerNameProvider).trim() == '') {
       return 'Entrez le nom du client';
     } else if (ref.watch(customerNameProvider).length < 3) {
       return "Le nom doit contenir au moins 3 lettres";
@@ -59,7 +59,7 @@ class CustomerValidators {
   }
 
   static String? customerFirstnames(String? value, WidgetRef ref) {
-    if (ref.watch(customerFirstnamesProvider) == '') {
+    if (ref.watch(customerFirstnamesProvider).trim() == '') {
       return 'Entrez le(s) prénom(s) nom du client';
     } else if (ref.watch(customerFirstnamesProvider).length < 3) {
       return "Le(s) prénom(s) doit contenir au moins 3 lettres";
@@ -68,7 +68,7 @@ class CustomerValidators {
   }
 
   static String? customerPhoneNumber(String? value, WidgetRef ref) {
-    if (ref.watch(customerPhoneNumberProvider) == '') {
+    if (ref.watch(customerPhoneNumberProvider).trim() == '') {
       return 'Entrez un numéro de téléphone';
     } else if (!RegExp(r'^(\+229|00229)[4569]\d{7}$')
         .hasMatch(ref.watch(customerPhoneNumberProvider))) {
@@ -78,7 +78,7 @@ class CustomerValidators {
   }
 
   static String? customerAddress(String? value, WidgetRef ref) {
-    if (ref.watch(customerAddressProvider) == '') {
+    if (ref.watch(customerAddressProvider).trim() == '') {
       return 'Entrez l\'adresse du client';
     } else if (ref.watch(customerAddressProvider).length < 5) {
       return "L'adresse doit contenir au moins 5 lettres";

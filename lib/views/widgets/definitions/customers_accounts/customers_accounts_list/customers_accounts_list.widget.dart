@@ -9,34 +9,27 @@ import 'package:communitybank/models/data/customer_card/customer_card.model.dart
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers_accounts/customers_accounts_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/customer_account/customer_account_update_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer/customer_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final searchedCustomersAccountsListProvider =
-    StreamProvider<List<CustomerAccount>>((ref) async* {
-  // String searchedCustomerAccount =
-  //     ref.watch(searchProvider('customers-accounts'));
-  ref.listen(searchProvider('customers-accounts'), (previous, next) {
-    if (previous != next && next != '' && next.trim() != '') {
-      ref.read(isSearchingProvider('customers-accounts').notifier).state = true;
-    } else {
-      ref.read(isSearchingProvider('customers-accounts').notifier).state =
-          false;
-    }
-  });
-  yield* CustomersAccountsController.getAll();
-
-  /* searchcustomersAccount(name: searchedCustomerAccount)
-      .asStream(); */
-});
-
 final customersAccountsListStreamProvider =
     StreamProvider<List<CustomerAccount>>((ref) async* {
-  yield* CustomersAccountsController.getAll();
+  final selectedCustomer = ref.watch(
+    listCustomerDropdownProvider('customers-accounts-list-sort-owner'),
+  );
+  final selectedCollector = ref.watch(
+    listCollectorDropdownProvider('customers-accounts-list-sort-collector'),
+  );
+
+  yield* CustomersAccountsController.getAll(
+    selectedCustomerId: selectedCustomer.id!,
+    selectedCollectorId: selectedCollector.id!,
+  );
 });
 
 class CustomersAccountsList extends StatefulHookConsumerWidget {
@@ -52,9 +45,6 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
   final ScrollController verticalScrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
-    //  final isSearching = ref.watch(isSearchingProvider('customers-accounts'));
-    //  final searchedCustomersAccountsList =
-    ref.watch(searchedCustomersAccountsListProvider);
     final customersAccountsListStream =
         ref.watch(customersAccountsListStreamProvider);
 

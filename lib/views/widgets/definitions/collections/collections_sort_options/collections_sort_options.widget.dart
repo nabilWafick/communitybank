@@ -119,7 +119,7 @@ class _CollectionsSortOptionsState
                       Flexible(
                         child: CBText(
                           text: collectionsListCollectionDate != null
-                              ? '${format.format(collectionsListCollectionDate)}  ${collectionsListCollectionDate.hour}:${collectionsListCollectionDate.minute}'
+                              ? format.format(collectionsListCollectionDate)
                               : '',
                           fontSize: 12.5,
                           fontWeight: FontWeight.w500,
@@ -130,41 +130,6 @@ class _CollectionsSortOptionsState
                     ],
                   ),
                 ),
-                /*  SizedBox(
-                  width: 320.0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CBIconButton(
-                        icon: Icons.date_range,
-                        text: 'Date de Saisie',
-                        onTap: () async {
-                          await FunctionsController.showDateTime(
-                            context,
-                            ref,
-                            collectionsListEntryDateProvider,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      Flexible(
-                        child: CBText(
-                          text: collectionsListEntryDate != null
-                              ? '${format.format(collectionsListEntryDate)}  ${collectionsListEntryDate.hour}:${collectionsListEntryDate.minute}'
-                              : '',
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w500,
-                          textOverflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      //   const SizedBox(),
-                    ],
-                  ),
-                ),
-              */
                 CBListCollectorDropdown(
                   width: 300.0,
                   label: 'Chargé de compte',

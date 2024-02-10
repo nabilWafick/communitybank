@@ -70,7 +70,8 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                     width: 15.0,
                   ),
                   CBListCustomerDropdown(
-                    width: 200.0,
+                    width: 300.0,
+                    menuHeigth: 500.0,
                     label: 'Clients',
                     providerName: 'customers-accounts-list-sort-owner',
                     dropdownMenuEntriesLabels: customersListStream.when(
@@ -79,7 +80,7 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                           Customer(
                             id: 0,
                             name: 'Tous',
-                            firstnames: 'Tous',
+                            firstnames: '',
                             phoneNumber: '',
                             profession: '',
                             nicNumber: 1234567890,
@@ -103,7 +104,7 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                           Customer(
                             id: 0,
                             name: 'Tous',
-                            firstnames: 'Tous',
+                            firstnames: '',
                             phoneNumber: '',
                             profession: '',
                             nicNumber: 1234567890,
@@ -123,7 +124,8 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                     ),
                   ),
                   CBListCollectorDropdown(
-                    width: 200.0,
+                    width: 300.0,
+                    menuHeigth: 500.0,
                     label: 'Chargés de comptes',
                     providerName: 'customers-accounts-list-sort-collector',
                     dropdownMenuEntriesLabels: collectorsListStream.when(
@@ -132,7 +134,7 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                           Collector(
                             id: 0,
                             name: 'Tous',
-                            firstnames: 'Tous',
+                            firstnames: '',
                             phoneNumber: '',
                             address: '',
                             createdAt: DateTime.now(),
@@ -150,7 +152,7 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                           Collector(
                             id: 0,
                             name: 'Tous',
-                            firstnames: 'Tous',
+                            firstnames: '',
                             phoneNumber: '',
                             address: '',
                             createdAt: DateTime.now(),

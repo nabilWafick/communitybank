@@ -75,6 +75,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
         children: [
           CBCashOperationsSearchOptionsCustomerAccountDropdown(
             width: 400.0,
+            menuHeigth: 500.0,
             label: 'Compte Client',
             providerName: 'cash-operations-search-options-customer-account',
             dropdownMenuEntriesLabels: custumersAccountsOwners.when(
@@ -89,7 +90,8 @@ class CashOperationsSearchOptions extends ConsumerWidget {
             ),
           ),
           CBCashOperationsSearchOptionsCustumerCardDropdown(
-            width: 300.0,
+            width: 220.0,
+            menuHeigth: 500.0,
             label: 'Carte',
             providerName: 'cash-operations-search-option-customer-card',
             dropdownMenuEntriesLabels: customersCardsWithOwners.when(

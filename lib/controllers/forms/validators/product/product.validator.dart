@@ -20,7 +20,7 @@ final productPictureProvider = StateProvider<String?>(
 
 class ProductValidators {
   static String? productName(String? value, WidgetRef ref) {
-    if (ref.watch(productNameProvider) == '') {
+    if (ref.watch(productNameProvider).trim() == '') {
       return 'Entrez le nom d\'un produit';
     } else if (ref.watch(productNameProvider).length < 3) {
       return "Le nom du produit doit contenir au moins 3 lettres";

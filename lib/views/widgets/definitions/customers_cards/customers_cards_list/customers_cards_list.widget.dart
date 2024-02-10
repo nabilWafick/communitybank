@@ -1,11 +1,7 @@
 import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
-import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customer_cards/customers_cards_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/customer_card/customer_card_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -74,7 +70,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
         controller: scrollController,
         child: SingleChildScrollView(
           //   scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 100.0),
+          //  padding: const EdgeInsets.symmetric(horizontal: 100.0),
           controller: scrollController,
           child: SingleChildScrollView(
             child: DataTable(
@@ -120,12 +116,12 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                DataColumn(
+                /*    DataColumn(
                   label: SizedBox(),
                 ),
                 DataColumn(
                   label: SizedBox(),
-                ),
+                ),*/
               ],
               rows: isSearching
                   ? searchedCustomersCardsList.when(
@@ -144,73 +140,35 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     text: customerCard.label,
                                   ),
                                 ),
-                                DataCell(Consumer(
-                                  builder: (context, ref, child) {
-                                    final typesListStream =
-                                        ref.watch(typesListStreamProvider);
+                                DataCell(
+                                  Consumer(
+                                    builder: (context, ref, child) {
+                                      final typesListStream =
+                                          ref.watch(typesListStreamProvider);
 
-                                    return typesListStream.when(
-                                      data: (data) {
-                                        final customerCardType =
-                                            data.firstWhere(
-                                          (type) =>
-                                              customerCard.typeId == type.id,
-                                        );
-
-                                        return CBText(
-                                          text: customerCardType.name,
-                                        );
-                                      },
-                                      error: (error, stackTrace) =>
-                                          const CBText(
-                                        text: '',
-                                      ),
-                                      loading: () => const CBText(
-                                        text: '',
-                                      ),
-                                    );
-                                  },
-                                )
-
-                                    /*  CBText(
-                                    text:
-                                        /*
-                                     typesListStream.when(
+                                      return typesListStream.when(
                                         data: (data) {
-                                         
-                                          String typeName = 'Default';
-        
-                                          for (Type type in data) {
-                                            if (type.id == customerCard.typeId) {
-                                              typeName = type.name;
-                                              customerCard.type = type;
-                                            }
-                                          }
-        
                                           final customerCardType =
                                               data.firstWhere(
-                                            (type) => type.id == customerCard.id,
+                                            (type) =>
+                                                customerCard.typeId == type.id,
                                           );
-        
-                                          customerCard.type = customerCardType;
-        
-                                          typeName = customerCardType.name;
-        
-                                          return typeName;
+
+                                          return CBText(
+                                            text: customerCardType.name,
+                                          );
                                         },
-                                        error: (error, stackTrace) => '',
-                                        loading: () => ''),
-                                        */
-                                        typeListStreamData.firstWhere(
-                                      (type) {
-                                        if (type.id == customerCard.typeId) {
-                                          customerCard.type = type;
-                                        }
-                                        return type.id == customerCard.typeId;
-                                      },
-                                    ).name,
-                                  ),*/
-                                    ),
+                                        error: (error, stackTrace) =>
+                                            const CBText(
+                                          text: '',
+                                        ),
+                                        loading: () => const CBText(
+                                          text: '',
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.repaidAt != null
@@ -225,7 +183,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                         : '',
                                   ),
                                 ),
-                                DataCell(
+                                /*   DataCell(
                                   onTap: () {
                                     FunctionsController.showAlertDialog(
                                       context: context,
@@ -263,6 +221,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     ),
                                   ),
                                 ),
+                              */
                               ],
                             );
                           },
@@ -319,47 +278,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                       ),
                                     );
                                   },
-                                )
-
-                                    /*  CBText(
-                                    text:
-                                        /*
-                                     typesListStream.when(
-                                        data: (data) {
-                                         
-                                          String typeName = 'Default';
-        
-                                          for (Type type in data) {
-                                            if (type.id == customerCard.typeId) {
-                                              typeName = type.name;
-                                              customerCard.type = type;
-                                            }
-                                          }
-        
-                                          final customerCardType =
-                                              data.firstWhere(
-                                            (type) => type.id == customerCard.id,
-                                          );
-        
-                                          customerCard.type = customerCardType;
-        
-                                          typeName = customerCardType.name;
-        
-                                          return typeName;
-                                        },
-                                        error: (error, stackTrace) => '',
-                                        loading: () => ''),
-                                        */
-                                        typeListStreamData.firstWhere(
-                                      (type) {
-                                        if (type.id == customerCard.typeId) {
-                                          customerCard.type = type;
-                                        }
-                                        return type.id == customerCard.typeId;
-                                      },
-                                    ).name,
-                                  ),*/
-                                    ),
+                                )),
                                 DataCell(
                                   CBText(
                                     text: customerCard.repaidAt != null
@@ -374,7 +293,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                         : '',
                                   ),
                                 ),
-                                DataCell(
+                                /*   DataCell(
                                   onTap: () {
                                     FunctionsController.showAlertDialog(
                                       context: context,
@@ -412,6 +331,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     ),
                                   ),
                                 ),
+                              */
                               ],
                             );
                           },

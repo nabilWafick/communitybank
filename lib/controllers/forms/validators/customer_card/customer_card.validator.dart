@@ -26,7 +26,7 @@ final customerCardRepaymentDateProvider = StateProvider<DateTime?>(
 
 class CustomerCardValidators {
   static String? customerCardLabel(String? value, WidgetRef ref) {
-    if (ref.watch(customerCardLabelProvider) == '') {
+    if (ref.watch(customerCardLabelProvider).trim() == '') {
       return 'Entrez le libellé de l\'customerCard';
     } else if (ref.watch(customerCardLabelProvider).length < 3) {
       return "Le nom doit contenir au moins 5 lettres";

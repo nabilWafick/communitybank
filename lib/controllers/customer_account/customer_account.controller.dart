@@ -17,8 +17,14 @@ class CustomersAccountsController {
     return response == null ? null : CustomerAccount.fromMap(response);
   }
 
-  static Stream<List<CustomerAccount>> getAll() async* {
-    final customerAccountsMapListStream = CustomersAccountsService.getAll();
+  static Stream<List<CustomerAccount>> getAll({
+    required int selectedCustomerId,
+    required int selectedCollectorId,
+  }) async* {
+    final customerAccountsMapListStream = CustomersAccountsService.getAll(
+      selectedCustomerId: selectedCustomerId,
+      selectedCollectorId: selectedCollectorId,
+    );
     //   debugPrint('In Controller');
     // yield all CustomerAccounts data or an empty list
     yield* customerAccountsMapListStream.map(
