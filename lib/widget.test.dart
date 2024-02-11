@@ -5,6 +5,7 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {
   return;
@@ -38,12 +39,8 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Card(
-              color: Colors.grey,
-              child: SizedBox(
-                height: 200,
-                width: 200,
-              ),
+            CBText(
+              text: data.toString(),
             ),
             const SizedBox(
               height: 200,
@@ -54,9 +51,17 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
               child: CBElevatedButton(
                 text: 'Show dialog',
                 onPressed: () async {
-                  FunctionsController.showAlertDialog(
-                    context: context,
-                    alertDialog: const ResponseDialog(),
+                  final supabase = Supabase.instance.client;
+                  final result = await supabase.rpc(
+                    'get_all_customer_card_settlements',
+                    params: {
+                      'customer_card_id': '84',
+                    },
+                  );
+                  setState(
+                    () {
+                      data = result;
+                    },
                   );
                 },
               ),
