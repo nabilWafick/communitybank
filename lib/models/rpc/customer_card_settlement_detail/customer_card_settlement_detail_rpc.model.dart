@@ -1,6 +1,5 @@
 class CustomerCardSettlementDetailRPC {
-  static const String functionName =
-      'get_all_customer_card_settlements_details';
+  static const String functionName = 'get_customer_card_settlements_details';
 
   static const String customerCardId = 'id_carte';
   static const String typeId = 'id_type';

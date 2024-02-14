@@ -17,7 +17,7 @@ class _MainState extends ConsumerState<Main> {
       padding: const EdgeInsets.symmetric(
         horizontal: 25.0,
       ),
-      width: MediaQuery.of(context).size.width * 6 / 7,
+      width: MediaQuery.of(context).size.width * 7 / 8,
       child: const Column(
         children: [
           MainAppbar(),

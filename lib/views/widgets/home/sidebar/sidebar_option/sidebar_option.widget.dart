@@ -27,7 +27,7 @@ class SidebarOption extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(vertical: 12.0),
         padding: const EdgeInsets.symmetric(
           // vertical: 5.0,
-          horizontal: 25.0,
+          horizontal: 20.0,
         ),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
@@ -58,10 +58,10 @@ class SidebarOption extends ConsumerWidget {
             ),
             CBText(
               text: sidebarOptionData.name,
-              fontSize: 15.0,
+              fontSize: 14.0,
               fontWeight: selectedSidebarOption.name == sidebarOptionData.name
-                  ? FontWeight.bold
-                  : FontWeight.normal,
+                  ? FontWeight.w600
+                  : FontWeight.w500,
               color: selectedSidebarOption.name == sidebarOptionData.name
                   ? CBColors.primaryColor
                   : CBColors.sidebarTextColor,

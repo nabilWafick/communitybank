@@ -58,7 +58,7 @@ class _MainBodyState extends ConsumerState<MainBody> {
     return SizedBox(
       // padding: const EdgeInsets.only(bottom: 200.0),
 
-      height: screenSize.height * 6 / 7,
+      height: screenSize.height * 7 / 8,
       child:
           // const LocalitiesPage(),
           // const PersonnalStatusPage(),

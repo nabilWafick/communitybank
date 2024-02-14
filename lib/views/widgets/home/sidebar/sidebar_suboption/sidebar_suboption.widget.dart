@@ -37,8 +37,8 @@ class SidebarSubOption extends ConsumerWidget {
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            vertical: 12.0,
-            horizontal: 20.0,
+            vertical: .0,
+            horizontal: 15.0,
           ),
           child: Row(
             children: [
@@ -47,13 +47,14 @@ class SidebarSubOption extends ConsumerWidget {
                 color: selectedSidebarSubOption == sidebarSubOptionData
                     ? CBColors.primaryColor
                     : Colors.white,
+                size: 20.0,
               ),
               const SizedBox(
-                width: 15.0,
+                width: 10.0,
               ),
               CBText(
                 text: sidebarSubOptionData.name,
-                fontSize: 12.0,
+                fontSize: 10.0,
                 fontWeight: FontWeight.w600,
                 color: selectedSidebarSubOption == sidebarSubOptionData
                     ? CBColors.primaryColor

@@ -69,7 +69,7 @@ class CustomerCardsService {
 
   static Future<List<Map<String, dynamic>>> searchCustomerCard(
       {required String label}) async {
-    List<Map<String, dynamic>>? response;
+    List<Map<String, dynamic>> response;
     final supabase = Supabase.instance.client;
 
     try {

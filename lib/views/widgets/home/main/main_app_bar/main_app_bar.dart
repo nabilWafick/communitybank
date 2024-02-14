@@ -38,9 +38,8 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
     final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
 
     return Container(
-      height: screenSize.height / 7,
-      padding: const EdgeInsets.only(top: 25.0),
-      // color: Colors.grey,
+      height: screenSize.height / 8,
+      padding: const EdgeInsets.only(top: 20.0),
       child: Column(
         children: [
           Row(
@@ -50,7 +49,7 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
               CBText(
                 text: selectedSidebarOption.name,
                 //   color: CBColors.sidebarTextColor,
-                fontSize: 25.0,
+                fontSize: 17.0,
                 fontWeight: FontWeight.w600,
               ),
               Row(
@@ -69,7 +68,7 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                         data: (data) => data,
                         error: (error, stakTrace) => '',
                         loading: () => ''),
-                    fontSize: 15.0,
+                    fontSize: 12.0,
                     fontWeight: FontWeight.w600,
                   ),
                   const SizedBox(
@@ -97,8 +96,8 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                                   color: CBColors.primaryColor,
                                   elevation: 5.0,
                                   child: SizedBox(
-                                    height: 25.0,
-                                    width: 25.0,
+                                    height: 20.0,
+                                    width: 20.0,
                                   ),
                                 ),
                               );
@@ -108,16 +107,16 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                                 color: Colors.red[700],
                                 elevation: 5.0,
                                 child: const SizedBox(
-                                  height: 25.0,
-                                  width: 25.0,
+                                  height: 20.0,
+                                  width: 20.0,
                                 ),
                               );
                               return Card(
                                 color: Colors.red[700],
                                 elevation: 5.0,
                                 child: const SizedBox(
-                                  height: 25.0,
-                                  width: 25.0,
+                                  height: 20.0,
+                                  width: 20.0,
                                 ),
                               );
                           }
@@ -126,16 +125,16 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
                           color: CBColors.secondaryColor,
                           elevation: 5.0,
                           child: SizedBox(
-                            height: 25.0,
-                            width: 25.0,
+                            height: 20.0,
+                            width: 20.0,
                           ),
                         ),
                         loading: () => const Card(
                           color: CBColors.tertiaryColor,
                           elevation: 5.0,
                           child: SizedBox(
-                            height: 25.0,
-                            width: 25.0,
+                            height: 20.0,
+                            width: 20.0,
                           ),
                         ),
                       );
@@ -146,31 +145,8 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
             ],
           ),
           const SizedBox(
-            height: 12.0,
+            height: 10.0,
           ),
-          /* Scrollbar(
-            radius: const Radius.circular(
-              15.0,
-            ),
-            controller: scrollController,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                bottom: 20.0,
-              ),
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: selectedSidebarOption.subOptions
-                    .map(
-                      (subOption) =>
-                          SidebarSubOption(sidebarSubOptionData: subOption),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),*/
           SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 50,
@@ -231,18 +207,21 @@ class _AppBarHorizontalScrollerState
                 duration: const Duration(milliseconds: 100),
               );
             },
-            child: const Card(
+            child: Card(
               elevation: 10.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               color: CBColors.backgroundColor,
               //  color: CBColors.primaryColor,
               shadowColor: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.all(12.0),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Icon(
                   Icons.arrow_back_ios_rounded,
                   //  color: Colors.white,
-                  color: CBColors.primaryColor,
-                  size: 25.0,
+                  color: Color.fromARGB(255, 28, 28, 28),
+                  size: 20.0,
                 ),
               ),
             ),
@@ -259,17 +238,20 @@ class _AppBarHorizontalScrollerState
                 duration: const Duration(milliseconds: 100),
               );
             },
-            child: const Card(
+            child: Card(
               elevation: 10.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               color: CBColors.backgroundColor,
               // color: CBColors.primaryColor,
-              child: Padding(
-                padding: EdgeInsets.all(12.0),
+              child: const Padding(
+                padding: EdgeInsets.all(10.0),
                 child: Icon(
                   Icons.arrow_forward_ios_rounded,
                   //  color: Colors.white,
                   color: CBColors.primaryColor,
-                  size: 25.0,
+                  size: 20.0,
                 ),
               ),
             ),
