@@ -14,6 +14,7 @@ class CustomerCardSettlementDetail {
   final String agentFirstname;
   final String agentName;
   final DateTime settlementDate;
+  final DateTime settlementEntryDate;
 
   CustomerCardSettlementDetail({
     required this.customerCardId,
@@ -26,6 +27,7 @@ class CustomerCardSettlementDetail {
     required this.agentFirstname,
     required this.agentName,
     required this.settlementDate,
+    required this.settlementEntryDate,
   });
 
   CustomerCardSettlementDetail copyWith({
@@ -39,6 +41,7 @@ class CustomerCardSettlementDetail {
     String? agentFirstname,
     String? agentName,
     DateTime? settlementDate,
+    DateTime? settlementEntryDate,
   }) {
     return CustomerCardSettlementDetail(
       customerCardId: customerCardId ?? this.customerCardId,
@@ -51,6 +54,7 @@ class CustomerCardSettlementDetail {
       agentFirstname: agentFirstname ?? this.agentFirstname,
       agentName: agentName ?? this.agentName,
       settlementDate: settlementDate ?? this.settlementDate,
+      settlementEntryDate: settlementEntryDate ?? this.settlementEntryDate,
     );
   }
 
@@ -67,6 +71,8 @@ class CustomerCardSettlementDetail {
       CustomerCardSettlementDetailRPC.agentName: agentName,
       CustomerCardSettlementDetailRPC.settlementDate:
           settlementDate.toIso8601String(),
+      CustomerCardSettlementDetailRPC.settlementEntryDate:
+          settlementEntryDate.toIso8601String(),
     };
   }
 
@@ -88,6 +94,8 @@ class CustomerCardSettlementDetail {
       agentName: map[CustomerCardSettlementDetailRPC.agentName] as String,
       settlementDate:
           DateTime.parse(map[CustomerCardSettlementDetailRPC.settlementDate]),
+      settlementEntryDate: DateTime.parse(
+          map[CustomerCardSettlementDetailRPC.settlementEntryDate]),
     );
   }
 
@@ -95,11 +103,12 @@ class CustomerCardSettlementDetail {
 
   factory CustomerCardSettlementDetail.fromJson(String source) =>
       CustomerCardSettlementDetail.fromMap(
-          json.decode(source) as Map<String, dynamic>);
+        json.decode(source) as Map<String, dynamic>,
+      );
 
   @override
   String toString() {
-    return 'CustomerCardSettlementDetail(customerCardId: $customerCardId, typeId: $typeId, settlementId: $settlementId, customerCardLabel: $customerCardLabel, typeName: $typeName, settlementNumber: $settlementNumber, settlementAmount: $settlementAmount, agentFirstname: $agentFirstname, agentName: $agentName, settlementDate: $settlementDate)';
+    return 'CustomerCardSettlementDetail(customerCardId: $customerCardId, typeId: $typeId, settlementId: $settlementId, customerCardLabel: $customerCardLabel, typeName: $typeName, settlementNumber: $settlementNumber, settlementAmount: $settlementAmount, agentFirstname: $agentFirstname, agentName: $agentName, settlementDate: $settlementDate, settlementEntryDate: $settlementEntryDate)';
   }
 
   @override
@@ -115,7 +124,8 @@ class CustomerCardSettlementDetail {
         other.settlementAmount == settlementAmount &&
         other.agentFirstname == agentFirstname &&
         other.agentName == agentName &&
-        other.settlementDate == settlementDate;
+        other.settlementDate == settlementDate &&
+        other.settlementEntryDate == settlementEntryDate;
   }
 
   @override
@@ -129,6 +139,7 @@ class CustomerCardSettlementDetail {
         settlementAmount.hashCode ^
         agentFirstname.hashCode ^
         agentName.hashCode ^
-        settlementDate.hashCode;
+        settlementDate.hashCode ^
+        settlementEntryDate.hashCode;
   }
 }

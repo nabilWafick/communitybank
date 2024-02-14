@@ -149,7 +149,7 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                   columns: const [
                     DataColumn(
                       label: CBText(
-                        text: 'Date de Collecte',
+                        text: 'Date Collecte',
                         textAlign: TextAlign.start,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w600,
@@ -224,7 +224,7 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                                 CBText(
                                   text: format.format(
                                       customerCardSettlementDetail
-                                          .settlementDate),
+                                          .settlementEntryDate),
                                   fontSize: 12.0,
                                 ),
                               ),

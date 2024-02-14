@@ -48,7 +48,7 @@ Future<void> generateAndPrintCustomerCardSettlementsDetailsPdf({
             ),
             OtherInfos(
               label: 'Mise',
-              value: customerCardType.stake.ceil().toString(),
+              value: '${customerCardType.stake.ceil().toString()}f',
             ),
           ],
         ),
@@ -61,65 +61,105 @@ Future<void> generateAndPrintCustomerCardSettlementsDetailsPdf({
     required List<CustomerCardSettlementDetail> customerCardSettlementsDetails,
   }) {
     return pw.Table(
+      border: pw.TableBorder.all(),
       children: [
         pw.TableRow(
           children: [
-            pw.Text(
-              'Date de Collecte',
-              style: pw.TextStyle(
-                fontSize: 14,
-                fontWeight: pw.FontWeight.bold,
+            pw.Center(
+              child: pw.Text(
+                'Date Collecte',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                ),
               ),
             ),
-            pw.Text(
-              'Nombre Mise',
-              style: pw.TextStyle(
-                fontSize: 14,
-                fontWeight: pw.FontWeight.bold,
+            pw.Center(
+              child: pw.Text(
+                'Nombre Mise',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                ),
               ),
             ),
-            pw.Text(
-              'Montant',
-              style: pw.TextStyle(
-                fontSize: 14,
-                fontWeight: pw.FontWeight.bold,
+            pw.Center(
+              child: pw.Text(
+                'Montant',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                ),
               ),
             ),
-            pw.Text(
-              'Date Saisie',
-              style: pw.TextStyle(
-                fontSize: 14,
-                fontWeight: pw.FontWeight.bold,
+            pw.Center(
+              child: pw.Text(
+                'Date Saisie',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                ),
               ),
             ),
-            pw.Text(
-              'Agent',
-              style: pw.TextStyle(
-                fontSize: 14,
-                fontWeight: pw.FontWeight.bold,
+            pw.Center(
+              child: pw.Text(
+                'Agent',
+                style: pw.TextStyle(
+                  fontSize: 10,
+                  fontWeight: pw.FontWeight.bold,
+                ),
               ),
             ),
           ],
         ),
         for (int i = 0; i < customerCardSettlementsDetails.length; ++i)
-          pw.TableRow(children: [
-            pw.Text(
-              format.format(customerCardSettlementsDetails[i].settlementDate),
-            ),
-            pw.Text(
-                customerCardSettlementsDetails[i].settlementNumber.toString()),
-            pw.Text(
-              customerCardSettlementsDetails[i]
-                  .settlementAmount
-                  .ceil()
-                  .toString(),
-            ),
-            pw.Text(
-              format.format(customerCardSettlementsDetails[i].settlementDate),
-            ),
-            pw.Text(
-                '${customerCardSettlementsDetails[i].agentName} ${customerCardSettlementsDetails[i].agentFirstname}'),
-          ]),
+          pw.TableRow(
+            children: [
+              pw.Center(
+                child: pw.Text(
+                  format
+                      .format(customerCardSettlementsDetails[i].settlementDate),
+                  style: const pw.TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+              pw.Center(
+                child: pw.Text(
+                  customerCardSettlementsDetails[i].settlementNumber.toString(),
+                ),
+              ),
+              pw.Center(
+                child: pw.Text(
+                  customerCardSettlementsDetails[i]
+                      .settlementAmount
+                      .ceil()
+                      .toString(),
+                  style: const pw.TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+              pw.Center(
+                child: pw.Text(
+                  format.format(
+                    customerCardSettlementsDetails[i].settlementEntryDate,
+                  ),
+                  style: const pw.TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+              pw.Center(
+                child: pw.Text(
+                  '${customerCardSettlementsDetails[i].agentName} ${customerCardSettlementsDetails[i].agentFirstname}',
+                  style: const pw.TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -135,7 +175,7 @@ Future<void> generateAndPrintCustomerCardSettlementsDetailsPdf({
               customerCard: customerCard,
               customerCardType: customerCardType,
             ),
-            pw.SizedBox(height: 10),
+            pw.SizedBox(height: 30),
             buildDataTable(
               customerCardSettlementsDetails: customerCardSettlementsDetails,
             ),
@@ -183,13 +223,13 @@ class OtherInfos extends pw.StatelessWidget {
         pw.Text(
           '$label: ',
           style: const pw.TextStyle(
-            fontSize: 11,
+            fontSize: 10,
           ),
         ),
         pw.Text(
           value,
           style: pw.TextStyle(
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: pw.FontWeight.bold,
           ),
         ),

@@ -11,4 +11,5 @@ class CustomerCardSettlementDetailRPC {
   static const String agentFirstname = 'prenoms_agent';
   static const String agentName = 'nom_agent';
   static const String settlementDate = 'date_reglement';
+  static const String settlementEntryDate = 'date_saisie';
 }
