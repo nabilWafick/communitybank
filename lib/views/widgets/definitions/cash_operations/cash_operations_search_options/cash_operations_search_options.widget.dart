@@ -65,9 +65,8 @@ class CashOperationsSearchOptions extends ConsumerWidget {
         ref.watch(customersCardsWithOwnerListStreamProvider);
 
     return Container(
-      margin: const EdgeInsets.only(
-        top: 20.0,
-        bottom: 20.0,
+      margin: const EdgeInsets.symmetric(
+        vertical: 15.0,
       ),
       width: double.maxFinite,
       child: Row(

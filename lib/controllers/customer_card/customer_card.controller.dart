@@ -36,7 +36,8 @@ class CustomersCardsController {
     Stream<List<Map<String, dynamic>>> customerCardsMapListStream =
         CustomerCardsService.getAll();
 
-// filter and return only customer card which have an an owner i.e only which are used by an account owner
+    // filter and return only customer card which have an an owner i.e
+    // only which are used by an account owner
     customerCardsMapListStream = customerCardsMapListStream.map(
       (customerCardsMapList) => customerCardsMapList
           .where((customerCardMap) =>

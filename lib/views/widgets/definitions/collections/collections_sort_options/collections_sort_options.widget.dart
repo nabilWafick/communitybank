@@ -55,7 +55,7 @@ class _CollectionsSortOptionsState
     final format = DateFormat.yMMMMEEEEd('fr');
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(
@@ -81,131 +81,126 @@ class _CollectionsSortOptionsState
               ),
             ],
           ),
-          Container(
-            margin: const EdgeInsets.only(
-              top: 20.0,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /*  CBSearchInput(
-                  hintText: 'Rechercher un règlement',
-                  searchProvider: searchProvider('collections'),
-                ),*/
-                const SizedBox(
-                  width: 10.0,
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              /*  CBSearchInput(
+                hintText: 'Rechercher un règlement',
+                searchProvider: searchProvider('collections'),
+              ),*/
+              const SizedBox(
+                width: 10.0,
+              ),
+              SizedBox(
+                width: 320.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CBIconButton(
+                      icon: Icons.date_range,
+                      text: 'Date de Collecte',
+                      onTap: () async {
+                        await FunctionsController.showDateTime(
+                          context,
+                          ref,
+                          collectionsListCollectionDateProvider,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    Flexible(
+                      child: CBText(
+                        text: collectionsListCollectionDate != null
+                            ? format.format(collectionsListCollectionDate)
+                            : '',
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w500,
+                        textOverflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    //   const SizedBox(),
+                  ],
                 ),
-                SizedBox(
-                  width: 320.0,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CBIconButton(
-                        icon: Icons.date_range,
-                        text: 'Date de Collecte',
-                        onTap: () async {
-                          await FunctionsController.showDateTime(
-                            context,
-                            ref,
-                            collectionsListCollectionDateProvider,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      Flexible(
-                        child: CBText(
-                          text: collectionsListCollectionDate != null
-                              ? format.format(collectionsListCollectionDate)
-                              : '',
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w500,
-                          textOverflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      //   const SizedBox(),
-                    ],
-                  ),
+              ),
+              CBListCollectorDropdown(
+                width: 300.0,
+                label: 'Chargé de compte',
+                providerName: 'collections-collector',
+                dropdownMenuEntriesLabels: collectorsListStream.when(
+                  data: (data) => [
+                    Collector(
+                      name: 'Tous',
+                      firstnames: '',
+                      phoneNumber: '',
+                      address: '',
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
                 ),
-                CBListCollectorDropdown(
-                  width: 300.0,
-                  label: 'Chargé de compte',
-                  providerName: 'collections-collector',
-                  dropdownMenuEntriesLabels: collectorsListStream.when(
-                    data: (data) => [
-                      Collector(
-                        name: 'Tous',
-                        firstnames: '',
-                        phoneNumber: '',
-                        address: '',
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                      ...data
-                    ],
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
-                  dropdownMenuEntriesValues: collectorsListStream.when(
-                    data: (data) => [
-                      Collector(
-                        name: 'Tous',
-                        firstnames: '',
-                        phoneNumber: '',
-                        address: '',
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                      ...data
-                    ],
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
+                dropdownMenuEntriesValues: collectorsListStream.when(
+                  data: (data) => [
+                    Collector(
+                      name: 'Tous',
+                      firstnames: '',
+                      phoneNumber: '',
+                      address: '',
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
                 ),
-                CBListAgentDropdown(
-                  width: 300.0,
-                  label: 'Agent',
-                  providerName: 'collections-agent',
-                  dropdownMenuEntriesLabels: agentsListStream.when(
-                    data: (data) => [
-                      Agent(
-                        name: 'Tous',
-                        firstnames: '',
-                        phoneNumber: '',
-                        address: '',
-                        email: '',
-                        role: '',
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                      ...data
-                    ],
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
-                  dropdownMenuEntriesValues: agentsListStream.when(
-                    data: (data) => [
-                      Agent(
-                        name: 'Tous',
-                        firstnames: '',
-                        phoneNumber: '',
-                        address: '',
-                        email: '',
-                        role: '',
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                      ...data
-                    ],
-                    error: (error, stackTrace) => [],
-                    loading: () => [],
-                  ),
+              ),
+              CBListAgentDropdown(
+                width: 300.0,
+                label: 'Agent',
+                providerName: 'collections-agent',
+                dropdownMenuEntriesLabels: agentsListStream.when(
+                  data: (data) => [
+                    Agent(
+                      name: 'Tous',
+                      firstnames: '',
+                      phoneNumber: '',
+                      address: '',
+                      email: '',
+                      role: '',
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
                 ),
-              ],
-            ),
+                dropdownMenuEntriesValues: agentsListStream.when(
+                  data: (data) => [
+                    Agent(
+                      name: 'Tous',
+                      firstnames: '',
+                      phoneNumber: '',
+                      address: '',
+                      email: '',
+                      role: '',
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
+                ),
+              ),
+            ],
           ),
         ],
       ),

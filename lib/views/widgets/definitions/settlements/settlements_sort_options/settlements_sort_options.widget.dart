@@ -46,7 +46,7 @@ class _SettlementsSortOptionsState
     //   final format = DateFormat.yMMMMEEEEd('fr');
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(

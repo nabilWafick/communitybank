@@ -19,6 +19,7 @@ import 'package:communitybank/views/widgets/forms/adding/settlement/settlement_a
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
+import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/customer_card_settlements_details_printing.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -124,41 +125,32 @@ class _CashOperationsCustomerCardInfosState
                 width: 20.0,
               ),
               SizedBox(
-                  width: widget.width * .85,
-                  height: 40.0,
-                  child: CashOperationsCustomerCardsHorizontalScroller(
-                    children:
-                        cashOperationsSelectedCustomerAccountOwnerCustomerCards
-                            .map(
-                      (customerCard) {
-                        return customerCard.satisfiedAt == null &&
-                                customerCard.repaidAt == null
-                            ? CustomerCardCard(
-                                customerCard: customersCardsListStream.when(
-                                  data: (data) {
-                                    return data.firstWhere(
-                                      (customerCardData) =>
-                                          customerCardData.id ==
-                                          customerCard.id,
-                                    );
-                                  },
-                                  error: (error, stackTrace) => customerCard,
-                                  loading: () => customerCard,
-                                ),
-                              )
-                            : const SizedBox();
-                      },
-                    ).toList(),
-                  )
-
-                  /* SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children:
-                     
-                  ),
-                ),*/
-                  ),
+                width: widget.width * .85,
+                height: 40.0,
+                child: CashOperationsCustomerCardsHorizontalScroller(
+                  children:
+                      cashOperationsSelectedCustomerAccountOwnerCustomerCards
+                          .map(
+                    (customerCard) {
+                      return customerCard.satisfiedAt == null &&
+                              customerCard.repaidAt == null
+                          ? CustomerCardCard(
+                              customerCard: customersCardsListStream.when(
+                                data: (data) {
+                                  return data.firstWhere(
+                                    (customerCardData) =>
+                                        customerCardData.id == customerCard.id,
+                                  );
+                                },
+                                error: (error, stackTrace) => customerCard,
+                                loading: () => customerCard,
+                              ),
+                            )
+                          : const SizedBox();
+                    },
+                  ).toList(),
+                ),
+              ),
             ],
           ),
           SizedBox(
@@ -670,108 +662,6 @@ class _CashOperationsCustomerCardInfosState
                         ),
                       ],
                     ),
-              /*  Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 250.0,
-                    child: SwitchListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: .0,
-                        vertical: .0,
-                      ),
-                      splashRadius: .0,
-                      // isRepaid && && customerCardRepaymentDate != null
-                      // because, update switch state only after verify that
-                      // the date have be setted properly and isn't null
-                      // don't work,
-                      value: isRepaid && customerCardRepaymentDate != null,
-                      title: const CBText(
-                        text: 'Remboursé',
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      onChanged: (value) async {
-                        // check if a customer card is selected
-                        if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                            null) {
-                          // if the customerCard isn't satisfied
-                          if (isSatisfied == false &&
-                              customerCardSatisfactionDate == null) {
-                            // if switch will be switched to on
-                            if (value == true) {
-                              // verify if there is a least one settlement
-                              // on the customer card
-                              if (settlementsNumbersTotal > 0) {
-                                //  show dataTime picker for setting
-                                // repayment date
-                                await FunctionsController.showDateTime(
-                                  context,
-                                  ref,
-                                  customerCardRepaymentDateProvider,
-                                );
-
-                                // if customerCard repayment is setted and not null
-                                if (ref.watch(
-                                        customerCardRepaymentDateProvider) !=
-                                    null) {
-                                  // do uptate
-
-                                  await CustomerCardCRUDFunctions
-                                      .updateRepaymentDate(
-                                    context: context,
-                                    ref: ref,
-                                    customerCard:
-                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard,
-                                  );
-                                  // change switch state/value
-                                  ref
-                                      .read(
-                                        isCustomerCardRepaidProvider.notifier,
-                                      )
-                                      .state = value;
-                                }
-                              } else {
-                                ref
-                                    .read(responseDialogProvider.notifier)
-                                    .state = ResponseDialogModel(
-                                  serviceResponse: ServiceResponse.failed,
-                                  response:
-                                      'Aucun règlement n\'a été fait sur la carte',
-                                );
-
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog: const ResponseDialog(),
-                                );
-                              }
-                            } else {
-                              /* ref
-                                  .read(
-                                    customerCardRepaymentDateProvider.notifier,
-                                  )
-                                  .state = null;
-
-                              ref
-                                  .read(isCustomerCardRepaidProvider.notifier)
-                                  .state = value;
-                           */
-                            }
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                  CustomerCardDateData(
-                    label: 'Date de Remboursement',
-                    value: customerCardRepaymentDate != null && isRepaid
-                        ? '${format.format(customerCardRepaymentDate)}  ${customerCardRepaymentDate.hour}:${customerCardRepaymentDate.minute}'
-                        : '',
-                  ),
-                ],
-              ),
-            */
-
               cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
                   ? Consumer(
                       builder: (context, ref, child) {
@@ -964,114 +854,6 @@ class _CashOperationsCustomerCardInfosState
                         ),
                       ],
                     ),
-
-              /*  
-             Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 250.0,
-                    child: SwitchListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: .0,
-                        vertical: .0,
-                      ),
-                      value:
-                          isSatisfied && customerCardSatisfactionDate != null,
-                      title: const CBText(
-                        text: 'Satisfait',
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      // isSatisfied && customerCardSatisfactionDate != null
-                      // because, update switch state only after verify that
-                      // the date have be setted properly and isn't null
-                      // don't work,
-                      onChanged: (value) async {
-                        // check if a customer card is selected
-                        if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                            null) {
-                          // if the customerCard isn't repaid
-                          if (isRepaid == false &&
-                              customerCardRepaymentDate == null) {
-                            // if switch will be switched to on
-                            if (value == true) {
-                              // verify if settlementsTotalNumbers is
-                              // equal to 372 on the customer card
-
-                              if (settlementsNumbersTotal == 372) {
-                                //  show dataTime picker for setting
-                                //  satisfaction date
-                                await FunctionsController.showDateTime(
-                                  context,
-                                  ref,
-                                  customerCardSatisfactionDateProvider,
-                                );
-
-                                // customer card satisfaction date is setted
-                                // and is not null
-
-                                if (ref.watch(
-                                        customerCardSatisfactionDateProvider) !=
-                                    null) {
-                                  CustomerCardCRUDFunctions
-                                      .updateSatisfactionDate(
-                                    context: context,
-                                    ref: ref,
-                                    customerCard:
-                                        cashOperationsSelectedCustomerAccountOwnerSelectedCard,
-                                  );
-                                  // change switch state/value
-                                  ref
-                                      .read(
-                                        isCustomerCardSatisfiedProvider
-                                            .notifier,
-                                      )
-                                      .state = value;
-                                }
-                              } else {
-                                ref
-                                    .read(responseDialogProvider.notifier)
-                                    .state = ResponseDialogModel(
-                                  serviceResponse: ServiceResponse.failed,
-                                  response:
-                                      'Tous les règlements de la carte n\'ont pas été éffectués',
-                                );
-
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog: const ResponseDialog(),
-                                );
-                              }
-                            } else {
-                              /*    ref
-                                  .read(
-                                    customerCardSatisfactionDateProvider
-                                        .notifier,
-                                  )
-                                  .state = null;
-
-                              ref
-                                  .read(
-                                    isCustomerCardSatisfiedProvider.notifier,
-                                  )
-                                  .state = value;
-                          */
-                            }
-                          }
-                        }
-                      },
-                    ),
-                  ),
-                  CustomerCardDateData(
-                    label: 'Date de Satisfaction',
-                    value: customerCardSatisfactionDate != null && isSatisfied
-                        ? '${format.format(customerCardSatisfactionDate)}  ${customerCardSatisfactionDate.hour}:${customerCardSatisfactionDate.minute}'
-                        : '',
-                  ),
-                ],
-              ),
-           */
             ],
           ),
           Row(
@@ -1080,9 +862,22 @@ class _CashOperationsCustomerCardInfosState
               CBIconButton(
                 icon: Icons.book,
                 text: 'Situation du client',
-                onTap: () {
-                  cashOperationsSelectedCustomerAccount != null ? () {} : () {};
-                },
+                onTap: cashOperationsSelectedCustomerAccount != null &&
+                        cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
+                            null
+                    ? () async {
+                        await FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog:
+                              CustomerCardSettlementsDetailsPrintingPreview(
+                            customerCard:
+                                cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+                            type:
+                                cashOperationsSelectedCustomerAccountOwnerSelectedCardType!,
+                          ),
+                        );
+                      }
+                    : () {},
               ),
               CBIconButton(
                 icon: Icons.add_circle,

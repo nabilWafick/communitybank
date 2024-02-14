@@ -60,7 +60,7 @@ class _CashOperationsSettlementsState
           width: 1.5,
         ),
       ),
-      height: 370.0,
+      height: 350.0,
       width: double.infinity,
       child: Scrollbar(
         controller: horizontalScrollController,
