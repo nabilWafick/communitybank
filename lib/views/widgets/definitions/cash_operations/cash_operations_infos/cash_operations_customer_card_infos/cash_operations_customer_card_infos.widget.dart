@@ -869,12 +869,7 @@ class _CashOperationsCustomerCardInfosState
                         await FunctionsController.showAlertDialog(
                           context: context,
                           alertDialog:
-                              CustomerCardSettlementsDetailsPrintingPreview(
-                            customerCard:
-                                cashOperationsSelectedCustomerAccountOwnerSelectedCard,
-                            type:
-                                cashOperationsSelectedCustomerAccountOwnerSelectedCardType!,
-                          ),
+                              const CustomerCardSettlementsDetailsPrintingPreview(),
                         );
                       }
                     : () {},

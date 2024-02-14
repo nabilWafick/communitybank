@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:communitybank/controllers/customer_card_settlement_detail/customer_card_settlement_detail.controller.dart';
-import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/data/customer_card_settlement_detail/customer_card_settlement_detail.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
+import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/generate_and_print_customer_card_settlements_details_pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -21,13 +23,8 @@ final customerCardSettlementsDetailsProvider =
 
 class CustomerCardSettlementsDetailsPrintingPreview
     extends StatefulHookConsumerWidget {
-  final CustomerCard customerCard;
-  final Type type;
-
   const CustomerCardSettlementsDetailsPrintingPreview({
     super.key,
-    required this.customerCard,
-    required this.type,
   });
 
   @override
@@ -46,9 +43,15 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
   @override
   Widget build(BuildContext context) {
     const formCardWidth = 1000.0;
+
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
+        ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
     final customerCardSettlementsDetailsList = ref.watch(
       customerCardSettlementsDetailsProvider(
-        widget.customerCard.id!,
+        cashOperationsSelectedCustomerAccountOwnerSelectedCard!.id!,
       ),
     );
 
@@ -92,11 +95,14 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
               children: [
                 OtherInfos(
                   label: 'Carte',
-                  value: widget.customerCard.label,
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                      .label,
                 ),
                 OtherInfos(
                   label: 'Nombre Type',
-                  value: widget.customerCard.typeNumber.toString(),
+                  value: cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                      .typeNumber
+                      .toString(),
                 )
               ],
             ),
@@ -108,11 +114,14 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
               children: [
                 OtherInfos(
                   label: 'Type',
-                  value: widget.type.name,
+                  value:
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCardType!
+                          .name,
                 ),
                 OtherInfos(
                   label: 'Mise',
-                  value: '${widget.type.stake.ceil()}f',
+                  value:
+                      '${cashOperationsSelectedCustomerAccountOwnerSelectedCardType.stake.ceil()}f',
                 ),
               ],
             ),
@@ -259,7 +268,27 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                   width: 170.0,
                   child: CBElevatedButton(
                     text: 'Imprimer',
-                    onPressed: () {},
+                    onPressed: () async {
+                      final customerCardSettlementsDetails =
+                          await CustomerCardSettlementsDetailsController
+                              .getCustomerCardSettlementsDetails(
+                        customerCardId:
+                            cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                .id!,
+                      );
+                      // generate pdf file and print it
+
+                      await generateAndPrintCustomerCardSettlementsDetailsPdf(
+                        context: context,
+                        format: format,
+                        customerCard:
+                            cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+                        customerCardType:
+                            cashOperationsSelectedCustomerAccountOwnerSelectedCardType,
+                        customerCardSettlementsDetails:
+                            customerCardSettlementsDetails,
+                      );
+                    },
                   ),
                 )
               ],

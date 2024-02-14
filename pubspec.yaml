@@ -24,7 +24,7 @@ dependencies:
   http: ^1.1.2
   image_picker: ^1.0.5
   intl: ^0.18.1
-  path_provider: ^2.1.1
+  path_provider: ^2.1.2
   realtime_client: ^1.4.0
   resizable_widget: ^1.0.5
   responsive_framework: ^0.2.0
@@ -39,6 +39,8 @@ dependencies:
   msix: ^3.16.7
   internet_connection_checker: ^1.0.0+1
   text_similarity: ^1.0.1
+  pdf: ^3.10.7
+  printing: ^5.11.1
 
 dev_dependencies:
   flutter_test:
