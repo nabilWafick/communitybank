@@ -21,13 +21,20 @@ class CustomersAccountsController {
     required int selectedCustomerId,
     required int selectedCollectorId,
   }) async* {
+    // filter is done in controller because supabase stream support only one
+    // filter type
+    // error throws when try it
+
+    //  debugPrint('selectedCustomerId: $selectedCustomerId');
+    //  debugPrint('selectedCollectorId: $selectedCollectorId');
     final customerAccountsMapListStream = CustomersAccountsService.getAll(
-      selectedCustomerId: selectedCustomerId,
-      selectedCollectorId: selectedCollectorId,
-    );
+        // selectedCustomerId: selectedCustomerId,
+        // selectedCollectorId: selectedCollectorId,
+        );
     //   debugPrint('In Controller');
     // yield all CustomerAccounts data or an empty list
-    yield* customerAccountsMapListStream.map(
+    Stream<List<CustomerAccount>> customerAccountsListStream =
+        customerAccountsMapListStream.map(
       (customerAccountsMapList) => customerAccountsMapList.map(
         (customerAccountMap) {
           //   debugPrint(customerAccountMap.toString());
@@ -35,7 +42,30 @@ class CustomersAccountsController {
         },
       ).toList(),
     );
-    //.asBroadcastStream();
+
+    if (selectedCustomerId != 0) {
+      customerAccountsListStream = customerAccountsListStream.map(
+        (customerAccountsList) => customerAccountsList
+            .where(
+              (customerAccount) =>
+                  customerAccount.customerId == selectedCustomerId,
+            )
+            .toList(),
+      );
+    }
+
+    if (selectedCollectorId != 0) {
+      customerAccountsListStream = customerAccountsListStream.map(
+        (customerAccountsList) => customerAccountsList
+            .where(
+              (customerAccount) =>
+                  customerAccount.collectorId == selectedCollectorId,
+            )
+            .toList(),
+      );
+    }
+
+    yield* customerAccountsListStream;
   }
 
 /*

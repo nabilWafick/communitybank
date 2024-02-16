@@ -44,12 +44,15 @@ class CustomersAccountsService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll({
+  static Stream<List<Map<String, dynamic>>> getAll(
+      /*{
     required int selectedCustomerId,
     required int selectedCollectorId,
-  }) async* {
+  }*/
+      ) async* {
     final supabase = Supabase.instance.client;
-
+    // debugPrint('selectedCustomerId: $selectedCustomerId');
+    // debugPrint('selectedCollectorId: $selectedCollectorId');
     try {
       // listen to CustomerAccounts table change and return a stream of all CustomerAccounts data
 
@@ -60,7 +63,7 @@ class CustomersAccountsService {
         ascending: true,
       );
 
-      if (selectedCustomerId != 0) {
+      /* if (selectedCustomerId != 0) {
         query.eq(
           CustomerAccountTable.customerId,
           selectedCustomerId,
@@ -72,7 +75,8 @@ class CustomersAccountsService {
           CustomerAccountTable.collectorId,
           selectedCollectorId,
         );
-      }
+        
+      }*/
       // return the result as stream
       yield* query.asBroadcastStream();
     } catch (error) {
