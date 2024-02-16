@@ -1,5 +1,4 @@
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/localities/localities_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
@@ -13,7 +12,7 @@ class LocalitiesSortOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(
@@ -37,19 +36,6 @@ class LocalitiesSortOptions extends ConsumerWidget {
                     // FormCard(),
                   );
                 },
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CBSearchInput(
-                hintText: 'Rechercher une localité',
-                searchProvider: searchProvider('localities'),
-              ),
-              const SizedBox(
-                width: 10.0,
               ),
             ],
           ),

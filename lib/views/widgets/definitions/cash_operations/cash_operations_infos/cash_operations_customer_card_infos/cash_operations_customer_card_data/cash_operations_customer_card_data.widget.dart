@@ -19,12 +19,12 @@ class CustomerCardData extends ConsumerWidget {
         children: [
           CBText(
             text: '$label: ',
-            fontSize: 11,
+            fontSize: 10,
             //  fontWeight: FontWeight.w500,
           ),
           CBText(
             text: value,
-            fontSize: 13,
+            fontSize: 11,
             fontWeight: FontWeight.w500,
             //  color: CBColors.tertiaryColor,
           )

@@ -67,32 +67,32 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                       label: CBText(
                         text: 'Code',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Client',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Chargé de compte',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Cartes',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
@@ -136,6 +136,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
 
                                         return CBText(
                                           text: accountOwner,
+                                          fontSize: 12.0,
                                         );
                                       },
                                       error: (error, stackTrace) =>
@@ -166,6 +167,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
 
                                         return CBText(
                                           text: accountCollector,
+                                          fontSize: 12.0,
                                         );
                                       },
                                       error: (error, stackTrace) =>
@@ -188,7 +190,10 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                                         for (CustomerCard customerCard
                                             in data) {
                                           if (customerAccount.customerCardsIds
-                                              .contains(customerCard.id)) {
+                                                  .contains(customerCard.id) &&
+                                              customerCard.satisfiedAt ==
+                                                  null &&
+                                              customerCard.repaidAt == null) {
                                             if (accountCustomerCards.isEmpty) {
                                               accountCustomerCards =
                                                   customerCard.label;
@@ -201,6 +206,7 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
 
                                         return CBText(
                                           text: accountCustomerCards,
+                                          fontSize: 12.0,
                                         );
                                       },
                                       error: (error, stackTrace) =>

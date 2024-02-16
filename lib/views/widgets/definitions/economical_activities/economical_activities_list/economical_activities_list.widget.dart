@@ -5,6 +5,7 @@ import 'package:communitybank/models/data/economical_activity/economical_activit
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/economical_activities/economical_activities_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/economical_activities/economical_activities_update_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -50,27 +51,32 @@ class EconomicalActivitiesList extends ConsumerWidget {
         child: SingleChildScrollView(
           child: DataTable(
             showCheckboxColumn: true,
-            columns: const [
-              DataColumn(
+            columns: [
+              const DataColumn(
                 label: CBText(
                   text: 'Code',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               DataColumn(
-                label: CBText(
+                label: CBSearchInput(
+                  hintText: 'Nom',
+                  searchProvider: searchProvider('ceconomical-actvities'),
+                ),
+
+                /* CBText(
                   text: 'Nom',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),*/
               ),
-              DataColumn(
+              const DataColumn(
                 label: SizedBox(),
               ),
-              DataColumn(
+              const DataColumn(
                 label: SizedBox(),
               ),
             ],
@@ -86,10 +92,14 @@ class EconomicalActivitiesList extends ConsumerWidget {
                                   CBText(
                                     text:
                                         '${data.indexOf(economicalActivity) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
-                                  CBText(text: economicalActivity.name),
+                                  CBText(
+                                    text: economicalActivity.name,
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   onTap: () {
@@ -155,10 +165,14 @@ class EconomicalActivitiesList extends ConsumerWidget {
                                   CBText(
                                     text:
                                         '${data.indexOf(economicalActivity) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
-                                  CBText(text: economicalActivity.name),
+                                  CBText(
+                                    text: economicalActivity.name,
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   onTap: () {

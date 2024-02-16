@@ -11,6 +11,7 @@ import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/t
 import 'package:communitybank/views/widgets/forms/update/types/types_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
@@ -70,49 +71,53 @@ class _TypesListState extends ConsumerState<TypesList> {
             child: SingleChildScrollView(
               controller: verticalScrollController,
               child: DataTable(
-                columns: const [
-                  DataColumn(
+                columns: [
+                  const DataColumn(
                     label: CBText(
                       text: 'Code',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Photos',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
-                    label: CBText(
+                      label: CBSearchInput(
+                    hintText: 'Nom',
+                    searchProvider: searchProvider('types'),
+                  )
+                      /* CBText(
                       text: 'Nom',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  DataColumn(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                    ),*/
+                      ),
+                  const DataColumn(
                     label: CBText(
                       text: 'Mise',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Produits',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(label: SizedBox()),
-                  DataColumn(label: SizedBox()),
+                  const DataColumn(label: SizedBox()),
+                  const DataColumn(label: SizedBox()),
                 ],
                 rows: isSearching
                     ? searchedTypesList.when(
@@ -124,6 +129,7 @@ class _TypesListState extends ConsumerState<TypesList> {
                                   DataCell(
                                     CBText(
                                       text: '${data.indexOf(type) + 1}',
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   DataCell(
@@ -144,10 +150,16 @@ class _TypesListState extends ConsumerState<TypesList> {
                                     ),
                                   ),
                                   DataCell(
-                                    CBText(text: type.name),
+                                    CBText(
+                                      text: type.name,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
-                                    CBText(text: '${type.stake.ceil()} f/Jour'),
+                                    CBText(
+                                      text: '${type.stake.ceil()} f/Jour',
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
                                     Consumer(builder: (BuildContext context,
@@ -178,7 +190,10 @@ class _TypesListState extends ConsumerState<TypesList> {
                                             }
                                           }
                                           //  debugPrint('type products: ${type.products}');
-                                          return CBText(text: typeProducts);
+                                          return CBText(
+                                            text: typeProducts,
+                                            fontSize: 12.0,
+                                          );
                                         },
                                         error: (error, stackTrace) =>
                                             const CBText(text: ''),
@@ -305,6 +320,7 @@ class _TypesListState extends ConsumerState<TypesList> {
                                   DataCell(
                                     CBText(
                                       text: '${data.indexOf(type) + 1}',
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   DataCell(
@@ -325,10 +341,16 @@ class _TypesListState extends ConsumerState<TypesList> {
                                     ),
                                   ),
                                   DataCell(
-                                    CBText(text: type.name),
+                                    CBText(
+                                      text: type.name,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
-                                    CBText(text: '${type.stake.ceil()} f/Jour'),
+                                    CBText(
+                                      text: '${type.stake.ceil()} f/Jour',
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
                                     Consumer(builder: (BuildContext context,
@@ -359,7 +381,10 @@ class _TypesListState extends ConsumerState<TypesList> {
                                             }
                                           }
                                           //  debugPrint('type products: ${type.products}');
-                                          return CBText(text: typeProducts);
+                                          return CBText(
+                                            text: typeProducts,
+                                            fontSize: 12.0,
+                                          );
                                         },
                                         error: (error, stackTrace) =>
                                             const CBText(text: ''),

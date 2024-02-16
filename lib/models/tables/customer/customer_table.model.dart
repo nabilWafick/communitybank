@@ -6,7 +6,7 @@ class CustomerTable {
   static const String phoneNumber = 'telephone';
   static const String address = 'adresse';
   static const String profession = 'profession';
-  static const String nciNumber = 'numero_cni';
+  static const String nicNumber = 'numero_cni';
   static const String categoryId = 'id_categorie';
   static const String economicalActivityId = 'id_activite_economique';
   static const String personalStatusId = 'id_statut_personnel';

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CBSearchInput extends ConsumerStatefulWidget {
   final String hintText;
-  final StateProvider searchProvider;
+  final StateProvider<String> searchProvider;
   const CBSearchInput({
     super.key,
     required this.hintText,
@@ -26,22 +26,36 @@ class _CBSearchInputState extends ConsumerState<CBSearchInput> {
           onChanged: (value) {
             ref.read(widget.searchProvider.notifier).state = value;
           },
+          style: const TextStyle(
+            fontSize: 12.0,
+          ),
           decoration: InputDecoration(
-              hintText: widget.hintText,
-              prefixIcon: const Icon(
-                Icons.search,
+            // contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+            hintStyle: const TextStyle(
+              fontSize: 12.0,
+            ),
+            hintText: widget.hintText,
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide.none,
+            ),
+            prefixIcon: const Icon(
+              Icons.search,
+              color: CBColors.primaryColor,
+            ),
+            suffixIcon: IconButton(
+              onPressed: () {
+                ref.read(widget.searchProvider.notifier).state = '';
+                textEditingController.text = '';
+              },
+              icon: const Icon(
+                Icons.close,
                 color: CBColors.primaryColor,
               ),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  ref.read(widget.searchProvider.notifier).state = '';
-                  textEditingController.clear();
-                },
-                icon: const Icon(
-                  Icons.close,
-                  color: CBColors.primaryColor,
-                ),
-              )),
+            ),
+          ),
         ),
       ),
     );

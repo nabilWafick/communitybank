@@ -9,7 +9,6 @@ import 'package:communitybank/views/widgets/definitions/customers_categories/cus
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
 import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/add_button/add_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
@@ -17,7 +16,6 @@ import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_cat
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/locality/locality_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_status/personal_status_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +34,7 @@ class CustomersSortOptions extends ConsumerWidget {
         ref.watch(personalStatusListStreamProvider);
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(
@@ -69,13 +67,13 @@ class CustomersSortOptions extends ConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CBSearchInput(
-                hintText: 'Rechercher un client',
-                searchProvider: searchProvider('customers'),
-              ),
+              const SizedBox(),
               Row(
                 children: [
-                  const CBText(text: 'Trier par'),
+                  const CBText(
+                    text: 'Trier par',
+                    fontSize: 12.0,
+                  ),
                   const SizedBox(
                     width: 15.0,
                   ),

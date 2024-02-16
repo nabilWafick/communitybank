@@ -22,7 +22,7 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(
@@ -65,7 +65,10 @@ class CustomersAccountsSortOptions extends ConsumerWidget {
                   const SizedBox(
                     width: 10.0,
                   ),
-                  const CBText(text: 'Trier par'),
+                  const CBText(
+                    text: 'Trier par',
+                    fontSize: 12.0,
+                  ),
                   const SizedBox(
                     width: 15.0,
                   ),

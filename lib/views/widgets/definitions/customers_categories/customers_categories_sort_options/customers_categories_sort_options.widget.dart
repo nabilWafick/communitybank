@@ -1,6 +1,5 @@
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/customers_categories/customers_categories_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
@@ -14,7 +13,7 @@ class CustomersCategoriesSortOptions extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(
@@ -36,19 +35,6 @@ class CustomersCategoriesSortOptions extends ConsumerWidget {
                     alertDialog: const CustomerCategoryAddingForm(),
                   );
                 },
-              ),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CBSearchInput(
-                hintText: 'Rechercher une catégorie de client',
-                searchProvider: searchProvider('customers-categories'),
-              ),
-              const SizedBox(
-                width: 10.0,
               ),
             ],
           ),

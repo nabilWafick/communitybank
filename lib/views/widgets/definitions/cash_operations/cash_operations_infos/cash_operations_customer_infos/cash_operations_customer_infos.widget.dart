@@ -600,6 +600,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                         label: 'Localité',
                         value: '',
                       ),
+
+                // show vqlidated customer cards number
                 cashOperationsSelectedCustomerAccountOwner != null
                     ? Consumer(
                         builder: (context, ref, child) {
@@ -709,12 +711,12 @@ class OtherInfos extends ConsumerWidget {
         children: [
           CBText(
             text: '$label: ',
-            fontSize: 10.5,
+            fontSize: 10,
             //  fontWeight: FontWeight.w500,
           ),
           CBText(
             text: value,
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: FontWeight.w500,
           )
         ],

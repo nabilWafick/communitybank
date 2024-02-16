@@ -77,56 +77,56 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                     label: CBText(
                       text: 'Code',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Chargé de compte',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Montant',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Reste',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Date de collecte',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Date de saisie',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Agent',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
@@ -169,6 +169,7 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                                           },
                                           error: ((error, stackTrace) => ''),
                                           loading: () => ''),
+                                      fontSize: 12.0,
                                     );
                                   },
                                 ),
@@ -176,23 +177,27 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                               DataCell(
                                 CBText(
                                   text: collection.amount.ceil().toString(),
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text: collection.rest.ceil().toString(),
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text:
                                       '${format.format(collection.collectedAt)}  ${collection.collectedAt.hour}:${collection.collectedAt.minute}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text:
                                       '${format.format(collection.createdAt)}  ${collection.createdAt.hour}:${collection.createdAt.minute}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
@@ -214,6 +219,7 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                                           },
                                           error: ((error, stackTrace) => ''),
                                           loading: () => ''),
+                                      fontSize: 12.0,
                                     );
                                   },
                                 ),

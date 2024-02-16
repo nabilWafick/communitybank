@@ -16,52 +16,55 @@ class SidebarSubOption extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedSidebarSubOption =
         ref.watch(selectedSidebarSubOptionProvider);
-    return Card(
-      margin: const EdgeInsets.symmetric(
-        horizontal: 10.0,
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-        side: const BorderSide(
-          color: CBColors.primaryColor,
+    return InkWell(
+      onTap: () {
+        ref.read(selectedSidebarSubOptionProvider.notifier).state =
+            sidebarSubOptionData;
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+          horizontal: 10.0,
         ),
-      ),
-      elevation: 10.0,
-      color: selectedSidebarSubOption == sidebarSubOptionData
-          ? Colors.white
-          : CBColors.primaryColor,
-      child: InkWell(
-        onTap: () {
-          ref.read(selectedSidebarSubOptionProvider.notifier).state =
-              sidebarSubOptionData;
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: .0,
-            horizontal: 15.0,
+        decoration: BoxDecoration(
+          color: selectedSidebarSubOption == sidebarSubOptionData
+              ? Colors.white
+              : CBColors.primaryColor,
+          border: Border.all(
+            color: CBColors.primaryColor,
           ),
-          child: Row(
-            children: [
-              Icon(
-                sidebarSubOptionData.icon,
-                color: selectedSidebarSubOption == sidebarSubOptionData
-                    ? CBColors.primaryColor
-                    : Colors.white,
-                size: 20.0,
-              ),
-              const SizedBox(
-                width: 10.0,
-              ),
-              CBText(
-                text: sidebarSubOptionData.name,
-                fontSize: 10.0,
-                fontWeight: FontWeight.w600,
-                color: selectedSidebarSubOption == sidebarSubOptionData
-                    ? CBColors.primaryColor
-                    : Colors.white,
-              )
-            ],
-          ),
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              blurRadius: 4,
+              offset: const Offset(4, 8),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10.0,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              sidebarSubOptionData.icon,
+              color: selectedSidebarSubOption == sidebarSubOptionData
+                  ? CBColors.primaryColor
+                  : Colors.white,
+              size: 20.0,
+            ),
+            const SizedBox(
+              width: 10.0,
+            ),
+            CBText(
+              text: sidebarSubOptionData.name,
+              fontSize: 10.0,
+              fontWeight: FontWeight.w600,
+              color: selectedSidebarSubOption == sidebarSubOptionData
+                  ? CBColors.primaryColor
+                  : Colors.white,
+            )
+          ],
         ),
       ),
     );

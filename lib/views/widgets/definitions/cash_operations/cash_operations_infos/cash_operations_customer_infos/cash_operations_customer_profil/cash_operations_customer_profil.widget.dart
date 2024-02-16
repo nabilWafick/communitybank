@@ -63,11 +63,11 @@ class CashOperationsCustomerProfil extends ConsumerWidget {
                           text:
                               '${realTimeCustomerData.firstnames} ${realTimeCustomerData.name}',
                           fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
+                          fontSize: 11.0,
                         ),
                         CBText(
                           text: realTimeCustomerData.phoneNumber,
-                          fontSize: 11.0,
+                          fontSize: 10.0,
                         ),
                       ],
                     ),
@@ -106,11 +106,11 @@ class CashOperationsCustomerProfil extends ConsumerWidget {
                       CBText(
                         text: '',
                         fontWeight: FontWeight.w500,
-                        fontSize: 12.0,
+                        fontSize: 11.0,
                       ),
                       CBText(
                         text: '',
-                        fontSize: 11.0,
+                        fontSize: 10.0,
                       ),
                     ],
                   ),
@@ -148,11 +148,11 @@ class CashOperationsCustomerProfil extends ConsumerWidget {
                       CBText(
                         text: '',
                         fontWeight: FontWeight.w500,
-                        fontSize: 12.0,
+                        fontSize: 11.0,
                       ),
                       CBText(
                         text: '',
-                        fontSize: 11.0,
+                        fontSize: 10.0,
                       ),
                     ],
                   ),
@@ -192,11 +192,11 @@ class CashOperationsCustomerProfil extends ConsumerWidget {
                   CBText(
                     text: '',
                     fontWeight: FontWeight.w500,
-                    fontSize: 12.0,
+                    fontSize: 11.0,
                   ),
                   CBText(
                     text: '',
-                    fontSize: 11.0,
+                    fontSize: 10.0,
                   ),
                 ],
               ),

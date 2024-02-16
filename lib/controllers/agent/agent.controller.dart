@@ -35,8 +35,22 @@ class AgentsController {
     //.asBroadcastStream();
   }
 
-  static Future<List<Agent>> searchAgent({required String name}) async {
-    final searchedAgents = await AgentsService.searchAgent(name: name);
+  static Future<List<Agent>> searchAgent({
+    required String searchedAgentName,
+    required String searchedAgentFirstnames,
+    required String searchedAgentEmail,
+    required String searchedAgentPhoneNumber,
+    required String searchedAgentAddress,
+    required String searchedAgentRole,
+  }) async {
+    final searchedAgents = await AgentsService.searchAgent(
+      searchedAgentName: searchedAgentName,
+      searchedAgentFirstnames: searchedAgentFirstnames,
+      searchedAgentEmail: searchedAgentEmail,
+      searchedAgentPhoneNumber: searchedAgentPhoneNumber,
+      searchedAgentAddress: searchedAgentAddress,
+      searchedAgentRole: searchedAgentRole,
+    );
 
     return searchedAgents
         .map(

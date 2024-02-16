@@ -118,7 +118,7 @@ class _CashOperationsCustomerCardInfosState
             children: [
               const CBText(
                 text: 'Cartes: ',
-                fontSize: 14.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w600,
               ),
               const SizedBox(

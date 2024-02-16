@@ -149,7 +149,7 @@ class _MainAppbarState extends ConsumerState<MainAppbar> {
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            height: 50,
+            height: 40,
             child: AppBarHorizontalScroller(
               children: selectedSidebarOption.subOptions
                   .map(
@@ -220,7 +220,7 @@ class _AppBarHorizontalScrollerState
                 child: Icon(
                   Icons.arrow_back_ios_rounded,
                   //  color: Colors.white,
-                  color: Color.fromARGB(255, 28, 28, 28),
+                  color: CBColors.primaryColor,
                   size: 20.0,
                 ),
               ),

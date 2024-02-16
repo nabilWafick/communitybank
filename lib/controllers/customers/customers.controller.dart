@@ -1,6 +1,5 @@
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
-import 'package:communitybank/models/tables/customer/customer_table.model.dart';
 import 'package:communitybank/services/customers/customers.service.dart';
 
 class CustomersController {
@@ -17,19 +16,18 @@ class CustomersController {
   }
 
   static Stream<List<Customer>> getAll({
-    required int? selectedCustomerCategoryId,
-    required int? selectedCustomerEconomicalActivityId,
-    required int? selectedCustomerLocalityId,
-    required int? selectedCustomerPersonalStatusId,
+    required int selectedCustomerCategoryId,
+    required int selectedCustomerEconomicalActivityId,
+    required int selectedCustomerLocalityId,
+    required int selectedCustomerPersonalStatusId,
   }) async* {
     final customersMapListStream = CustomersService.getAll(
-        /*   selectedCustomerCategoryId: selectedCustomerCategoryId,
+      selectedCustomerCategoryId: selectedCustomerCategoryId,
       selectedCustomerEconomicalActivityId:
           selectedCustomerEconomicalActivityId,
       selectedCustomerLocalityId: selectedCustomerLocalityId,
       selectedCustomerPersonalStatusId: selectedCustomerPersonalStatusId,
-   */
-        );
+    );
 
     //  debugPrint(customersMapListStream.toString());
 
@@ -44,7 +42,7 @@ class CustomersController {
 
     // filter customers based on the selected locality, economical activity, personal status and category
 
-    if (selectedCustomerCategoryId != 0) {
+    /* if (selectedCustomerCategoryId != 0) {
       customersListStream = customersListStream.map(
         (customersList) => customersList
             .where(
@@ -86,34 +84,32 @@ class CustomersController {
             .toList(),
       );
     }
+    */
 
     // yield all Customers data or an empty list
     yield* customersListStream;
   }
 
-  static Future<List<Customer>> searchCustomer({required String name}) async {
-    final searchedCustomersMap =
-        await CustomersService.searchCustomer(name: name);
+  static Future<List<Customer>> searchCustomer({
+    required String searchedCustomerName,
+    required String searchedCustomerFirstnames,
+    required String searchedCustomerPhoneNumber,
+    required String searchedCustomerAddress,
+    required String searchedCustomerProfession,
+    required String searchedCustomerNicNumber,
+  }) async {
+    final searchedCustomersMap = await CustomersService.searchCustomer(
+      searchedCustomerName: searchedCustomerName,
+      searchedCustomerFirstnames: searchedCustomerFirstnames,
+      searchedCustomerPhoneNumber: searchedCustomerPhoneNumber,
+      searchedCustomerAddress: searchedCustomerAddress,
+      searchedCustomerProfession: searchedCustomerProfession,
+      searchedCustomerNicNumber: searchedCustomerNicNumber,
+    );
 
     final searchedCustomers = searchedCustomersMap.map(
       (customerMap) {
-        return Customer(
-          id: customerMap[CustomerTable.id]?.toInt(),
-          name: customerMap[CustomerTable.name] ?? '',
-          firstnames: customerMap[CustomerTable.firstnames] ?? '',
-          phoneNumber: customerMap[CustomerTable.phoneNumber] ?? '',
-          address: customerMap[CustomerTable.address] ?? '',
-          profession: customerMap[CustomerTable.profession] ?? '',
-          nicNumber: customerMap[CustomerTable.nciNumber]?.toInt() ?? 0,
-          categoryId: customerMap[CustomerTable.categoryId],
-          economicalActivityId: customerMap[CustomerTable.economicalActivityId],
-          personalStatusId: customerMap[CustomerTable.personalStatusId],
-          localityId: customerMap[CustomerTable.localityId],
-          profile: customerMap[CustomerTable.profile],
-          signature: customerMap[CustomerTable.signature],
-          createdAt: DateTime.parse(customerMap[CustomerTable.createdAt]),
-          updatedAt: DateTime.parse(customerMap[CustomerTable.updatedAt]),
-        );
+        return Customer.fromMap(customerMap);
       },
     ).toList();
 

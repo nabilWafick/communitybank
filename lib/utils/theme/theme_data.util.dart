@@ -137,7 +137,7 @@ class CBThemeData {
       textStyle: const TextStyle(
         fontFamily: 'Poppins',
         color: CBColors.secondaryColor,
-        fontSize: 12.0,
+        fontSize: 10.0,
         fontWeight: FontWeight.w400,
       ),
       menuStyle: const MenuStyle(
@@ -149,13 +149,17 @@ class CBThemeData {
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 7.0,
+          horizontal: 10.0,
+        ),
         hintStyle: const TextStyle(
           color: CBColors.secondaryColor,
-          fontSize: 12.0,
+          fontSize: 10.0,
           fontFamily: 'Poppins',
         ),
         floatingLabelStyle: const TextStyle(
-          fontSize: 12.0,
+          fontSize: 10.0,
           fontWeight: FontWeight.w600,
           color: CBColors.primaryColor,
         ),

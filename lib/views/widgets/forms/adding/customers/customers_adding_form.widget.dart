@@ -1,11 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
+//import 'package:communitybank/controllers/customers/customers.controller.dart';
 import 'package:communitybank/controllers/customers/customers.controller.dart';
 import 'package:communitybank/controllers/forms/on_changed/customer/customer.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
+//import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
 import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
@@ -15,6 +17,7 @@ import 'package:communitybank/views/widgets/definitions/economical_activities/ec
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding_confirmation_dialog/customers/customers.adding_confirmation_dialog.widget.dart';
+//import 'package:communitybank/views/widgets/forms/adding_confirmation_dialog/customers/customers.adding_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category/customer_category_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -23,7 +26,7 @@ import 'package:communitybank/views/widgets/globals/forms_dropdowns/personal_sta
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:text_similarity/implementation/text_similarity.dart';
+//import 'package:text_similarity/implementation/text_similarity.dart';
 
 class CustomerAddingForm extends StatefulHookConsumerWidget {
   const CustomerAddingForm({super.key});
@@ -488,73 +491,53 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                             child: CBElevatedButton(
                               text: 'Valider',
                               onPressed: () async {
+                                /*   await CustomerCRUDFunctions.create(
+                                  context: context,
+                                  formKey: formKey,
+                                  ref: ref,
+                                  showValidatedButton: showValidatedButton,
+                                );*/
                                 final isFormValid =
                                     formKey.currentState!.validate();
                                 if (isFormValid) {
+                                  showValidatedButton.value = false;
                                   // get customer name and firstnames
                                   final customerName =
                                       ref.watch(customerNameProvider);
                                   final customerFirstnames =
                                       ref.watch(customerFirstnamesProvider);
 
-                                  // check if the customer isn't already in the database
+                                  // check if the customer name or firstnames
+                                  // isn't already in the database
 
-                                  // get all registered customers
+                                  // get all registered customers zhich have a
+                                  // name or a firstame equal to the inputs
+
                                   final registeredCustomers =
                                       await CustomersController.getAll(
-                                    selectedCustomerCategoryId: null,
-                                    selectedCustomerEconomicalActivityId: null,
-                                    selectedCustomerLocalityId: null,
-                                    selectedCustomerPersonalStatusId: null,
+                                    selectedCustomerCategoryId: 0,
+                                    selectedCustomerEconomicalActivityId: 0,
+                                    selectedCustomerLocalityId: 0,
+                                    selectedCustomerPersonalStatusId: 0,
                                   ).first;
-
-                                  // store customers names
-                                  final registerdCustomersNames =
-                                      registeredCustomers
-                                          .map(
-                                            (customer) => customer.name,
-                                          )
-                                          .toList();
-
-                                  // store customers firstnames
-                                  final registerdCustomersFirstnames =
-                                      registeredCustomers
-                                          .map(
-                                            (customer) => customer.firstnames,
-                                          )
-                                          .toList();
-
-                                  const textSimilarity = TextSimilarity();
-
-                                  // test the new customer name with registered cutomer names
-                                  final namesResults =
-                                      textSimilarity.similarities(
-                                    input: customerName,
-                                    candidates: registerdCustomersNames,
-                                    distance: 2,
-                                  );
-
-                                  // test the new customer firstnames with registered cutomer firstnames
-                                  final firstnamesResults =
-                                      textSimilarity.similarities(
-                                    input: customerFirstnames,
-                                    candidates: registerdCustomersFirstnames,
-                                    distance: 2,
-                                  );
 
                                   List<Customer> similarCustomers = [];
 
-                                  // store customers with similar name ou firstnames
-
-                                  for (Customer customer in similarCustomers) {
-                                    if (namesResults.contains(customer.name)) {
-                                      similarCustomers.add(customer);
-                                    }
-                                    if (firstnamesResults
-                                        .contains(customer.firstnames)) {
-                                      similarCustomers.add(customer);
-                                    }
-                                  }
+                                  similarCustomers = registeredCustomers
+                                      .where(
+                                        (customer) =>
+                                            customer.firstnames.toLowerCase() ==
+                                                customerFirstnames
+                                                    .toLowerCase() ||
+                                            customer.firstnames.toLowerCase() ==
+                                                customerName.toLowerCase() ||
+                                            customer.name.toLowerCase() ==
+                                                customerFirstnames
+                                                    .toLowerCase() ||
+                                            customer.name.toLowerCase() ==
+                                                customerName.toLowerCase(),
+                                      )
+                                      .toList();
 
                                   // filter cutomers list
                                   similarCustomers =
@@ -568,7 +551,7 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                                       showValidatedButton: showValidatedButton,
                                     );
                                   } else {
-                                    FunctionsController.showAlertDialog(
+                                    await FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog:
                                           CustomerAddingConfirmationDialog(

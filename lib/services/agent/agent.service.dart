@@ -88,24 +88,43 @@ class AgentsService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> searchAgent(
-      {required String name}) async {
-    List<Map<String, dynamic>>? response;
+  static Future<List<Map<String, dynamic>>> searchAgent({
+    required String searchedAgentName,
+    required String searchedAgentFirstnames,
+    required String searchedAgentEmail,
+    required String searchedAgentPhoneNumber,
+    required String searchedAgentAddress,
+    required String searchedAgentRole,
+  }) async {
     final supabase = Supabase.instance.client;
 
     try {
-      // get all Agents which name contain "name"
-      response = await supabase
-              .from(AgentTable.tableName)
-              .select<List<Map<String, dynamic>>>()
-              .ilike(AgentTable.name, '%$name%')
+      var query = supabase
+          .from(AgentTable.tableName)
+          .select<List<Map<String, dynamic>>>();
 
-          //.or(filters)
-          // .ilike(AgentTable.firstnames, '%$name%');
-          ;
+      if (searchedAgentName != '') {
+        query.ilike(AgentTable.name, '%$searchedAgentName%');
+      }
+
+      if (searchedAgentFirstnames != '') {
+        query.ilike(AgentTable.firstnames, '%$searchedAgentFirstnames%');
+      }
+      if (searchedAgentEmail != '') {
+        query.ilike(AgentTable.email, '%$searchedAgentEmail%');
+      }
+      if (searchedAgentPhoneNumber != '') {
+        query.ilike(AgentTable.phoneNumber, '%$searchedAgentPhoneNumber%');
+      }
+      if (searchedAgentAddress != '') {
+        query.ilike(AgentTable.address, '%$searchedAgentAddress%');
+      }
+      if (searchedAgentRole != '') {
+        query.ilike(AgentTable.role, '%$searchedAgentRole%');
+      }
 
       // return the result data
-      return response;
+      return await query;
     } catch (error) {
       debugPrint(error.toString());
     }

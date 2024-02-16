@@ -9,6 +9,7 @@ import 'package:communitybank/views/widgets/definitions/products/products.widget
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/products/products_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/products/products_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,48 +50,51 @@ class _ProductsListState extends ConsumerState<ProductsList> {
     final searchedProductsList = ref.watch(searchedProductsListProvider);
     return SizedBox(
       height: 600.0,
-      // width: MediaQuery.of(context).size.width,
+      //  width: 500,
       child: Scrollbar(
         controller: scrollController,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 100.0),
           controller: scrollController,
           child: DataTable(
-            columns: const [
-              DataColumn(
+            columns: [
+              const DataColumn(
                 label: CBText(
                   text: 'Code',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              DataColumn(
+              const DataColumn(
                 label: CBText(
                   text: 'Photo',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               DataColumn(
-                label: CBText(
+                label: CBSearchInput(
+                  hintText: 'Nom',
+                  searchProvider: searchProvider('products'),
+                ),
+                /*   CBText(
                   text: 'Nom',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),*/
               ),
-              DataColumn(
+              const DataColumn(
                 label: CBText(
                   text: 'Prix d\'achat',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              DataColumn(label: SizedBox()),
-              DataColumn(label: SizedBox()),
+              const DataColumn(label: SizedBox()),
+              const DataColumn(label: SizedBox()),
             ],
             rows: isSearching
                 ? searchedProductsList.when(
@@ -103,6 +107,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                                 DataCell(
                                   CBText(
                                     text: '${data.indexOf(product) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
@@ -127,12 +132,16 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                                   ),
                                 ),
                                 DataCell(
-                                  CBText(text: product.name),
+                                  CBText(
+                                    text: product.name,
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   CBText(
-                                      text:
-                                          '${product.purchasePrice.ceil()} f'),
+                                    text: '${product.purchasePrice.ceil()} f',
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   onTap: () {
@@ -198,6 +207,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                                 DataCell(
                                   CBText(
                                     text: '${data.indexOf(product) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
@@ -222,12 +232,16 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                                   ),
                                 ),
                                 DataCell(
-                                  CBText(text: product.name),
+                                  CBText(
+                                    text: product.name,
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   CBText(
-                                      text:
-                                          '${product.purchasePrice.ceil()} f'),
+                                    text: '${product.purchasePrice.ceil()} f',
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   onTap: () {
@@ -240,9 +254,9 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                                           ProductUpdateForm(product: product),
                                     );
                                   },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
+                                  const SizedBox(
+                                    width: 20.0,
+                                    child: Icon(
                                       Icons.edit,
                                       color: Colors.green,
                                     ),

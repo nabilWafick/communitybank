@@ -5,6 +5,7 @@ import 'package:communitybank/models/data/locality/locality.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/localities/localities_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/localities/localities_update_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,27 +43,31 @@ class LocalitiesList extends ConsumerWidget {
         child: SingleChildScrollView(
           child: DataTable(
             showCheckboxColumn: true,
-            columns: const [
-              DataColumn(
+            columns: [
+              const DataColumn(
                 label: CBText(
                   text: 'Code',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               DataColumn(
-                label: CBText(
+                label: CBSearchInput(
+                  hintText: 'Nom',
+                  searchProvider: searchProvider('localities'),
+                ),
+                /*   CBText(
                   text: 'Nom',
                   textAlign: TextAlign.start,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w600,
-                ),
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),*/
               ),
-              DataColumn(
+              const DataColumn(
                 label: SizedBox(),
               ),
-              DataColumn(
+              const DataColumn(
                 label: SizedBox(),
               ),
             ],
@@ -77,10 +82,14 @@ class LocalitiesList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                     text: '${data.indexOf(locality) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
-                                  CBText(text: locality.name),
+                                  CBText(
+                                    text: locality.name,
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   onTap: () {
@@ -143,10 +152,14 @@ class LocalitiesList extends ConsumerWidget {
                                 DataCell(
                                   CBText(
                                     text: '${data.indexOf(locality) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
-                                  CBText(text: locality.name),
+                                  CBText(
+                                    text: locality.name,
+                                    fontSize: 12.0,
+                                  ),
                                 ),
                                 DataCell(
                                   onTap: () {

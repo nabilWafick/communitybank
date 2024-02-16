@@ -25,15 +25,87 @@ import 'package:communitybank/models/data/customers_category/customers_category.
 
 final searchedCustomersListProvider =
     StreamProvider<List<Customer>>((ref) async* {
-  String searchedCustomer = ref.watch(searchProvider('customers'));
-  ref.listen(searchProvider('customers'), (previous, next) {
+  // customer name
+  String searchedCustomerName = ref.watch(searchProvider('customers-name'));
+  ref.listen(searchProvider('customers-name'), (previous, next) {
     if (previous != next && next != '' && next.trim() != '') {
-      ref.read(isSearchingProvider('customers').notifier).state = true;
+      ref.read(isSearchingProvider('customers-name').notifier).state = true;
     } else {
-      ref.read(isSearchingProvider('customers').notifier).state = false;
+      ref.read(isSearchingProvider('customers-name').notifier).state = false;
     }
   });
-  yield* CustomersController.searchCustomer(name: searchedCustomer).asStream();
+
+  // customer firstnames
+  String searchedCustomerFirstnames =
+      ref.watch(searchProvider('customers-firstnames'));
+  ref.listen(searchProvider('customers-firstnames'), (previous, next) {
+    if (previous != next && next != '' && next.trim() != '') {
+      ref.read(isSearchingProvider('customers-firstnames').notifier).state =
+          true;
+    } else {
+      ref.read(isSearchingProvider('customers-firstnames').notifier).state =
+          false;
+    }
+  });
+
+  // customer phoneNumber
+  String searchedCustomerPhoneNumber =
+      ref.watch(searchProvider('customers-phoneNumber'));
+  ref.listen(searchProvider('customers-phoneNumber'), (previous, next) {
+    if (previous != next && next != '' && next.trim() != '') {
+      ref.read(isSearchingProvider('customers-phoneNumber').notifier).state =
+          true;
+    } else {
+      ref.read(isSearchingProvider('customers-phoneNumber').notifier).state =
+          false;
+    }
+  });
+
+  // customer address
+  String searchedCustomerAddress =
+      ref.watch(searchProvider('customers-address'));
+  ref.listen(searchProvider('customers-address'), (previous, next) {
+    if (previous != next && next != '' && next.trim() != '') {
+      ref.read(isSearchingProvider('customers-address').notifier).state = true;
+    } else {
+      ref.read(isSearchingProvider('customers-address').notifier).state = false;
+    }
+  });
+
+  // customer profession
+  String searchedCustomerProfession =
+      ref.watch(searchProvider('customers-profession'));
+  ref.listen(searchProvider('customers-profession'), (previous, next) {
+    if (previous != next && next != '' && next.trim() != '') {
+      ref.read(isSearchingProvider('customers-profession').notifier).state =
+          true;
+    } else {
+      ref.read(isSearchingProvider('customers-profession').notifier).state =
+          false;
+    }
+  });
+
+  // customer nicNumber
+  String searchedCustomerNicNumber =
+      ref.watch(searchProvider('customers-nicNumber'));
+  ref.listen(searchProvider('customers-nicNumber'), (previous, next) {
+    if (previous != next && next != '' && next.trim() != '') {
+      ref.read(isSearchingProvider('customers-nicNumber').notifier).state =
+          true;
+    } else {
+      ref.read(isSearchingProvider('customers-nicNumber').notifier).state =
+          false;
+    }
+  });
+
+  yield* CustomersController.searchCustomer(
+    searchedCustomerName: searchedCustomerName,
+    searchedCustomerFirstnames: searchedCustomerFirstnames,
+    searchedCustomerPhoneNumber: searchedCustomerPhoneNumber,
+    searchedCustomerAddress: searchedCustomerAddress,
+    searchedCustomerProfession: searchedCustomerProfession,
+    searchedCustomerNicNumber: searchedCustomerNicNumber,
+  ).asStream();
 });
 
 final customersListStreamProvider =
@@ -48,10 +120,11 @@ final customersListStreamProvider =
   final selectedCustomerLocality =
       ref.watch(listLocalityDropdownProvider('customer-list-sort-locality'));
   yield* CustomersController.getAll(
-    selectedCustomerCategoryId: selectedCustomerCategory.id,
-    selectedCustomerEconomicalActivityId: selectedCustomerEconomicalActivity.id,
-    selectedCustomerLocalityId: selectedCustomerLocality.id,
-    selectedCustomerPersonalStatusId: selectedCustomerPersonalStatus.id,
+    selectedCustomerCategoryId: selectedCustomerCategory.id!,
+    selectedCustomerEconomicalActivityId:
+        selectedCustomerEconomicalActivity.id!,
+    selectedCustomerLocalityId: selectedCustomerLocality.id!,
+    selectedCustomerPersonalStatusId: selectedCustomerPersonalStatus.id!,
   );
 });
 
@@ -69,7 +142,12 @@ class _CustomersListState extends ConsumerState<CustomersList> {
   Widget build(
     BuildContext context,
   ) {
-    final isSearching = ref.watch(isSearchingProvider('customers'));
+    final isSearching = ref.watch(isSearchingProvider('customers-name')) ||
+        ref.watch(isSearchingProvider('customers-firstnames')) ||
+        ref.watch(isSearchingProvider('customers-phoneNumber')) ||
+        ref.watch(isSearchingProvider('customers-address')) ||
+        ref.watch(isSearchingProvider('customers-profession')) ||
+        ref.watch(isSearchingProvider('customers-nicNumber'));
     final customersListStream = ref.watch(customersListStreamProvider);
     final searchedCustomers = ref.watch(searchedCustomersListProvider);
 
@@ -86,107 +164,141 @@ class _CustomersListState extends ConsumerState<CustomersList> {
               controller: verticalScrollController,
               child: DataTable(
                 showCheckboxColumn: true,
-                columns: const [
-                  DataColumn(
+                columns: [
+                  const DataColumn(
                     label: CBText(
                       text: 'Code',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Photo',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
-                    label: CBText(
-                      text: 'Nom & Prénoms',
+                      label: CBSearchInput(
+                    hintText: 'Nom',
+                    searchProvider: searchProvider('customers-name'),
+                  )
+                      /*  CBText(
+                      text: 'Nom',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ),
+                 */
+                      ),
                   DataColumn(
-                    label: CBText(
+                      label: CBSearchInput(
+                    hintText: 'Prénoms',
+                    searchProvider: searchProvider('customers-firstnames'),
+                  )
+                      /* CBText(
+                      text: 'Prénoms',
+                      textAlign: TextAlign.start,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                    ),*/
+                      ),
+                  DataColumn(
+                      label: CBSearchInput(
+                    hintText: 'Téléphone',
+                    searchProvider: searchProvider('customers-phoneNumber'),
+                  )
+                      /* CBText(
                       text: 'Téléphone',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                    ),*/
+                      ),
                   DataColumn(
-                    label: CBText(
+                      label: CBSearchInput(
+                    hintText: 'Adresse',
+                    searchProvider: searchProvider('customers-address'),
+                  )
+                      /* CBText(
                       text: 'Adresse',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                    ),*/
+                      ),
                   DataColumn(
-                    label: CBText(
+                      label: CBSearchInput(
+                    hintText: 'Profession',
+                    searchProvider: searchProvider('customers-profession'),
+                  )
+                      /*CBText(
                       text: 'Profession',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ),
+                    */
+                      ),
                   DataColumn(
-                    label: CBText(
+                      label: CBSearchInput(
+                    hintText: 'Numero CNI',
+                    searchProvider: searchProvider('customers-nicNumber'),
+                  )
+                      /* label: CBText(
                       text: 'Numéro CNI',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  DataColumn(
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
+                    ),*/
+                      ),
+                  const DataColumn(
                     label: CBText(
                       text: 'Catégorie',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Activité économique',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Status Personnel',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Localité',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: CBText(
                       text: 'Signature',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: SizedBox(),
                   ),
-                  DataColumn(
+                  const DataColumn(
                     label: SizedBox(),
                   ),
                 ],
@@ -199,7 +311,9 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                                 cells: [
                                   DataCell(
                                     CBText(
-                                        text: '${data.indexOf(customer) + 1}'),
+                                      text: '${data.indexOf(customer) + 1}',
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
                                     onTap: () {
@@ -225,24 +339,39 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                                   ),
                                   DataCell(
                                     CBText(
-                                        text:
-                                            '${customer.name} ${customer.firstnames}',),
+                                      text: customer.name,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
-                                    CBText(text: customer.phoneNumber),
+                                    CBText(
+                                      text: customer.firstnames,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
-                                    CBText(text: customer.address),
+                                    CBText(
+                                      text: customer.phoneNumber,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                      text: customer.address,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
                                     CBText(
                                       text: customer.profession ?? '',
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   DataCell(
                                     CBText(
                                       text:
                                           customer.nicNumber?.toString() ?? '',
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   DataCell(Consumer(
@@ -273,6 +402,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: customerCategory.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -313,6 +443,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: economicalActivity.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -351,6 +482,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: personalStatus.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -385,6 +517,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: customerLocality.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -470,7 +603,9 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                                 cells: [
                                   DataCell(
                                     CBText(
-                                        text: '${data.indexOf(customer) + 1}'),
+                                      text: '${data.indexOf(customer) + 1}',
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
                                     onTap: () {
@@ -496,24 +631,39 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                                   ),
                                   DataCell(
                                     CBText(
-                                        text:
-                                            '${customer.firstnames} ${customer.name}'),
+                                      text: customer.name,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
-                                    CBText(text: customer.phoneNumber),
+                                    CBText(
+                                      text: customer.firstnames,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
-                                    CBText(text: customer.address),
+                                    CBText(
+                                      text: customer.phoneNumber,
+                                      fontSize: 12.0,
+                                    ),
+                                  ),
+                                  DataCell(
+                                    CBText(
+                                      text: customer.address,
+                                      fontSize: 12.0,
+                                    ),
                                   ),
                                   DataCell(
                                     CBText(
                                       text: customer.profession ?? '',
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   DataCell(
                                     CBText(
                                       text:
                                           customer.nicNumber?.toString() ?? '',
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   DataCell(Consumer(
@@ -544,6 +694,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: customerCategory.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -584,6 +735,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: economicalActivity.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -622,6 +774,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: personalStatus.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -656,6 +809,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
 
                                           return CBText(
                                             text: customerLocality.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>

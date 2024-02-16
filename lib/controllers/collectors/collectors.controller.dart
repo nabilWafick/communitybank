@@ -29,9 +29,18 @@ class CollectorsController {
     //.asBroadcastStream();
   }
 
-  static Future<List<Collector>> searchCollector({required String name}) async {
-    final searchedCollectors =
-        await CollectorsService.searchCollector(name: name);
+  static Future<List<Collector>> searchCollector({
+    required String searchedCollectorName,
+    required String searchedCollectorAddress,
+    required String searchedCollectorFirstnames,
+    required String searchedCollectorPhoneNumber,
+  }) async {
+    final searchedCollectors = await CollectorsService.searchCollector(
+      searchedCollectorName: searchedCollectorName,
+      searchedCollectorAddress: searchedCollectorAddress,
+      searchedCollectorFirstnames: searchedCollectorFirstnames,
+      searchedCollectorPhoneNumber: searchedCollectorPhoneNumber,
+    );
 
     return searchedCollectors
         .map(

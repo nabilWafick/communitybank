@@ -48,15 +48,12 @@ class CustomersService {
     return null;
   }
 
-  static Stream<List<Map<String, dynamic>>> getAll(
-      /*{
-    required int? selectedCustomerCategoryId,
-    required int? selectedCustomerEconomicalActivityId,
-    required int? selectedCustomerLocalityId,
-    required int? selectedCustomerPersonalStatusId,
-  }
-  */
-      ) async* {
+  static Stream<List<Map<String, dynamic>>> getAll({
+    required int selectedCustomerCategoryId,
+    required int selectedCustomerEconomicalActivityId,
+    required int selectedCustomerLocalityId,
+    required int selectedCustomerPersonalStatusId,
+  }) async* {
     final supabase = Supabase.instance.client;
 
     try {
@@ -70,24 +67,24 @@ class CustomersService {
       );
 
       // filter le list and return only Customers which purchase prices are equal to selectedCustomerCategoryId
-      /*   if (selectedCustomerCategoryId != 0) {
-        query.eq(CustomerTable.category, selectedCustomerCategoryId);
+      if (selectedCustomerCategoryId != 0) {
+        query.eq(CustomerTable.categoryId, selectedCustomerCategoryId);
       }
 
       if (selectedCustomerEconomicalActivityId != 0) {
-        query.eq(CustomerTable.economicalActivity,
+        query.eq(CustomerTable.economicalActivityId,
             selectedCustomerEconomicalActivityId);
       }
 
       if (selectedCustomerPersonalStatusId != 0) {
         query.eq(
-            CustomerTable.personalStatus, selectedCustomerPersonalStatusId);
+            CustomerTable.personalStatusId, selectedCustomerPersonalStatusId);
       }
 
       if (selectedCustomerLocalityId != 0) {
-        query.eq(CustomerTable.locality, selectedCustomerLocalityId);
+        query.eq(CustomerTable.localityId, selectedCustomerLocalityId);
       }
-*/
+
       // return the result as stream
       yield* query.asBroadcastStream();
     } catch (error) {
@@ -96,20 +93,44 @@ class CustomersService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> searchCustomer(
-      {required String name}) async {
-    List<Map<String, dynamic>>? response;
+  static Future<List<Map<String, dynamic>>> searchCustomer({
+    required String searchedCustomerName,
+    required String searchedCustomerFirstnames,
+    required String searchedCustomerPhoneNumber,
+    required String searchedCustomerAddress,
+    required String searchedCustomerProfession,
+    required String searchedCustomerNicNumber,
+  }) async {
     final supabase = Supabase.instance.client;
 
     try {
-      // get all Customers which name contain "name"
-      response = await supabase
+      var query = supabase
           .from(CustomerTable.tableName)
-          .select<List<Map<String, dynamic>>>()
-          .ilike(CustomerTable.name, '%$name%');
+          .select<List<Map<String, dynamic>>>();
+
+      if (searchedCustomerName != '') {
+        query.ilike(CustomerTable.name, '%$searchedCustomerName%');
+      }
+
+      if (searchedCustomerFirstnames != '') {
+        query.ilike(CustomerTable.firstnames, '%$searchedCustomerFirstnames%');
+      }
+      if (searchedCustomerPhoneNumber != '') {
+        query.ilike(
+            CustomerTable.phoneNumber, '%$searchedCustomerPhoneNumber%');
+      }
+      if (searchedCustomerAddress != '') {
+        query.ilike(CustomerTable.address, '%$searchedCustomerAddress%');
+      }
+      if (searchedCustomerProfession != '') {
+        query.ilike(CustomerTable.profession, '%$searchedCustomerProfession%');
+      }
+      if (searchedCustomerNicNumber != '') {
+        query.ilike(CustomerTable.nicNumber, '%$searchedCustomerNicNumber%');
+      }
 
       // return the result data
-      return response;
+      return await query;
     } catch (error) {
       debugPrint(error.toString());
     }

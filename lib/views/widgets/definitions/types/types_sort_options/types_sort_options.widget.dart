@@ -2,7 +2,6 @@ import 'package:communitybank/controllers/forms/validators/type/type.validator.d
 import 'package:communitybank/controllers/types/types.controller.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/types/types_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -26,7 +25,7 @@ class TypesSortOptions extends ConsumerWidget {
 
     return Container(
       margin: const EdgeInsets.only(
-        bottom: 40.0,
+        bottom: 20.0,
       ),
       width: double.maxFinite,
       child: Column(
@@ -59,14 +58,12 @@ class TypesSortOptions extends ConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CBSearchInput(
-                hintText: 'Rechercher un type',
-                searchProvider: searchProvider('types'),
-              ),
+              const SizedBox(),
               Row(
                 children: [
                   const CBText(
                     text: 'Trier par',
+                    fontSize: 12.0,
                   ),
                   const SizedBox(
                     width: 15.0,

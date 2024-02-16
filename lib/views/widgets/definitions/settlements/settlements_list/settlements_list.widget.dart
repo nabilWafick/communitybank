@@ -81,48 +81,48 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                     label: CBText(
                       text: 'Code',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Carte',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Nombre',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Date de règlement',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Date de saisie',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   DataColumn(
                     label: CBText(
                       text: 'Agent',
                       textAlign: TextAlign.start,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -136,6 +136,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                               DataCell(
                                 CBText(
                                   text: '${data.indexOf(settlement) + 1}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
@@ -148,23 +149,27 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                                           .label,
                                       error: ((error, stackTrace) => ''),
                                       loading: () => ''),
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text: settlement.number.toString(),
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text:
                                       '${format.format(settlement.collectedAt)}  ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text:
                                       '${format.format(settlement.createdAt)}  ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
@@ -179,6 +184,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                                     error: (error, stackTrace) => '',
                                     loading: () => '',
                                   ),
+                                  fontSize: 12.0,
                                 ),
                               ),
                             ],

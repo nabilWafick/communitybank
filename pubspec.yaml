@@ -41,6 +41,7 @@ dependencies:
   text_similarity: ^1.0.1
   pdf: ^3.10.7
   printing: ^5.11.1
+  data_table_2: ^2.5.10
 
 dev_dependencies:
   flutter_test:

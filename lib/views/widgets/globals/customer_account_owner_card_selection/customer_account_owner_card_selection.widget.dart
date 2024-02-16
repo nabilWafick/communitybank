@@ -66,6 +66,13 @@ class _CustomerAccountOwnerCardSelectionState
                       for (CustomerCard customerCard in data) {
                         if (customerCard.id == widget.customerCardId) {
                           accountOwnerCard = customerCard;
+
+                          // show the widget if the customer card is not satisfied
+                          if (customerCard.satisfiedAt != null ||
+                              customerCard.repaidAt != null) {
+                            showWidget.value = false;
+                          }
+
                           break;
                         }
                       }

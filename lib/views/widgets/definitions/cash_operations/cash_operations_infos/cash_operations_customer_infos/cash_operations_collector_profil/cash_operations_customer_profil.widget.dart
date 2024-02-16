@@ -64,11 +64,11 @@ class CashOperationsCollectorProfil extends ConsumerWidget {
                             text:
                                 '${realTimeCollectorData.firstnames} ${realTimeCollectorData.name}',
                             fontWeight: FontWeight.w500,
-                            fontSize: 12.0,
+                            fontSize: 11.0,
                           ),
                           CBText(
                             text: realTimeCollectorData.phoneNumber,
-                            fontSize: 11.0,
+                            fontSize: 10.0,
                           ),
                         ],
                       ),
@@ -107,11 +107,11 @@ class CashOperationsCollectorProfil extends ConsumerWidget {
                         CBText(
                           text: '',
                           fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
+                          fontSize: 11.0,
                         ),
                         CBText(
                           text: '',
-                          fontSize: 11.0,
+                          fontSize: 10.0,
                         ),
                       ],
                     ),
@@ -149,11 +149,11 @@ class CashOperationsCollectorProfil extends ConsumerWidget {
                         CBText(
                           text: '',
                           fontWeight: FontWeight.w500,
-                          fontSize: 12.0,
+                          fontSize: 11.0,
                         ),
                         CBText(
                           text: '',
-                          fontSize: 11.0,
+                          fontSize: 10.0,
                         ),
                       ],
                     ),
@@ -194,11 +194,11 @@ class CashOperationsCollectorProfil extends ConsumerWidget {
                   CBText(
                     text: '',
                     fontWeight: FontWeight.w500,
-                    fontSize: 12.0,
+                    fontSize: 11.0,
                   ),
                   CBText(
                     text: '',
-                    fontSize: 11.0,
+                    fontSize: 10.0,
                   ),
                 ],
               ),

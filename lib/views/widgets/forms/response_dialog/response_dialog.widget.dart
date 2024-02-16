@@ -15,11 +15,14 @@ class ResponseDialog extends StatefulHookConsumerWidget {
 class _ResponseDialogState extends ConsumerState<ResponseDialog> {
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-    });
+    final responseDialogData = ref.watch(responseDialogProvider);
+    if (responseDialogData.serviceResponse == ServiceResponse.success) {
+      Future.delayed(const Duration(milliseconds: 1000), () {
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      });
+    }
 
     super.initState();
   }

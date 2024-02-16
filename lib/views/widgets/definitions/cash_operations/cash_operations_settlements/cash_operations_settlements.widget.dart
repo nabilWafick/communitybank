@@ -77,56 +77,56 @@ class _CashOperationsSettlementsState
                       label: CBText(
                         text: 'Code',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Carte',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Mise',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Montant',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Date Collecte',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Date Saisie',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
                       label: CBText(
                         text: 'Agent',
                         textAlign: TextAlign.start,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     DataColumn(
@@ -149,6 +149,7 @@ class _CashOperationsSettlementsState
                               DataCell(
                                 CBText(
                                   text: '${data.indexOf(settlement) + 1}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(Consumer(
@@ -166,6 +167,7 @@ class _CashOperationsSettlementsState
                                       );
                                       return CBText(
                                         text: realTimeCustomerCardData.label,
+                                        fontSize: 12.0,
                                       );
                                     },
                                     error: (error, stackTrace) => const CBText(
@@ -181,6 +183,7 @@ class _CashOperationsSettlementsState
                                 Center(
                                   child: CBText(
                                     text: settlement.number.toString(),
+                                    fontSize: 12.0,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -190,6 +193,7 @@ class _CashOperationsSettlementsState
                                   child: CBText(
                                     text:
                                         '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                               ),
@@ -197,12 +201,14 @@ class _CashOperationsSettlementsState
                                 CBText(
                                   text:
                                       '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
                                 CBText(
                                   text:
                                       '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                                  fontSize: 12.0,
                                 ),
                               ),
                               DataCell(
@@ -220,7 +226,8 @@ class _CashOperationsSettlementsState
                                         );
                                         return CBText(
                                           text:
-                                              '${realTimeAgentData.firstnames} ${realTimeAgentData.name}',
+                                              ' ${realTimeAgentData.name} ${realTimeAgentData.firstnames}',
+                                          fontSize: 12.0,
                                         );
                                       },
                                       error: (error, stackTrace) =>

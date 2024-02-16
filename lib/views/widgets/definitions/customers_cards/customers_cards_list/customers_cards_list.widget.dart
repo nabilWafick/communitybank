@@ -2,6 +2,7 @@ import 'package:communitybank/controllers/customer_card/customer_card.controller
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
+import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -75,45 +76,49 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
           child: SingleChildScrollView(
             child: DataTable(
               showCheckboxColumn: true,
-              columns: const [
-                DataColumn(
+              columns: [
+                const DataColumn(
                   label: CBText(
                     text: 'Code',
                     textAlign: TextAlign.start,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 DataColumn(
-                  label: CBText(
+                  label: CBSearchInput(
+                    hintText: 'Libellé',
+                    searchProvider: searchProvider('customers-cards'),
+                  ),
+                  /*CBText(
                     text: 'Libellé',
                     textAlign: TextAlign.start,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),*/
                 ),
-                DataColumn(
+                const DataColumn(
                   label: CBText(
                     text: 'Type',
                     textAlign: TextAlign.start,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                DataColumn(
+                const DataColumn(
                   label: CBText(
                     text: 'Remboursé',
                     textAlign: TextAlign.start,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                DataColumn(
+                const DataColumn(
                   label: CBText(
                     text: 'Satisfait',
                     textAlign: TextAlign.start,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 /*    DataColumn(
@@ -133,11 +138,13 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                 DataCell(
                                   CBText(
                                     text: '${data.indexOf(customerCard) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.label,
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
@@ -156,6 +163,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
 
                                           return CBText(
                                             text: customerCardType.name,
+                                            fontSize: 12.0,
                                           );
                                         },
                                         error: (error, stackTrace) =>
@@ -174,6 +182,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     text: customerCard.repaidAt != null
                                         ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt!.hour}:${customerCard.repaidAt!.minute}'
                                         : '',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
@@ -181,6 +190,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     text: customerCard.satisfiedAt != null
                                         ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt!.hour}:${customerCard.satisfiedAt!.minute}'
                                         : '',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 /*   DataCell(
@@ -245,11 +255,13 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                 DataCell(
                                   CBText(
                                     text: '${data.indexOf(customerCard) + 1}',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
                                   CBText(
                                     text: customerCard.label,
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(Consumer(
@@ -267,6 +279,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
 
                                         return CBText(
                                           text: customerCardType.name,
+                                          fontSize: 12.0,
                                         );
                                       },
                                       error: (error, stackTrace) =>
@@ -275,6 +288,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                       ),
                                       loading: () => const CBText(
                                         text: '',
+                                        fontSize: 12.0,
                                       ),
                                     );
                                   },
@@ -284,6 +298,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     text: customerCard.repaidAt != null
                                         ? '${format.format(customerCard.repaidAt!)}  ${customerCard.repaidAt!.hour}:${customerCard.repaidAt!.minute}'
                                         : '',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 DataCell(
@@ -291,6 +306,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                                     text: customerCard.satisfiedAt != null
                                         ? '${format.format(customerCard.satisfiedAt!)}  ${customerCard.satisfiedAt!.hour}:${customerCard.satisfiedAt!.minute}'
                                         : '',
+                                    fontSize: 12.0,
                                   ),
                                 ),
                                 /*   DataCell(

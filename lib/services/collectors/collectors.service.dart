@@ -74,24 +74,37 @@ class CollectorsService {
     }
   }
 
-  static Future<List<Map<String, dynamic>>> searchCollector(
-      {required String name}) async {
-    List<Map<String, dynamic>>? response;
+  static Future<List<Map<String, dynamic>>> searchCollector({
+    required String searchedCollectorName,
+    required String searchedCollectorFirstnames,
+    required String searchedCollectorPhoneNumber,
+    required String searchedCollectorAddress,
+  }) async {
     final supabase = Supabase.instance.client;
 
     try {
-      // get all collectors which name contain "name"
-      response = await supabase
-              .from(CollectorTable.tableName)
-              .select<List<Map<String, dynamic>>>()
-              .ilike(CollectorTable.name, '%$name%')
+      var query = supabase
+          .from(CollectorTable.tableName)
+          .select<List<Map<String, dynamic>>>();
 
-          //.or(filters)
-          // .ilike(CollectorTable.firstnames, '%$name%');
-          ;
+      if (searchedCollectorName != '') {
+        query.ilike(CollectorTable.name, '%$searchedCollectorName%');
+      }
+
+      if (searchedCollectorFirstnames != '') {
+        query.ilike(
+            CollectorTable.firstnames, '%$searchedCollectorFirstnames%');
+      }
+      if (searchedCollectorPhoneNumber != '') {
+        query.ilike(
+            CollectorTable.phoneNumber, '%$searchedCollectorPhoneNumber%');
+      }
+      if (searchedCollectorAddress != '') {
+        query.ilike(CollectorTable.address, '%$searchedCollectorAddress%');
+      }
 
       // return the result data
-      return response;
+      return await query;
     } catch (error) {
       debugPrint(error.toString());
     }

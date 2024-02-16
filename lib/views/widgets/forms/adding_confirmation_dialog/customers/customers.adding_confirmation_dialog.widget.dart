@@ -90,45 +90,49 @@ class _CustomerAddingConfirmationDialogState
                           const Flexible(
                             child: CBText(
                               text: 'Ce client est peût être dejà enregistré \n'
-                                  'Vérifiez les resseemblences et confirmez',
-                              fontSize: 15.0,
+                                  'Vérifiez les ressemblences et confirmez',
+                              fontSize: 12.0,
                               fontWeight: FontWeight.w500,
                               textOverflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                      CBText(
-                          text:
-                              'User number: ${widget.similarCustomers.length}'),
-                      SizedBox(
-                        height: 300,
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 20.0,
+                        ),
+                        height: 200,
                         width: formCardWidth * .8,
                         child: Scrollbar(
+                          controller: scrollController,
+                          child: SingleChildScrollView(
                             controller: scrollController,
-                            child: SingleChildScrollView(
-                              controller: scrollController,
-                              child: Column(
-                                children: widget.similarCustomers
-                                    .map(
-                                      (similarCustomer) => ListTile(
-                                        title: CBText(
-                                          text:
-                                              '${similarCustomer.name} ${similarCustomer.firstnames}',
-                                        ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widget.similarCustomers
+                                  .map(
+                                    (similarCustomer) => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 5.0,
                                       ),
-                                    )
-                                    .toList(),
-                              ),
-                            )),
+                                      child: CBText(
+                                        text:
+                                            '${similarCustomer.name} ${similarCustomer.firstnames}',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                          ),
+                        ),
                       )
                     ],
                   ),
                 )
               ],
-            ),
-            const SizedBox(
-              height: 15.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -139,6 +143,7 @@ class _CustomerAddingConfirmationDialogState
                     text: 'Annuler',
                     backgroundColor: CBColors.sidebarTextColor,
                     onPressed: () {
+                      widget.showValidatedButton.value = true;
                       Navigator.of(context).pop();
                     },
                   ),
