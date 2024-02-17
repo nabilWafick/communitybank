@@ -38,6 +38,9 @@ class CBCustomerAccountOwnerCardLabelTextFormField extends HookConsumerWidget {
       initialValue: initialValue,
       keyboardType: textInputType,
       cursorColor: CBColors.primaryColor,
+      style: const TextStyle(
+        fontSize: 12.0,
+      ),
       decoration: InputDecoration(
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16.5, vertical: 16.5),

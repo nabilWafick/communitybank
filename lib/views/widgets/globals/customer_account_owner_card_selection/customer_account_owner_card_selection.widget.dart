@@ -92,12 +92,12 @@ class _CustomerAccountOwnerCardSelectionState
                     }
 
                     return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Row(
                           children: [
                             SizedBox(
-                              width: widget.formCardWidth / 2.7,
+                              width: widget.formCardWidth / 3,
                               child:
                                   CBCustomerAccountOwnerCardLabelTextFormField(
                                 inputIndex: widget.index,
@@ -112,7 +112,7 @@ class _CustomerAccountOwnerCardSelectionState
                               ),
                             ),
                             SizedBox(
-                              width: widget.formCardWidth / 5.5,
+                              width: widget.formCardWidth / 6,
                               child:
                                   CBCustomerAccountOwnerCardTypeNumberTextFormField(
                                 inputIndex: widget.index,
@@ -160,7 +160,7 @@ class _CustomerAccountOwnerCardSelectionState
                                         )
                                         .toList();
                                     return CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                      width: widget.formCardWidth / 3.55,
+                                      width: widget.formCardWidth / 4,
                                       menuHeigth: 500.0,
                                       label: 'Type',
                                       providerName: widget
@@ -171,7 +171,7 @@ class _CustomerAccountOwnerCardSelectionState
                                   },
                                   error: (error, stackTrace) =>
                                       CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                    width: widget.formCardWidth / 2.5,
+                                    width: widget.formCardWidth / 4,
                                     menuHeigth: 500.0,
                                     label: 'Type',
                                     providerName: widget
@@ -181,7 +181,7 @@ class _CustomerAccountOwnerCardSelectionState
                                   ),
                                   loading: () =>
                                       CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                    width: widget.formCardWidth / 2.5,
+                                    width: widget.formCardWidth / 4,
                                     menuHeigth: 500.0,
                                     label: 'Type',
                                     providerName: widget

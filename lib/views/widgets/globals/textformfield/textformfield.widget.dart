@@ -47,7 +47,7 @@ class CBTextFormField extends HookConsumerWidget {
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 14.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w500,
               ),
               decoration: InputDecoration(
@@ -90,7 +90,7 @@ class CBTextFormField extends HookConsumerWidget {
               cursorColor: CBColors.primaryColor,
               style: const TextStyle(
                 fontFamily: 'Poppins',
-                fontSize: 14.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(

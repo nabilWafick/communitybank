@@ -29,7 +29,7 @@ class _CustomerAccountUpdateFormState
     final showValidatedButton = useState<bool>(true);
     final customersListStream = ref.watch(customersListStreamProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
-    const formCardWidth = 650.0;
+    const formCardWidth = 600.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -91,7 +91,20 @@ class _CustomerAccountUpdateFormState
                             label: 'Client',
                             providerName: 'customer-account-update-customer',
                             dropdownMenuEntriesLabels: customersListStream.when(
-                              data: (data) => data,
+                              data: (data) {
+                                final accountOwner = data.firstWhere(
+                                  (customer) =>
+                                      customer.id! ==
+                                      widget.customerAccount.customerId,
+                                );
+                                data = [
+                                  accountOwner,
+                                  ...data,
+                                ];
+                                data = data.toSet().toList();
+
+                                return data;
+                              },
                               error: (error, stackTrace) => [],
                               loading: () => [],
                             ),
@@ -117,7 +130,20 @@ class _CustomerAccountUpdateFormState
                             providerName: 'customer-account-update-collector',
                             dropdownMenuEntriesLabels:
                                 collectorsListStream.when(
-                              data: (data) => data,
+                              data: (data) {
+                                final accountCollector = data.firstWhere(
+                                  (collector) =>
+                                      collector.id! ==
+                                      widget.customerAccount.collectorId,
+                                );
+                                data = [
+                                  accountCollector,
+                                  ...data,
+                                ];
+                                data = data.toSet().toList();
+
+                                return data;
+                              },
                               error: (error, stackTrace) => [],
                               loading: () => [],
                             ),

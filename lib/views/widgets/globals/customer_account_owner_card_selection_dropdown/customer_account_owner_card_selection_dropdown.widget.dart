@@ -75,7 +75,11 @@ class _CBCustomerAccountOwnerCardTypeSelectionDropdownState
         customerAccountOwnerCardTypeDropdownProvider(widget.providerName));
 
     return DropdownMenu(
+      textStyle: const TextStyle(
+        fontSize: 12.0,
+      ),
       inputDecorationTheme: const InputDecorationTheme(
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.5, vertical: 16.5),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(0.0),

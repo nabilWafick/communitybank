@@ -99,17 +99,19 @@ class CBThemeData {
       ),
     ),
     inputDecorationTheme: InputDecorationTheme(
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 20.0,
+      ),
       labelStyle: const TextStyle(
         color: CBColors.secondaryColor,
-        fontSize: 12.0,
+        fontSize: 10.0,
         fontWeight: FontWeight.w500,
         fontFamily: 'Poppins',
       ),
       hintStyle: const TextStyle(
         color: CBColors.secondaryColor,
-        fontSize: 12.0,
+        fontSize: 10.0,
         fontFamily: 'Poppins',
       ),
       enabledBorder: OutlineInputBorder(
