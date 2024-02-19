@@ -30,7 +30,10 @@ Future<void> main() async {
   );
 
   await DesktopWindow.setMinWindowSize(
-    const Size(1280.0, 700.0),
+    const Size(
+      1280.0,
+      700.0,
+    ),
   );
   runApp(
     const ProviderScope(

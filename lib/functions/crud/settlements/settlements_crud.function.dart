@@ -95,7 +95,9 @@ class SettlementCRUDFunctions {
             // check if the rest of amount of that collection is enough for
             // doing the settlement
             if (collectorCollection.rest -
-                    settlementNumber * settlementType!.stake <
+                    settlementNumber *
+                        settlementCustomerCard.typeNumber *
+                        settlementType!.stake <
                 0) {
               ref.read(responseDialogProvider.notifier).state =
                   ResponseDialogModel(
@@ -116,7 +118,9 @@ class SettlementCRUDFunctions {
               // substract settlement amount from collectorCollection rest
               final newCollectorCollection = collectorCollection.copyWith(
                 rest: collectorCollection.rest -
-                    settlementNumber * settlementType.stake,
+                    settlementNumber *
+                        settlementCustomerCard.typeNumber *
+                        settlementType.stake,
                 updatedAt: DateTime.now(),
               );
 
@@ -282,8 +286,12 @@ class SettlementCRUDFunctions {
                 // check if the rest of amount of that collection  (on which we  add  the previous settlement amount ) is enough for
                 // updating the settlement
                 if ((collectorCollection.rest +
-                            settlement.number * settlementType!.stake) -
-                        settlementNumber * settlementType.stake <
+                            settlement.number *
+                                settlementCustomerCard.typeNumber *
+                                settlementType!.stake) -
+                        settlementNumber *
+                            settlementCustomerCard.typeNumber *
+                            settlementType.stake <
                     0) {
                   ref.read(responseDialogProvider.notifier).state =
                       ResponseDialogModel(
@@ -304,8 +312,12 @@ class SettlementCRUDFunctions {
                   // add the previous settlement amount and substract the new settlement amount from collectorCollection rest
                   final newCollectorCollection = collectorCollection.copyWith(
                     rest: (collectorCollection.rest +
-                            settlement.number * settlementType.stake) -
-                        settlementNumber * settlementType.stake,
+                            settlement.number *
+                                settlementCustomerCard.typeNumber *
+                                settlementType.stake) -
+                        settlementNumber *
+                            settlementCustomerCard.typeNumber *
+                            settlementType.stake,
                     updatedAt: DateTime.now(),
                   );
 
@@ -382,7 +394,9 @@ class SettlementCRUDFunctions {
                   // check if the rest of amount of the new collection  is enough for adding the settlement
                   // collectorCollection is the the collection at the new date
                   if (collectorCollection.rest -
-                          settlementNumber * settlementType!.stake <
+                          settlementNumber *
+                              settlementCustomerCard.typeNumber *
+                              settlementType!.stake <
                       0) {
                     ref.read(responseDialogProvider.notifier).state =
                         ResponseDialogModel(
@@ -404,7 +418,9 @@ class SettlementCRUDFunctions {
                     final previousCollectorCollection =
                         previousCollection.copyWith(
                       rest: previousCollection.rest +
-                          settlement.number * settlementType.stake,
+                          settlement.number *
+                              settlementCustomerCard.typeNumber *
+                              settlementType.stake,
                       updatedAt: DateTime.now(),
                     );
 
@@ -439,7 +455,9 @@ class SettlementCRUDFunctions {
                       final newCollectorCollection =
                           collectorCollection.copyWith(
                         rest: collectorCollection.rest +
-                            -settlementNumber * settlementType.stake,
+                            -settlementNumber *
+                                settlementCustomerCard.typeNumber *
+                                settlementType.stake,
                         updatedAt: DateTime.now(),
                       );
 
@@ -535,6 +553,8 @@ class SettlementCRUDFunctions {
           cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
       final settlementCollector =
           ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
+      final settlementCustomerCard = ref.watch(
+          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
 
       // update settlement by swith off the vaidation
 
@@ -581,7 +601,9 @@ class SettlementCRUDFunctions {
 
         final newCollectorCollection = collectorCollection.copyWith(
           rest: collectorCollection.rest +
-              settlement.number * settlementType!.stake,
+              settlement.number *
+                  settlementCustomerCard!.typeNumber *
+                  settlementType!.stake,
         );
 
         collectorCollectionUpdateStatus = await CollectionsController.update(
@@ -696,7 +718,9 @@ class SettlementCRUDFunctions {
 
           final newCollectorCollection = collectorCollection.copyWith(
             rest: collectorCollection.rest -
-                settlement.number * settlementType!.stake,
+                settlement.number *
+                    settlementCustomerCard.typeNumber *
+                    settlementType!.stake,
           );
 
           collectorCollectionUpdateStatus = await CollectionsController.update(
@@ -748,6 +772,9 @@ class SettlementCRUDFunctions {
         ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
     showConfirmationButton.value = false;
 
+    final settlementCustomerCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+
     ServiceResponse settlementStatus;
 
     settlementStatus =
@@ -780,7 +807,9 @@ class SettlementCRUDFunctions {
 
         final newCollectorCollection = collectorCollection.copyWith(
           rest: collectorCollection.rest +
-              settlement.number * settlementType!.stake,
+              settlement.number *
+                  settlementCustomerCard!.typeNumber *
+                  settlementType!.stake,
         );
 
         collectorCollectionUpdateStatus = await CollectionsController.update(

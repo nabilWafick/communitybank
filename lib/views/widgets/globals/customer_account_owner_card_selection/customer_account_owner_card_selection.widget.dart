@@ -118,7 +118,9 @@ class _CustomerAccountOwnerCardSelectionState
                                 inputIndex: widget.index,
                                 label: 'Nombre',
                                 hintText: 'Nombre de Type',
-                                initialValue: 1.toString(),
+                                initialValue: accountOwnerCard != null
+                                    ? accountOwnerCard.typeNumber.toString()
+                                    : 1.toString(),
                                 textInputType: TextInputType.number,
                                 validator: CustomerAccountValidators
                                     .customerAccountOwnerCardTypeNumber,

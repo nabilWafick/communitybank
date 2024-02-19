@@ -591,6 +591,7 @@ class CustomerAccountCRUDFunctions {
                             customerAccountOwnerCards[i].id!)
                         .createdAt,
                   );
+
                   // update the customer card in the database
                   final lastCustomerCardMap = await CustomerCardsService.update(
                     id: customerAccountOwnerCards[i].id!,
@@ -711,7 +712,6 @@ class CustomerAccountCRUDFunctions {
                 showValidatedButton.value = true;
               }
             } else {
-              debugPrint('the account haven\'t been updated');
               // the account haven't been updated
               customerAccountFirstUpdateStatus = ServiceResponse.failed;
 

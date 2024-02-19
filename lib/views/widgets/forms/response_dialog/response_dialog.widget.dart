@@ -15,7 +15,7 @@ class ResponseDialog extends StatefulHookConsumerWidget {
 class _ResponseDialogState extends ConsumerState<ResponseDialog> {
   @override
   void initState() {
-    final responseDialogData = ref.watch(responseDialogProvider);
+    final responseDialogData = ref.read(responseDialogProvider);
     if (responseDialogData.serviceResponse == ServiceResponse.success) {
       Future.delayed(const Duration(milliseconds: 1000), () {
         if (mounted) {

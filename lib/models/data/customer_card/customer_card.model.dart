@@ -55,6 +55,7 @@ class CustomerCard {
     final map = {
       CustomerCardTable.label: label,
       CustomerCardTable.typeId: typeId,
+      CustomerCardTable.typeNumber: typeNumber,
       CustomerCardTable.customerAccountId: customerAccountId,
       CustomerCardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
       CustomerCardTable.repaidAt: repaidAt?.toIso8601String(),

@@ -38,6 +38,8 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
     final settlementCollectionDate =
         ref.watch(settlementCollectionDateProvider);
     final settlementNumber = ref.watch(settlementNumberProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
         ref.watch(
             cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
@@ -119,7 +121,7 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                             ),
                             CBText(
                               text:
-                                  '${settlementNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}f',
+                                  '${settlementNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCard!.typeNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}f',
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),

@@ -3,7 +3,6 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 
 class CBThemeData {
   static final lightTheme = ThemeData(
-    // primarySwatch: Colors.blue,
     scrollbarTheme: ScrollbarThemeData(
       thumbVisibility: MaterialStateProperty.all(true),
     ),
@@ -41,7 +40,6 @@ class CBThemeData {
         color: CBColors.secondaryColor,
       ),
     ),
-
     appBarTheme: const AppBarTheme(
       backgroundColor: CBColors.backgroundColor,
       foregroundColor: CBColors.secondaryColor,
