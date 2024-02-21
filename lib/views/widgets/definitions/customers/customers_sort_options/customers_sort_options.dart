@@ -26,10 +26,10 @@ class CustomersSortOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final economicalActivitiesListStream =
-        ref.watch(economicalActivityListStreamProvider);
+        ref.watch(economicalActivitiesListStreamProvider);
     final customersCategoriesListStream =
-        ref.watch(custumersCategoriesListStreamProvider);
-    final localitiesListStream = ref.watch(localityListStreamProvider);
+        ref.watch(customersCategoriesListStreamProvider);
+    final localitiesListStream = ref.watch(localitiesListStreamProvider);
     final personalStatusListStream =
         ref.watch(personalStatusListStreamProvider);
     return Container(

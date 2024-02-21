@@ -310,7 +310,7 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                           child: Consumer(
                             builder: (context, ref, child) {
                               final customersCategoriesListStream = ref
-                                  .watch(custumersCategoriesListStreamProvider);
+                                  .watch(customersCategoriesListStreamProvider);
 
                               return customersCategoriesListStream.when(
                                 data: (data) {
@@ -358,8 +358,8 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                           ),
                           child: Consumer(
                             builder: (context, ref, child) {
-                              final economicalActivitiesListStream = ref
-                                  .watch(economicalActivityListStreamProvider);
+                              final economicalActivitiesListStream = ref.watch(
+                                  economicalActivitiesListStreamProvider);
 
                               return economicalActivitiesListStream.when(
                                 data: (data) {
@@ -462,7 +462,7 @@ class _CustomerUpdateFormState extends ConsumerState<CustomerUpdateForm> {
                           child: Consumer(
                             builder: (context, ref, child) {
                               final localitiesListStream =
-                                  ref.watch(localityListStreamProvider);
+                                  ref.watch(localitiesListStreamProvider);
 
                               return localitiesListStream.when(
                                 data: (data) {

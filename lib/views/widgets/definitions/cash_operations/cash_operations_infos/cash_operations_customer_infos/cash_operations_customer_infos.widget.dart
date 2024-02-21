@@ -42,12 +42,12 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
     final cashOperationsSelectedCustomerAccountCollector =
         ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
     final customersCategoriesListStream =
-        ref.watch(custumersCategoriesListStreamProvider);
+        ref.watch(customersCategoriesListStreamProvider);
     final economicalActivitiesListStream =
-        ref.watch(economicalActivityListStreamProvider);
+        ref.watch(economicalActivitiesListStreamProvider);
     final personalStatusListStream =
         ref.watch(personalStatusListStreamProvider);
-    final localitiesListStream = ref.watch(localityListStreamProvider);
+    final localitiesListStream = ref.watch(localitiesListStreamProvider);
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);

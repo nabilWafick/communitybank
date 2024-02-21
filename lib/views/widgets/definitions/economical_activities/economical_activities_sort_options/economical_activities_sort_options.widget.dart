@@ -24,7 +24,7 @@ class EconomicalActivitiesSortOptions extends ConsumerWidget {
                 icon: Icons.refresh,
                 text: 'Rafraichir',
                 onTap: () {
-                  ref.invalidate(economicalActivityListStreamProvider);
+                  ref.invalidate(economicalActivitiesListStreamProvider);
                 },
               ),
               CBAddButton(

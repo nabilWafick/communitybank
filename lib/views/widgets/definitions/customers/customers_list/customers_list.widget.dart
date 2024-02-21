@@ -1,4 +1,5 @@
 import 'package:communitybank/controllers/customers/customers.controller.dart';
+import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
@@ -22,6 +23,7 @@ import 'package:communitybank/views/widgets/globals/lists_dropdowns/personal_sta
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 final searchedCustomersListProvider =
     StreamProvider<List<Customer>>((ref) async* {
@@ -139,762 +141,829 @@ class _CustomersListState extends ConsumerState<CustomersList> {
   final ScrollController verticalScrollController = ScrollController();
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('customers-name')) ||
         ref.watch(isSearchingProvider('customers-firstnames')) ||
         ref.watch(isSearchingProvider('customers-phoneNumber')) ||
-        ref.watch(isSearchingProvider('customers-address')) ||
-        ref.watch(isSearchingProvider('customers-profession')) ||
-        ref.watch(isSearchingProvider('customers-nicNumber'));
+        ref.watch(isSearchingProvider('customers-address'));
+    final searchedCustomersList = ref.watch(searchedCustomersListProvider);
     final customersListStream = ref.watch(customersListStreamProvider);
-    final searchedCustomers = ref.watch(searchedCustomersListProvider);
+    final customersList =
+        isSearching ? searchedCustomersList : customersListStream;
 
-    return SizedBox(
-      height: 600.0,
-      child: Scrollbar(
-        controller: horizontallScrollController,
-        child: SingleChildScrollView(
-          controller: horizontallScrollController,
-          scrollDirection: Axis.horizontal,
-          child: Scrollbar(
-            controller: verticalScrollController,
-            child: SingleChildScrollView(
-              controller: verticalScrollController,
-              child: DataTable(
-                showCheckboxColumn: true,
-                columns: [
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Code',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
+    ref.listen(customersListStreamProvider, (previous, next) {
+      if (isSearching) {
+        ref.invalidate(searchedCustomersListProvider);
+      }
+    });
+
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: customersList.when(
+          data: (data) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 2200,
+            itemCount: data.length,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'customers',
+                  searchProvider: searchProvider('customers-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'customers-firstnames',
+                  searchProvider: searchProvider('customers-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'customers-phoneNumber',
+                  searchProvider: searchProvider('customers-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'customers-address',
+                  searchProvider: searchProvider('customers-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Numéro NCI',
+                  familyName: 'customers-nicNumber',
+                  searchProvider: searchProvider('customers-nicNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Catégorie',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Activité Économique',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Status Personnel',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Localité',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Signature',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              final customer = data[index];
+              return Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      customer.profile != null
+                          ? FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SingleImageShower(
+                                imageSource: customer.profile!,
+                              ),
+                            )
+                          : () {};
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200.0,
+                      height: 30.0,
+                      child: customer.profile != null
+                          ? const Icon(
+                              Icons.photo,
+                              color: CBColors.primaryColor,
+                            )
+                          : const SizedBox(),
                     ),
                   ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Photo',
-                      textAlign: TextAlign.start,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: customer.name,
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Nom',
-                    familyName: 'customers-name',
-                    searchProvider: searchProvider('customers-name'),
-                  )
-                      /*  CBText(
-                      text: 'Nom',
-                      textAlign: TextAlign.start,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: customer.firstnames,
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
                     ),
-                 */
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: customer.phoneNumber,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: customer.address,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: customer.nicNumber?.toString() ?? '',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    width: 300.0,
+                    height: 30.0,
+                    alignment: Alignment.center,
+                    child: Consumer(
+                      builder:
+                          (BuildContext context, WidgetRef ref, Widget? child) {
+                        final customersCategoriesListStream =
+                            ref.watch(customersCategoriesListStreamProvider);
+
+                        return customersCategoriesListStream.when(
+                          data: (data) {
+                            CustomerCategory customerCategory =
+                                CustomerCategory(
+                              name: 'Non définie',
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            );
+
+                            for (CustomerCategory customerCategoryData
+                                in data) {
+                              if (customerCategoryData.id ==
+                                  customer.categoryId) {
+                                customerCategory = customerCategoryData;
+                                break;
+                              }
+                            }
+
+                            return CBText(
+                              text: customerCategory.name,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(text: ''),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 300.0,
+                    height: 30.0,
+                    alignment: Alignment.center,
+                    child: Consumer(
+                      builder:
+                          (BuildContext context, WidgetRef ref, Widget? child) {
+                        final economicalActivitiesListStream =
+                            ref.watch(economicalActivitiesListStreamProvider);
+
+                        return economicalActivitiesListStream.when(
+                          data: (data) {
+                            EconomicalActivity economicalActivity =
+                                EconomicalActivity(
+                              name: 'Non définie',
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            );
+
+                            for (EconomicalActivity economicalActivityData
+                                in data) {
+                              if (economicalActivityData.id ==
+                                  customer.economicalActivityId) {
+                                economicalActivity = economicalActivityData;
+                                break;
+                              }
+                            }
+
+                            return CBText(
+                              text: economicalActivity.name,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(text: ''),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 300.0,
+                    height: 30.0,
+                    alignment: Alignment.center,
+                    child: Consumer(
+                      builder:
+                          (BuildContext context, WidgetRef ref, Widget? child) {
+                        final personalStatusListStream =
+                            ref.watch(personalStatusListStreamProvider);
+
+                        return personalStatusListStream.when(
+                          data: (data) {
+                            PersonalStatus personalStatus = PersonalStatus(
+                              name: 'Non défini',
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            );
+
+                            for (PersonalStatus personalStatusData in data) {
+                              if (personalStatusData.id ==
+                                  customer.personalStatusId) {
+                                personalStatus = personalStatusData;
+                                break;
+                              }
+                            }
+
+                            return CBText(
+                              text: personalStatus.name,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(text: ''),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    width: 300.0,
+                    height: 30.0,
+                    alignment: Alignment.center,
+                    child: Consumer(
+                      builder:
+                          (BuildContext context, WidgetRef ref, Widget? child) {
+                        final localitiesListStream =
+                            ref.watch(localitiesListStreamProvider);
+
+                        return localitiesListStream.when(
+                          data: (data) {
+                            Locality customerLocality = Locality(
+                              name: 'Non définie',
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            );
+
+                            for (Locality localityData in data) {
+                              if (localityData.id == customer.localityId) {
+                                customerLocality = localityData;
+                                break;
+                              }
+                            }
+
+                            return CBText(
+                              text: customerLocality.name,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(text: ''),
+                        );
+                      },
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      customer.signature != null
+                          ? FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SingleImageShower(
+                                imageSource: customer.signature!,
+                              ),
+                            )
+                          : () {};
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200.0,
+                      height: 30.0,
+                      child: customer.signature != null
+                          ? const Icon(
+                              Icons.photo,
+                              color: CBColors.primaryColor,
+                            )
+                          : const SizedBox(),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      ref.read(customerProfilePictureProvider.notifier).state =
+                          null;
+                      ref
+                          .read(customerSignaturePictureProvider.notifier)
+                          .state = null;
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CustomerUpdateForm(
+                          customer: customer,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.green[500],
                       ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Prénoms',
-                    familyName: 'customers-firstnames',
-                    searchProvider: searchProvider('customers-firstnames'),
-                  )
-                      /* CBText(
-                      text: 'Prénoms',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
+                    ),
+                    // showEditIcon: true,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CustomerDeletionConfirmationDialog(
+                          customer: customer,
+                          confirmToDelete: CustomerCRUDFunctions.delete,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.red,
                       ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Téléphone',
-                    familyName: 'customers-phoneNumber',
-                    searchProvider: searchProvider('customers-phoneNumber'),
-                  )
-                      /* CBText(
-                      text: 'Téléphone',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
-                      ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Adresse',
-                    familyName: 'customers-address',
-                    searchProvider: searchProvider('customers-address'),
-                  )
-                      /* CBText(
-                      text: 'Adresse',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
-                      ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Profession',
-                    familyName: 'customers-profession',
-                    searchProvider: searchProvider('customers-profession'),
-                  )
-                      /*CBText(
-                      text: 'Profession',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
                     ),
-                    */
-                      ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Numero CNI',
-                    familyName: 'customers-nicNumber',
-                    searchProvider: searchProvider('customers-nicNumber'),
-                  )
-                      /* label: CBText(
-                      text: 'Numéro CNI',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
-                      ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Catégorie',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Activité économique',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Status Personnel',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Localité',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Signature',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const DataColumn(
-                    label: SizedBox(),
-                  ),
-                  const DataColumn(
-                    label: SizedBox(),
                   ),
                 ],
-                rows: isSearching
-                    ? searchedCustomers.when(
-                        data: (data) {
-                          return data.map(
-                            (customer) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(
-                                    CBText(
-                                      text: '${data.indexOf(customer) + 1}',
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    onTap: () {
-                                      customer.profile != null
-                                          ? FunctionsController.showAlertDialog(
-                                              context: context,
-                                              alertDialog: SingleImageShower(
-                                                imageSource: customer.profile!,
-                                              ),
-                                            )
-                                          : () {};
-                                    },
-                                    customer.profile != null
-                                        ? Container(
-                                            alignment: Alignment.center,
-                                            child: const Icon(
-                                              Icons.account_circle_sharp,
-                                              size: 35.0,
-                                              color: CBColors.primaryColor,
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.name,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.firstnames,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.phoneNumber,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.address,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.profession ?? '',
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text:
-                                          customer.nicNumber?.toString() ?? '',
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final customersCategoriesListStream =
-                                          ref.watch(
-                                              custumersCategoriesListStreamProvider);
-
-                                      return customersCategoriesListStream.when(
-                                        data: (data) {
-                                          CustomerCategory customerCategory =
-                                              CustomerCategory(
-                                            name: 'Non définie',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (CustomerCategory customerCategoryData
-                                              in data) {
-                                            if (customerCategoryData.id ==
-                                                customer.categoryId) {
-                                              customerCategory =
-                                                  customerCategoryData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: customerCategory.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final economicalActivitiesListStream =
-                                          ref.watch(
-                                              economicalActivityListStreamProvider);
-
-                                      return economicalActivitiesListStream
-                                          .when(
-                                        data: (data) {
-                                          EconomicalActivity
-                                              economicalActivity =
-                                              EconomicalActivity(
-                                            name: 'Non définie',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (EconomicalActivity economicalActivityData
-                                              in data) {
-                                            if (economicalActivityData.id ==
-                                                customer.economicalActivityId) {
-                                              economicalActivity =
-                                                  economicalActivityData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: economicalActivity.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final personalStatusListStream =
-                                          ref.watch(
-                                              personalStatusListStreamProvider);
-
-                                      return personalStatusListStream.when(
-                                        data: (data) {
-                                          PersonalStatus personalStatus =
-                                              PersonalStatus(
-                                            name: 'Non défini',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (PersonalStatus personalStatusData
-                                              in data) {
-                                            if (personalStatusData.id ==
-                                                customer.personalStatusId) {
-                                              personalStatus =
-                                                  personalStatusData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: personalStatus.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final localitiesListStream =
-                                          ref.watch(localityListStreamProvider);
-
-                                      return localitiesListStream.when(
-                                        data: (data) {
-                                          Locality customerLocality = Locality(
-                                            name: 'Non définie',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (Locality localityData in data) {
-                                            if (localityData.id ==
-                                                customer.localityId) {
-                                              customerLocality = localityData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: customerLocality.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(
-                                    onTap: () {
-                                      customer.signature != null
-                                          ? FunctionsController.showAlertDialog(
-                                              context: context,
-                                              alertDialog: SingleImageShower(
-                                                imageSource:
-                                                    customer.signature!,
-                                              ),
-                                            )
-                                          : () {};
-                                    },
-                                    customer.signature != null
-                                        ? Container(
-                                            alignment: Alignment.center,
-                                            child: const Icon(
-                                              Icons.photo,
-                                              color: CBColors.primaryColor,
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                  DataCell(
-                                    onTap: () async {
-                                      await FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: CustomerUpdateForm(
-                                            customer: customer),
-                                      );
-                                    },
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    // showEditIcon: true,
-                                  ),
-                                  DataCell(
-                                    onTap: () {
-                                      FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog:
-                                            CustomerDeletionConfirmationDialog(
-                                          customer: customer,
-                                          confirmToDelete:
-                                              CustomerCRUDFunctions.delete,
-                                        ),
-                                      );
-                                    },
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: const Icon(
-                                        Icons.delete_sharp,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ).toList();
-                        },
-                        error: (error, stackTrace) => [],
-                        loading: () => [],
-                      )
-                    : customersListStream.when(
-                        data: (data) {
-                          return data.map(
-                            (customer) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(
-                                    CBText(
-                                      text: '${data.indexOf(customer) + 1}',
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    onTap: () {
-                                      customer.profile != null
-                                          ? FunctionsController.showAlertDialog(
-                                              context: context,
-                                              alertDialog: SingleImageShower(
-                                                imageSource: customer.profile!,
-                                              ),
-                                            )
-                                          : () {};
-                                    },
-                                    customer.profile != null
-                                        ? Container(
-                                            alignment: Alignment.center,
-                                            child: const Icon(
-                                              Icons.account_circle_sharp,
-                                              size: 35.0,
-                                              color: CBColors.primaryColor,
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.name,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.firstnames,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.phoneNumber,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.address,
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text: customer.profession ?? '',
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    CBText(
-                                      text:
-                                          customer.nicNumber?.toString() ?? '',
-                                      fontSize: 12.0,
-                                    ),
-                                  ),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final customersCategoriesListStream =
-                                          ref.watch(
-                                              custumersCategoriesListStreamProvider);
-
-                                      return customersCategoriesListStream.when(
-                                        data: (data) {
-                                          CustomerCategory customerCategory =
-                                              CustomerCategory(
-                                            name: 'Non définie',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (CustomerCategory customerCategoryData
-                                              in data) {
-                                            if (customerCategoryData.id ==
-                                                customer.categoryId) {
-                                              customerCategory =
-                                                  customerCategoryData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: customerCategory.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final economicalActivitiesListStream =
-                                          ref.watch(
-                                              economicalActivityListStreamProvider);
-
-                                      return economicalActivitiesListStream
-                                          .when(
-                                        data: (data) {
-                                          EconomicalActivity
-                                              economicalActivity =
-                                              EconomicalActivity(
-                                            name: 'Non définie',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (EconomicalActivity economicalActivityData
-                                              in data) {
-                                            if (economicalActivityData.id ==
-                                                customer.economicalActivityId) {
-                                              economicalActivity =
-                                                  economicalActivityData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: economicalActivity.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final personalStatusListStream =
-                                          ref.watch(
-                                              personalStatusListStreamProvider);
-
-                                      return personalStatusListStream.when(
-                                        data: (data) {
-                                          PersonalStatus personalStatus =
-                                              PersonalStatus(
-                                            name: 'Non défini',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (PersonalStatus personalStatusData
-                                              in data) {
-                                            if (personalStatusData.id ==
-                                                customer.personalStatusId) {
-                                              personalStatus =
-                                                  personalStatusData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: personalStatus.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(Consumer(
-                                    builder: (BuildContext context,
-                                        WidgetRef ref, Widget? child) {
-                                      final localitiesListStream =
-                                          ref.watch(localityListStreamProvider);
-
-                                      return localitiesListStream.when(
-                                        data: (data) {
-                                          Locality customerLocality = Locality(
-                                            name: 'Non définie',
-                                            createdAt: DateTime.now(),
-                                            updatedAt: DateTime.now(),
-                                          );
-
-                                          for (Locality localityData in data) {
-                                            if (localityData.id ==
-                                                customer.localityId) {
-                                              customerLocality = localityData;
-                                              break;
-                                            }
-                                          }
-
-                                          return CBText(
-                                            text: customerLocality.name,
-                                            fontSize: 12.0,
-                                          );
-                                        },
-                                        error: (error, stackTrace) =>
-                                            const CBText(
-                                          text: '',
-                                        ),
-                                        loading: () => const CBText(text: ''),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(
-                                    onTap: () {
-                                      customer.signature != null
-                                          ? FunctionsController.showAlertDialog(
-                                              context: context,
-                                              alertDialog: SingleImageShower(
-                                                imageSource:
-                                                    customer.signature!,
-                                              ),
-                                            )
-                                          : () {};
-                                    },
-                                    customer.signature != null
-                                        ? Container(
-                                            alignment: Alignment.center,
-                                            child: const Icon(
-                                              Icons.photo,
-                                              color: CBColors.primaryColor,
-                                            ),
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                  DataCell(
-                                    onTap: () async {
-                                      await FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: CustomerUpdateForm(
-                                            customer: customer),
-                                      );
-                                    },
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                    // showEditIcon: true,
-                                  ),
-                                  DataCell(
-                                    onTap: () {
-                                      FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog:
-                                            CustomerDeletionConfirmationDialog(
-                                          customer: customer,
-                                          confirmToDelete:
-                                              CustomerCRUDFunctions.delete,
-                                        ),
-                                      );
-                                    },
-                                    Container(
-                                      alignment: Alignment.centerRight,
-                                      child: const Icon(
-                                        Icons.delete_sharp,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ).toList();
-                        },
-                        error: (error, stackTrace) => [],
-                        loading: () => [],
-                      ),
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          error: (error, stackTrace) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'customers',
+                  searchProvider: searchProvider('customers-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'customers-firstnames',
+                  searchProvider: searchProvider('customers-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'customers-phoneNumber',
+                  searchProvider: searchProvider('customers-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'customers-address',
+                  searchProvider: searchProvider('customers-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Numéro NCI',
+                  familyName: 'customers-nicNumber',
+                  searchProvider: searchProvider('customers-nicNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Catégorie',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Catégorie',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Activité Économique',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Status Personnel',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Localité',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          loading: () => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'customers',
+                  searchProvider: searchProvider('customers-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'customers-firstnames',
+                  searchProvider: searchProvider('customers-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'customers-phoneNumber',
+                  searchProvider: searchProvider('customers-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'customers-address',
+                  searchProvider: searchProvider('customers-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Numéro NCI',
+                  familyName: 'customers-nicNumber',
+                  searchProvider: searchProvider('customers-nicNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Catégorie',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Catégorie',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Activité Économique',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Status Personnel',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Localité',
+                  fontSize: 12,
+                  textAlign: TextAlign.center,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
           ),
         ),
       ),

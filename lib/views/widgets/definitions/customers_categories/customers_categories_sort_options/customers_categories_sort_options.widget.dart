@@ -25,7 +25,7 @@ class CustomersCategoriesSortOptions extends ConsumerWidget {
                 icon: Icons.refresh,
                 text: 'Rafraichir',
                 onTap: () {
-                  ref.invalidate(custumersCategoriesListStreamProvider);
+                  ref.invalidate(customersCategoriesListStreamProvider);
                 },
               ),
               CBAddButton(

@@ -24,7 +24,7 @@ class LocalitiesSortOptions extends ConsumerWidget {
                 icon: Icons.refresh,
                 text: 'Rafraichir',
                 onTap: () {
-                  ref.invalidate(localityListStreamProvider);
+                  ref.invalidate(localitiesListStreamProvider);
                 },
               ),
               CBAddButton(

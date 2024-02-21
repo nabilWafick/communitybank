@@ -1,18 +1,46 @@
-import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
+import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
+import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/products/products_crud.function.dart';
-import 'package:communitybank/utils/utils.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
+import 'package:communitybank/functions/crud/collections/collections_crud.function.dart';
+import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
+import 'package:communitybank/functions/crud/customers_accounts/customers_accounts_crud.fuction.dart';
+import 'package:communitybank/functions/crud/customers_categories/customers_categories_crud.function.dart';
+import 'package:communitybank/models/data/collector/collector.model.dart';
+import 'package:communitybank/models/data/customer/customer.model.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
+import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
+import 'package:communitybank/models/data/locality/locality.model.dart';
+import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
+import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/agents/agents_list/agents_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/collections/collections_list/collections_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/products/products_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/products/products_update_form.widget.dart';
+import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/collections/collections_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers/customers_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers_accounts/customers_accounts_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers_categories/customers_categories_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/collections/collection_amount/collections_amount_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/collections/collections_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/customer_account/customer_account_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/customers/customers_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/customers_categories/customers_categories_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/images_shower/single/single_image_shower.widget.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:intl/intl.dart';
 
 final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {
   return;
@@ -55,355 +83,520 @@ class ProductsTable extends ConsumerStatefulWidget {
 }
 
 class _ProductsTableState extends ConsumerState<ProductsTable> {
-  // Generate large sample data
-  // final int numRows = 100; // Adjust this number for desired table size
-  // final int numColumns = 5;
-  // final List<String> headerTitles = ['Col1', 'Col2', 'Col3', 'Col4', 'Col5'];
-  // final List<List<String>> data =
-  //     List.generate(100, (row) => List.generate(5, (col) => "Data $row-$col"));
-
   @override
   Widget build(BuildContext context) {
-    final isSearching = ref.watch(isSearchingProvider('products'));
-    final productsListStream = ref.watch(productsListStreamProvider);
-    final searchedProductsList = ref.watch(searchedProductsListProvider);
-    final productList = isSearching ? searchedProductsList : productsListStream;
+    final collectionsListStream = ref.watch(collectionsListStreamProvider);
 
-    ref.listen(productsListStreamProvider, (previous, next) {
-      if (isSearching) {
-        ref.invalidate(searchedProductsListProvider);
-      }
-    });
+    final format = DateFormat.yMMMMEEEEd('fr');
 
-    return Container(
-      alignment: Alignment.center,
-      //width: 900,
-      // height: 700,
-      child: productList.when(
-        data: (data) => HorizontalDataTable(
-          leftHandSideColumnWidth: 100,
-          rightHandSideColumnWidth: MediaQuery.of(context).size.width - 100,
-          itemCount: data.length,
-          isFixedHeader: true,
-          leftHandSideColBackgroundColor: CBColors.backgroundColor,
-          rightHandSideColBackgroundColor: CBColors.backgroundColor,
-          headerWidgets: [
-            Container(
-              width: 200.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'N°',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: collectionsListStream.when(
+          data: (data) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width,
+            itemCount: data.length,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 200.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'Photo',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Chargé de compte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 700.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: CBSearchInput(
-                hintText: 'Nom',
-                familyName: 'products',
-                searchProvider: searchProvider('products'),
-                width: MediaQuery.of(context).size.width,
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Montant',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 250.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'Prix d\'achat',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Reste',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 150.0,
-              height: 50.0,
-            ),
-            const SizedBox(
-              width: 150.0,
-              height: 50.0,
-            ),
-          ],
-          leftSideItemBuilder: (context, index) {
-            return Container(
-              alignment: Alignment.center,
-              width: 200.0,
-              height: 30.0,
-              child: CBText(
-                text: '${index + 1}',
-                fontSize: 12.0,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            );
-          },
-          rightSideItemBuilder: (BuildContext context, int index) {
-            final product = data[index];
-            return Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    product.picture != null
-                        ? FunctionsController.showAlertDialog(
-                            context: context,
-                            alertDialog: SingleImageShower(
-                              imageSource: product.picture!,
-                            ),
-                          )
-                        : () {};
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 200.0,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              final collection = data[index];
+              return Row(
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 500.0,
                     height: 30.0,
-                    child: product.picture != null
-                        ? const Icon(
-                            Icons.photo,
-                            color: CBColors.primaryColor,
-                          )
-                        : const SizedBox(),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: 700.0,
-                  height: 30.0,
-                  child: CBText(
-                    text: product.name,
-                    fontSize: 12.0,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  width: 250.0,
-                  height: 30.0,
-                  child: CBText(
-                    text: '${product.purchasePrice.ceil()} f',
-                    fontSize: 12.0,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    ref.read(productPictureProvider.notifier).state = null;
-                    FunctionsController.showAlertDialog(
-                      context: context,
-                      alertDialog: ProductUpdateForm(product: product),
-                    );
-                  },
-                  child: Container(
-                    width: 150.0,
-                    height: 30.0,
-                    alignment: Alignment.centerRight,
-                    child: Icon(
-                      Icons.edit,
-                      color: Colors.green[500],
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final collectorsListStream =
+                            ref.watch(collectorsListStreamProvider);
+                        return CBText(
+                          text: collectorsListStream.when(
+                              data: (data) {
+                                final collector = data.firstWhere(
+                                  (collector) =>
+                                      collector.id == collection.collectorId,
+                                );
+
+                                return '${collector.name} ${collector.firstnames}';
+                              },
+                              error: ((error, stackTrace) => ''),
+                              loading: () => ''),
+                          fontSize: 12.0,
+                        );
+                      },
                     ),
                   ),
-                  // showEditIcon: true,
-                ),
-                InkWell(
-                  onTap: () async {
-                    FunctionsController.showAlertDialog(
-                      context: context,
-                      alertDialog: ProductDeletionConfirmationDialog(
-                        product: product,
-                        confirmToDelete: ProductCRUDFunctions.delete,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: collection.amount.ceil().toString(),
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: collection.rest.ceil().toString(),
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 500.0,
+                    height: 30.0,
+                    child: CBText(
+                      text:
+                          '${format.format(collection.collectedAt)}  ${collection.collectedAt.hour}:${collection.collectedAt.minute}',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 500.0,
+                    height: 30.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final agentsListStream =
+                            ref.watch(agentsListStreamProvider);
+
+                        return CBText(
+                          text: agentsListStream.when(
+                              data: (data) {
+                                final agent = data.firstWhere(
+                                  (agent) => agent.id == collection.agentId,
+                                );
+
+                                return '${agent.name} ${agent.firstnames}';
+                              },
+                              error: ((error, stackTrace) => ''),
+                              loading: () => ''),
+                          fontSize: 12.0,
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 500.0,
+                    height: 30.0,
+                    child: CBText(
+                      text:
+                          '${format.format(collection.createdAt)}  ${collection.createdAt.hour}:${collection.createdAt.minute}',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CollectionAmountUpdateForm(
+                          collection: collection,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.green[500],
                       ),
-                    );
-                  },
-                  child: Container(
-                    width: 150.0,
-                    height: 30.0,
-                    alignment: Alignment.centerRight,
-                    child: const Icon(
-                      Icons.delete_sharp,
-                      color: Colors.red,
+                    ),
+                    // showEditIcon: true,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CollectionUpdateForm(
+                          collection: collection,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.green[500],
+                      ),
+                    ),
+                    // showEditIcon: true,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CollectionDeletionConfirmationDialog(
+                          collection: collection,
+                          confirmToDelete: CollectionCRUDFunctions.delete,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.red,
+                      ),
                     ),
                   ),
+                ],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          error: (error, stackTrace) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
-              ],
-            );
-          },
-          rowSeparatorWidget: const Divider(),
-          scrollPhysics: const BouncingScrollPhysics(),
-          horizontalScrollPhysics: const BouncingScrollPhysics(),
-        ),
-        error: (error, stackTrace) => HorizontalDataTable(
-          leftHandSideColumnWidth: 100,
-          rightHandSideColumnWidth: 1450,
-          itemCount: 0,
-          isFixedHeader: true,
-          leftHandSideColBackgroundColor: CBColors.backgroundColor,
-          rightHandSideColBackgroundColor: CBColors.backgroundColor,
-          headerWidgets: [
-            Container(
-              width: 200.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'N°',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
               ),
-            ),
-            Container(
-              width: 200.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'Photo',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Chargé de compte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 700.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: CBSearchInput(
-                hintText: 'Nom',
-                familyName: 'products',
-                searchProvider: searchProvider('products'),
-                width: MediaQuery.of(context).size.width,
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Montant',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 250.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'Prix d\'achat',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Reste',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 150.0,
-              height: 50.0,
-            ),
-            const SizedBox(
-              width: 150.0,
-              height: 50.0,
-            ),
-          ],
-          leftSideItemBuilder: (context, index) {
-            return Container(
-              alignment: Alignment.center,
-              width: 200.0,
-              height: 30.0,
-              child: CBText(
-                text: '${index + 1}',
-                fontSize: 12.0,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            );
-          },
-          rightSideItemBuilder: (BuildContext context, int index) {
-            return const Row(
-              children: [],
-            );
-          },
-          rowSeparatorWidget: const Divider(),
-          scrollPhysics: const BouncingScrollPhysics(),
-          horizontalScrollPhysics: const BouncingScrollPhysics(),
-        ),
-        loading: () => HorizontalDataTable(
-          leftHandSideColumnWidth: 100,
-          rightHandSideColumnWidth: 1450,
-          itemCount: 0,
-          isFixedHeader: true,
-          leftHandSideColBackgroundColor: CBColors.backgroundColor,
-          rightHandSideColBackgroundColor: CBColors.backgroundColor,
-          headerWidgets: [
-            Container(
-              width: 200.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'N°',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 200.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'Photo',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            Container(
-              width: 700.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: CBSearchInput(
-                hintText: 'Nom',
-                familyName: 'products',
-                searchProvider: searchProvider('products'),
-                width: MediaQuery.of(context).size.width,
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
               ),
-            ),
-            Container(
-              width: 250.0,
-              height: 50.0,
-              alignment: Alignment.center,
-              child: const CBText(
-                text: 'Prix d\'achat',
-                textAlign: TextAlign.center,
-                fontSize: 12.0,
-                fontWeight: FontWeight.w500,
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
               ),
-            ),
-            const SizedBox(
-              width: 150.0,
-              height: 50.0,
-            ),
-            const SizedBox(
-              width: 150.0,
-              height: 50.0,
-            ),
-          ],
-          leftSideItemBuilder: (context, index) {
-            return Container(
-              alignment: Alignment.center,
-              width: 200.0,
-              height: 30.0,
-              child: CBText(
-                text: '${index + 1}',
-                fontSize: 12.0,
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
               ),
-            );
-          },
-          rightSideItemBuilder: (BuildContext context, int index) {
-            return const Row(
-              children: [],
-            );
-          },
-          rowSeparatorWidget: const Divider(),
-          scrollPhysics: const BouncingScrollPhysics(),
-          horizontalScrollPhysics: const BouncingScrollPhysics(),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          loading: () => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Chargé de compte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Montant',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Reste',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 500.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
         ),
       ),
     );

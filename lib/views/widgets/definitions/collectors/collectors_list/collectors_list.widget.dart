@@ -12,6 +12,7 @@ import 'package:communitybank/views/widgets/globals/search_input/search_input.wi
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 final searchedCollectorsListProvider =
     StreamProvider<List<Collector>>((ref) async* {
@@ -84,340 +85,437 @@ class CollectorsList extends StatefulHookConsumerWidget {
 }
 
 class _CollectorsListState extends ConsumerState<CollectorsList> {
-  final ScrollController horizontalsScrollController = ScrollController();
-  final ScrollController verticalScrollController = ScrollController();
   @override
-  Widget build(BuildContext buildContext) {
+  Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('collectors-name')) ||
         ref.watch(isSearchingProvider('collectors-firstnames')) ||
         ref.watch(isSearchingProvider('collectors-phoneNumber')) ||
         ref.watch(isSearchingProvider('collectors-address'));
     final searchedCollectorsList = ref.watch(searchedCollectorsListProvider);
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
-    return SizedBox(
-      height: 600.0,
-      child: Scrollbar(
-        controller: horizontalsScrollController,
-        child: SingleChildScrollView(
-          controller: horizontalsScrollController,
-          scrollDirection: Axis.horizontal,
-          child: Scrollbar(
-            controller: verticalScrollController,
-            child: SingleChildScrollView(
-              controller: verticalScrollController,
-              child: DataTable(
-                showCheckboxColumn: true,
-                columns: [
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Code',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
+    final collectorsList =
+        isSearching ? searchedCollectorsList : collectorsListStream;
+
+    ref.listen(collectorsListStreamProvider, (previous, next) {
+      if (isSearching) {
+        ref.invalidate(searchedCollectorsListProvider);
+      }
+    });
+
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: collectorsList.when(
+          data: (data) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 400,
+            itemCount: data.length,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'collectors',
+                  searchProvider: searchProvider('collectors-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'collectors-firstnames',
+                  searchProvider: searchProvider('collectors-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'collectors-phoneNumber',
+                  searchProvider: searchProvider('collectors-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'collectors-address',
+                  searchProvider: searchProvider('collectors-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              final collector = data[index];
+              return Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      collector.profile != null
+                          ? FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SingleImageShower(
+                                imageSource: collector.profile!,
+                              ),
+                            )
+                          : () {};
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200.0,
+                      height: 30.0,
+                      child: collector.profile != null
+                          ? const Icon(
+                              Icons.photo,
+                              color: CBColors.primaryColor,
+                            )
+                          : const SizedBox(),
                     ),
                   ),
-                  const DataColumn(
-                    label: CBText(
-                      text: 'Photo',
-                      textAlign: TextAlign.start,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: collector.name,
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
-                    label: CBSearchInput(
-                      hintText: 'Nom',
-                      familyName: 'collectors-name',
-                      searchProvider: searchProvider('collectors-name'),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: collector.firstnames,
+                      fontSize: 12.0,
                     ),
-                    /*CBText(
-                      text: 'Nom',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
                   ),
-                  DataColumn(
-                    label: CBSearchInput(
-                      hintText: 'Prénoms',
-                      familyName: 'collectors-firstnames',
-                      searchProvider: searchProvider('collectors-firstnames'),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: collector.phoneNumber,
+                      fontSize: 12.0,
                     ),
-                    /*CBText(
-                      text: 'Prénoms',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
                   ),
-                  DataColumn(
-                    label: CBSearchInput(
-                      hintText: 'Téléphone',
-                      familyName: 'collectors-phoneNumber',
-                      searchProvider: searchProvider('collectors-phoneNumber'),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: collector.address,
+                      fontSize: 12.0,
                     ),
-                    /*CBText(
-                      text: 'Téléphone',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
                   ),
-                  DataColumn(
-                      label: CBSearchInput(
-                    hintText: 'Adresse',
-                    familyName: 'collectors-address',
-                    searchProvider: searchProvider('collectors-address'),
-                  )
-                      /* CBText(
-                      text: 'Adresse',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),*/
+                  InkWell(
+                    onTap: () async {
+                      ref.read(collectorPictureProvider.notifier).state = null;
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CollectorUpdateForm(
+                          collector: collector,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.green[500],
                       ),
-                  const DataColumn(
-                    label: SizedBox(),
+                    ),
+                    // showEditIcon: true,
                   ),
-                  const DataColumn(
-                    label: SizedBox(),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CollectorDeletionConfirmationDialog(
+                          collector: collector,
+                          confirmToDelete: CollectorCRUDFunctions.delete,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.red,
+                      ),
+                    ),
                   ),
                 ],
-                rows: isSearching
-                    ? searchedCollectorsList.when(
-                        data: (data) {
-                          //  debugPrint('collector Stream Data: $data');
-                          return data
-                              .map(
-                                (collector) => DataRow(
-                                  cells: [
-                                    DataCell(
-                                      CBText(
-                                        text: '${data.indexOf(collector) + 1}',
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      onTap: () {
-                                        collector.profile != null
-                                            ? FunctionsController
-                                                .showAlertDialog(
-                                                context: context,
-                                                alertDialog: SingleImageShower(
-                                                  imageSource:
-                                                      collector.profile!,
-                                                ),
-                                              )
-                                            : () {};
-                                      },
-                                      Container(
-                                        alignment: Alignment.center,
-                                        child: collector.profile != null
-                                            ? const Icon(
-                                                Icons.photo,
-                                                color: CBColors.primaryColor,
-                                              )
-                                            : const SizedBox(),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.name,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.firstnames,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.phoneNumber,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.address,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      onTap: () {
-                                        ref
-                                            .read(collectorPictureProvider
-                                                .notifier)
-                                            .state = null;
-                                        FunctionsController.showAlertDialog(
-                                          context: context,
-                                          alertDialog: CollectorUpdateForm(
-                                            collector: collector,
-                                          ),
-                                        );
-                                      },
-                                      Container(
-                                        alignment: Alignment.centerRight,
-                                        child: const Icon(
-                                          Icons.edit,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      // showEditIcon: true,
-                                    ),
-                                    DataCell(
-                                      onTap: () async {
-                                        FunctionsController.showAlertDialog(
-                                          context: context,
-                                          alertDialog:
-                                              CollectorDeletionConfirmationDialog(
-                                            collector: collector,
-                                            confirmToDelete:
-                                                CollectorCRUDFunctions.delete,
-                                          ),
-                                        );
-                                      },
-                                      Container(
-                                        alignment: Alignment.centerRight,
-                                        child: const Icon(
-                                          Icons.delete_sharp,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              .toList();
-                        },
-                        error: (error, stack) {
-                          //  debugPrint('collectors Stream Error');
-                          return [];
-                        },
-                        loading: () {
-                          //  debugPrint('collectors Stream Loading');
-                          return [];
-                        },
-                      )
-                    : collectorsListStream.when(
-                        data: (data) {
-                          //  debugPrint('collector Stream Data: $data');
-                          return data
-                              .map(
-                                (collector) => DataRow(
-                                  cells: [
-                                    DataCell(
-                                      CBText(
-                                        text: '${data.indexOf(collector) + 1}',
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      onTap: () {
-                                        collector.profile != null
-                                            ? FunctionsController
-                                                .showAlertDialog(
-                                                context: context,
-                                                alertDialog: SingleImageShower(
-                                                  imageSource:
-                                                      collector.profile!,
-                                                ),
-                                              )
-                                            : () {};
-                                      },
-                                      Container(
-                                        alignment: Alignment.center,
-                                        child: collector.profile != null
-                                            ? const Icon(
-                                                Icons.photo,
-                                                color: CBColors.primaryColor,
-                                              )
-                                            : const SizedBox(),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.name,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.firstnames,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.phoneNumber,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      CBText(
-                                        text: collector.address,
-                                        fontSize: 12.0,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      onTap: () {
-                                        ref
-                                            .read(collectorPictureProvider
-                                                .notifier)
-                                            .state = null;
-                                        FunctionsController.showAlertDialog(
-                                          context: context,
-                                          alertDialog: CollectorUpdateForm(
-                                            collector: collector,
-                                          ),
-                                        );
-                                      },
-                                      Container(
-                                        alignment: Alignment.centerRight,
-                                        child: const Icon(
-                                          Icons.edit,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      // showEditIcon: true,
-                                    ),
-                                    DataCell(
-                                      onTap: () async {
-                                        FunctionsController.showAlertDialog(
-                                          context: context,
-                                          alertDialog:
-                                              CollectorDeletionConfirmationDialog(
-                                            collector: collector,
-                                            confirmToDelete:
-                                                CollectorCRUDFunctions.delete,
-                                          ),
-                                        );
-                                      },
-                                      Container(
-                                        alignment: Alignment.centerRight,
-                                        child: const Icon(
-                                          Icons.delete_sharp,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              .toList();
-                        },
-                        error: (error, stack) {
-                          //  debugPrint('collectors Stream Error');
-                          return [];
-                        },
-                        loading: () {
-                          //  debugPrint('collectors Stream Loading');
-                          return [];
-                        },
-                      ),
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          error: (error, stackTrace) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'collectors',
+                  searchProvider: searchProvider('collectors'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'collectors-firstnames',
+                  searchProvider: searchProvider('collectors-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'collectors-phoneNumber',
+                  searchProvider: searchProvider('collectors-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'collectors-address',
+                  searchProvider: searchProvider('collectors-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          loading: () => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'collectors',
+                  searchProvider: searchProvider('collectors'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'collectors-firstnames',
+                  searchProvider: searchProvider('collectors-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'collectors-phoneNumber',
+                  searchProvider: searchProvider('collectors-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'collectors-address',
+                  searchProvider: searchProvider('collectors-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
           ),
         ),
       ),

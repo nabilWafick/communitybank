@@ -54,10 +54,10 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
   Widget build(BuildContext context) {
     const formCardWidth = 700.0;
     final economicalActivitiesListStream =
-        ref.watch(economicalActivityListStreamProvider);
+        ref.watch(economicalActivitiesListStreamProvider);
     final customersCategoriesListStream =
-        ref.watch(custumersCategoriesListStreamProvider);
-    final localitiesListStream = ref.watch(localityListStreamProvider);
+        ref.watch(customersCategoriesListStreamProvider);
+    final localitiesListStream = ref.watch(localitiesListStreamProvider);
     final personalStatusListStream =
         ref.watch(personalStatusListStreamProvider);
     final customerProfilePicture = ref.watch(customerProfilePictureProvider);

@@ -12,6 +12,7 @@ import 'package:communitybank/views/widgets/globals/search_input/search_input.wi
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 final searchedAgentsListProvider = StreamProvider<List<Agent>>((ref) async* {
   // Agent name
@@ -99,399 +100,521 @@ class AgentsList extends StatefulHookConsumerWidget {
 }
 
 class _AgentsListState extends ConsumerState<AgentsList> {
-  final ScrollController horizontallScrollController = ScrollController();
-  final ScrollController verticalScrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('agents-name')) ||
         ref.watch(isSearchingProvider('agents-firstnames')) ||
-        ref.watch(isSearchingProvider('agents-email')) ||
         ref.watch(isSearchingProvider('agents-phoneNumber')) ||
         ref.watch(isSearchingProvider('agents-address')) ||
         ref.watch(isSearchingProvider('agents-role'));
     final searchedAgentsList = ref.watch(searchedAgentsListProvider);
     final agentsListStream = ref.watch(agentsListStreamProvider);
-    return SizedBox(
-      height: 600.0,
-      child: Scrollbar(
-        controller: horizontallScrollController,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: SingleChildScrollView(
-            controller: horizontallScrollController,
-            child: Scrollbar(
-              controller: verticalScrollController,
-              child: SingleChildScrollView(
-                controller: verticalScrollController,
-                child: DataTable(
-                  showCheckboxColumn: true,
-                  columns: [
-                    const DataColumn(
-                      label: CBText(
-                        text: 'Code',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const DataColumn(
-                      label: CBText(
-                        text: 'Photo',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    DataColumn(
-                      label: CBSearchInput(
-                        hintText: 'Nom',
-                        familyName: 'agents-name',
-                        searchProvider: searchProvider('agents-name'),
-                      ),
+    final agentsList = isSearching ? searchedAgentsList : agentsListStream;
 
-                      /* CBText(
-                        text: 'Nom & Prénoms',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),*/
-                    ),
-                    DataColumn(
-                      label: CBSearchInput(
-                        hintText: 'Prénoms',
-                        familyName: 'agents-firstnames',
-                        searchProvider: searchProvider('agents-firstnames'),
-                      ),
+    ref.listen(agentsListStreamProvider, (previous, next) {
+      if (isSearching) {
+        ref.invalidate(searchedAgentsListProvider);
+      }
+    });
 
-                      /* CBText(
-                        text: 'Nom & Prénoms',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),*/
-                    ),
-                    DataColumn(
-                      label: CBSearchInput(
-                        hintText: 'Téléphone',
-                        familyName: 'agents-phoneNumber',
-                        searchProvider: searchProvider('agents-phoneNumber'),
-                      ),
-
-                      /* CBText(
-                        text: 'Téléphone',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),*/
-                    ),
-                    DataColumn(
-                      label: CBSearchInput(
-                        hintText: 'Email',
-                        familyName: 'agents-email',
-                        searchProvider: searchProvider('agents-email'),
-                      ),
-                      /*CBText(
-                        text: 'Email',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),*/
-                    ),
-                    DataColumn(
-                      label: CBSearchInput(
-                        hintText: 'Adresse',
-                        familyName: 'agents-address',
-                        searchProvider: searchProvider('agents-address'),
-                      ),
-
-                      /* CBText(
-                        text: 'Adresse',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),*/
-                    ),
-                    DataColumn(
-                      label: CBSearchInput(
-                        hintText: 'Rôle',
-                        familyName: 'agents-role',
-                        searchProvider: searchProvider('agents-role'),
-                      ),
-
-                      /* CBText(
-                        text: 'Role',
-                        textAlign: TextAlign.start,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),*/
-                    ),
-                    const DataColumn(
-                      label: SizedBox(),
-                    ),
-                    const DataColumn(
-                      label: SizedBox(),
-                    ),
-                  ],
-                  rows: isSearching
-                      ? searchedAgentsList.when(
-                          data: (data) {
-                            //  debugPrint('Agent Stream Data: $data');
-                            return data
-                                .map(
-                                  (agent) => DataRow(
-                                    cells: [
-                                      DataCell(
-                                        CBText(
-                                          text: '${data.indexOf(agent) + 1}',
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        onTap: () {
-                                          agent.profile != null
-                                              ? FunctionsController
-                                                  .showAlertDialog(
-                                                  context: context,
-                                                  alertDialog:
-                                                      SingleImageShower(
-                                                    imageSource: agent.profile!,
-                                                  ),
-                                                )
-                                              : () {};
-                                        },
-                                        Container(
-                                          alignment: Alignment.center,
-                                          child: agent.profile != null
-                                              ? const Icon(
-                                                  Icons.photo,
-                                                  color: CBColors.primaryColor,
-                                                )
-                                              : const SizedBox(),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.name,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.firstnames,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.phoneNumber,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.email,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.address,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.role,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        onTap: () {
-                                          ref
-                                              .read(
-                                                  agentPictureProvider.notifier)
-                                              .state = null;
-                                          FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: AgentUpdateForm(
-                                              agent: agent,
-                                            ),
-                                          );
-                                        },
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                        // showEditIcon: true,
-                                      ),
-                                      DataCell(
-                                        onTap: () async {
-                                          FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog:
-                                                AgentDeletionConfirmationDialog(
-                                              agent: agent,
-                                              confirmToDelete:
-                                                  AgentCRUDFunctions.delete,
-                                            ),
-                                          );
-                                        },
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: const Icon(
-                                            Icons.delete_sharp,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                .toList();
-                          },
-                          error: (error, stack) {
-                            //  debugPrint('Agents Stream Error');
-                            return [];
-                          },
-                          loading: () {
-                            //  debugPrint('Agents Stream Loading');
-                            return [];
-                          },
-                        )
-                      : agentsListStream.when(
-                          data: (data) {
-                            //  debugPrint('Agent Stream Data: $data');
-                            return data
-                                .map(
-                                  (agent) => DataRow(
-                                    cells: [
-                                      DataCell(
-                                        CBText(
-                                          text: '${data.indexOf(agent) + 1}',
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        onTap: () {
-                                          agent.profile != null
-                                              ? FunctionsController
-                                                  .showAlertDialog(
-                                                  context: context,
-                                                  alertDialog:
-                                                      SingleImageShower(
-                                                    imageSource: agent.profile!,
-                                                  ),
-                                                )
-                                              : () {};
-                                        },
-                                        Container(
-                                          alignment: Alignment.center,
-                                          child: agent.profile != null
-                                              ? const Icon(
-                                                  Icons.photo,
-                                                  color: CBColors.primaryColor,
-                                                )
-                                              : const SizedBox(),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.name,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.firstnames,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.phoneNumber,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.email,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.address,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        CBText(
-                                          text: agent.role,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        onTap: () {
-                                          ref
-                                              .read(
-                                                  agentPictureProvider.notifier)
-                                              .state = null;
-                                          FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: AgentUpdateForm(
-                                              agent: agent,
-                                            ),
-                                          );
-                                        },
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
-                                          ),
-                                        ),
-                                        // showEditIcon: true,
-                                      ),
-                                      DataCell(
-                                        onTap: () async {
-                                          FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog:
-                                                AgentDeletionConfirmationDialog(
-                                              agent: agent,
-                                              confirmToDelete:
-                                                  AgentCRUDFunctions.delete,
-                                            ),
-                                          );
-                                        },
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          child: const Icon(
-                                            Icons.delete_sharp,
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                                .toList();
-                          },
-                          error: (error, stack) {
-                            //  debugPrint('Agents Stream Error');
-                            return [];
-                          },
-                          loading: () {
-                            //  debugPrint('Agents Stream Loading');
-                            return [];
-                          },
-                        ),
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: agentsList.when(
+          data: (data) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 1200,
+            itemCount: data.length,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'collectors',
+                  searchProvider: searchProvider('agents-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'agents-firstnames',
+                  searchProvider: searchProvider('agents-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Email',
+                  familyName: 'agents-email',
+                  searchProvider: searchProvider('agents-email'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'agents-phoneNumber',
+                  searchProvider: searchProvider('agents-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'agents-address',
+                  searchProvider: searchProvider('agents-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Rôle',
+                  familyName: 'agents-role',
+                  searchProvider: searchProvider('agents-role'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              final agent = data[index];
+              return Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      agent.profile != null
+                          ? FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SingleImageShower(
+                                imageSource: agent.profile!,
+                              ),
+                            )
+                          : () {};
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200.0,
+                      height: 30.0,
+                      child: agent.profile != null
+                          ? const Icon(
+                              Icons.photo,
+                              color: CBColors.primaryColor,
+                            )
+                          : const SizedBox(),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: agent.name,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: agent.firstnames,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: agent.email,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: agent.phoneNumber,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: agent.address,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: agent.role,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      ref.read(agentPictureProvider.notifier).state = null;
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: AgentUpdateForm(
+                          agent: agent,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.green[500],
+                      ),
+                    ),
+                    // showEditIcon: true,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: AgentDeletionConfirmationDialog(
+                          agent: agent,
+                          confirmToDelete: AgentCRUDFunctions.delete,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          error: (error, stackTrace) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'collectors',
+                  searchProvider: searchProvider('agents-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'agents-firstnames',
+                  searchProvider: searchProvider('agents-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Email',
+                  familyName: 'agents-email',
+                  searchProvider: searchProvider('agents-email'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'agents-phoneNumber',
+                  searchProvider: searchProvider('agents-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'agents-address',
+                  searchProvider: searchProvider('agents-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Rôle',
+                  familyName: 'agents-role',
+                  searchProvider: searchProvider('agents-role'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          loading: () => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'collectors',
+                  searchProvider: searchProvider('agents-name'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Prénoms',
+                  familyName: 'agents-firstnames',
+                  searchProvider: searchProvider('agents-firstnames'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Email',
+                  familyName: 'agents-email',
+                  searchProvider: searchProvider('agents-email'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Téléphone',
+                  familyName: 'agents-phoneNumber',
+                  searchProvider: searchProvider('agents-phoneNumber'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Adresse',
+                  familyName: 'agents-address',
+                  searchProvider: searchProvider('agents-address'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Rôle',
+                  familyName: 'agents-role',
+                  searchProvider: searchProvider('agents-role'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
           ),
         ),
       ),

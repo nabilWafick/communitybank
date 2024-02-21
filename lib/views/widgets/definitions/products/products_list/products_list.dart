@@ -11,7 +11,6 @@ import 'package:communitybank/views/widgets/forms/update/products/products_updat
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -43,14 +42,13 @@ class ProductsList extends StatefulHookConsumerWidget {
 }
 
 class _ProductsListState extends ConsumerState<ProductsList> {
-  final ScrollController scrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('products'));
     final productsListStream = ref.watch(productsListStreamProvider);
     final searchedProductsList = ref.watch(searchedProductsListProvider);
-    final productList = isSearching ? searchedProductsList : productsListStream;
+    final productsList =
+        isSearching ? searchedProductsList : productsListStream;
 
     ref.listen(productsListStreamProvider, (previous, next) {
       if (isSearching) {
@@ -61,8 +59,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        //width: 900,
-        child: productList.when(
+        child: productsList.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
             rightHandSideColumnWidth: MediaQuery.of(context).size.width - 100,
@@ -107,7 +104,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
               Container(
                 width: 250.0,
                 height: 50.0,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Prix d\'achat',
                   textAlign: TextAlign.center,
@@ -172,7 +169,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                     ),
                   ),
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerLeft,
                     width: 250.0,
                     height: 30.0,
                     child: CBText(
@@ -270,7 +267,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
               Container(
                 width: 250.0,
                 height: 50.0,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Prix d\'achat',
                   textAlign: TextAlign.center,
@@ -351,7 +348,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
               Container(
                 width: 250.0,
                 height: 50.0,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Prix d\'achat',
                   textAlign: TextAlign.center,

@@ -1,5 +1,4 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +22,7 @@ class _CBSearchInputState extends ConsumerState<CBSearchInput> {
   TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    textEditingController.text = ref.watch(searchProvider(widget.familyName));
+    //  textEditingController.text = ref.watch(searchProvider(widget.familyName));
     return SizedBox(
       width: widget.width ?? 350.0,
       child: Form(
