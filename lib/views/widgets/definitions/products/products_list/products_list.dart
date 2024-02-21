@@ -14,6 +14,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 final searchedProductsListProvider =
     StreamProvider<List<Product>>((ref) async* {
@@ -49,252 +50,345 @@ class _ProductsListState extends ConsumerState<ProductsList> {
     final isSearching = ref.watch(isSearchingProvider('products'));
     final productsListStream = ref.watch(productsListStreamProvider);
     final searchedProductsList = ref.watch(searchedProductsListProvider);
-    return SizedBox(
-      height: 600.0,
-      //  width: 500,
-      child: DataTable(
-        columns: [
-          const DataColumn(
-            label: CBText(
-              text: 'Code',
-              textAlign: TextAlign.start,
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const DataColumn(
-            label: CBText(
-              text: 'Photo',
-              textAlign: TextAlign.start,
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          DataColumn(
-            label: CBSearchInput(
-              hintText: 'Nom',
-              familyName: 'products',
-              searchProvider: searchProvider('products'),
-            ),
-            /*   CBText(
-              text: 'Nom',
-              textAlign: TextAlign.start,
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-            ),*/
-          ),
-          const DataColumn(
-            label: CBText(
-              text: 'Prix d\'achat',
-              textAlign: TextAlign.start,
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const DataColumn(label: SizedBox()),
-          const DataColumn(label: SizedBox()),
-        ],
-        rows: isSearching
-            ? searchedProductsList.when(
-                data: (data) {
-                  //  debugPrint('Product Stream Data: $data');
-                  return data
-                      .map(
-                        (product) => DataRow(
-                          cells: [
-                            DataCell(
-                              CBText(
-                                text: '${data.indexOf(product) + 1}',
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                product.picture != null
-                                    ? FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: SingleImageShower(
-                                          imageSource: product.picture!,
-                                        ),
-                                      )
-                                    : () {};
-                              },
-                              Container(
-                                alignment: Alignment.center,
-                                child: product.picture != null
-                                    ? const Icon(
-                                        Icons.photo,
-                                        color: CBColors.primaryColor,
-                                      )
-                                    : const SizedBox(),
-                              ),
-                            ),
-                            DataCell(
-                              CBText(
-                                text: product.name,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            DataCell(
-                              CBText(
-                                text: '${product.purchasePrice.ceil()} f',
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                ref
-                                    .read(productPictureProvider.notifier)
-                                    .state = null;
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      ProductUpdateForm(product: product),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              // showEditIcon: true,
-                            ),
-                            DataCell(
-                              onTap: () async {
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      ProductDeletionConfirmationDialog(
-                                    product: product,
-                                    confirmToDelete:
-                                        ProductCRUDFunctions.delete,
-                                  ),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.delete_sharp,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                      .toList();
-                },
-                error: (error, stack) {
-                  //  debugPrint('Products Stream Error');
-                  return [];
-                },
-                loading: () {
-                  //  debugPrint('Products Stream Loading');
-                  return [];
-                },
-              )
-            : productsListStream.when(
-                data: (data) {
-                  //  debugPrint('Product Stream Data: $data');
-                  return data
-                      .map(
-                        (product) => DataRow(
-                          cells: [
-                            DataCell(
-                              CBText(
-                                text: '${data.indexOf(product) + 1}',
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                product.picture != null
-                                    ? FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: SingleImageShower(
-                                          imageSource: product.picture!,
-                                        ),
-                                      )
-                                    : () {};
-                              },
-                              Container(
-                                alignment: Alignment.center,
-                                child: product.picture != null
-                                    ? const Icon(
-                                        Icons.photo,
-                                        color: CBColors.primaryColor,
-                                      )
-                                    : const SizedBox(),
-                              ),
-                            ),
-                            DataCell(
-                              CBText(
-                                text: product.name,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            DataCell(
-                              CBText(
-                                text: '${product.purchasePrice.ceil()} f',
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            DataCell(
-                              onTap: () {
-                                ref
-                                    .read(productPictureProvider.notifier)
-                                    .state = null;
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      ProductUpdateForm(product: product),
-                                );
-                              },
-                              const SizedBox(
-                                width: 20.0,
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              // showEditIcon: true,
-                            ),
-                            DataCell(
-                              onTap: () async {
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      ProductDeletionConfirmationDialog(
-                                    product: product,
-                                    confirmToDelete:
-                                        ProductCRUDFunctions.delete,
-                                  ),
-                                );
-                              },
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: const Icon(
-                                  Icons.delete_sharp,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                      .toList();
-                },
-                error: (error, stack) {
-                  //  debugPrint('Products Stream Error');
-                  return [];
-                },
-                loading: () {
-                  //  debugPrint('Products Stream Loading');
-                  return [];
-                },
+    final productList = isSearching ? searchedProductsList : productsListStream;
+
+    ref.listen(productsListStreamProvider, (previous, next) {
+      if (isSearching) {
+        ref.invalidate(searchedProductsListProvider);
+      }
+    });
+
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        //width: 900,
+        child: productList.when(
+          data: (data) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width - 100,
+            itemCount: data.length,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 700.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'products',
+                  searchProvider: searchProvider('products'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Prix d\'achat',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              final product = data[index];
+              return Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      product.picture != null
+                          ? FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SingleImageShower(
+                                imageSource: product.picture!,
+                              ),
+                            )
+                          : () {};
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 200.0,
+                      height: 30.0,
+                      child: product.picture != null
+                          ? const Icon(
+                              Icons.photo,
+                              color: CBColors.primaryColor,
+                            )
+                          : const SizedBox(),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 700.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: product.name,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 250.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: '${product.purchasePrice.ceil()} f',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      ref.read(productPictureProvider.notifier).state = null;
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: ProductUpdateForm(product: product),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.edit,
+                        color: Colors.green[500],
+                      ),
+                    ),
+                    // showEditIcon: true,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: ProductDeletionConfirmationDialog(
+                          product: product,
+                          confirmToDelete: ProductCRUDFunctions.delete,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 150.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.delete_sharp,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          error: (error, stackTrace) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 700.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'products',
+                  searchProvider: searchProvider('products'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Prix d\'achat',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          loading: () => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Photo',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 700.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: CBSearchInput(
+                  hintText: 'Nom',
+                  familyName: 'products',
+                  searchProvider: searchProvider('products'),
+                  width: MediaQuery.of(context).size.width,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Prix d\'achat',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+              const SizedBox(
+                width: 150.0,
+                height: 50.0,
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+        ),
       ),
     );
   }

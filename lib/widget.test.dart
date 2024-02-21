@@ -1,6 +1,12 @@
+import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/products/products_crud.function.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/products/products_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/products/products_update_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/images_shower/single/single_image_shower.widget.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -42,76 +48,6 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
   }
 }
 
-class LargeTable extends StatefulWidget {
-  const LargeTable({super.key});
-
-  @override
-  _LargeTableState createState() => _LargeTableState();
-}
-
-class _LargeTableState extends State<LargeTable> {
-  // Generate large sample data
-  final int numRows = 100; // Adjust this number for desired table size
-  final int numColumns = 5;
-  final List<String> headerTitles = ['Col1', 'Col2', 'Col3', 'Col4', 'Col5'];
-  final List<List<String>> data =
-      List.generate(100, (row) => List.generate(5, (col) => "Data $row-$col"));
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        alignment: Alignment.center,
-        width: 700,
-        height: 700,
-        child: HorizontalDataTable(
-          leftHandSideColumnWidth: 100,
-          rightHandSideColumnWidth: 900,
-          itemCount: data.length,
-          isFixedHeader: true,
-          leftHandSideColBackgroundColor: CBColors.backgroundColor,
-          rightHandSideColBackgroundColor: CBColors.backgroundColor,
-          headerWidgets: headerTitles
-              .map(
-                (title) => Container(
-                  alignment: Alignment.center,
-                  //  color: Colors.blueGrey,
-                  width: 225.0,
-                  height: 50.0,
-                  child: Text(title),
-                ),
-              )
-              .toList(),
-          leftSideItemBuilder: (context, index) {
-            return Container(
-              alignment: Alignment.center,
-              width: 100.0,
-              height: 50.0,
-              child: Text('$index'),
-            );
-          },
-          rightSideItemBuilder: (BuildContext context, int index) {
-            return Row(
-              children: List.generate(
-                numColumns - 1,
-                (col) => Container(
-                  alignment: Alignment.center,
-                  width: 225.0,
-                  child: Text(
-                      data[index][col + 1]), // adjust column width as needed
-                ),
-              ),
-            );
-          },
-          rowSeparatorWidget: const Divider(),
-          scrollPhysics: const BouncingScrollPhysics(),
-          horizontalScrollPhysics: const BouncingScrollPhysics(),
-        ),
-      ),
-    );
-  }
-}
-
 class ProductsTable extends ConsumerStatefulWidget {
   const ProductsTable({super.key});
   @override
@@ -120,34 +56,33 @@ class ProductsTable extends ConsumerStatefulWidget {
 
 class _ProductsTableState extends ConsumerState<ProductsTable> {
   // Generate large sample data
-  final int numRows = 100; // Adjust this number for desired table size
-  final int numColumns = 5;
-  final List<String> headerTitles = ['Col1', 'Col2', 'Col3', 'Col4', 'Col5'];
-  final List<List<String>> data =
-      List.generate(100, (row) => List.generate(5, (col) => "Data $row-$col"));
+  // final int numRows = 100; // Adjust this number for desired table size
+  // final int numColumns = 5;
+  // final List<String> headerTitles = ['Col1', 'Col2', 'Col3', 'Col4', 'Col5'];
+  // final List<List<String>> data =
+  //     List.generate(100, (row) => List.generate(5, (col) => "Data $row-$col"));
 
   @override
   Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('products'));
     final productsListStream = ref.watch(productsListStreamProvider);
     final searchedProductsList = ref.watch(searchedProductsListProvider);
-    return Center(
-      child: Container(
-        alignment: Alignment.center,
-        width: 700,
-        height: 700,
-        child:
-            /*  
+    final productList = isSearching ? searchedProductsList : productsListStream;
 
-        productsListStream.when(data: (data){
+    ref.listen(productsListStreamProvider, (previous, next) {
+      if (isSearching) {
+        ref.invalidate(searchedProductsListProvider);
+      }
+    });
 
-        }, error: (error,stackTrace)=>, loading: ()=>),
-        
-        */
-
-            HorizontalDataTable(
+    return Container(
+      alignment: Alignment.center,
+      //width: 900,
+      // height: 700,
+      child: productList.when(
+        data: (data) => HorizontalDataTable(
           leftHandSideColumnWidth: 100,
-          rightHandSideColumnWidth: 1200,
+          rightHandSideColumnWidth: MediaQuery.of(context).size.width - 100,
           itemCount: data.length,
           isFixedHeader: true,
           leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -158,14 +93,13 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
               height: 50.0,
               alignment: Alignment.center,
               child: const CBText(
-                text: 'Num',
+                text: 'N°',
                 textAlign: TextAlign.center,
                 fontSize: 12.0,
                 fontWeight: FontWeight.w500,
               ),
             ),
             Container(
-              color: Colors.green,
               width: 200.0,
               height: 50.0,
               alignment: Alignment.center,
@@ -177,19 +111,18 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
               ),
             ),
             Container(
-              color: Colors.green,
-              width: 400.0,
+              width: 700.0,
               height: 50.0,
               alignment: Alignment.center,
               child: CBSearchInput(
                 hintText: 'Nom',
                 familyName: 'products',
                 searchProvider: searchProvider('products'),
+                width: MediaQuery.of(context).size.width,
               ),
             ),
             Container(
-              color: Colors.green,
-              width: 200.0,
+              width: 250.0,
               height: 50.0,
               alignment: Alignment.center,
               child: const CBText(
@@ -200,11 +133,11 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
               ),
             ),
             const SizedBox(
-              width: 100.0,
+              width: 150.0,
               height: 50.0,
             ),
             const SizedBox(
-              width: 100.0,
+              width: 150.0,
               height: 50.0,
             ),
           ],
@@ -220,95 +153,81 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
             );
           },
           rightSideItemBuilder: (BuildContext context, int index) {
+            final product = data[index];
             return Row(
               children: [
                 InkWell(
                   onTap: () {
-                    /*   product.picture != null
-                                    ? FunctionsController.showAlertDialog(
-                                        context: context,
-                                        alertDialog: SingleImageShower(
-                                          imageSource: product.picture!,
-                                        ),
-                                      )
-                                    : () {};
-                             */
+                    product.picture != null
+                        ? FunctionsController.showAlertDialog(
+                            context: context,
+                            alertDialog: SingleImageShower(
+                              imageSource: product.picture!,
+                            ),
+                          )
+                        : () {};
                   },
                   child: Container(
-                      alignment: Alignment.center,
-                      width: 200.0,
-                      height: 30.0,
-                      child: const Icon(
-                        Icons.photo,
-                        color: CBColors.primaryColor,
-                      )
-                      /* product.picture != null
-                                    ? const Icon(
-                                        Icons.photo,
-                                        color: CBColors.primaryColor,
-                                      )
-                                    : const SizedBox(),
-                                    */
-                      ),
+                    alignment: Alignment.center,
+                    width: 200.0,
+                    height: 30.0,
+                    child: product.picture != null
+                        ? const Icon(
+                            Icons.photo,
+                            color: CBColors.primaryColor,
+                          )
+                        : const SizedBox(),
+                  ),
                 ),
                 Container(
-                  alignment: Alignment.center,
-                  width: 400.0,
+                  alignment: Alignment.centerLeft,
+                  width: 700.0,
                   height: 30.0,
-                  child: const CBText(
-                    text: 'Product Name',
-                    //  text: 'product.name',
+                  child: CBText(
+                    text: product.name,
                     fontSize: 12.0,
                   ),
                 ),
                 Container(
                   alignment: Alignment.center,
-                  width: 200.0,
+                  width: 250.0,
                   height: 30.0,
-                  child: const CBText(
-                    text: 'Purchase Price',
-                    //   text: '${product.purchasePrice.ceil()} f',
+                  child: CBText(
+                    text: '${product.purchasePrice.ceil()} f',
                     fontSize: 12.0,
                   ),
                 ),
                 InkWell(
                   onTap: () {
-                    /*   ref
-                                    .read(productPictureProvider.notifier)
-                                    .state = null;
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      ProductUpdateForm(product: product),
-                                );*/
+                    ref.read(productPictureProvider.notifier).state = null;
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: ProductUpdateForm(product: product),
+                    );
                   },
                   child: Container(
-                    width: 100.0,
+                    width: 150.0,
                     height: 30.0,
                     alignment: Alignment.centerRight,
-                    child: const Icon(
+                    child: Icon(
                       Icons.edit,
-                      color: Colors.green,
+                      color: Colors.green[500],
                     ),
                   ),
                   // showEditIcon: true,
                 ),
                 InkWell(
                   onTap: () async {
-                    /*
-                                FunctionsController.showAlertDialog(
-                                  context: context,
-                                  alertDialog:
-                                      ProductDeletionConfirmationDialog(
-                                    product: product,
-                                    confirmToDelete:
-                                        ProductCRUDFunctions.delete,
-                                  ),
-                                );
-                                */
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: ProductDeletionConfirmationDialog(
+                        product: product,
+                        confirmToDelete: ProductCRUDFunctions.delete,
+                      ),
+                    );
                   },
                   child: Container(
-                    width: 100.0,
+                    width: 150.0,
                     height: 30.0,
                     alignment: Alignment.centerRight,
                     child: const Icon(
@@ -318,6 +237,168 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                   ),
                 ),
               ],
+            );
+          },
+          rowSeparatorWidget: const Divider(),
+          scrollPhysics: const BouncingScrollPhysics(),
+          horizontalScrollPhysics: const BouncingScrollPhysics(),
+        ),
+        error: (error, stackTrace) => HorizontalDataTable(
+          leftHandSideColumnWidth: 100,
+          rightHandSideColumnWidth: 1450,
+          itemCount: 0,
+          isFixedHeader: true,
+          leftHandSideColBackgroundColor: CBColors.backgroundColor,
+          rightHandSideColBackgroundColor: CBColors.backgroundColor,
+          headerWidgets: [
+            Container(
+              width: 200.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const CBText(
+                text: 'N°',
+                textAlign: TextAlign.center,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Container(
+              width: 200.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const CBText(
+                text: 'Photo',
+                textAlign: TextAlign.center,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Container(
+              width: 700.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: CBSearchInput(
+                hintText: 'Nom',
+                familyName: 'products',
+                searchProvider: searchProvider('products'),
+                width: MediaQuery.of(context).size.width,
+              ),
+            ),
+            Container(
+              width: 250.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const CBText(
+                text: 'Prix d\'achat',
+                textAlign: TextAlign.center,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(
+              width: 150.0,
+              height: 50.0,
+            ),
+            const SizedBox(
+              width: 150.0,
+              height: 50.0,
+            ),
+          ],
+          leftSideItemBuilder: (context, index) {
+            return Container(
+              alignment: Alignment.center,
+              width: 200.0,
+              height: 30.0,
+              child: CBText(
+                text: '${index + 1}',
+                fontSize: 12.0,
+              ),
+            );
+          },
+          rightSideItemBuilder: (BuildContext context, int index) {
+            return const Row(
+              children: [],
+            );
+          },
+          rowSeparatorWidget: const Divider(),
+          scrollPhysics: const BouncingScrollPhysics(),
+          horizontalScrollPhysics: const BouncingScrollPhysics(),
+        ),
+        loading: () => HorizontalDataTable(
+          leftHandSideColumnWidth: 100,
+          rightHandSideColumnWidth: 1450,
+          itemCount: 0,
+          isFixedHeader: true,
+          leftHandSideColBackgroundColor: CBColors.backgroundColor,
+          rightHandSideColBackgroundColor: CBColors.backgroundColor,
+          headerWidgets: [
+            Container(
+              width: 200.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const CBText(
+                text: 'N°',
+                textAlign: TextAlign.center,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Container(
+              width: 200.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const CBText(
+                text: 'Photo',
+                textAlign: TextAlign.center,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Container(
+              width: 700.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: CBSearchInput(
+                hintText: 'Nom',
+                familyName: 'products',
+                searchProvider: searchProvider('products'),
+                width: MediaQuery.of(context).size.width,
+              ),
+            ),
+            Container(
+              width: 250.0,
+              height: 50.0,
+              alignment: Alignment.center,
+              child: const CBText(
+                text: 'Prix d\'achat',
+                textAlign: TextAlign.center,
+                fontSize: 12.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(
+              width: 150.0,
+              height: 50.0,
+            ),
+            const SizedBox(
+              width: 150.0,
+              height: 50.0,
+            ),
+          ],
+          leftSideItemBuilder: (context, index) {
+            return Container(
+              alignment: Alignment.center,
+              width: 200.0,
+              height: 30.0,
+              child: CBText(
+                text: '${index + 1}',
+                fontSize: 12.0,
+              ),
+            );
+          },
+          rightSideItemBuilder: (BuildContext context, int index) {
+            return const Row(
+              children: [],
             );
           },
           rowSeparatorWidget: const Divider(),

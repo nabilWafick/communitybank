@@ -7,11 +7,13 @@ class CBSearchInput extends ConsumerStatefulWidget {
   final String hintText;
   final String familyName;
   final StateProvider<String> searchProvider;
+  final double? width;
   const CBSearchInput({
     super.key,
     required this.familyName,
     required this.hintText,
     required this.searchProvider,
+    this.width,
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CBSearchInputState();
@@ -23,7 +25,7 @@ class _CBSearchInputState extends ConsumerState<CBSearchInput> {
   Widget build(BuildContext context) {
     textEditingController.text = ref.watch(searchProvider(widget.familyName));
     return SizedBox(
-      width: 350.0,
+      width: widget.width ?? 350.0,
       child: Form(
         child: TextFormField(
           //  initialValue: initialValue != '' ? initialValue : null,
