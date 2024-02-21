@@ -60,6 +60,7 @@ class PersonalStatusList extends ConsumerWidget {
               DataColumn(
                 label: CBSearchInput(
                   hintText: 'Nom',
+                  familyName: 'personal-status',
                   searchProvider: searchProvider('personal-status'),
                 ),
                 /*CBText(

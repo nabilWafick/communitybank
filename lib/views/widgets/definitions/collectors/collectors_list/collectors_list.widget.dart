@@ -127,6 +127,7 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                   DataColumn(
                     label: CBSearchInput(
                       hintText: 'Nom',
+                      familyName: 'collectors-name',
                       searchProvider: searchProvider('collectors-name'),
                     ),
                     /*CBText(
@@ -139,6 +140,7 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                   DataColumn(
                     label: CBSearchInput(
                       hintText: 'Prénoms',
+                      familyName: 'collectors-firstnames',
                       searchProvider: searchProvider('collectors-firstnames'),
                     ),
                     /*CBText(
@@ -151,6 +153,7 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                   DataColumn(
                     label: CBSearchInput(
                       hintText: 'Téléphone',
+                      familyName: 'collectors-phoneNumber',
                       searchProvider: searchProvider('collectors-phoneNumber'),
                     ),
                     /*CBText(
@@ -163,6 +166,7 @@ class _CollectorsListState extends ConsumerState<CollectorsList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Adresse',
+                    familyName: 'collectors-address',
                     searchProvider: searchProvider('collectors-address'),
                   )
                       /* CBText(

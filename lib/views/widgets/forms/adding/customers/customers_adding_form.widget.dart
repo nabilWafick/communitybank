@@ -28,6 +28,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 //import 'package:text_similarity/implementation/text_similarity.dart';
 
+// used for check if there is customers
+// with similar name or firstnames
+// that will help for knowing
+// if Navigator.of(context).pop()
+// will be used two times in customer
+// creation crud function in order to close
+// similar customers list and customer
+// adding alert dialog
+final isThereSimilarCustomersProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
 class CustomerAddingForm extends StatefulHookConsumerWidget {
   const CustomerAddingForm({super.key});
 
@@ -551,12 +563,25 @@ class _CustomerAddingFormState extends ConsumerState<CustomerAddingForm> {
                                       showValidatedButton: showValidatedButton,
                                     );
                                   } else {
+                                    // used for check if there is customers
+                                    // with similar name or firstnames
+                                    // that will help for knowing
+                                    // if Navigator.of(context).pop()
+                                    // will be used two times in customer
+                                    // creation crud function in order to close
+                                    // similar customers list and customer
+                                    // adding alert dialog
+                                    ref
+                                        .read(isThereSimilarCustomersProvider
+                                            .notifier)
+                                        .state = true;
                                     await FunctionsController.showAlertDialog(
                                       context: context,
                                       alertDialog:
                                           CustomerAddingConfirmationDialog(
                                         formKey: formKey,
                                         similarCustomers: similarCustomers,
+                                        context: context,
                                         showValidatedButton:
                                             showValidatedButton,
                                         confirmToAdd:

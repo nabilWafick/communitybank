@@ -1,12 +1,15 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CBSearchInput extends ConsumerStatefulWidget {
   final String hintText;
+  final String familyName;
   final StateProvider<String> searchProvider;
   const CBSearchInput({
     super.key,
+    required this.familyName,
     required this.hintText,
     required this.searchProvider,
   });
@@ -18,10 +21,12 @@ class _CBSearchInputState extends ConsumerState<CBSearchInput> {
   TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    textEditingController.text = ref.watch(searchProvider(widget.familyName));
     return SizedBox(
       width: 350.0,
       child: Form(
         child: TextFormField(
+          //  initialValue: initialValue != '' ? initialValue : null,
           controller: textEditingController,
           onChanged: (value) {
             ref.read(widget.searchProvider.notifier).state = value;

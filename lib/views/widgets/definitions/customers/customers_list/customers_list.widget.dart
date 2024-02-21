@@ -184,6 +184,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Nom',
+                    familyName: 'customers-name',
                     searchProvider: searchProvider('customers-name'),
                   )
                       /*  CBText(
@@ -197,6 +198,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Prénoms',
+                    familyName: 'customers-firstnames',
                     searchProvider: searchProvider('customers-firstnames'),
                   )
                       /* CBText(
@@ -209,6 +211,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Téléphone',
+                    familyName: 'customers-phoneNumber',
                     searchProvider: searchProvider('customers-phoneNumber'),
                   )
                       /* CBText(
@@ -221,6 +224,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Adresse',
+                    familyName: 'customers-address',
                     searchProvider: searchProvider('customers-address'),
                   )
                       /* CBText(
@@ -233,6 +237,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Profession',
+                    familyName: 'customers-profession',
                     searchProvider: searchProvider('customers-profession'),
                   )
                       /*CBText(
@@ -246,6 +251,7 @@ class _CustomersListState extends ConsumerState<CustomersList> {
                   DataColumn(
                       label: CBSearchInput(
                     hintText: 'Numero CNI',
+                    familyName: 'customers-nicNumber',
                     searchProvider: searchProvider('customers-nicNumber'),
                   )
                       /* label: CBText(

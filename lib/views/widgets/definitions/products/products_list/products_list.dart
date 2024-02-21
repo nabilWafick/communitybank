@@ -11,6 +11,7 @@ import 'package:communitybank/views/widgets/forms/update/products/products_updat
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -51,254 +52,249 @@ class _ProductsListState extends ConsumerState<ProductsList> {
     return SizedBox(
       height: 600.0,
       //  width: 500,
-      child: Scrollbar(
-        controller: scrollController,
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: DataTable(
-            columns: [
-              const DataColumn(
-                label: CBText(
-                  text: 'Code',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const DataColumn(
-                label: CBText(
-                  text: 'Photo',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              DataColumn(
-                label: CBSearchInput(
-                  hintText: 'Nom',
-                  searchProvider: searchProvider('products'),
-                ),
-                /*   CBText(
-                  text: 'Nom',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),*/
-              ),
-              const DataColumn(
-                label: CBText(
-                  text: 'Prix d\'achat',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const DataColumn(label: SizedBox()),
-              const DataColumn(label: SizedBox()),
-            ],
-            rows: isSearching
-                ? searchedProductsList.when(
-                    data: (data) {
-                      //  debugPrint('Product Stream Data: $data');
-                      return data
-                          .map(
-                            (product) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: '${data.indexOf(product) + 1}',
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    product.picture != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: product.picture!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: product.picture != null
-                                        ? const Icon(
-                                            Icons.photo,
-                                            color: CBColors.primaryColor,
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: product.name,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: '${product.purchasePrice.ceil()} f',
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    ref
-                                        .read(productPictureProvider.notifier)
-                                        .state = null;
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          ProductUpdateForm(product: product),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          ProductDeletionConfirmationDialog(
-                                        product: product,
-                                        confirmToDelete:
-                                            ProductCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('Products Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('Products Stream Loading');
-                      return [];
-                    },
-                  )
-                : productsListStream.when(
-                    data: (data) {
-                      //  debugPrint('Product Stream Data: $data');
-                      return data
-                          .map(
-                            (product) => DataRow(
-                              cells: [
-                                DataCell(
-                                  CBText(
-                                    text: '${data.indexOf(product) + 1}',
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    product.picture != null
-                                        ? FunctionsController.showAlertDialog(
-                                            context: context,
-                                            alertDialog: SingleImageShower(
-                                              imageSource: product.picture!,
-                                            ),
-                                          )
-                                        : () {};
-                                  },
-                                  Container(
-                                    alignment: Alignment.center,
-                                    child: product.picture != null
-                                        ? const Icon(
-                                            Icons.photo,
-                                            color: CBColors.primaryColor,
-                                          )
-                                        : const SizedBox(),
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: product.name,
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                DataCell(
-                                  CBText(
-                                    text: '${product.purchasePrice.ceil()} f',
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                                DataCell(
-                                  onTap: () {
-                                    ref
-                                        .read(productPictureProvider.notifier)
-                                        .state = null;
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          ProductUpdateForm(product: product),
-                                    );
-                                  },
-                                  const SizedBox(
-                                    width: 20.0,
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                  ),
-                                  // showEditIcon: true,
-                                ),
-                                DataCell(
-                                  onTap: () async {
-                                    FunctionsController.showAlertDialog(
-                                      context: context,
-                                      alertDialog:
-                                          ProductDeletionConfirmationDialog(
-                                        product: product,
-                                        confirmToDelete:
-                                            ProductCRUDFunctions.delete,
-                                      ),
-                                    );
-                                  },
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: const Icon(
-                                      Icons.delete_sharp,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList();
-                    },
-                    error: (error, stack) {
-                      //  debugPrint('Products Stream Error');
-                      return [];
-                    },
-                    loading: () {
-                      //  debugPrint('Products Stream Loading');
-                      return [];
-                    },
-                  ),
+      child: DataTable(
+        columns: [
+          const DataColumn(
+            label: CBText(
+              text: 'Code',
+              textAlign: TextAlign.start,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
+          const DataColumn(
+            label: CBText(
+              text: 'Photo',
+              textAlign: TextAlign.start,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          DataColumn(
+            label: CBSearchInput(
+              hintText: 'Nom',
+              familyName: 'products',
+              searchProvider: searchProvider('products'),
+            ),
+            /*   CBText(
+              text: 'Nom',
+              textAlign: TextAlign.start,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+            ),*/
+          ),
+          const DataColumn(
+            label: CBText(
+              text: 'Prix d\'achat',
+              textAlign: TextAlign.start,
+              fontSize: 12.0,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const DataColumn(label: SizedBox()),
+          const DataColumn(label: SizedBox()),
+        ],
+        rows: isSearching
+            ? searchedProductsList.when(
+                data: (data) {
+                  //  debugPrint('Product Stream Data: $data');
+                  return data
+                      .map(
+                        (product) => DataRow(
+                          cells: [
+                            DataCell(
+                              CBText(
+                                text: '${data.indexOf(product) + 1}',
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            DataCell(
+                              onTap: () {
+                                product.picture != null
+                                    ? FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog: SingleImageShower(
+                                          imageSource: product.picture!,
+                                        ),
+                                      )
+                                    : () {};
+                              },
+                              Container(
+                                alignment: Alignment.center,
+                                child: product.picture != null
+                                    ? const Icon(
+                                        Icons.photo,
+                                        color: CBColors.primaryColor,
+                                      )
+                                    : const SizedBox(),
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text: product.name,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text: '${product.purchasePrice.ceil()} f',
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            DataCell(
+                              onTap: () {
+                                ref
+                                    .read(productPictureProvider.notifier)
+                                    .state = null;
+                                FunctionsController.showAlertDialog(
+                                  context: context,
+                                  alertDialog:
+                                      ProductUpdateForm(product: product),
+                                );
+                              },
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              // showEditIcon: true,
+                            ),
+                            DataCell(
+                              onTap: () async {
+                                FunctionsController.showAlertDialog(
+                                  context: context,
+                                  alertDialog:
+                                      ProductDeletionConfirmationDialog(
+                                    product: product,
+                                    confirmToDelete:
+                                        ProductCRUDFunctions.delete,
+                                  ),
+                                );
+                              },
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: const Icon(
+                                  Icons.delete_sharp,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList();
+                },
+                error: (error, stack) {
+                  //  debugPrint('Products Stream Error');
+                  return [];
+                },
+                loading: () {
+                  //  debugPrint('Products Stream Loading');
+                  return [];
+                },
+              )
+            : productsListStream.when(
+                data: (data) {
+                  //  debugPrint('Product Stream Data: $data');
+                  return data
+                      .map(
+                        (product) => DataRow(
+                          cells: [
+                            DataCell(
+                              CBText(
+                                text: '${data.indexOf(product) + 1}',
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            DataCell(
+                              onTap: () {
+                                product.picture != null
+                                    ? FunctionsController.showAlertDialog(
+                                        context: context,
+                                        alertDialog: SingleImageShower(
+                                          imageSource: product.picture!,
+                                        ),
+                                      )
+                                    : () {};
+                              },
+                              Container(
+                                alignment: Alignment.center,
+                                child: product.picture != null
+                                    ? const Icon(
+                                        Icons.photo,
+                                        color: CBColors.primaryColor,
+                                      )
+                                    : const SizedBox(),
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text: product.name,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            DataCell(
+                              CBText(
+                                text: '${product.purchasePrice.ceil()} f',
+                                fontSize: 12.0,
+                              ),
+                            ),
+                            DataCell(
+                              onTap: () {
+                                ref
+                                    .read(productPictureProvider.notifier)
+                                    .state = null;
+                                FunctionsController.showAlertDialog(
+                                  context: context,
+                                  alertDialog:
+                                      ProductUpdateForm(product: product),
+                                );
+                              },
+                              const SizedBox(
+                                width: 20.0,
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              // showEditIcon: true,
+                            ),
+                            DataCell(
+                              onTap: () async {
+                                FunctionsController.showAlertDialog(
+                                  context: context,
+                                  alertDialog:
+                                      ProductDeletionConfirmationDialog(
+                                    product: product,
+                                    confirmToDelete:
+                                        ProductCRUDFunctions.delete,
+                                  ),
+                                );
+                              },
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: const Icon(
+                                  Icons.delete_sharp,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList();
+                },
+                error: (error, stack) {
+                  //  debugPrint('Products Stream Error');
+                  return [];
+                },
+                loading: () {
+                  //  debugPrint('Products Stream Loading');
+                  return [];
+                },
+              ),
       ),
     );
   }

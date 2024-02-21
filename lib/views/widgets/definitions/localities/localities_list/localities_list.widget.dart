@@ -55,6 +55,7 @@ class LocalitiesList extends ConsumerWidget {
               DataColumn(
                 label: CBSearchInput(
                   hintText: 'Nom',
+                  familyName: 'localities',
                   searchProvider: searchProvider('localities'),
                 ),
                 /*   CBText(

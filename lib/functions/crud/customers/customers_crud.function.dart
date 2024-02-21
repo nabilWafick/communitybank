@@ -7,6 +7,7 @@ import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/constants/constants.util.dart';
+import 'package:communitybank/views/widgets/forms/adding/customers/customers_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category/customer_category_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';
@@ -178,10 +179,16 @@ class CustomerCRUDFunctions {
         showValidatedButton.value = true;
       }
 
-      FunctionsController.showAlertDialog(
+      await FunctionsController.showAlertDialog(
         context: context,
         alertDialog: const ResponseDialog(),
       );
+      if (ref.watch(isThereSimilarCustomersProvider) &&
+          customerStatus == ServiceResponse.success) {
+        Future.delayed(const Duration(milliseconds: 1200), () {
+          Navigator.of(context).pop();
+        });
+      }
     }
   }
 

@@ -88,6 +88,7 @@ class _CustomersCardsListState extends ConsumerState<CustomersCardsList> {
                 DataColumn(
                   label: CBSearchInput(
                     hintText: 'Libellé',
+                    familyName: 'customers-cards',
                     searchProvider: searchProvider('customers-cards'),
                   ),
                   /*CBText(

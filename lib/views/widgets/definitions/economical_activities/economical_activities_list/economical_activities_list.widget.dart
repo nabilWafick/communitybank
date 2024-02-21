@@ -63,7 +63,8 @@ class EconomicalActivitiesList extends ConsumerWidget {
               DataColumn(
                 label: CBSearchInput(
                   hintText: 'Nom',
-                  searchProvider: searchProvider('ceconomical-actvities'),
+                  familyName: 'economical-actvities',
+                  searchProvider: searchProvider('economical-actvities'),
                 ),
 
                 /* CBText(

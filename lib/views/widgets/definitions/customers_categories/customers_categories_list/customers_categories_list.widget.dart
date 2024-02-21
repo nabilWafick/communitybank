@@ -63,6 +63,7 @@ class CustomersCategoriesList extends ConsumerWidget {
               DataColumn(
                 label: CBSearchInput(
                   hintText: 'Nom',
+                  familyName: 'customers-categories',
                   searchProvider: searchProvider('customers-categories'),
                 ),
                 /* CBText(

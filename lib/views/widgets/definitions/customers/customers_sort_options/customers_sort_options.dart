@@ -51,6 +51,8 @@ class CustomersSortOptions extends ConsumerWidget {
               ),
               CBAddButton(
                 onTap: () {
+                  ref.read(isThereSimilarCustomersProvider.notifier).state =
+                      false;
                   ref.read(customerProfilePictureProvider.notifier).state =
                       null;
                   ref.read(customerSignaturePictureProvider.notifier).state =

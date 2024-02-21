@@ -9,6 +9,7 @@ class CustomerAddingConfirmationDialog extends StatefulHookConsumerWidget {
   final GlobalKey<FormState> formKey;
   final List<Customer> similarCustomers;
   final ValueNotifier<bool> showValidatedButton;
+  final BuildContext context;
   final Future<void> Function({
     required BuildContext context,
     required GlobalKey<FormState> formKey,
@@ -19,6 +20,7 @@ class CustomerAddingConfirmationDialog extends StatefulHookConsumerWidget {
     super.key,
     required this.formKey,
     required this.similarCustomers,
+    required this.context,
     required this.showValidatedButton,
     required this.confirmToAdd,
   });
@@ -61,6 +63,7 @@ class _CustomerAddingConfirmationDialogState
                     ),
                     IconButton(
                       onPressed: () {
+                        widget.showValidatedButton.value = true;
                         Navigator.of(context).pop();
                       },
                       icon: const Icon(
@@ -157,9 +160,9 @@ class _CustomerAddingConfirmationDialogState
                         child: CBElevatedButton(
                           text: 'Confirmer',
                           onPressed: () async {
-                            Navigator.of(context).pop();
+                            showConfirmationButton.value = false;
                             widget.confirmToAdd(
-                              context: context,
+                              context: widget.context,
                               formKey: widget.formKey,
                               ref: ref,
                               showValidatedButton: widget.showValidatedButton,

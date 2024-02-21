@@ -2,6 +2,7 @@ import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/widget.test.dart';
 //import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
@@ -90,11 +91,10 @@ class CommunityBankApp extends ConsumerWidget {
       ),
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home:
-          // const WidgetTest(),
-          //  const RegistrationPage(),
-          //  const LoginPage(),
-          const MainApp(),
+      home: const WidgetTest(),
+      //  const RegistrationPage(),
+      //  const LoginPage(),
+      // const MainApp(),
       //  const LoginPage(),
     );
   }

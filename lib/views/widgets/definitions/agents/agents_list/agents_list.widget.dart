@@ -145,6 +145,7 @@ class _AgentsListState extends ConsumerState<AgentsList> {
                     DataColumn(
                       label: CBSearchInput(
                         hintText: 'Nom',
+                        familyName: 'agents-name',
                         searchProvider: searchProvider('agents-name'),
                       ),
 
@@ -158,6 +159,7 @@ class _AgentsListState extends ConsumerState<AgentsList> {
                     DataColumn(
                       label: CBSearchInput(
                         hintText: 'Prénoms',
+                        familyName: 'agents-firstnames',
                         searchProvider: searchProvider('agents-firstnames'),
                       ),
 
@@ -171,6 +173,7 @@ class _AgentsListState extends ConsumerState<AgentsList> {
                     DataColumn(
                       label: CBSearchInput(
                         hintText: 'Téléphone',
+                        familyName: 'agents-phoneNumber',
                         searchProvider: searchProvider('agents-phoneNumber'),
                       ),
 
@@ -184,6 +187,7 @@ class _AgentsListState extends ConsumerState<AgentsList> {
                     DataColumn(
                       label: CBSearchInput(
                         hintText: 'Email',
+                        familyName: 'agents-email',
                         searchProvider: searchProvider('agents-email'),
                       ),
                       /*CBText(
@@ -196,6 +200,7 @@ class _AgentsListState extends ConsumerState<AgentsList> {
                     DataColumn(
                       label: CBSearchInput(
                         hintText: 'Adresse',
+                        familyName: 'agents-address',
                         searchProvider: searchProvider('agents-address'),
                       ),
 
@@ -209,6 +214,7 @@ class _AgentsListState extends ConsumerState<AgentsList> {
                     DataColumn(
                       label: CBSearchInput(
                         hintText: 'Rôle',
+                        familyName: 'agents-role',
                         searchProvider: searchProvider('agents-role'),
                       ),
 
