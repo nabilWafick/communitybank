@@ -30,9 +30,6 @@ class _CashOperationsSettlementsState
     initializeDateFormatting('fr');
   }
 
-  final ScrollController verticalScrollController = ScrollController();
-  final ScrollController horizontalScrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
