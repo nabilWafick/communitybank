@@ -1,11 +1,13 @@
 import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
+import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -53,156 +55,390 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
 
   @override
   Widget build(BuildContext context) {
-    //  final isSearching = ref.watch(isSearchingProvider('settlements'));
     final settlementsListStream = ref.watch(settlementsListStreamProvider);
-    final customersCardsListStream =
-        ref.watch(customersCardsListStreamProvider);
-    final agentsListStream = ref.watch(agentsListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
-    return SizedBox(
-      // alignment: Alignment.center,
-      height: 620.0,
 
-      // width: double.infinity,
-      child: Scrollbar(
-        controller: horizontalScrollController,
-        child: SingleChildScrollView(
-          controller: horizontalScrollController,
-          scrollDirection: Axis.horizontal,
-          child: Scrollbar(
-            controller: verticalScrollController,
-            child: SingleChildScrollView(
-              controller: verticalScrollController,
-              child: DataTable(
-                showCheckboxColumn: true,
-                columns: const [
-                  DataColumn(
-                    label: CBText(
-                      text: 'Code',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
+    return Expanded(
+      child: Container(
+        alignment: Alignment.center,
+        child: settlementsListStream.when(
+          data: (data) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 100,
+            itemCount: data.length,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Mise',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              final settlement = data[index];
+              return Row(
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final customersCardsListStream =
+                            ref.watch(customersCardsListStreamProvider);
+
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerCardData = data.firstWhere(
+                              (customerCard) =>
+                                  customerCard.id == settlement.cardId,
+                            );
+                            return CBText(
+                              text: realTimeCustomerCardData.label,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  DataColumn(
-                    label: CBText(
-                      text: 'Carte',
-                      textAlign: TextAlign.start,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: settlement.number.toString(),
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  DataColumn(
-                    label: CBText(
-                      text: 'Nombre',
-                      textAlign: TextAlign.start,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text:
+                          '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
-                    label: CBText(
-                      text: 'Date de règlement',
-                      textAlign: TextAlign.start,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text:
+                          '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
                       fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  DataColumn(
-                    label: CBText(
-                      text: 'Date de saisie',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  DataColumn(
-                    label: CBText(
-                      text: 'Agent',
-                      textAlign: TextAlign.start,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w500,
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final agentListStream =
+                            ref.watch(agentsListStreamProvider);
+
+                        return agentListStream.when(
+                          data: (data) {
+                            final realTimeAgentData = data.firstWhere(
+                              (agent) => agent.id == settlement.agentId,
+                            );
+                            return CBText(
+                              text:
+                                  ' ${realTimeAgentData.name} ${realTimeAgentData.firstnames}',
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
-                rows: settlementsListStream.when(
-                  data: (data) {
-                    //  debugPrint('collector Stream Data: $data');
-                    return data
-                        .map(
-                          (settlement) => DataRow(
-                            cells: [
-                              DataCell(
-                                CBText(
-                                  text: '${data.indexOf(settlement) + 1}',
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: customersCardsListStream.when(
-                                      data: (data) => data
-                                          .firstWhere((customerCard) =>
-                                              customerCard.id ==
-                                              settlement.cardId)
-                                          .label,
-                                      error: ((error, stackTrace) => ''),
-                                      loading: () => ''),
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: settlement.number.toString(),
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text:
-                                      '${format.format(settlement.collectedAt)}  ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text:
-                                      '${format.format(settlement.createdAt)}  ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                              DataCell(
-                                CBText(
-                                  text: agentsListStream.when(
-                                    data: (data) {
-                                      final agent = data.firstWhere((agent) =>
-                                          agent.id == settlement.agentId);
-
-                                      return '${agent.firstnames} ${agent.name}';
-                                    },
-                                    error: (error, stackTrace) => '',
-                                    loading: () => '',
-                                  ),
-                                  fontSize: 12.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                        .toList();
-                  },
-                  error: (error, stack) {
-                    //  debugPrint('collectors Stream Error');
-                    return [];
-                  },
-                  loading: () {
-                    //  debugPrint('collectors Stream Loading');
-                    return [];
-                  },
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          error: (error, stackTrace) => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Mise',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
+          ),
+          loading: () => HorizontalDataTable(
+            leftHandSideColumnWidth: 100,
+            rightHandSideColumnWidth: 1450,
+            itemCount: 0,
+            isFixedHeader: true,
+            leftHandSideColBackgroundColor: CBColors.backgroundColor,
+            rightHandSideColBackgroundColor: CBColors.backgroundColor,
+            headerWidgets: [
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'N°',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Mise',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de collecte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de saisie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+            leftSideItemBuilder: (context, index) {
+              return Container(
+                alignment: Alignment.center,
+                width: 200.0,
+                height: 30.0,
+                child: CBText(
+                  text: '${index + 1}',
+                  fontSize: 12.0,
+                ),
+              );
+            },
+            rightSideItemBuilder: (BuildContext context, int index) {
+              return const Row(
+                children: [],
+              );
+            },
+            rowSeparatorWidget: const Divider(),
+            scrollPhysics: const BouncingScrollPhysics(),
+            horizontalScrollPhysics: const BouncingScrollPhysics(),
           ),
         ),
       ),

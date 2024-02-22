@@ -49,6 +49,7 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
       child: DropdownMenu(
         width: widget.width,
         menuHeight: widget.menuHeigth,
+        enableFilter: true,
         label: CBText(
           text: widget.label,
         ),
@@ -64,7 +65,7 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
                   data: (data) {
                     final customer = data.firstWhere((customer) =>
                         customer.id == dropdownMenuEntryLabel.customerId);
-                    return '${customer.firstnames} ${customer.name}';
+                    return '${customer.name} ${customer.firstnames}';
                   },
                   error: (error, stackTrace) => '',
                   loading: () => '',

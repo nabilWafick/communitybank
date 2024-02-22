@@ -1,40 +1,12 @@
-import 'package:communitybank/controllers/forms/validators/customer/customer.validator.dart';
-import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/collections/collections_crud.function.dart';
-import 'package:communitybank/functions/crud/customers/customers_crud.function.dart';
-import 'package:communitybank/functions/crud/customers_accounts/customers_accounts_crud.fuction.dart';
-import 'package:communitybank/functions/crud/customers_categories/customers_categories_crud.function.dart';
-import 'package:communitybank/models/data/collector/collector.model.dart';
-import 'package:communitybank/models/data/customer/customer.model.dart';
-import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
-import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
-import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
-import 'package:communitybank/models/data/locality/locality.model.dart';
-import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
+import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents_list/agents_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/collections/collections_list/collections_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/customers_categories/customers_categories_list/customers_categories_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
-import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/collections/collections_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers/customers_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers_accounts/customers_accounts_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/customers_categories/customers_categories_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/collections/collection_amount/collections_amount_update_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/collections/collections_update_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/customer_account/customer_account_update_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/customers/customers_update_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/customers_categories/customers_categories_update_form.widget.dart';
-import 'package:communitybank/views/widgets/globals/images_shower/single/single_image_shower.widget.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/settlements/settlements_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update/settlement/settlement_update_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/settlement/settlement_validation_status_update_confirmation_dialog.widegt.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
@@ -85,17 +57,39 @@ class ProductsTable extends ConsumerStatefulWidget {
 class _ProductsTableState extends ConsumerState<ProductsTable> {
   @override
   Widget build(BuildContext context) {
-    final collectionsListStream = ref.watch(collectionsListStreamProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
+        ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider,
+    );
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
+        ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
 
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        child: collectionsListStream.when(
+        decoration: BoxDecoration(
+          //  color: Colors.blueAccent,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(
+              15.0,
+            ),
+            topRight: Radius.circular(
+              15.0,
+            ),
+          ),
+          border: Border.all(
+            color: CBColors.sidebarTextColor.withOpacity(.5),
+            width: 1.5,
+          ),
+        ),
+        child: cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
+            .when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 850,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -113,11 +107,22 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 300.0,
                 height: 50.0,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Chargé de compte',
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Mise',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -135,18 +140,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Reste',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -157,7 +151,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -168,7 +162,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -203,30 +197,35 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
               );
             },
             rightSideItemBuilder: (BuildContext context, int index) {
-              final collection = data[index];
+              final settlement = data[index];
               return Row(
                 children: [
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 500.0,
+                    width: 300.0,
                     height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final collectorsListStream =
-                            ref.watch(collectorsListStreamProvider);
-                        return CBText(
-                          text: collectorsListStream.when(
-                              data: (data) {
-                                final collector = data.firstWhere(
-                                  (collector) =>
-                                      collector.id == collection.collectorId,
-                                );
+                        final customersCardsListStream =
+                            ref.watch(customersCardsListStreamProvider);
 
-                                return '${collector.name} ${collector.firstnames}';
-                              },
-                              error: ((error, stackTrace) => ''),
-                              loading: () => ''),
-                          fontSize: 12.0,
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerCardData = data.firstWhere(
+                              (customerCard) =>
+                                  customerCard.id == settlement.cardId,
+                            );
+                            return CBText(
+                              text: realTimeCustomerCardData.label,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
                         );
                       },
                     ),
@@ -236,8 +235,9 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                     width: 300.0,
                     height: 30.0,
                     child: CBText(
-                      text: collection.amount.ceil().toString(),
+                      text: settlement.number.toString(),
                       fontSize: 12.0,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Container(
@@ -245,61 +245,71 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                     width: 300.0,
                     height: 30.0,
                     child: CBText(
-                      text: collection.rest.ceil().toString(),
+                      text:
+                          '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
                       fontSize: 12.0,
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 500.0,
+                    width: 400.0,
                     height: 30.0,
                     child: CBText(
                       text:
-                          '${format.format(collection.collectedAt)}  ${collection.collectedAt.hour}:${collection.collectedAt.minute}',
+                          '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
                       fontSize: 12.0,
                     ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 500.0,
+                    width: 400.0,
+                    height: 30.0,
+                    child: CBText(
+                      text:
+                          '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
                     height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final agentsListStream =
+                        final agentListStream =
                             ref.watch(agentsListStreamProvider);
 
-                        return CBText(
-                          text: agentsListStream.when(
-                              data: (data) {
-                                final agent = data.firstWhere(
-                                  (agent) => agent.id == collection.agentId,
-                                );
-
-                                return '${agent.name} ${agent.firstnames}';
-                              },
-                              error: ((error, stackTrace) => ''),
-                              loading: () => ''),
-                          fontSize: 12.0,
+                        return agentListStream.when(
+                          data: (data) {
+                            final realTimeAgentData = data.firstWhere(
+                              (agent) => agent.id == settlement.agentId,
+                            );
+                            return CBText(
+                              text:
+                                  ' ${realTimeAgentData.name} ${realTimeAgentData.firstnames}',
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
                         );
                       },
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 500.0,
-                    height: 30.0,
-                    child: CBText(
-                      text:
-                          '${format.format(collection.createdAt)}  ${collection.createdAt.hour}:${collection.createdAt.minute}',
-                      fontSize: 12.0,
                     ),
                   ),
                   InkWell(
                     onTap: () async {
                       FunctionsController.showAlertDialog(
                         context: context,
-                        alertDialog: CollectionAmountUpdateForm(
-                          collection: collection,
+                        alertDialog:
+                            SettlementValidationStatusUpdateConfirmationDialog(
+                          settlement: settlement,
+                          confirmToDelete:
+                              SettlementCRUDFunctions.updateValidationStatus,
                         ),
                       );
                     },
@@ -307,20 +317,24 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                       width: 150.0,
                       height: 30.0,
                       alignment: Alignment.center,
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.green[500],
-                      ),
+                      child: settlement.isValiated
+                          ? const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.close,
+                              color: Colors.red,
+                            ),
                     ),
                     // showEditIcon: true,
                   ),
                   InkWell(
                     onTap: () async {
-                      FunctionsController.showAlertDialog(
+                      await FunctionsController.showAlertDialog(
                         context: context,
-                        alertDialog: CollectionUpdateForm(
-                          collection: collection,
-                        ),
+                        alertDialog:
+                            SettlementUpdateForm(settlement: settlement),
                       );
                     },
                     child: Container(
@@ -336,11 +350,11 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                   ),
                   InkWell(
                     onTap: () async {
-                      FunctionsController.showAlertDialog(
+                      await FunctionsController.showAlertDialog(
                         context: context,
-                        alertDialog: CollectionDeletionConfirmationDialog(
-                          collection: collection,
-                          confirmToDelete: CollectionCRUDFunctions.delete,
+                        alertDialog: SettlementDeletionConfirmationDialog(
+                          settlement: settlement,
+                          confirmToDelete: SettlementCRUDFunctions.delete,
                         ),
                       );
                     },
@@ -381,11 +395,22 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.center,
                 child: const CBText(
-                  text: 'Chargé de compte',
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Mise',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -403,18 +428,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Reste',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -425,7 +439,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -436,7 +450,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -499,11 +513,22 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.center,
                 child: const CBText(
-                  text: 'Chargé de compte',
+                  text: 'Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Mise',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -521,18 +546,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Reste',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -543,7 +557,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -554,7 +568,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                 ),
               ),
               Container(
-                width: 500.0,
+                width: 400.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
