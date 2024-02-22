@@ -79,4 +79,18 @@ class FunctionsController {
           )
         : null;
   }
+
+  static String getFormatedTime({
+    required DateTime dateTime,
+  }) {
+    String hour =
+        dateTime.hour < 10 ? '0${dateTime.hour}' : dateTime.hour.toString();
+    String minute = dateTime.minute < 10
+        ? '0${dateTime.minute}'
+        : dateTime.minute.toString();
+    String second = dateTime.second < 10
+        ? '0${dateTime.second}'
+        : dateTime.second.toString();
+    return '$hour:$minute:$second';
+  }
 }

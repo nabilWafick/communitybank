@@ -169,7 +169,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
       Future.delayed(const Duration(milliseconds: 100), () {
         final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
             ref.watch(
-                cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+        );
 
 // if there is no account selected and selection beginining by card or if the customer card selected is not for the owner of the previous customer card
         if (cashOperationsSelectedCustomerAccount == null ||
@@ -260,15 +261,18 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
       //  debugPrint('new data');
       Future.delayed(const Duration(milliseconds: 100), () {
         if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
-          debugPrint('new data after selected card check');
+          //  debugPrint('new data after selected card check');
           final realTimeCustomerCard = next.when(
-              data: (data) => data.firstWhere((customerCard) =>
+            data: (data) => data.firstWhere(
+              (customerCard) =>
                   customerCard.id ==
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCard.id),
-              error: (error, stackTrace) =>
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCard,
-              loading: () =>
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCard);
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard.id,
+            ),
+            error: (error, stackTrace) =>
+                cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+            loading: () =>
+                cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+          );
 
           ref
               .read(

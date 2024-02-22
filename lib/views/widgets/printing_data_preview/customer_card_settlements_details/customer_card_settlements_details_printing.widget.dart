@@ -44,7 +44,8 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
   @override
   Widget build(BuildContext context) {
     const formCardWidth = 1500.0;
-
+    final cashOperationsSelectedCustomerAccountOwner =
+        ref.watch(cashOperationsSelectedCustomerAccountOwnerProvider);
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
@@ -88,8 +89,12 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15.0,
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 5.0),
+              child: OtherInfos(
+                  label: 'Client',
+                  value:
+                      '${cashOperationsSelectedCustomerAccountOwner!.name} ${cashOperationsSelectedCustomerAccountOwner.firstnames}'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,9 +131,6 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20.0,
-            ),
             Container(
               margin: const EdgeInsets.symmetric(
                 vertical: 10.0,
@@ -142,13 +144,15 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                 },
               ),
             ),
-            const SizedBox(
-              height: 10.0,
-            ),
             Container(
               alignment: Alignment.center,
               width: MediaQuery.of(context).size.width,
-              height: 500.0,
+              height: 460.0,
+              margin: const EdgeInsets.only(
+                top: 10.0,
+                bottom: 20.0,
+              ),
+              //  color: Colors.blueGrey,
               child: customerCardSettlementsDetailsList.when(
                 data: (data) => HorizontalDataTable(
                   leftHandSideColumnWidth: 100,
@@ -491,8 +495,54 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                 ),
               ),
             ),
+            Consumer(
+              builder: (context, ref, child) {
+                double settlementAmountsTotal = 0;
+
+                return customerCardSettlementsDetailsList.when(
+                    data: (data) {
+                      for (CustomerCardSettlementDetail customerCardSettlementDetail
+                          in data) {
+                        settlementAmountsTotal +=
+                            customerCardSettlementDetail.settlementAmount;
+                      }
+                      return Container(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const CBText(
+                              text: 'Total: ',
+                              fontSize: 12.0,
+                            ),
+                            CBText(
+                              text: '${settlementAmountsTotal.ceil()} f',
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    error: (error, stackTrace) => Container(
+                          alignment: Alignment.centerRight,
+                          child: const CBText(
+                            text: 'Total: ',
+                            fontSize: 12.0,
+                          ),
+                        ),
+                    loading: () => Container(
+                          alignment: Alignment.centerRight,
+                          child: const CBText(
+                            text: 'Total: ',
+                            fontSize: 12.0,
+                          ),
+                        ));
+              },
+            ),
             const SizedBox(
-              height: 35.0,
+              height: 30.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -527,6 +577,7 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                       await generateAndPrintCustomerCardSettlementsDetailsPdf(
                         context: context,
                         format: format,
+                        customer: cashOperationsSelectedCustomerAccountOwner,
                         customerCard:
                             cashOperationsSelectedCustomerAccountOwnerSelectedCard,
                         customerCardType:

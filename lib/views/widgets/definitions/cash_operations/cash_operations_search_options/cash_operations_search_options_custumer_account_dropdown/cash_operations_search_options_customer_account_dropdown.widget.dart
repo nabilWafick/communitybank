@@ -1,3 +1,4 @@
+import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
@@ -63,8 +64,18 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
                     .indexOf(dropdownMenuEntryLabel)],
                 label: customersListStream.when(
                   data: (data) {
-                    final customer = data.firstWhere((customer) =>
-                        customer.id == dropdownMenuEntryLabel.customerId);
+                    final customer = data.firstWhere(
+                      (customer) =>
+                          customer.id == dropdownMenuEntryLabel.customerId,
+                      orElse: () => Customer(
+                        name: '',
+                        firstnames: '',
+                        phoneNumber: '',
+                        address: '',
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                      ),
+                    );
                     return '${customer.name} ${customer.firstnames}';
                   },
                   error: (error, stackTrace) => '',
