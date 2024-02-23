@@ -6,8 +6,8 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_collector_profil/cash_operations_customer_profil.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_customer_profil/cash_operations_customer_profil.widget.dart';
 import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
-import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options_customer_card_dropdown/cash_operations_search_options_customer_card_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options_custumer_account_dropdown/cash_operations_search_options_customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/customer_card_dropdown/customer_card_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/custumer_account_dropdown/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts.widgets.dart';
@@ -56,106 +56,171 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    // for checking if cash operations variables are null
+    final isRefreshing = ref.watch(isRefreshingProvider);
 
-// listen for cash operations selected customer account provider (update)
-// for updating account owner collector, setting the first customer card
-// as the selected customer card
+    final cashOperationCustomerAccountDropdownValue = ref.watch(
+        cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+            'cash-operations-search-options-customer-account'));
+
+    /* final cashOperationCustomerCardDropdownValue = ref.watch(
+        cashOperationsSearchOptionsCustomerCardDropdownProvider(
+            'cash-operations-search-options-customer-card'));*/
+
+    ref.listen(
+      isRefreshingProvider,
+      (previous, next) {
+        Future.delayed(
+          const Duration(
+            milliseconds: 100,
+          ),
+          () {
+            if (previous != next) {
+              ref
+                  .read(
+                    isRefreshingProvider.notifier,
+                  )
+                  .state = next;
+            }
+          },
+        );
+      },
+    );
+
+    // listen for cash operations selected customer account provider (update)
+    // for updating account owner collector, setting the first customer card
+    // as the selected customer card
 
     ref.listen(
       cashOperationsSelectedCustomerAccountProvider,
       (previous, next) {
-        Future.delayed(
-            const Duration(
-              milliseconds: 100,
-            ), () {
-          customersListStream.when(
-            data: (data) {
-              // set the current user account
-              ref
-                  .read(
-                    cashOperationsSelectedCustomerAccountOwnerProvider.notifier,
-                  )
-                  .state = data.firstWhere((customer) =>
-                      customer.id! ==
-                      // watch the cash operations customer account dropdown
-                      ref
-                          .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                              'cash-operations-search-options-customer-account'))!
-                          .customerId
-                  //   cashOperationsSelectedCustomerAccount!.customerId,
-                  );
-            },
-            error: (error, stackTrace) {},
-            loading: () {},
-          );
+        debugPrint('first customer account listener');
+        debugPrint('first isRefreshing: $isRefreshing');
+        if (isRefreshing == false) {
+          debugPrint(' isRefreshing after first checking: $isRefreshing');
+          Future.delayed(
+              const Duration(
+                milliseconds: 100,
+              ), () {
+            debugPrint('customer account listener');
+            debugPrint('isRefreshing: $isRefreshing');
+            customersListStream.when(
+              data: (data) {
+                // set the current user account
 
-          // update customer account collector
-          collectorsListStream.when(
-            data: (data) {
-              // set the current ower account collector
-              ref
-                  .read(
-                    cashOperationsSelectedCustomerAccountCollectorProvider
-                        .notifier,
-                  )
-                  .state = data.firstWhere((collector) =>
-                      collector.id! ==
-                      // watch the cash operations customer account dropdown
+                // this check is doing because of refreshing effect
 
-                      ref
-                          .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                              'cash-operations-search-options-customer-account'))!
-                          .collectorId
+                ref
+                    .read(
+                      cashOperationsSelectedCustomerAccountOwnerProvider
+                          .notifier,
+                    )
+                    .state = data.firstWhere((customer) =>
+                        customer.id! ==
+                        // watch the cash operations customer account dropdown
+                        ref
+                            .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                                'cash-operations-search-options-customer-account'))!
+                            .customerId
+                    //   cashOperationsSelectedCustomerAccount!.customerId,
+                    );
+              },
+              error: (error, stackTrace) {},
+              loading: () {},
+            );
 
-                  //  cashOperationsSelectedCustomerAccount!.collectorId,
-                  );
-            },
-            error: (error, stackTrace) {},
-            loading: () {},
-          );
+            // update customer account collector
+            collectorsListStream.when(
+              data: (data) {
+                // set the current ower account collector
 
-          //  update customer cards
-          customersCardsListStream.when(
-            data: (data) {
-              ref
-                  .read(
-                    cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider
-                        .notifier,
-                  )
-                  .state = data
-                  .where(
-                    (customerCard) => ref
-                        .watch(
-                          cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                              'cash-operations-search-options-customer-account'),
-                        )!
-                        .customerCardsIds
-                        .contains(customerCard.id!),
-                  )
-                  .toList();
-              ref
-                  .read(
-                    cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
-                        .notifier,
-                  )
-                  .state = ref.watch(
-                cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
-              )[0];
+                ref
+                    .read(
+                      cashOperationsSelectedCustomerAccountCollectorProvider
+                          .notifier,
+                    )
+                    .state = data.firstWhere((collector) =>
+                        collector.id! ==
+                        // watch the cash operations customer account dropdown
 
-              // update cash operations customer card dropdown selected item
+                        ref
+                            .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                                'cash-operations-search-options-customer-account'))!
+                            .collectorId
 
-              ref
-                  .read(cashOperationsSearchOptionsCustumerCardDropdownProvider(
-                    'cash-operations-search-option-customer-card',
-                  ).notifier)
-                  .state = ref.watch(
-                cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
-              )[0];
-            },
-            error: (error, stackTrace) {},
-            loading: () {},
-          );
-        });
+                    //  cashOperationsSelectedCustomerAccount!.collectorId,
+                    );
+              },
+              error: (error, stackTrace) {},
+              loading: () {},
+            );
+
+            //  update customer cards
+            customersCardsListStream.when(
+              data: (data) {
+                //?============
+                debugPrint('data length: ${data.length}');
+                //?============
+
+                //?============
+                debugPrint(
+                    'is customer account null : ${cashOperationCustomerAccountDropdownValue != null}');
+                //?============
+                ref
+                    .read(
+                      cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider
+                          .notifier,
+                    )
+                    .state = data
+                    .where(
+                      (customerCard) =>
+                          ref
+                              .watch(
+                                cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                                    'cash-operations-search-options-customer-account'),
+                              )!
+                              .customerCardsIds
+                              .contains(customerCard.id!) &&
+                          customerCard.satisfiedAt == null &&
+                          customerCard.repaidAt == null,
+                    )
+                    .toList();
+
+//?============
+                debugPrint('custumer cards: ${ref.watch(
+                  cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
+                )} ');
+//?============
+                if (ref
+                    .watch(
+                      cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
+                    )
+                    .isNotEmpty) {
+                  ref
+                      .read(
+                        cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
+                            .notifier,
+                      )
+                      .state = ref.watch(
+                    cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
+                  )[0];
+                  ref
+                      .read(
+                          cashOperationsSearchOptionsCustomerCardDropdownProvider(
+                        'cash-operations-search-options-customer-card',
+                      ).notifier)
+                      .state = ref.watch(
+                    cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
+                  )[0];
+                }
+
+                // update cash operations customer card dropdown selected item
+              },
+              error: (error, stackTrace) {},
+              loading: () {},
+            );
+          });
+        }
       },
     );
 
@@ -166,92 +231,98 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
     ref.listen(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
         (previous, next) {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
-            ref.watch(
-          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
-        );
+      if (isRefreshing == false) {
+        debugPrint('selected customer card listener');
+        debugPrint('isRefreshing: $isRefreshing');
+        Future.delayed(const Duration(milliseconds: 100), () {
+          final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
+              ref.watch(
+            cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+          );
 
-// if there is no account selected and selection beginining by card or if the customer card selected is not for the owner of the previous customer card
-        if (cashOperationsSelectedCustomerAccount == null ||
-            cashOperationsSelectedCustomerAccount.id !=
-                cashOperationsSelectedCustomerAccountOwnerSelectedCard!
-                    .customerAccountId) {
-          customersAccountsListStream.when(
+// if there is no account selected and selection begin by card or if the customer card selected is not for the owner of the previous customer card
+          if (cashOperationsSelectedCustomerAccount == null ||
+              cashOperationsSelectedCustomerAccount.id !=
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                      .customerAccountId) {
+            customersAccountsListStream.when(
+              data: (data) {
+                // update the selected customer account dropdown
+                ref
+                    .read(
+                      cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                              'cash-operations-search-options-customer-account')
+                          .notifier,
+                    )
+                    .state = data.firstWhere(
+                  (customerAccount) =>
+                      customerAccount.id ==
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                          .customerAccountId,
+                );
+
+                // update cash operations customer account
+                ref
+                    .read(
+                        cashOperationsSelectedCustomerAccountProvider.notifier)
+                    .state = data.firstWhere(
+                  (customerAccount) =>
+                      customerAccount.id ==
+                      cashOperationsSelectedCustomerAccountOwnerSelectedCard!
+                          .customerAccountId,
+                );
+              },
+              error: (error, stackTrace) {},
+              loading: () {},
+            );
+          }
+
+          // update cash operations customer card dropdown selected item
+          customersCardsListStream.when(
             data: (data) {
-              // update the selected customer account dropdown
               ref
-                  .read(
-                    cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                            'cash-operations-search-options-customer-account')
-                        .notifier,
-                  )
+                  .read(cashOperationsSearchOptionsCustomerCardDropdownProvider(
+                    'cash-operations-search-options-customer-card',
+                  ).notifier)
                   .state = data.firstWhere(
-                (customerAccount) =>
-                    customerAccount.id ==
+                (customerCard) =>
                     cashOperationsSelectedCustomerAccountOwnerSelectedCard!
-                        .customerAccountId,
-              );
-
-              // update cash operations customer account
-              ref
-                  .read(cashOperationsSelectedCustomerAccountProvider.notifier)
-                  .state = data.firstWhere(
-                (customerAccount) =>
-                    customerAccount.id ==
-                    cashOperationsSelectedCustomerAccountOwnerSelectedCard!
-                        .customerAccountId,
+                        .id ==
+                    customerCard.id,
               );
             },
             error: (error, stackTrace) {},
             loading: () {},
           );
-        }
 
-        // update cash operations customer card dropdown selected item
-        customersCardsListStream.when(
-          data: (data) {
-            ref
-                .read(cashOperationsSearchOptionsCustumerCardDropdownProvider(
-                  'cash-operations-search-option-customer-card',
-                ).notifier)
-                .state = data.firstWhere(
-              (customerCard) =>
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCard!.id ==
-                  customerCard.id,
-            );
-          },
-          error: (error, stackTrace) {},
-          loading: () {},
-        );
+          // update  selected custumer card type
+          typesListStream.when(
+            data: (data) {
+              ref
+                  .read(
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider
+                        .notifier,
+                  )
+                  .state = data.firstWhere(
+                (type) =>
+                    type.id ==
+                    ref
+                        .watch(
+                          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+                        )!
+                        .typeId,
+              );
+            },
+            error: (error, stackTrace) {},
+            loading: () {},
+          );
 
-        // update  selected custumer card type
-        typesListStream.when(
-          data: (data) {
-            ref
-                .read(
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider
-                      .notifier,
-                )
-                .state = data.firstWhere(
-              (type) =>
-                  type.id ==
-                  ref
-                      .watch(
-                        cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
-                      )!
-                      .typeId,
-            );
-          },
-          error: (error, stackTrace) {},
-          loading: () {},
-        );
-
-        // update for the selected custumer card
-        // satisfaction and repayment date,
-        // satisfaction and repayment switch state
-        // provider(isRepaid, isSatified)
-      });
+          // update for the selected custumer card
+          // satisfaction and repayment date,
+          // satisfaction and repayment switch state
+          // provider(isRepaid, isSatified)
+        });
+      }
     });
 
     // listening to customers cards list stream provider (data update)
@@ -259,28 +330,32 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
     ref.listen(customersCardsListStreamProvider, (previous, next) {
       //  debugPrint('new data');
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
-          //  debugPrint('new data after selected card check');
-          final realTimeCustomerCard = next.when(
-            data: (data) => data.firstWhere(
-              (customerCard) =>
-                  customerCard.id ==
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCard.id,
-            ),
-            error: (error, stackTrace) =>
-                cashOperationsSelectedCustomerAccountOwnerSelectedCard,
-            loading: () =>
-                cashOperationsSelectedCustomerAccountOwnerSelectedCard,
-          );
+      if (isRefreshing == false) {
+        debugPrint('customer card list stream listener');
+        debugPrint('isRefreshing: $isRefreshing');
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
+            //  debugPrint('new data after selected card check');
+            final realTimeCustomerCard = next.when(
+              data: (data) => data.firstWhere(
+                (customerCard) =>
+                    customerCard.id ==
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCard.id,
+              ),
+              error: (error, stackTrace) =>
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+              loading: () =>
+                  cashOperationsSelectedCustomerAccountOwnerSelectedCard,
+            );
 
-          ref
-              .read(
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
-                      .notifier)
-              .state = realTimeCustomerCard;
-        }
-      });
+            ref
+                .read(
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
+                        .notifier)
+                .state = realTimeCustomerCard;
+          }
+        });
+      }
     });
 
     return Container(

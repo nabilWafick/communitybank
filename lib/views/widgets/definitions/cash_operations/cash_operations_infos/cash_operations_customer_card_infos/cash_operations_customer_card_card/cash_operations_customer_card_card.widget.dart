@@ -53,7 +53,7 @@ class CustomerCardCard extends ConsumerWidget {
 
                 return customersCardsListStream.when(
                   data: (data) {
-                    String customerCardLabel = '';
+                    /* String customerCardLabel = '';
 
                     for (CustomerCard customerCard in data) {
                       if (customerCard.id ==
@@ -61,10 +61,22 @@ class CustomerCardCard extends ConsumerWidget {
                               .id) {
                         customerCardLabel = customerCard.label;
                       }
-                    }
+                    }*/
+
+                    final realTimeCustomerCard = data.firstWhere(
+                      (realTimeCustomerCard) =>
+                          customerCard.id == realTimeCustomerCard.id,
+                      orElse: () => CustomerCard(
+                        label: '',
+                        typeId: 0,
+                        typeNumber: 0,
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                      ),
+                    );
 
                     return CBText(
-                      text: customerCardLabel,
+                      text: realTimeCustomerCard.label,
 
                       // sidebarSubOptionData.name
                       fontSize: 11,

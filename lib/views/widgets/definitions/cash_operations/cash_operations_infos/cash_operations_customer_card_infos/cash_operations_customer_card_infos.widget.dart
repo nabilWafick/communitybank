@@ -78,8 +78,6 @@ class _CashOperationsCustomerCardInfosState
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
     final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
-    final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
-        .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
@@ -128,7 +126,30 @@ class _CashOperationsCustomerCardInfosState
                 width: widget.width * .85,
                 height: 40.0,
                 child: CashOperationsCustomerCardsHorizontalScroller(
-                  children:
+                  children: cashOperationsSelectedCustomerAccount == null ||
+                          cashOperationsSelectedCustomerAccountOwnerSelectedCard ==
+                              null
+                      ? []
+                      : customersCardsListStream.when(
+                          data: (data) => data
+                              .where(
+                                (customerCard) =>
+                                    cashOperationsSelectedCustomerAccount
+                                        .customerCardsIds
+                                        .contains(customerCard.id!) &&
+                                    customerCard.satisfiedAt == null &&
+                                    customerCard.repaidAt == null,
+                              )
+                              .map(
+                                (customerCard) => CustomerCardCard(
+                                  customerCard: customerCard,
+                                ),
+                              )
+                              .toList(),
+                          error: (error, stackTrace) => [],
+                          loading: () => [],
+                        ),
+/*
                       cashOperationsSelectedCustomerAccountOwnerCustomerCards
                           .map(
                     (customerCard) {
@@ -149,6 +170,8 @@ class _CashOperationsCustomerCardInfosState
                           : const SizedBox();
                     },
                   ).toList(),
+
+                  */
                 ),
               ),
             ],

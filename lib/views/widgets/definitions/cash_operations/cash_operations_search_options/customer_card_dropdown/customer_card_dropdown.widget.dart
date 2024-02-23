@@ -4,7 +4,7 @@ import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final cashOperationsSearchOptionsCustumerCardDropdownProvider =
+final cashOperationsSearchOptionsCustomerCardDropdownProvider =
     StateProvider.family<CustomerCard?, String>((ref, dropdown) {
   return null;
 });
@@ -37,7 +37,7 @@ class _CBCashOperationsSearchOptionsCustumerCardDropdownState
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem = ref.watch(
-      cashOperationsSearchOptionsCustumerCardDropdownProvider(
+      cashOperationsSearchOptionsCustomerCardDropdownProvider(
           widget.providerName),
     );
     return Container(
@@ -74,8 +74,9 @@ class _CBCashOperationsSearchOptionsCustumerCardDropdownState
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
+          ref.read(isRefreshingProvider.notifier).state = false;
           ref
-              .read(cashOperationsSearchOptionsCustumerCardDropdownProvider(
+              .read(cashOperationsSearchOptionsCustomerCardDropdownProvider(
                 widget.providerName,
               ).notifier)
               .state = value!;

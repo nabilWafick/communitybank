@@ -95,10 +95,13 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
+          ref.read(isRefreshingProvider.notifier).state = false;
           ref
-              .read(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                      widget.providerName)
-                  .notifier)
+              .read(
+                cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                  widget.providerName,
+                ).notifier,
+              )
               .state = value!;
           ref
               .read(cashOperationsSelectedCustomerAccountProvider.notifier)
