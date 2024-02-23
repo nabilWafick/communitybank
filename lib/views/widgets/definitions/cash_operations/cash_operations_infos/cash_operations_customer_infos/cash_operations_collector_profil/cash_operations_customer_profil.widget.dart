@@ -62,7 +62,7 @@ class CashOperationsCollectorProfil extends ConsumerWidget {
                         children: [
                           CBText(
                             text:
-                                '${realTimeCollectorData.firstnames} ${realTimeCollectorData.name}',
+                                '${realTimeCollectorData.name} ${realTimeCollectorData.firstnames}',
                             fontWeight: FontWeight.w500,
                             fontSize: 11.0,
                           ),

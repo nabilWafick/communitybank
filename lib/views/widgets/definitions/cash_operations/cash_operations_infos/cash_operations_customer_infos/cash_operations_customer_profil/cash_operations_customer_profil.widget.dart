@@ -61,7 +61,7 @@ class CashOperationsCustomerProfil extends ConsumerWidget {
                       children: [
                         CBText(
                           text:
-                              '${realTimeCustomerData.firstnames} ${realTimeCustomerData.name}',
+                              '${realTimeCustomerData.name} ${realTimeCustomerData.firstnames}',
                           fontWeight: FontWeight.w500,
                           fontSize: 11.0,
                         ),
