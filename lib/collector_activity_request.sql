@@ -80,12 +80,12 @@ SELECT
     id_charge_compte,
     nom_charge_compte,
     prenoms_charge_compte,
-    ARRAY_AGG (id_carte) AS id_cartes,
-    ARRAY_AGG (libelle_carte) AS libelle_cartes,
-    ARRAY_AGG (nombre_types) AS nombre_types_cartes,
-    ARRAY_AGG (nom_type) AS nom_types,
-    ARRAY_AGG (total_reglements) AS total_reglements,
-    ARRAY_AGG (montant_reglements) AS montant_reglements
+    ARRAY_AGG (id_carte) AS ids_cartes,
+    ARRAY_AGG (libelle_carte) AS libelles_cartes,
+    ARRAY_AGG (nombre_types) AS nombres_types_cartes,
+    ARRAY_AGG (nom_type) AS noms_types,
+    ARRAY_AGG (total_reglements) AS totaux_reglements,
+    ARRAY_AGG (montant_reglements) AS montants_reglements
 FROM
     (
         SELECT
@@ -112,15 +112,15 @@ FROM
             JOIN charges_compte ON comptes_clients.id_charge_compte = charges_compte.id
             JOIN cartes ON cartes.id = ANY (comptes_clients.ids_cartes)
             JOIN types ON cartes.id_type = types.id
-            JOIN (
+            LEFT JOIN (
                 SELECT DISTINCT
                     DATE (date_collecte) AS date_collecte
                 FROM
                     reglements
                 WHERE
-                    DATE (date_collecte) BETWEEN '2024-01-01' AND '2024-01-12'
+                    DATE (date_collecte) BETWEEN '2024-01-01' AND '2024-02-29'
             ) AS dates_collectes ON TRUE
-            JOIN (
+            LEFT JOIN (
                 SELECT
                     id_carte,
                     DATE (date_collecte) AS date_collecte,
@@ -136,7 +136,7 @@ FROM
                 FROM
                     reglements
                 WHERE
-                    DATE (date_collecte) BETWEEN '2024-01-01' AND '2024-01-12'
+                    DATE (date_collecte) BETWEEN '2024-01-01' AND '2024-02-29'
                 GROUP BY
                     id_carte,
                     DATE (date_collecte)
@@ -144,6 +144,7 @@ FROM
             AND bilan_reglements.date_collecte = dates_collectes.date_collecte
         WHERE
             id_charge_compte = 9
+            and total_reglements > 0
     ) AS subquery
 GROUP BY
     id_compte,
