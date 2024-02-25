@@ -13,7 +13,7 @@ class CollectorPeriodicActivityRPC {
   static const String customersCardsLabels = 'libelles_cartes';
   static const String customersCardsTypesNumbers = 'nombres_types_cartes';
   static const String typesIds = 'ids_types';
-  static const String typesLabels = 'noms_types';
+  static const String typesNames = 'noms_types';
   static const String customerCardSettlementsTotals =
       'totaux_reglements_cartes';
   static const String customerCardSettlementsAmounts =

@@ -1,4 +1,4 @@
-import 'package:communitybank/models/rpc/collector_daily_activity/collector_daily_rpc.model.dart';
+import 'package:communitybank/models/rpc/collector_daily_activity/collector_daily_activity_rpc.model.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
