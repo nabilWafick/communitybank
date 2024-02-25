@@ -1,20 +1,21 @@
-import 'package:communitybank/models/rpc/customer_card_settlement_detail/customer_card_settlement_detail_rpc.model.dart';
+import 'package:communitybank/models/rpc/collector_daily_activity/collector_daily_rpc.model.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CustomersCardsSettlementsDetailsService {
-  static Future<List<Map<String, dynamic>>> getCustomerCardSettlementsDetails({
-    required int customerCardId,
+class CollectorDailyActivityService {
+  static Future<List<Map<String, dynamic>>> getCollectorDailyActivity({
+    required String? collectionDate,
+    required int? collectorId,
   }) async {
     List<Map<String, dynamic>> response;
     final supabase = Supabase.instance.client;
 
     try {
-      // get customer card details
       response = await supabase.rpc(
-        CustomerCardSettlementDetailRPC.functionName,
+        CollectorDailyActivityRPC.functionName,
         params: {
-          'customer_card_id': customerCardId,
+          'collection_date': collectionDate,
+          'collector_id': collectorId,
         },
       ).select<List<Map<String, dynamic>>>();
       // return the result data

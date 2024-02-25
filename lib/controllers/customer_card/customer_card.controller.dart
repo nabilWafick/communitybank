@@ -1,7 +1,7 @@
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
-import 'package:communitybank/services/customer_card/customer_card.service.dart';
+import 'package:communitybank/services/customers_cards/customer_card.service.dart';
 
 class CustomersCardsController {
   static Future<ServiceResponse> create(

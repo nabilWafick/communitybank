@@ -7,7 +7,7 @@ class CustomerCardSettlementsDetailsController {
     required int customerCardId,
   }) async {
     final customerCardSettlementsDetails =
-        await CustomerCardSettlementsDetailsService
+        await CustomersCardsSettlementsDetailsService
             .getCustomerCardSettlementsDetails(
       customerCardId: customerCardId,
     );

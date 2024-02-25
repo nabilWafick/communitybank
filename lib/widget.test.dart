@@ -203,7 +203,7 @@ class _ProductsTableState extends ConsumerState<ProductsTable> {
                     height: 30.0,
                     child: CBText(
                       text:
-                          '${customerCardSettlementDetail.agentName} ${customerCardSettlementDetail.agentFirstname}',
+                          '${customerCardSettlementDetail.agentName} ${customerCardSettlementDetail.agentFirstnames}',
                       fontSize: 12.0,
                     ),
                   ),

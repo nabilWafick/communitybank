@@ -1,6 +1,6 @@
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
-import 'package:communitybank/services/customer_account/customer_account.service.dart';
+import 'package:communitybank/services/customers_accounts/customer_account.service.dart';
 
 class CustomersAccountsController {
   static Future<ServiceResponse> create(

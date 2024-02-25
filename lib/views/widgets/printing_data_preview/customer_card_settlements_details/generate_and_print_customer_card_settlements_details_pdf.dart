@@ -204,7 +204,7 @@ Future<void> generateAndPrintCustomerCardSettlementsDetailsPdf({
                   horizontal: 5.0,
                 ),
                 child: pw.Text(
-                  '${customerCardSettlementsDetails[i].agentName} ${customerCardSettlementsDetails[i].agentFirstname}',
+                  '${customerCardSettlementsDetails[i].agentName} ${customerCardSettlementsDetails[i].agentFirstnames}',
                   style: const pw.TextStyle(
                     fontSize: 9,
                   ),

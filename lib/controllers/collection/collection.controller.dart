@@ -1,6 +1,6 @@
 import 'package:communitybank/models/data/collection/collection.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
-import 'package:communitybank/services/collection/collection.service.dart';
+import 'package:communitybank/services/collections/collections.service.dart';
 
 class CollectionsController {
   static Future<ServiceResponse> create(

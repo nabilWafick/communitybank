@@ -292,7 +292,7 @@ class _CustomerCardSettlementsDetailsPrintingPreviewState
                           height: 30.0,
                           child: CBText(
                             text:
-                                '${customerCardSettlementDetail.agentName} ${customerCardSettlementDetail.agentFirstname}',
+                                '${customerCardSettlementDetail.agentName} ${customerCardSettlementDetail.agentFirstnames}',
                             fontSize: 12.0,
                           ),
                         ),

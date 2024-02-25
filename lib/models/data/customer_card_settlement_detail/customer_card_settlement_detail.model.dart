@@ -11,7 +11,7 @@ class CustomerCardSettlementDetail {
   final String typeName;
   final int settlementNumber;
   final double settlementAmount;
-  final String agentFirstname;
+  final String agentFirstnames;
   final String agentName;
   final DateTime settlementDate;
   final DateTime settlementEntryDate;
@@ -24,7 +24,7 @@ class CustomerCardSettlementDetail {
     required this.typeName,
     required this.settlementNumber,
     required this.settlementAmount,
-    required this.agentFirstname,
+    required this.agentFirstnames,
     required this.agentName,
     required this.settlementDate,
     required this.settlementEntryDate,
@@ -38,7 +38,7 @@ class CustomerCardSettlementDetail {
     String? typeName,
     int? settlementNumber,
     double? settlementAmount,
-    String? agentFirstname,
+    String? agentFirstnames,
     String? agentName,
     DateTime? settlementDate,
     DateTime? settlementEntryDate,
@@ -51,7 +51,7 @@ class CustomerCardSettlementDetail {
       typeName: typeName ?? this.typeName,
       settlementNumber: settlementNumber ?? this.settlementNumber,
       settlementAmount: settlementAmount ?? this.settlementAmount,
-      agentFirstname: agentFirstname ?? this.agentFirstname,
+      agentFirstnames: agentFirstnames ?? this.agentFirstnames,
       agentName: agentName ?? this.agentName,
       settlementDate: settlementDate ?? this.settlementDate,
       settlementEntryDate: settlementEntryDate ?? this.settlementEntryDate,
@@ -67,7 +67,7 @@ class CustomerCardSettlementDetail {
       CustomerCardSettlementDetailRPC.typeName: typeName,
       CustomerCardSettlementDetailRPC.settlementNumber: settlementNumber,
       CustomerCardSettlementDetailRPC.settlementAmount: settlementAmount,
-      CustomerCardSettlementDetailRPC.agentFirstname: agentFirstname,
+      CustomerCardSettlementDetailRPC.agentFirstnames: agentFirstnames,
       CustomerCardSettlementDetailRPC.agentName: agentName,
       CustomerCardSettlementDetailRPC.settlementDate:
           settlementDate.toIso8601String(),
@@ -89,8 +89,8 @@ class CustomerCardSettlementDetail {
           map[CustomerCardSettlementDetailRPC.settlementNumber] as int,
       settlementAmount:
           map[CustomerCardSettlementDetailRPC.settlementAmount] as double,
-      agentFirstname:
-          map[CustomerCardSettlementDetailRPC.agentFirstname] as String,
+      agentFirstnames:
+          map[CustomerCardSettlementDetailRPC.agentFirstnames] as String,
       agentName: map[CustomerCardSettlementDetailRPC.agentName] as String,
       settlementDate:
           DateTime.parse(map[CustomerCardSettlementDetailRPC.settlementDate]),
@@ -108,7 +108,7 @@ class CustomerCardSettlementDetail {
 
   @override
   String toString() {
-    return 'CustomerCardSettlementDetail(customerCardId: $customerCardId, typeId: $typeId, settlementId: $settlementId, customerCardLabel: $customerCardLabel, typeName: $typeName, settlementNumber: $settlementNumber, settlementAmount: $settlementAmount, agentFirstname: $agentFirstname, agentName: $agentName, settlementDate: $settlementDate, settlementEntryDate: $settlementEntryDate)';
+    return 'CustomerCardSettlementDetail(customerCardId: $customerCardId, typeId: $typeId, settlementId: $settlementId, customerCardLabel: $customerCardLabel, typeName: $typeName, settlementNumber: $settlementNumber, settlementAmount: $settlementAmount, agentFirstnames: $agentFirstnames, agentName: $agentName, settlementDate: $settlementDate, settlementEntryDate: $settlementEntryDate)';
   }
 
   @override
@@ -122,7 +122,7 @@ class CustomerCardSettlementDetail {
         other.typeName == typeName &&
         other.settlementNumber == settlementNumber &&
         other.settlementAmount == settlementAmount &&
-        other.agentFirstname == agentFirstname &&
+        other.agentFirstnames == agentFirstnames &&
         other.agentName == agentName &&
         other.settlementDate == settlementDate &&
         other.settlementEntryDate == settlementEntryDate;
@@ -137,7 +137,7 @@ class CustomerCardSettlementDetail {
         typeName.hashCode ^
         settlementNumber.hashCode ^
         settlementAmount.hashCode ^
-        agentFirstname.hashCode ^
+        agentFirstnames.hashCode ^
         agentName.hashCode ^
         settlementDate.hashCode ^
         settlementEntryDate.hashCode;

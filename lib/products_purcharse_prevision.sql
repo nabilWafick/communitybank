@@ -44,3 +44,33 @@ FROM
 GROUP BY
   produits.id,
   produits.nom;
+
+--- ============================================ ---
+
+-- Supabase AI is experimental and may produce incorrect answers
+-- Always verify the output before executing
+
+SELECT
+  produits.id as id_produit,
+  produits.nom as nom_produit,
+  coalesce(array_agg(types.id), array[]::bigint[]) as ids_types,
+  coalesce(array_agg(types.nom), array[]::text[]) as noms_types,
+  coalesce(array_agg(details_type.nombre_produit_type), array[]::int[]) as nombres_produits_types
+FROM
+  produits
+ LEFT JOIN (
+    SELECT id, nom, unnest(ids_produits) as produit_id
+    FROM types
+  ) AS types ON produits.id = types.produit_id
+LEFT JOIN  (
+SELECT
+            id as id_type,
+            nom as nom_type,
+            unnest(ids_produits) AS id_produit_type,
+            unnest(nombres_produits) AS nombre_produit_type,
+            generate_series(1, array_length(ids_produits, 1)) AS index_produit_type
+        FROM
+            types
+            GROUP BY id_type
+)  as  details_type on details_type.id_produit_type=produits.id
+GROUP BY produits.id, produits.nom;

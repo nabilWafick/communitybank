@@ -69,7 +69,7 @@ class TypesSortOptions extends ConsumerWidget {
                     width: 15.0,
                   ),
                   CBListStringDropdown(
-                    width: 120.0,
+                    width: 150.0,
                     menuHeigth: 500.0,
                     label: 'Mise',
                     providerName: 'types-stackes',
@@ -119,7 +119,7 @@ class TypesSortOptions extends ConsumerWidget {
                     ,
                   ),
                   CBListProductDropdown(
-                    width: 200.0,
+                    width: 300.0,
                     menuHeigth: 500.0,
                     label: 'Produit',
                     providerName: 'types-products',

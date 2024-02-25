@@ -11,8 +11,8 @@ import 'package:communitybank/models/response_dialog/response_dialog.model.dart'
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/models/tables/customer_account/customer_account_table.model.dart';
 import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
-import 'package:communitybank/services/customer_account/customer_account.service.dart';
-import 'package:communitybank/services/customer_card/customer_card.service.dart';
+import 'package:communitybank/services/customers_accounts/customer_account.service.dart';
+import 'package:communitybank/services/customers_cards/customer_card.service.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer/customer_dropdown.widget.dart';
