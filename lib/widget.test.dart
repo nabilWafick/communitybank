@@ -1,5 +1,5 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/customer_card_settlements_details_printing.widget.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';

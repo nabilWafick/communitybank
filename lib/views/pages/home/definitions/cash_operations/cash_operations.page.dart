@@ -1,4 +1,4 @@
-import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations.widgets.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

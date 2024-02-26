@@ -3,7 +3,7 @@
 import 'package:communitybank/controllers/customer_card_settlement_detail/customer_card_settlement_detail.controller.dart';
 import 'package:communitybank/models/data/customer_card_settlement_detail/customer_card_settlement_detail.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/generate_and_print_customer_card_settlements_details_pdf.dart';

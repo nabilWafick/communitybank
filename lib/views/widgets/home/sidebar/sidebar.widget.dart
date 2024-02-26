@@ -111,6 +111,55 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       showSubOptions: true,
     ),
     SidebarOptionModel(
+      icon: Icons.analytics,
+      name: 'Activités',
+      subOptions: [
+        SidebarSubOptionModel(
+          index: 15,
+          icon: Icons.analytics,
+          name: 'Journalier Client',
+        ),
+        SidebarSubOptionModel(
+          index: 16,
+          icon: Icons.analytics,
+          name: 'Periodique Client',
+        ),
+        SidebarSubOptionModel(
+          index: 17,
+          icon: Icons.analytics,
+          name: 'Journalier Chargé de Compte',
+        ),
+        SidebarSubOptionModel(
+          index: 18,
+          icon: Icons.analytics,
+          name: 'Periodique Chargé de Compte',
+        ),
+      ],
+      showSubOptions: true,
+    ),
+    SidebarOptionModel(
+      icon: Icons.account_balance,
+      name: 'Statistiques',
+      subOptions: [
+        SidebarSubOptionModel(
+          index: 19,
+          icon: Icons.query_stats,
+          name: 'Types',
+        ),
+        SidebarSubOptionModel(
+          index: 20,
+          icon: Icons.query_stats,
+          name: 'Produits',
+        ),
+        SidebarSubOptionModel(
+          index: 21,
+          icon: Icons.query_stats,
+          name: 'Prévisions',
+        ),
+      ],
+      showSubOptions: true,
+    ),
+    /*  SidebarOptionModel(
       icon: Icons.keyboard,
       name: 'Saisies',
       subOptions: [
@@ -134,7 +183,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       ],
       showSubOptions: true,
     ),
-    /* SidebarOptionModel(
+  */ /* SidebarOptionModel(
       icon: Icons.logout,
       name: 'Déconnexion',
       subOptions: [

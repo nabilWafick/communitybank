@@ -43,9 +43,9 @@ class _MainBodyState extends ConsumerState<MainBody> {
     CollectionsPage(),
     CashOperationsPage(),
     SettlementsPage(),
-    EntriesPage(),
-    FilesPage(),
-    LogoutPage(),
+    //  EntriesPage(),
+    //  FilesPage(),
+    //  LogoutPage(),
   ];
   @override
   Widget build(BuildContext context) {

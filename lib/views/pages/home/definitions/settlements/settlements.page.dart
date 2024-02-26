@@ -1,4 +1,4 @@
-import 'package:communitybank/views/widgets/definitions/settlements/settlements.widgets.dart';
+import 'package:communitybank/views/widgets/cash/settlements/settlements.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
