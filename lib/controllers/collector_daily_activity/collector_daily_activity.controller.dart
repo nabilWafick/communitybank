@@ -10,7 +10,7 @@ class CollectorDailyActivityController {
     final collectorDailyActivities =
         await CollectorDailyActivityService.getCollectorDailyActivity(
       collectionDate: collectionDate != null
-          ? FunctionsController.getSQLFormatDate(collectionDate)
+          ? FunctionsController.getSQLFormatDate(dateTime: collectionDate)
           : null,
       collectorId: collectorId,
     );

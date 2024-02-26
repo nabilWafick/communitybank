@@ -95,7 +95,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         SidebarSubOptionModel(
           index: 12,
           icon: Icons.payments,
-          name: 'Collectes',
+          name: 'Versements Collectes',
         ),
         SidebarSubOptionModel(
           index: 13,
@@ -138,7 +138,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       showSubOptions: true,
     ),
     SidebarOptionModel(
-      icon: Icons.account_balance,
+      icon: Icons.stacked_line_chart,
       name: 'Statistiques',
       subOptions: [
         SidebarSubOptionModel(

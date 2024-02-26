@@ -43,10 +43,13 @@ class CollectionCRUDFunctions {
         final collectorCollections = await CollectionsController.getAll(
           collectorId: collector.id,
           collectedAt: collectionDate,
-          agentId: null,
+          agentId: 0,
         ).first;
+        debugPrint('collector: $collector');
+        debugPrint('collection date: $collectionDate');
+        debugPrint('existing collection: $collectorCollections');
 
-        //  check if the collector dayly collection have been added
+        //  check if the collector daily collection have been added
 
         if (collectorCollections.isNotEmpty) {
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
@@ -135,7 +138,7 @@ class CollectionCRUDFunctions {
         final collectorCollections = await CollectionsController.getAll(
           collectorId: collector.id,
           collectedAt: collectionDate,
-          agentId: null,
+          agentId: 0,
         ).first;
 
         //  check if the collector dayly collection have been added

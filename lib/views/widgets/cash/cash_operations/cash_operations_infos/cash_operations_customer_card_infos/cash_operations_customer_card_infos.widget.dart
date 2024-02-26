@@ -541,9 +541,10 @@ class _CashOperationsCustomerCardInfosState
                                             // repayment date
                                             await FunctionsController
                                                 .showDateTime(
-                                              context,
-                                              ref,
-                                              customerCardRepaymentDateProvider,
+                                              context: context,
+                                              ref: ref,
+                                              stateProvider:
+                                                  customerCardRepaymentDateProvider,
                                             );
 
                                             // if customerCard repayment is setted and not null
@@ -740,9 +741,10 @@ class _CashOperationsCustomerCardInfosState
 
                                             await FunctionsController
                                                 .showDateTime(
-                                              context,
-                                              ref,
-                                              customerCardSatisfactionDateProvider,
+                                              context: context,
+                                              ref: ref,
+                                              stateProvider:
+                                                  customerCardSatisfactionDateProvider,
                                             );
 
                                             // if customerCard satisfaction

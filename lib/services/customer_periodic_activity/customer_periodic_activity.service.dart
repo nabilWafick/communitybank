@@ -25,8 +25,10 @@ class CustomerPeriodicActivityService {
         },
       ).select<List<Map<String, dynamic>>>();
       // return the result data
+      // debugPrint('customer activity data length: ${response.length}');
       return response;
     } catch (error) {
+      //  debugPrint('In RPC');
       debugPrint(error.toString());
       return [];
     }

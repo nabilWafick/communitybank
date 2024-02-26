@@ -30,10 +30,13 @@ class FunctionsController {
     }
   }
 
-  static showDateTime(BuildContext context, WidgetRef ref,
-      StateProvider<DateTime?> stateProvider) async {
+  static showDateTime({
+    required BuildContext context,
+    required WidgetRef ref,
+    required StateProvider<DateTime?> stateProvider,
+  }) async {
     DateTime? selectedDate;
-    TimeOfDay? selectedTime;
+    //  TimeOfDay? selectedTime;
     //  do {
     selectedDate = await showDatePicker(
       context: context,
@@ -44,13 +47,14 @@ class FunctionsController {
       confirmText: 'Valider',
       cancelText: 'Annuler',
     );
-
+/*
     selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
       confirmText: 'Valider',
       cancelText: 'Annuler',
     );
+    */
     //  } while (selectedDate == null || selectedTime == null);
 
     DateTime? dateTime;
@@ -61,11 +65,9 @@ class FunctionsController {
         year: selectedDate.year,
         month: selectedDate.month,
         day: selectedDate.day,
-      );
-
-      dateTime = dateTime.copyWith(
-        hour: selectedTime != null ? selectedTime.hour : 0,
-        minute: selectedTime != null ? selectedTime.minute : 0,
+        hour: 0,
+        minute: 0,
+        second: 0,
       );
     }
 
@@ -94,10 +96,23 @@ class FunctionsController {
     return '$hour:$minute:$second';
   }
 
-  static String getSQLFormatDate(DateTime dateTime) {
+  static String getSQLFormatDate({
+    required DateTime dateTime,
+  }) {
     String year = dateTime.year.toString().padLeft(4, '0');
     String month = dateTime.month.toString().padLeft(2, '0');
     String day = dateTime.day.toString().padLeft(2, '0');
     return "$year-$month-$day";
+  }
+
+  static String truncateText({
+    required String text,
+    required int maxLength,
+  }) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return "${text.substring(0, maxLength)}...";
+    }
   }
 }

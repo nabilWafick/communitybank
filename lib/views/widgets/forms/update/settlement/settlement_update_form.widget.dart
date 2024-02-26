@@ -155,9 +155,10 @@ class _SettlementUpdateFormState extends ConsumerState<SettlementUpdateForm> {
                               text: 'Date de Collecte',
                               onTap: () {
                                 FunctionsController.showDateTime(
-                                  context,
-                                  ref,
-                                  settlementCollectionDateProvider,
+                                  context: context,
+                                  ref: ref,
+                                  stateProvider:
+                                      settlementCollectionDateProvider,
                                 );
                               },
                             ),

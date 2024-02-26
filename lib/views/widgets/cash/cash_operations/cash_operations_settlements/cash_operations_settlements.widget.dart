@@ -39,6 +39,8 @@ class _CashOperationsSettlementsState
     final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
         ref.watch(
             cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
 
@@ -222,7 +224,7 @@ class _CashOperationsSettlementsState
                     height: 30.0,
                     child: CBText(
                       text:
-                          '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
+                          '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCard!.typeNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
                       fontSize: 12.0,
                       textAlign: TextAlign.center,
                     ),
@@ -232,8 +234,7 @@ class _CashOperationsSettlementsState
                     width: 300.0,
                     height: 30.0,
                     child: CBText(
-                      text:
-                          '${format.format(settlement.collectedAt)} ${settlement.collectedAt.hour}:${settlement.collectedAt.minute}',
+                      text: format.format(settlement.collectedAt),
                       fontSize: 12.0,
                     ),
                   ),

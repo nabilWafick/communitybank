@@ -11,10 +11,10 @@ class CollectorPeriodicActivityController {
     final collectorPeriodicActivities =
         await CollectorPeriodicActivityService.getCollectorPeriodicActivity(
       collectionBeginDate: collectionBeginDate != null
-          ? FunctionsController.getSQLFormatDate(collectionBeginDate)
+          ? FunctionsController.getSQLFormatDate(dateTime: collectionBeginDate)
           : null,
       collectionEndDate: collectionEndDate != null
-          ? FunctionsController.getSQLFormatDate(collectionEndDate)
+          ? FunctionsController.getSQLFormatDate(dateTime: collectionEndDate)
           : null,
       collectorId: collectorId,
     );

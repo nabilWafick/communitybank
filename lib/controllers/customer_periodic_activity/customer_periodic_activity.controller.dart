@@ -13,22 +13,24 @@ class CustomerPeriodicActivityController {
     final customerPeriodicActivities =
         await CustomerPeriodicActivityService.getCustomerPeriodicActivity(
       collectionBeginDate: collectionBeginDate != null
-          ? FunctionsController.getSQLFormatDate(collectionBeginDate)
+          ? FunctionsController.getSQLFormatDate(dateTime: collectionBeginDate)
           : null,
       collectionEndDate: collectionEndDate != null
-          ? FunctionsController.getSQLFormatDate(collectionEndDate)
+          ? FunctionsController.getSQLFormatDate(dateTime: collectionEndDate)
           : null,
       collectorId: collectorId,
       customerAccountId: customerAccountId,
       settlementsTotal: settlementsTotal,
     );
+    //  debugPrint('customerAccountId: $customerAccountId');
 
-    return customerPeriodicActivities
-        .map(
-          (customerPeriodicActivity) => CustomerPeriodicActivity.fromMap(
-            customerPeriodicActivity,
-          ),
-        )
-        .toList();
+    return customerPeriodicActivities.map(
+      (customerPeriodicActivity) {
+        //  debugPrint('customerPeriodicActivity: $customerPeriodicActivity');
+        return CustomerPeriodicActivity.fromMap(
+          customerPeriodicActivity,
+        );
+      },
+    ).toList();
   }
 }

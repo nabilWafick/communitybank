@@ -1,3 +1,7 @@
+import 'package:communitybank/views/pages/home/activities/collector_daily_activity/collector_daily_activity.page.dart';
+import 'package:communitybank/views/pages/home/activities/collector_periodic_activity/collector_periodic_activity.page.dart';
+import 'package:communitybank/views/pages/home/activities/customer_daily_activity/customer_daily_activity.page.dart';
+import 'package:communitybank/views/pages/home/activities/customer_periodic_activity/customer_periodic_activity.page.dart';
 import 'package:communitybank/views/pages/home/dashboard/dashboard.page.dart';
 import 'package:communitybank/views/pages/home/definitions/agents/agents.page.dart';
 import 'package:communitybank/views/pages/home/definitions/collections/collections.page.dart';
@@ -13,9 +17,9 @@ import 'package:communitybank/views/pages/home/definitions/personal_status/perso
 import 'package:communitybank/views/pages/home/definitions/products/products.page.dart';
 import 'package:communitybank/views/pages/home/definitions/settlements/settlements.page.dart';
 import 'package:communitybank/views/pages/home/definitions/types/types.page.dart';
-import 'package:communitybank/views/pages/home/entries/entries.page.dart';
-import 'package:communitybank/views/pages/home/files/files.page.dart';
-import 'package:communitybank/views/pages/home/logout/logout.page.dart';
+import 'package:communitybank/views/pages/home/statistics/customers_products/customers_products.page.dart';
+import 'package:communitybank/views/pages/home/statistics/customers_types/customers_types.pages.dart';
+import 'package:communitybank/views/pages/home/statistics/forecasts/forecasts.page.dart';
 import 'package:communitybank/views/widgets/home/home.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +47,13 @@ class _MainBodyState extends ConsumerState<MainBody> {
     CollectionsPage(),
     CashOperationsPage(),
     SettlementsPage(),
+    CustomerDailyActivityPage(),
+    CustomerPeriodicActivityPage(),
+    CollectorDailyActivityPage(),
+    CollectorPeriodicActivityPage(),
+    CustomersTypesPage(),
+    CustomersProductsPage(),
+    ForecastsPage()
     //  EntriesPage(),
     //  FilesPage(),
     //  LogoutPage(),

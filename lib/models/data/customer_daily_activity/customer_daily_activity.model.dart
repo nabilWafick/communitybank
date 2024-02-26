@@ -13,12 +13,12 @@ class CustomerDailyActivity {
   final int collectorId;
   final String collectorName;
   final String collectorFirstnames;
-  final List<int> customersCardsIds;
+  final List<dynamic> customersCardsIds;
   final List<String> customersCardsLabels;
-  final List<int> customersCardsTypesNumbers;
-  final List<int> typesIds;
-  final List<int> typesNames;
-  final List<int> customerCardSettlementsTotals;
+  final List<dynamic> customersCardsTypesNumbers;
+  final List<dynamic> typesIds;
+  final List<dynamic> typesNames;
+  final List<dynamic> customerCardSettlementsTotals;
   final List<double> customerCardSettlementsAmounts;
   CustomerDailyActivity({
     required this.collectionDate,
@@ -47,12 +47,12 @@ class CustomerDailyActivity {
     int? collectorId,
     String? collectorName,
     String? collectorFirstnames,
-    List<int>? customersCardsIds,
+    List<dynamic>? customersCardsIds,
     List<String>? customersCardsLabels,
-    List<int>? customersCardsTypesNumbers,
-    List<int>? typesIds,
-    List<int>? typesNames,
-    List<int>? customerCardSettlementsTotals,
+    List<dynamic>? customersCardsTypesNumbers,
+    List<dynamic>? typesIds,
+    List<dynamic>? typesNames,
+    List<dynamic>? customerCardSettlementsTotals,
     List<double>? customerCardSettlementsAmounts,
   }) {
     return CustomerDailyActivity(
@@ -102,8 +102,8 @@ class CustomerDailyActivity {
 
   factory CustomerDailyActivity.fromMap(Map<String, dynamic> map) {
     return CustomerDailyActivity(
-      collectionDate: DateTime.fromMillisecondsSinceEpoch(
-          map[CustomerDailyActivityRPC.collectionDate] as int),
+      collectionDate:
+          DateTime.parse(map[CustomerDailyActivityRPC.collectionDate]),
       customerAccountId: map[CustomerDailyActivityRPC.customerAccountId] as int,
       customerId: map[CustomerDailyActivityRPC.customerId] as int,
       customerName: map[CustomerDailyActivityRPC.customerName] as String,
@@ -113,20 +113,20 @@ class CustomerDailyActivity {
       collectorName: map[CustomerDailyActivityRPC.collectorName] as String,
       collectorFirstnames:
           map[CustomerDailyActivityRPC.collectorFirstnames] as String,
-      customersCardsIds: List<int>.from(
-          (map[CustomerDailyActivityRPC.customersCardsIds]) as List<int>),
+      customersCardsIds: List<dynamic>.from(
+          (map[CustomerDailyActivityRPC.customersCardsIds]) as List<dynamic>),
       customersCardsLabels: List<String>.from(
           (map[CustomerDailyActivityRPC.customersCardsLabels]) as List<String>),
-      customersCardsTypesNumbers: List<int>.from(
+      customersCardsTypesNumbers: List<dynamic>.from(
           (map[CustomerDailyActivityRPC.customersCardsTypesNumbers])
-              as List<int>),
-      typesIds:
-          List<int>.from((map[CustomerDailyActivityRPC.typesIds]) as List<int>),
-      typesNames: List<int>.from(
-          (map[CustomerDailyActivityRPC.typesNames]) as List<int>),
-      customerCardSettlementsTotals: List<int>.from(
+              as List<dynamic>),
+      typesIds: List<dynamic>.from(
+          (map[CustomerDailyActivityRPC.typesIds]) as List<dynamic>),
+      typesNames: List<dynamic>.from(
+          (map[CustomerDailyActivityRPC.typesNames]) as List<dynamic>),
+      customerCardSettlementsTotals: List<dynamic>.from(
           (map[CustomerDailyActivityRPC.customerCardSettlementsTotals])
-              as List<int>),
+              as List<dynamic>),
       customerCardSettlementsAmounts: List<double>.from(
           (map[CustomerDailyActivityRPC.customerCardSettlementsAmounts])
               as List<double>),

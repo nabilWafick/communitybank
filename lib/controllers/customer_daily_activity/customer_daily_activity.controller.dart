@@ -12,7 +12,7 @@ class CustomerDailyActivityController {
     final customerDailyActivities =
         await CustomerDailyActivityService.getCustomerDailyActivity(
       collectionDate: collectionDate != null
-          ? FunctionsController.getSQLFormatDate(collectionDate)
+          ? FunctionsController.getSQLFormatDate(dateTime: collectionDate)
           : null,
       collectorId: collectorId,
       customerAccountId: customerAccountId,

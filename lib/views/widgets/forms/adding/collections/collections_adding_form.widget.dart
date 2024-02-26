@@ -152,9 +152,9 @@ class _CollectionAddingFormState extends ConsumerState<CollectionAddingForm> {
                               text: 'Date de Collecte',
                               onTap: () {
                                 FunctionsController.showDateTime(
-                                  context,
-                                  ref,
-                                  collectionDateProvider,
+                                  context: context,
+                                  ref: ref,
+                                  stateProvider: collectionDateProvider,
                                 );
                               },
                             ),

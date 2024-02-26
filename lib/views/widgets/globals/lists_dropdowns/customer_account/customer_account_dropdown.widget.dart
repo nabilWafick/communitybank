@@ -1,3 +1,4 @@
+import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
@@ -83,9 +84,19 @@ class _CBListCustomerAccountDropdownState
                     .indexOf(dropdownMenuEntryLabel)],
                 label: customersListStream.when(
                   data: (data) {
-                    final customer = data.firstWhere((customer) =>
-                        customer.id == dropdownMenuEntryLabel.customerId);
-                    return '${customer.firstnames} ${customer.name}';
+                    final customer = data.firstWhere(
+                      (customer) =>
+                          customer.id == dropdownMenuEntryLabel.customerId,
+                      orElse: () => Customer(
+                        name: '',
+                        firstnames: '',
+                        phoneNumber: '1234567890',
+                        address: 'Address',
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
+                      ),
+                    );
+                    return '${customer.name} ${customer.firstnames} ';
                   },
                   error: (error, stackTrace) => '',
                   loading: () => '',

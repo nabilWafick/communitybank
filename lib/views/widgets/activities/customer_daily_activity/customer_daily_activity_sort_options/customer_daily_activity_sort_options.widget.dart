@@ -84,9 +84,10 @@ class _CustomerDailyActivitySortOptionsState
                       text: 'Date de Collecte',
                       onTap: () async {
                         await FunctionsController.showDateTime(
-                          context,
-                          ref,
-                          customerDailyActivityCollectionDateProvider,
+                          context: context,
+                          ref: ref,
+                          stateProvider:
+                              customerDailyActivityCollectionDateProvider,
                         );
                       },
                     ),

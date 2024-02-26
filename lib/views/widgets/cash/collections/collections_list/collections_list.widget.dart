@@ -85,7 +85,7 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
               Container(
                 width: 500.0,
                 height: 50.0,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Chargé de compte',
                   textAlign: TextAlign.start,
@@ -233,6 +233,16 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                     alignment: Alignment.centerLeft,
                     width: 500.0,
                     height: 30.0,
+                    child: CBText(
+                      text:
+                          '${format.format(collection.createdAt)}  ${collection.createdAt.hour}:${collection.createdAt.minute}',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 500.0,
+                    height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
                         final agentsListStream =
@@ -252,16 +262,6 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                           fontSize: 12.0,
                         );
                       },
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 500.0,
-                    height: 30.0,
-                    child: CBText(
-                      text:
-                          '${format.format(collection.createdAt)}  ${collection.createdAt.hour}:${collection.createdAt.minute}',
-                      fontSize: 12.0,
                     ),
                   ),
                   InkWell(
