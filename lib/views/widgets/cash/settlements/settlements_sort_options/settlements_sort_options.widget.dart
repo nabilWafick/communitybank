@@ -147,6 +147,7 @@ class _SettlementsSortOptionsState
               CBListCustomerCardDropdown(
                 width: 200.0,
                 label: 'Carte',
+                menuHeigth: 500.0,
                 providerName: 'settlements-card',
                 dropdownMenuEntriesLabels:
                     customersCardsWithOwnerListStream.when(

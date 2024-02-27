@@ -117,22 +117,12 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
         SidebarSubOptionModel(
           index: 15,
           icon: Icons.analytics,
-          name: 'Journalier Client',
+          name: ' Client',
         ),
         SidebarSubOptionModel(
           index: 16,
           icon: Icons.analytics,
-          name: 'Periodique Client',
-        ),
-        SidebarSubOptionModel(
-          index: 17,
-          icon: Icons.analytics,
-          name: 'Journalier Chargé de Compte',
-        ),
-        SidebarSubOptionModel(
-          index: 18,
-          icon: Icons.analytics,
-          name: 'Periodique Chargé de Compte',
+          name: 'Chargé de Compte',
         ),
       ],
       showSubOptions: true,
@@ -142,17 +132,17 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>((ref) {
       name: 'Statistiques',
       subOptions: [
         SidebarSubOptionModel(
-          index: 19,
-          icon: Icons.query_stats,
+          index: 17,
+          icon: Icons.stacked_line_chart,
           name: 'Types',
         ),
         SidebarSubOptionModel(
-          index: 20,
-          icon: Icons.query_stats,
+          index: 18,
+          icon: Icons.stacked_line_chart,
           name: 'Produits',
         ),
         SidebarSubOptionModel(
-          index: 21,
+          index: 19,
           icon: Icons.query_stats,
           name: 'Prévisions',
         ),

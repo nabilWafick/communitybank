@@ -59,26 +59,35 @@ class _CustomerAccountOwnerCardSelectionState
                     // store the customer card, generated letters by default
                     String accountOwnerCardLabel = '';
 
-                    // store the cstomer card if it's existed
-                    CustomerCard? accountOwnerCard;
+                    // store the customer card if it's existed
+                    CustomerCard accountOwnerCard = CustomerCard(
+                      label: 'ERROR',
+                      typeId: 0,
+                      typeNumber: 0,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    );
 
                     if (widget.customerCardId != null) {
-                      for (CustomerCard customerCard in data) {
-                        if (customerCard.id == widget.customerCardId) {
-                          accountOwnerCard = customerCard;
+                      accountOwnerCard = data.firstWhere(
+                        (customerCard) =>
+                            customerCard.id == widget.customerCardId,
+                        orElse: () => CustomerCard(
+                          label: 'ERROR',
+                          typeId: 0,
+                          typeNumber: 0,
+                          createdAt: DateTime.now(),
+                          updatedAt: DateTime.now(),
+                        ),
+                      );
 
-                          // show the widget if the customer card is not satisfied
-                          if (customerCard.satisfiedAt != null ||
-                              customerCard.repaidAt != null) {
-                            showWidget.value = false;
-                          }
-
-                          break;
-                        }
+                      if (accountOwnerCard.satisfiedAt != null ||
+                          accountOwnerCard.repaidAt != null) {
+                        showWidget.value = false;
                       }
 
-                      // set the account owner card label
-                      accountOwnerCardLabel = accountOwnerCard!.label;
+                      //  // set the account owner card label
+                      accountOwnerCardLabel = accountOwnerCard.label;
 
                       data = [
                         accountOwnerCard,
@@ -118,7 +127,7 @@ class _CustomerAccountOwnerCardSelectionState
                                 inputIndex: widget.index,
                                 label: 'Nombre',
                                 hintText: 'Nombre de Type',
-                                initialValue: accountOwnerCard != null
+                                initialValue: accountOwnerCard.label != 'ERROR'
                                     ? accountOwnerCard.typeNumber.toString()
                                     : 1.toString(),
                                 textInputType: TextInputType.number,
@@ -136,22 +145,19 @@ class _CustomerAccountOwnerCardSelectionState
                                 return typesListStream.when(
                                   data: (data) {
                                     Type? accountOwnerCardType;
-                                    if (accountOwnerCard != null) {
-                                      for (Type type in data) {
-                                        if (type.id ==
-                                            accountOwnerCard.typeId) {
-                                          accountOwnerCardType = type;
-                                          break;
-                                        }
+                                    for (Type type in data) {
+                                      if (type.id == accountOwnerCard.typeId) {
+                                        accountOwnerCardType = type;
+                                        break;
                                       }
-
-                                      data = [
-                                        accountOwnerCardType!,
-                                        ...data,
-                                      ];
-
-                                      data.toSet().toSet();
                                     }
+
+                                    data = [
+                                      accountOwnerCardType!,
+                                      ...data,
+                                    ];
+
+                                    data.toSet().toSet();
                                     final remainProducts = data
                                         .where(
                                           (customerCard) =>

@@ -9,8 +9,8 @@ class CustomersProducts {
   String productName;
   List<dynamic> customersAccountsIds;
   List<dynamic> customersIds;
-  List<String> customersNames;
-  List<String> customersFirstnames;
+  List<dynamic> customersNames;
+  List<dynamic> customersFirstnames;
   CustomersProducts({
     required this.productId,
     required this.productName,
@@ -25,8 +25,8 @@ class CustomersProducts {
     String? productName,
     List<dynamic>? customersAccountsIds,
     List<dynamic>? customersIds,
-    List<String>? customersNames,
-    List<String>? customersFirstnames,
+    List<dynamic>? customersNames,
+    List<dynamic>? customersFirstnames,
   }) {
     return CustomersProducts(
       productId: productId ?? this.productId,
@@ -57,10 +57,10 @@ class CustomersProducts {
           (map[CustomersProductsRPC.customersAccountsIds]) as List<dynamic>),
       customersIds: List<dynamic>.from(
           (map[CustomersProductsRPC.customersIds]) as List<dynamic>),
-      customersNames: List<String>.from(
-          (map[CustomersProductsRPC.customersNames]) as List<String>),
-      customersFirstnames: List<String>.from(
-          (map[CustomersProductsRPC.customersFirstnames]) as List<String>),
+      customersNames: List<dynamic>.from(
+          (map[CustomersProductsRPC.customersNames]) as List<dynamic>),
+      customersFirstnames: List<dynamic>.from(
+          (map[CustomersProductsRPC.customersFirstnames]) as List<dynamic>),
     );
   }
 

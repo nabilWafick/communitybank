@@ -4,7 +4,6 @@ import 'package:communitybank/models/data/customer_card/customer_card.model.dart
 import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/data/customer_periodic_activity/customer_periodic_activity.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_account_dopdown/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_card_card/customer_card_card.widget.dart';
 import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_cards_horizontal_scroller/customer_cards_horizontal_scroller.widget.dart';
 import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_sort_options/customer_periodic_activity_sort_options.widget.dart';
@@ -82,8 +81,6 @@ class _CustomerPeriodicActivityDataState
 
   @override
   Widget build(BuildContext context) {
-    final format = DateFormat.yMMMMEEEEd('fr');
-
     final selectedCustomerAccount = ref.watch(
       customerPeriodicActivitySelectedCustomerAccountProvider,
     );
@@ -94,6 +91,7 @@ class _CustomerPeriodicActivityDataState
         ref.watch(customerPeriodicActivitySelectedCustomerCardProvider);
     final customerPeriodicActivitySelectedCustomerCardType =
         ref.watch(customerPeriodicActivitySelectedCustomerCardTypeProvider);
+    final format = DateFormat.yMMMMEEEEd('fr');
     final customerCardSettlementsDetailsList = ref.watch(
       customerCardSettlementsDetailsProvider(
         customerPeriodicActivitySelectedCustomerCard != null &&
@@ -220,7 +218,7 @@ class _CustomerPeriodicActivityDataState
         ),
         Container(
           margin: const EdgeInsets.symmetric(
-            vertical: 10.0,
+            vertical: 20.0,
           ),
           child: Column(
             children: [
@@ -285,7 +283,7 @@ class _CustomerPeriodicActivityDataState
         ),
         Container(
           alignment: Alignment.center,
-          height: 500.0,
+          height: 514,
           child: customerCardSettlementsDetailsList.when(
             data: (data) => HorizontalDataTable(
               leftHandSideColumnWidth: 100,

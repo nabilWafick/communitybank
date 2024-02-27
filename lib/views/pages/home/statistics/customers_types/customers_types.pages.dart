@@ -1,4 +1,4 @@
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/statistics/customers_types/customers_types.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,11 +7,11 @@ class CustomersTypesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: CBText(
-        text: 'Customers Types',
-        fontSize: 25.0,
-      ),
+    return const Column(
+      children: [
+        CustomersTypesStatisticsSortOptions(),
+        CustomersTypesStatisticsData(),
+      ],
     );
   }
 }

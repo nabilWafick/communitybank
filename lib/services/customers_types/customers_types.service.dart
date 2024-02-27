@@ -18,10 +18,13 @@ class CustomersTypesService {
           'type_id': typeId,
         },
       ).select<List<Map<String, dynamic>>>();
+
       // return the result data
       return response;
     } catch (error) {
-      debugPrint(error.toString());
+      debugPrint(
+        error.toString(),
+      );
       return [];
     }
   }
