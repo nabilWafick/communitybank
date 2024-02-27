@@ -1,18 +1,17 @@
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_periodic_activity_data.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final cashOperationsSearchOptionsCustomerAccountDropdownProvider =
+final customerActivityCustomerAccountDropdownProvider =
     StateProvider.family<CustomerAccount?, String>((ref, dropdown) {
   return null;
 });
 
-class CBCashOperationsSearchOptionsCustomerAccountDropdown
-    extends ConsumerStatefulWidget {
+class CBCustomerActivityCustomerAccountDropdown extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<CustomerAccount> dropdownMenuEntriesLabels;
@@ -20,7 +19,7 @@ class CBCashOperationsSearchOptionsCustomerAccountDropdown
   final double? width;
   final double? menuHeigth;
 
-  const CBCashOperationsSearchOptionsCustomerAccountDropdown({
+  const CBCustomerActivityCustomerAccountDropdown({
     super.key,
     this.width,
     this.menuHeigth,
@@ -31,17 +30,15 @@ class CBCashOperationsSearchOptionsCustomerAccountDropdown
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBCashOperationsSearchOptionsCustomerAccountDropdownState();
+      _CBCustomerActivityCustomerAccountDropdownState();
 }
 
-class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
-    extends ConsumerState<
-        CBCashOperationsSearchOptionsCustomerAccountDropdown> {
+class _CBCustomerActivityCustomerAccountDropdownState
+    extends ConsumerState<CBCustomerActivityCustomerAccountDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem = ref.watch(
-        cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-            widget.providerName));
+        customerActivityCustomerAccountDropdownProvider(widget.providerName));
     final customersListStream = ref.watch(customersListStreamProvider);
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -97,17 +94,18 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
         onSelected: (value) {
           ref
               .read(
-                cashOperationsSearchOptionsCustomerAccountDropdownProvider(
+                customerActivityCustomerAccountDropdownProvider(
                   widget.providerName,
                 ).notifier,
               )
               .state = value!;
 
           ref
-              .read(cashOperationsSelectedCustomerAccountProvider.notifier)
+              .read(
+                customerPeriodicActivitySelectedCustomerAccountProvider
+                    .notifier,
+              )
               .state = value;
-
-          ref.read(isRefreshingProvider.notifier).state = false;
         },
       ),
     );
