@@ -83,7 +83,7 @@ class _CustomersProductsStatisticsDataState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Products',
+                  text: 'Produits',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,

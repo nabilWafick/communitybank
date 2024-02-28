@@ -1,8 +1,11 @@
+import 'dart:io';
+
+import 'package:communitybank/functions/auth/auth.function.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/widget.test.dart';
+//import 'package:communitybank/widget.test.dart';
 //import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +33,23 @@ Future<void> main() async {
     ),
   );
 
+  WidgetsBinding.instance.addPostFrameCallback(
+    (timeStamp) {
+      ProcessSignal.sigterm.watch().listen(
+        (event) async {
+          await AuthFunctions.logout();
+        },
+      );
+    },
+  );
+
   await DesktopWindow.setMinWindowSize(
     const Size(
       1280.0,
       700.0,
     ),
   );
+
   runApp(
     const ProviderScope(
       child: CommunityBankApp(),
@@ -91,7 +105,8 @@ class CommunityBankApp extends ConsumerWidget {
       ),
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: // const WidgetTest(),
+      home:
+          // const WidgetTest(),
           //  const RegistrationPage(),
           //  const LoginPage(),
           const MainApp(),
@@ -106,29 +121,42 @@ final authStateProvider = StreamProvider<AuthState>((ref) async* {
   yield* auth;
 });
 
-class MainApp extends ConsumerWidget {
+class MainApp extends ConsumerStatefulWidget {
   const MainApp({super.key});
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MainAppState();
+}
+
+class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authStateStream = ref.watch(authStateProvider);
-    // final supabase = Supabase.instance.client;
-    // final currentUser = supabase.auth.currentUser;
+  void dispose() {
+    WidgetsBinding.instance.addObserver(this);
+    super.dispose();
+  }
 
-    // return currentUser == null
-    //     ? const LoginPage()
-    //     :
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused) {
+      await AuthFunctions.logout();
+    }
+    if (state == AppLifecycleState.detached) {
+      await AuthFunctions.logout();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authStateStream = ref.watch(authStateProvider);
+
     return authStateStream.when(
       data: (authState) {
-        /* final authStateEvent = authState.event;
-        if (authStateEvent == AuthChangeEvent.signedIn) {
-          return const HomePage();1
-        } else if (authStateEvent == AuthChangeEvent.signedOut) {
-          return const LoginPage();
-        } else {
-          return const LoginPage();
-        } */
-
         final authStateSession = authState.session;
         if (authStateSession != null) {
           return const HomePage();

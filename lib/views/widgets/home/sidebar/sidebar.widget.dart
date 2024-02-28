@@ -275,12 +275,7 @@ class LogoutSidebarOption extends ConsumerWidget {
     final selectedSidebarOption = ref.watch(selectedSidebarOptionProvider);
     return InkWell(
       onTap: () async {
-        //  ref.read(selectedSidebarOptionProvider.notifier).state =
-        //      sidebarOptionData;
-        //  ref.read(selectedSidebarSubOptionProvider.notifier).state =
-        //      sidebarOptionData.subOptions[0];
-
-        await AuthFunctions.logout(context);
+        await AuthFunctions.logout();
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 12.0),

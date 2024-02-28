@@ -1,10 +1,9 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
 import 'package:communitybank/models/tables/customer_card/customer_card_table.model.dart';
 
 class CustomerCard {
-  final int? id;
+  final dynamic id;
   final String label;
   final int typeId;
   final int typeNumber;
@@ -26,7 +25,7 @@ class CustomerCard {
   });
 
   CustomerCard copyWith({
-    int? id,
+    dynamic id,
     String? label,
     int? typeId,
     int? typeNumber,
@@ -70,7 +69,7 @@ class CustomerCard {
 
   factory CustomerCard.fromMap(Map<String, dynamic> map) {
     return CustomerCard(
-      id: map[CustomerCardTable.id]?.toInt(),
+      id: map[CustomerCardTable.id],
       label: map[CustomerCardTable.label] ?? '',
       typeId: map[CustomerCardTable.typeId]?.toInt(),
       typeNumber: map[CustomerCardTable.typeNumber],
@@ -122,65 +121,4 @@ class CustomerCard {
         createdAt.hashCode ^
         updatedAt.hashCode;
   }
-}
-
-class Test {
-  int? id;
-  num number;
-  DateTime? date;
-  Test({
-    this.id,
-    required this.number,
-    this.date,
-  });
-
-  Test copyWith({
-    ValueGetter<int?>? id,
-    num? number,
-    ValueGetter<DateTime?>? date,
-  }) {
-    return Test(
-      id: id != null ? id() : this.id,
-      number: number ?? this.number,
-      date: date != null ? date() : this.date,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'number': number,
-      'date': date?.millisecondsSinceEpoch,
-    };
-  }
-
-  factory Test.fromMap(Map<String, dynamic> map) {
-    return Test(
-      id: map['id']?.toInt(),
-      number: map['number'] ?? 0,
-      date: map['date'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['date'])
-          : null,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Test.fromJson(String source) => Test.fromMap(json.decode(source));
-
-  @override
-  String toString() => 'Test(id: $id, number: $number, date: $date)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Test &&
-        other.id == id &&
-        other.number == number &&
-        other.date == date;
-  }
-
-  @override
-  int get hashCode => id.hashCode ^ number.hashCode ^ date.hashCode;
 }

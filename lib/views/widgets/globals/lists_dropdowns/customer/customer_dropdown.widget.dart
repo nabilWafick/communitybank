@@ -85,9 +85,23 @@ class _CBListCustomerDropdownState
           Icons.arrow_drop_down,
         ),
         onSelected: (value) {
-          ref
-              .read(listCustomerDropdownProvider(widget.providerName).notifier)
-              .state = value!;
+          ref.read(listCustomerDropdownProvider(widget.providerName).notifier).state =
+              value ??
+                  Customer(
+                    id: 0,
+                    name: 'Tous',
+                    firstnames: '',
+                    phoneNumber: '',
+                    address: '',
+                    profession: '',
+                    nicNumber: 1,
+                    categoryId: 0,
+                    economicalActivityId: 0,
+                    personalStatusId: 0,
+                    localityId: 0,
+                    createdAt: DateTime.now(),
+                    updatedAt: DateTime.now(),
+                  );
         },
       ),
     );

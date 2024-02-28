@@ -5,6 +5,7 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/type/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:communitybank/views/widgets/statistics/customers_types/customers_types_details_shower/customers_types_details_shower.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -90,6 +91,17 @@ class _CustomersTypesStatisticsDataState
                 ),
               ),
               Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Nombre',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
                 width: 1000.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
@@ -116,13 +128,23 @@ class _CustomersTypesStatisticsDataState
               final customersTypes = data[index];
               return Row(
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100.0,
-                    height: 30.0,
-                    child: const Icon(
-                      Icons.aspect_ratio,
-                      color: CBColors.primaryColor,
+                  InkWell(
+                    onTap: () {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CustomersTypesTypesDetailsShower(
+                          customersTypes: customersTypes,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 100.0,
+                      height: 30.0,
+                      child: const Icon(
+                        Icons.aspect_ratio,
+                        color: CBColors.primaryColor,
+                      ),
                     ),
                   ),
                   Container(
@@ -131,6 +153,17 @@ class _CustomersTypesStatisticsDataState
                     height: 30.0,
                     child: CBText(
                       text: customersTypes.typeName,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 200.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: customersTypes.customersIds.first == null
+                          ? '0'
+                          : customersTypes.customersIds.length.toString(),
                       fontSize: 12.0,
                     ),
                   ),
@@ -211,6 +244,17 @@ class _CustomersTypesStatisticsDataState
                 ),
               ),
               Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Nombre',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
                 width: 1000.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
@@ -274,6 +318,17 @@ class _CustomersTypesStatisticsDataState
                 child: const CBText(
                   text: 'Types',
                   textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Nombre',
+                  textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),

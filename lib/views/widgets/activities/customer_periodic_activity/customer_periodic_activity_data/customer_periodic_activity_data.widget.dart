@@ -283,7 +283,7 @@ class _CustomerPeriodicActivityDataState
         ),
         Container(
           alignment: Alignment.center,
-          height: 514,
+          height: MediaQuery.of(context).size.height * .55,
           child: customerCardSettlementsDetailsList.when(
             data: (data) => HorizontalDataTable(
               leftHandSideColumnWidth: 100,

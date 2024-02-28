@@ -158,20 +158,18 @@ class AuthFunctions {
     }
   }
 
-  static Future<void> logout(BuildContext context) async {
+  static Future<void> logout() async {
     await AuthController.signOut();
 
     final prefs = await SharedPreferences.getInstance();
 
-    // remove the agent id so as to facilitate some tasks like settlements adding
+    // remove the agent id
     prefs.remove(CBConstants.agentIdPrefKey);
 
-    // remove the agent name for main app bar view
+    // remove the agent name
     prefs.remove(CBConstants.agentNamePrefKey);
 
-    // remove the agent firstnames for main app bar view
+    // remove the agent firstnames
     prefs.remove(CBConstants.agentFirstnamesPrefKey);
-
-    // remove the agent email
   }
 }

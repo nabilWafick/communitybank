@@ -43,218 +43,249 @@ class CustomersAccountsList extends StatefulHookConsumerWidget {
 }
 
 class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
-  final ScrollController horizontalScrollController = ScrollController();
-  final ScrollController verticalScrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     final customersAccountsListStream =
         ref.watch(customersAccountsListStreamProvider);
+    final customersListStream = ref.watch(customersListStreamProvider);
 
     return Expanded(
       child: Container(
         alignment: Alignment.center,
         child: customersAccountsListStream.when(
-          data: (data) => HorizontalDataTable(
-            leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 800,
-            itemCount: data.length,
-            isFixedHeader: true,
-            leftHandSideColBackgroundColor: CBColors.backgroundColor,
-            rightHandSideColBackgroundColor: CBColors.backgroundColor,
-            headerWidgets: [
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'N°',
-                  textAlign: TextAlign.center,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
+          data: (data) {
+            return HorizontalDataTable(
+              leftHandSideColumnWidth: 100,
+              rightHandSideColumnWidth: MediaQuery.of(context).size.width + 800,
+              itemCount: data.length,
+              isFixedHeader: true,
+              leftHandSideColBackgroundColor: CBColors.backgroundColor,
+              rightHandSideColBackgroundColor: CBColors.backgroundColor,
+              headerWidgets: [
+                Container(
+                  width: 200.0,
+                  height: 50.0,
+                  alignment: Alignment.center,
+                  child: const CBText(
+                    text: 'N°',
+                    textAlign: TextAlign.center,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Container(
-                width: 500.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Client',
-                  textAlign: TextAlign.center,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
+                Container(
+                  width: 500.0,
+                  height: 50.0,
+                  alignment: Alignment.centerLeft,
+                  child: const CBText(
+                    text: 'Client',
+                    textAlign: TextAlign.center,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Container(
-                width: 500.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Chargé de compte',
-                  textAlign: TextAlign.center,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
+                Container(
+                  width: 500.0,
+                  height: 50.0,
+                  alignment: Alignment.centerLeft,
+                  child: const CBText(
+                    text: 'Chargé de compte',
+                    textAlign: TextAlign.center,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Container(
-                width: 1200.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Cartes',
-                  textAlign: TextAlign.center,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
+                Container(
+                  width: 1200.0,
+                  height: 50.0,
+                  alignment: Alignment.centerLeft,
+                  child: const CBText(
+                    text: 'Cartes',
+                    textAlign: TextAlign.center,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 150.0,
-                height: 50.0,
-              ),
-              const SizedBox(
-                width: 150.0,
-                height: 50.0,
-              ),
-            ],
-            leftSideItemBuilder: (context, index) {
-              return Container(
-                alignment: Alignment.center,
-                width: 200.0,
-                height: 30.0,
-                child: CBText(
-                  text: '${index + 1}',
-                  fontSize: 12.0,
+                const SizedBox(
+                  width: 150.0,
+                  height: 50.0,
                 ),
-              );
-            },
-            rightSideItemBuilder: (BuildContext context, int index) {
-              final customerAccount = data[index];
-              return Row(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 500.0,
-                    height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final customersListStream =
-                            ref.watch(customersListStreamProvider);
+                const SizedBox(
+                  width: 150.0,
+                  height: 50.0,
+                ),
+              ],
+              leftSideItemBuilder: (context, index) {
+                return Container(
+                  alignment: Alignment.center,
+                  width: 200.0,
+                  height: 30.0,
+                  child: CBText(
+                    text: '${index + 1}',
+                    fontSize: 12.0,
+                  ),
+                );
+              },
+              rightSideItemBuilder: (BuildContext context, int index) {
+                final customerAccount = data[index];
 
-                        return customersListStream.when(
-                          data: (data) {
-                            String accountOwner = '';
-
-                            for (Customer customer in data) {
-                              if (customer.id == customerAccount.customerId) {
-                                accountOwner =
-                                    ' ${customer.name} ${customer.firstnames}';
-                                break;
-                              }
-                            }
-
-                            return CBText(
-                              text: accountOwner,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(text: ''),
-                          loading: () => const CBText(text: ''),
+                return Row(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 500.0,
+                      height: 30.0,
+                      child: /* customersListStream.when(
+                      data: (data) {
+                        final accountOwner = data.firstWhere(
+                          (customer) =>
+                              customer.id == customerAccount.customerId,
+                          orElse: () => Customer(
+                            name: 'ID',
+                            firstnames: '${customerAccount.customerId}',
+                            phoneNumber: '1234567890',
+                            address: 'Address',
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                        );
+          
+                        return CBText(
+                          text:
+                              '${accountOwner.name} ${accountOwner.firstnames}',
+                          fontSize: 12.0,
                         );
                       },
+                      error: (error, stackTrace) => const CBText(text: ''),
+                      loading: () => const CBText(text: ''),
+                    ),*/
+
+                          Consumer(
+                        builder: (context, ref, child) {
+                          return customersListStream.when(
+                            data: (data) {
+                              final accountOwner = data.firstWhere(
+                                (customer) =>
+                                    customer.id == customerAccount.customerId,
+                                orElse: () => Customer(
+                                  name: 'ID',
+                                  firstnames: '${customerAccount.customerId}',
+                                  phoneNumber: '1234567890',
+                                  address: 'Address',
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                ),
+                              );
+
+                              return CBText(
+                                text:
+                                    '${accountOwner.name} ${accountOwner.firstnames}',
+                                fontSize: 12.0,
+                              );
+                            },
+                            error: (error, stackTrace) =>
+                                const CBText(text: ''),
+                            loading: () => const CBText(text: ''),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 500.0,
-                    height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final collectorsListStream =
-                            ref.watch(collectorsListStreamProvider);
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 500.0,
+                      height: 30.0,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final collectorsListStream =
+                              ref.watch(collectorsListStreamProvider);
 
-                        return collectorsListStream.when(
-                          data: (data) {
-                            String accountCollector = '';
+                          return collectorsListStream.when(
+                            data: (data) {
+                              String accountCollector = '';
 
-                            for (Collector collector in data) {
-                              if (collector.id == customerAccount.collectorId) {
-                                accountCollector =
-                                    ' ${collector.name} ${collector.firstnames}';
-                                break;
-                              }
-                            }
-
-                            return CBText(
-                              text: accountCollector,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(text: ''),
-                          loading: () => const CBText(text: ''),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 1200.0,
-                    height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final customersCardListStream =
-                            ref.watch(customersCardsListStreamProvider);
-
-                        return customersCardListStream.when(
-                          data: (data) {
-                            String accountCustomerCards = '';
-
-                            for (CustomerCard customerCard in data) {
-                              if (customerAccount.customerCardsIds
-                                      .contains(customerCard.id) &&
-                                  customerCard.satisfiedAt == null &&
-                                  customerCard.repaidAt == null) {
-                                if (accountCustomerCards.isEmpty) {
-                                  accountCustomerCards = customerCard.label;
-                                } else {
-                                  accountCustomerCards =
-                                      '$accountCustomerCards  ${customerCard.label}';
+                              for (Collector collector in data) {
+                                if (collector.id ==
+                                    customerAccount.collectorId) {
+                                  accountCollector =
+                                      ' ${collector.name} ${collector.firstnames}';
+                                  break;
                                 }
                               }
-                            }
 
-                            return CBText(
-                              text: accountCustomerCards,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(text: ''),
-                          loading: () => const CBText(text: ''),
-                        );
-                      },
+                              return CBText(
+                                text: accountCollector,
+                                fontSize: 12.0,
+                              );
+                            },
+                            error: (error, stackTrace) =>
+                                const CBText(text: ''),
+                            loading: () => const CBText(text: ''),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      ref
-                          .read(customerAccountAddedInputsProvider.notifier)
-                          .state = {};
-                      ref
-                          .read(customerAccountOwnerSelectedCardsTypesProvider
-                              .notifier)
-                          .state = {};
-                      // automatically add the type products inputs after rendering
-                      for (dynamic customerCardId
-                          in customerAccount.customerCardsIds) {
-                        ref
-                            .read(
-                          customerAccountAddedInputsProvider.notifier,
-                        )
-                            .update((state) {
-                          state[customerCardId] = true;
-                          return state;
-                        });
-                      }
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 1200.0,
+                      height: 30.0,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final customersCardListStream =
+                              ref.watch(customersCardsListStreamProvider);
 
-                      /*
+                          return customersCardListStream.when(
+                            data: (data) {
+                              String accountCustomerCards = '';
+
+                              for (CustomerCard customerCard in data) {
+                                if (customerAccount.customerCardsIds
+                                        .contains(customerCard.id) &&
+                                    customerCard.satisfiedAt == null &&
+                                    customerCard.repaidAt == null) {
+                                  if (accountCustomerCards.isEmpty) {
+                                    accountCustomerCards = customerCard.label;
+                                  } else {
+                                    accountCustomerCards =
+                                        '$accountCustomerCards  ${customerCard.label}';
+                                  }
+                                }
+                              }
+
+                              return CBText(
+                                text: accountCustomerCards,
+                                fontSize: 12.0,
+                              );
+                            },
+                            error: (error, stackTrace) =>
+                                const CBText(text: ''),
+                            loading: () => const CBText(text: ''),
+                          );
+                        },
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        ref
+                            .read(customerAccountAddedInputsProvider.notifier)
+                            .state = {};
+                        ref
+                            .read(customerAccountOwnerSelectedCardsTypesProvider
+                                .notifier)
+                            .state = {};
+                        // automatically add the type products inputs after rendering
+                        for (dynamic customerCardId
+                            in customerAccount.customerCardsIds) {
+                          ref
+                              .read(
+                            customerAccountAddedInputsProvider.notifier,
+                          )
+                              .update((state) {
+                            state[customerCardId] = true;
+                            return state;
+                          });
+                        }
+
+                        /*
                                   debugPrint('Milliseconds');
                                   debugPrint(
                                     DateTime.now()
@@ -269,51 +300,54 @@ class _CustomersAccountsListState extends ConsumerState<CustomersAccountsList> {
                                   );
                                   */
 
-                      await FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog: CustomerAccountUpdateForm(
-                          customerAccount: customerAccount,
+                        await FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog: CustomerAccountUpdateForm(
+                            customerAccount: customerAccount,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 150.0,
+                        height: 30.0,
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.green[500],
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 150.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.green[500],
+                      ),
+                      // showEditIcon: true,
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog:
+                              CustomerAccountDeletionConfirmationDialog(
+                            customerAccount: customerAccount,
+                            confirmToDelete:
+                                CustomerAccountCRUDFunctions.delete,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 150.0,
+                        height: 30.0,
+                        alignment: Alignment.center,
+                        child: const Icon(
+                          Icons.delete_sharp,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
-                    // showEditIcon: true,
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog: CustomerAccountDeletionConfirmationDialog(
-                          customerAccount: customerAccount,
-                          confirmToDelete: CustomerAccountCRUDFunctions.delete,
-                        ),
-                      );
-                    },
-                    child: Container(
-                      width: 150.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.delete_sharp,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-            rowSeparatorWidget: const Divider(),
-            scrollPhysics: const BouncingScrollPhysics(),
-            horizontalScrollPhysics: const BouncingScrollPhysics(),
-          ),
+                  ],
+                );
+              },
+              rowSeparatorWidget: const Divider(),
+              scrollPhysics: const BouncingScrollPhysics(),
+              horizontalScrollPhysics: const BouncingScrollPhysics(),
+            );
+          },
           error: (error, stackTrace) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
             rightHandSideColumnWidth: 1450,
