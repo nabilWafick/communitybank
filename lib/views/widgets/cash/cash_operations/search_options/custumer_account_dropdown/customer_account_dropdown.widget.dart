@@ -1,6 +1,6 @@
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
@@ -108,8 +108,6 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
               .state = value;
 
           ref.read(isRefreshingProvider.notifier).state = false;
-          debugPrint('customer account dropdown');
-          debugPrint('isRefreshing: ${ref.watch(isRefreshingProvider)}');
         },
       ),
     );

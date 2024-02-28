@@ -1,6 +1,6 @@
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';

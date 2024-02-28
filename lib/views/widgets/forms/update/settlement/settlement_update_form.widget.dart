@@ -4,7 +4,7 @@ import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/utils/utils.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/cash_operations_customer_card_infos/cash_operations_customer_card_infos.widget.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_customer_infos.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/customer_card_infos/customer_card_infos.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/customer_infos/customer_infos.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

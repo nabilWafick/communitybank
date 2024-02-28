@@ -8,7 +8,7 @@ import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/constants/constants.util.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,8 +1,8 @@
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/settlements/settlements_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/settlement/settlement_update_form.widget.dart';

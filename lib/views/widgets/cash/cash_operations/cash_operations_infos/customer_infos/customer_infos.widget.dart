@@ -3,11 +3,11 @@ import 'package:communitybank/models/data/economical_activity/economical_activit
 import 'package:communitybank/models/data/locality/locality.model.dart';
 import 'package:communitybank/models/data/personal_status/personal_status.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_collector_profil/cash_operations_customer_profil.widget.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/cash_operations_customer_infos/cash_operations_customer_profil/cash_operations_customer_profil.widget.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/cash_operations_search_options.widget.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/customer_card_dropdown/customer_card_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_search_options/custumer_account_dropdown/customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/customer_infos/collector_profil/customer_profil.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/customer_infos/customer_profil/customer_profil.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/customer_card_dropdown/customer_card_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/custumer_account_dropdown/customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts.widgets.dart';
