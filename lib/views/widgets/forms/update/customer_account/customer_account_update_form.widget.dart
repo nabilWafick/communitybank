@@ -149,7 +149,20 @@ class _CustomerAccountUpdateFormState
                             ),
                             dropdownMenuEntriesValues:
                                 collectorsListStream.when(
-                              data: (data) => data,
+                              data: (data) {
+                                final accountCollector = data.firstWhere(
+                                  (collector) =>
+                                      collector.id! ==
+                                      widget.customerAccount.collectorId,
+                                );
+                                data = [
+                                  accountCollector,
+                                  ...data,
+                                ];
+                                data = data.toSet().toList();
+
+                                return data;
+                              },
                               error: (error, stackTrace) => [],
                               loading: () => [],
                             ),

@@ -60,7 +60,7 @@ class CollectionsService {
       var query = supabase
           .from(CollectionTable.tableName)
           .stream(primaryKey: [CollectionTable.id]).order(
-        CollectionTable.id,
+        CollectionTable.collectedAt,
         ascending: true,
       );
 

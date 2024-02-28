@@ -1,14 +1,15 @@
-import 'package:communitybank/models/data/customers_types/customers_types.model.dart';
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/models/data/customers_products/customers_products.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CustomersTypesDetailsShower extends ConsumerWidget {
-  final CustomersTypes customersTypes;
-  const CustomersTypesDetailsShower({
+class CustomersProductsDetailsShower extends ConsumerWidget {
+  final CustomersProducts customersProducts;
+  const CustomersProductsDetailsShower({
     super.key,
-    required this.customersTypes,
+    required this.customersProducts,
   });
 
   @override
@@ -35,7 +36,10 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CBText(
-                      text: customersTypes.typeName,
+                      text: FunctionsController.truncateText(
+                        text: customersProducts.productName,
+                        maxLength: 27,
+                      ),
                       fontSize: 20.0,
                       fontWeight: FontWeight.w600,
                     ),
@@ -58,14 +62,15 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                   ),
                   height: 550.0,
                   child: ListView.builder(
-                    itemCount: customersTypes.customersIds.length,
+                    itemCount: customersProducts.customersIds.length,
                     itemBuilder: (context, index) {
-                      if (customersTypes.customersNames[index] != null &&
-                          customersTypes.customersFirstnames[index] != null) {
+                      if (customersProducts.customersNames[index] != null &&
+                          customersProducts.customersFirstnames[index] !=
+                              null) {
                         return ListTile(
                           title: CBText(
                             text:
-                                '${customersTypes.customersNames[index]} ${customersTypes.customersFirstnames[index]}',
+                                '${customersProducts.customersNames[index]} ${customersProducts.customersFirstnames[index]}',
                             fontSize: 14.0,
                             fontWeight: FontWeight.w500,
                             textAlign: TextAlign.left,

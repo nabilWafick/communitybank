@@ -11,6 +11,8 @@ import 'package:communitybank/models/data/type/type.model.dart';
 var query =
     "je  veux obtenir pour chaque produit le nombre necessaire pour satisfaire tous les clients ayant souscrits a l'obtention de ce produit. un client est favorable a recevoir un un produit si la somme du nombre de ses reglements sur une de ses cartes ayant un type comportant ce produit est superieur ou egal a 161 ,  le nombre de produit a prendre par ce client est egal a nombre_type*nombre_produit, le calcul sera fait pour chaque carte du client ayant un type comportant ce produit, dans types se trouve les ids_produits et les nombres_produits, les ids et les nombre des produits sont ranger dans le meme ordre, (c'est a dire qu'ils ont la meme position dans leur listes respectives, ids_produits[id_produitA]=nombres_produits[nombre_produitA] dans le type). ainsi je veux pour chaque produit, l'id du produit, son nom, le nombre de produit necessaire pour satifaire tous les clients favorables, je veux egalement les ids des comptes clients des clients favorables, les id des clients favorables, les noms des clients favorables, les prenoms des clients favorables. met les ids des comptes clients favorables, les id des clients favorables, les noms des clients favorables, les prenoms des clients favorables pour chaque pour produit dans des listes et dans le meme ordre (c'est a dire ids_comptes_clients_favorables[clientA]=ids_clients_favorables[clientA]=noms_clients_favorables[clientA]=prenoms_clients_favorables[clientA])";
 
+var exemple = 'Exemple';
+
 final produitA = Product(
   id: 1,
   name: 'Produit A',

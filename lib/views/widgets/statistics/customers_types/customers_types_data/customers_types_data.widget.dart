@@ -132,7 +132,7 @@ class _CustomersTypesStatisticsDataState
                     onTap: () {
                       FunctionsController.showAlertDialog(
                         context: context,
-                        alertDialog: CustomersTypesTypesDetailsShower(
+                        alertDialog: CustomersTypesDetailsShower(
                           customersTypes: customersTypes,
                         ),
                       );

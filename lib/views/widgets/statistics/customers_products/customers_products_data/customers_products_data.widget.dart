@@ -5,6 +5,7 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:communitybank/views/widgets/statistics/customers_products/customers_products_details_shower/customers_products_details_shower.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -116,13 +117,23 @@ class _CustomersProductsStatisticsDataState
               final customersProducts = data[index];
               return Row(
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100.0,
-                    height: 30.0,
-                    child: const Icon(
-                      Icons.aspect_ratio,
-                      color: CBColors.primaryColor,
+                  InkWell(
+                    onTap: () {
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: CustomersProductsDetailsShower(
+                          customersProducts: customersProducts,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 100.0,
+                      height: 30.0,
+                      child: const Icon(
+                        Icons.aspect_ratio,
+                        color: CBColors.primaryColor,
+                      ),
                     ),
                   ),
                   Container(

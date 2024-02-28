@@ -72,7 +72,7 @@ class _CollectorPeriodicActivityDataState
             //  debugPrint('Data Model length: ${data.length}');
             return HorizontalDataTable(
               leftHandSideColumnWidth: 100,
-              rightHandSideColumnWidth: MediaQuery.of(context).size.width + 200,
+              rightHandSideColumnWidth: MediaQuery.of(context).size.width + 300,
               itemCount: data.length,
               isFixedHeader: true,
               leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -101,7 +101,7 @@ class _CollectorPeriodicActivityDataState
                   ),
                 ),
                 Container(
-                  width: 300.0,
+                  width: 400.0,
                   height: 50.0,
                   alignment: Alignment.centerLeft,
                   child: const CBText(
@@ -183,7 +183,7 @@ class _CollectorPeriodicActivityDataState
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      width: 300.0,
+                      width: 400.0,
                       height: 30.0,
                       child: CBText(
                         text:

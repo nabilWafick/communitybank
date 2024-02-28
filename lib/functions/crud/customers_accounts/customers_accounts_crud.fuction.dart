@@ -532,6 +532,8 @@ class CustomerAccountCRUDFunctions {
               updatedAt: DateTime.now(),
             );
 
+            debugPrint('account collector: $customerAccountCollector');
+
             // update the customer account in the database (may be the
             // account collector have been replaced )
             final lastCustomerAccountMap =

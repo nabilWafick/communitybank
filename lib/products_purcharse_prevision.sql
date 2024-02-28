@@ -1,8 +1,9 @@
+-- settlements data
 SELECT
   produits.id AS id_produit,
   produits.nom AS nom_produit,
-  COALESCE(ARRAY_AGG(types.id), ARRAY[]::bigint[]) AS ids_types,
-  COALESCE(ARRAY_AGG(types.nom), ARRAY[]::text[]) AS noms_types,
+  COALESCE(ARRAY_AGG(distinct types.id), ARRAY[]::bigint[]) AS ids_types,
+  COALESCE(ARRAY_AGG(distinct types.nom), ARRAY[]::text[]) AS noms_types,
   COALESCE(ARRAY_AGG(cartes.id), ARRAY[]::bigint[]) AS ids_cartes,
   COALESCE(ARRAY_AGG(cartes.libelle), ARRAY[]::text[]) AS libelles_cartes,
   COALESCE(ARRAY_AGG(cartes.nombre_types), ARRAY[]::int[]) AS nombres_types,
@@ -16,7 +17,7 @@ SELECT
   COALESCE(ARRAY_AGG(clients.prenoms), ARRAY[]::text[]) AS prenoms_clients
 FROM
   produits
-  JOIN types ON produits.id = ANY (types.ids_produits)
+LEFT JOIN types ON produits.id = ANY (types.ids_produits)
   JOIN cartes ON types.id = cartes.id_type
   JOIN comptes_clients ON cartes.id = ANY (comptes_clients.ids_cartes)
   JOIN clients ON comptes_clients.id_client = clients.id
@@ -38,39 +39,51 @@ FROM
     GROUP BY
       id_carte
   ) AS bilan_reglements ON bilan_reglements.id_carte = cartes.id
-  --  WHERE 
+    WHERE 
+    bilan_reglements.total_reglements >= 10
   --  produits.id = product_id OR product_id IS NULL
   --  and comptes_clients.id = customer_account_id OR customer_account_id IS NULL
 GROUP BY
   produits.id,
-  produits.nom;
+  produits.nom
+ORDER BY 
+  produits.nom ASC;
 
---- ============================================ ---
-
--- Supabase AI is experimental and may produce incorrect answers
--- Always verify the output before executing
+-- products numbers data
 
 SELECT
   produits.id as id_produit,
   produits.nom as nom_produit,
-  coalesce(array_agg(types.id), array[]::bigint[]) as ids_types,
-  coalesce(array_agg(types.nom), array[]::text[]) as noms_types,
-  coalesce(array_agg(details_type.nombre_produit_type), array[]::int[]) as nombres_produits_types
+  coalesce(array_agg(DISTINCT types.id), array[]::bigint[]) as ids_types,
+  coalesce(array_agg(DISTINCT types.nom), array[]::text[]) as noms_types,
+  coalesce(
+    array_agg(details_type.nombre_produit_type),
+    array[]::int[]
+  ) as nombres_produits_types
 FROM
   produits
- LEFT JOIN (
-    SELECT id, nom, unnest(ids_produits) as produit_id
-    FROM types
+  LEFT JOIN (
+    SELECT
+      id,
+      nom,
+      unnest(ids_produits) as produit_id
+    FROM
+      types
   ) AS types ON produits.id = types.produit_id
-LEFT JOIN  (
-SELECT
-            id as id_type,
-            nom as nom_type,
-            unnest(ids_produits) AS id_produit_type,
-            unnest(nombres_produits) AS nombre_produit_type,
-            generate_series(1, array_length(ids_produits, 1)) AS index_produit_type
-        FROM
-            types
-            GROUP BY id_type
-)  as  details_type on details_type.id_produit_type=produits.id
-GROUP BY produits.id, produits.nom;
+  LEFT JOIN (
+    SELECT
+      id as id_type,
+      nom as nom_type,
+      unnest(ids_produits) AS id_produit_type,
+      unnest(nombres_produits) AS nombre_produit_type,
+      generate_series(1, array_length(ids_produits, 1)) AS index_produit_type
+    FROM
+      types
+    GROUP BY
+      id_type
+  ) as details_type on details_type.id_produit_type = produits.id
+GROUP BY
+  produits.id,
+  produits.nom
+ORDER BY 
+  produits.nom ASC;

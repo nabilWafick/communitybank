@@ -4,7 +4,6 @@ import 'package:communitybank/controllers/forms/on_changed/customer_account/cust
 import 'package:communitybank/controllers/forms/validators/customer_account/customer_account.validator.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
@@ -42,212 +41,190 @@ class _CustomerAccountOwnerCardSelectionState
   Widget build(BuildContext context) {
     //  const formCardWidth = 450.0;
     final showWidget = useState(widget.isVisible);
-
     final customerAccountOwnerSelectedCardsTypes =
         ref.watch(customerAccountOwnerSelectedCardsTypesProvider);
+    final customersCardsListStream =
+        ref.watch(customersCardsListStreamProvider);
+    final typesListStream = ref.watch(typesListStreamProvider);
+
+    int accountOwnerCardTypeId = 0;
+
     return showWidget.value
         ? Container(
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 7.0),
             width: widget.formCardWidth,
-            child: Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                final customersCardsListStream =
-                    ref.watch(customersCardsListStreamProvider);
-
-                return customersCardsListStream.when(
-                  data: (data) {
-                    // store the customer card, generated letters by default
-                    String accountOwnerCardLabel = '';
-
-                    // store the customer card if it's existed
-                    CustomerCard accountOwnerCard = CustomerCard(
-                      label: 'ERROR',
-                      typeId: 0,
-                      typeNumber: 0,
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                    );
-
-                    if (widget.customerCardId != null) {
-                      accountOwnerCard = data.firstWhere(
-                        (customerCard) =>
-                            customerCard.id == widget.customerCardId,
-                        orElse: () => CustomerCard(
-                          label: 'ERROR',
-                          typeId: 0,
-                          typeNumber: 0,
-                          createdAt: DateTime.now(),
-                          updatedAt: DateTime.now(),
-                        ),
-                      );
-
-                      if (accountOwnerCard.satisfiedAt != null ||
-                          accountOwnerCard.repaidAt != null) {
-                        showWidget.value = false;
-                      }
-
-                      //  // set the account owner card label
-                      accountOwnerCardLabel = accountOwnerCard.label;
-
-                      data = [
-                        accountOwnerCard,
-                        ...data,
-                      ];
-
-                      data = data.toSet().toList();
-                    } else {
-                      accountOwnerCardLabel =
-                          generateRandomStringFromDateTimeNowMillis();
-                    }
-
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: widget.formCardWidth / 3,
-                              child:
-                                  CBCustomerAccountOwnerCardLabelTextFormField(
-                                inputIndex: widget.index,
-                                label: 'Libellé',
-                                hintText: 'Libellé de la carte',
-                                initialValue: accountOwnerCardLabel,
-                                textInputType: TextInputType.number,
-                                validator: CustomerAccountValidators
-                                    .customerAccountOwnerCardLabel,
-                                onChanged: CustomerAccountOnChanged
-                                    .customerAccountOwnerCardLabel,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  children: [
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final accountOwnerCard = data.firstWhere(
+                              (customerCard) =>
+                                  customerCard.id == widget.customerCardId,
+                              orElse: () => CustomerCard(
+                                label:
+                                    generateRandomStringFromDateTimeNowMillis(),
+                                typeId: 0,
+                                typeNumber: 1,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
                               ),
-                            ),
-                            SizedBox(
-                              width: widget.formCardWidth / 6,
-                              child:
-                                  CBCustomerAccountOwnerCardTypeNumberTextFormField(
-                                inputIndex: widget.index,
-                                label: 'Nombre',
-                                hintText: 'Nombre de Type',
-                                initialValue: accountOwnerCard.label != 'ERROR'
-                                    ? accountOwnerCard.typeNumber.toString()
-                                    : 1.toString(),
-                                textInputType: TextInputType.number,
-                                validator: CustomerAccountValidators
-                                    .customerAccountOwnerCardTypeNumber,
-                                onChanged: CustomerAccountOnChanged
-                                    .customerAccountOwnerCardTypeNumber,
-                              ),
-                            ),
-                            Consumer(
-                              builder: (context, ref, child) {
-                                final typesListStream =
-                                    ref.watch(typesListStreamProvider);
+                            );
 
-                                return typesListStream.when(
-                                  data: (data) {
-                                    Type? accountOwnerCardType;
-                                    for (Type type in data) {
-                                      if (type.id == accountOwnerCard.typeId) {
-                                        accountOwnerCardType = type;
-                                        break;
-                                      }
-                                    }
+                            if (accountOwnerCard.satisfiedAt != null ||
+                                accountOwnerCard.repaidAt != null) {
+                              showWidget.value = false;
+                            }
+                            accountOwnerCardTypeId = accountOwnerCard.typeId;
+                            data = [
+                              accountOwnerCard,
+                              ...data,
+                            ];
 
-                                    data = [
-                                      accountOwnerCardType!,
-                                      ...data,
-                                    ];
+                            data = data.toSet().toList();
 
-                                    data.toSet().toSet();
-                                    final remainProducts = data
-                                        .where(
-                                          (customerCard) =>
-                                              customerAccountOwnerSelectedCardsTypes
-                                                  .containsValue(
-                                                      customerCard) ==
-                                              false,
-                                        )
-                                        .toList();
-                                    return CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                      width: widget.formCardWidth / 4,
-                                      menuHeigth: 500.0,
-                                      label: 'Type',
-                                      providerName: widget
-                                          .customerCardTypeSelectionDropdownProvider,
-                                      dropdownMenuEntriesLabels: remainProducts,
-                                      dropdownMenuEntriesValues: remainProducts,
-                                    );
-                                  },
-                                  error: (error, stackTrace) =>
-                                      CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                    width: widget.formCardWidth / 4,
-                                    menuHeigth: 500.0,
-                                    label: 'Type',
-                                    providerName: widget
-                                        .customerCardTypeSelectionDropdownProvider,
-                                    dropdownMenuEntriesLabels: const [],
-                                    dropdownMenuEntriesValues: const [],
+                            return Row(
+                              children: [
+                                SizedBox(
+                                  width: widget.formCardWidth / 3,
+                                  child:
+                                      CBCustomerAccountOwnerCardLabelTextFormField(
+                                    inputIndex: widget.index,
+                                    label: 'Libellé',
+                                    hintText: 'Libellé de la carte',
+                                    initialValue: accountOwnerCard.label,
+                                    textInputType: TextInputType.number,
+                                    validator: CustomerAccountValidators
+                                        .customerAccountOwnerCardLabel,
+                                    onChanged: CustomerAccountOnChanged
+                                        .customerAccountOwnerCardLabel,
                                   ),
-                                  loading: () =>
-                                      CBCustomerAccountOwnerCardTypeSelectionDropdown(
-                                    width: widget.formCardWidth / 4,
-                                    menuHeigth: 500.0,
-                                    label: 'Type',
-                                    providerName: widget
-                                        .customerCardTypeSelectionDropdownProvider,
-                                    dropdownMenuEntriesLabels: const [],
-                                    dropdownMenuEntriesValues: const [],
+                                ),
+                                SizedBox(
+                                  width: widget.formCardWidth / 6,
+                                  child:
+                                      CBCustomerAccountOwnerCardTypeNumberTextFormField(
+                                    inputIndex: widget.index,
+                                    label: 'Nombre',
+                                    hintText: 'Nombre de Type',
+                                    initialValue:
+                                        accountOwnerCard.typeNumber.toString(),
+                                    textInputType: TextInputType.number,
+                                    validator: CustomerAccountValidators
+                                        .customerAccountOwnerCardTypeNumber,
+                                    onChanged: CustomerAccountOnChanged
+                                        .customerAccountOwnerCardTypeNumber,
                                   ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            showWidget.value = false;
-                            ref
-                                .read(typeAddedInputsProvider.notifier)
-                                .update((state) {
-                              // if input is visible, hide it
-                              state[widget.index] = showWidget.value;
-                              //  debugPrint('typeAddedInputsProvider');
-                              //  debugPrint(state.toString());
-
-                              return state;
-                            });
-
-                            // remove the selected product from customerAccountOwnerSelectedCardsTypes
-                            ref
-                                .read(
-                                    customerAccountOwnerSelectedCardsTypesProvider
-                                        .notifier)
-                                .update((state) {
-                              // since customerAccountOwnerSelectedCardsTypes use type selection dropdown provider as key
-                              state.remove(widget
-                                  .customerCardTypeSelectionDropdownProvider);
-                              // debugPrint('customerAccountOwnerSelectedCardsTypesProvider');
-                              // debugPrint('length: ${state.length}');
-                              // debugPrint(state.toString());
-                              return state;
-                            });
+                                ),
+                              ],
+                            );
                           },
-                          icon: const Icon(
-                            Icons.close_rounded,
-                            color: CBColors.primaryColor,
-                            size: 30.0,
+                          error: (error, stackTrace) => const Row(
+                            children: [],
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                  error: (error, stackTrace) => SizedBox(
-                    width: widget.formCardWidth / 2.5,
-                  ),
-                  loading: () => SizedBox(
-                    width: widget.formCardWidth / 2.5,
-                  ),
-                );
-              },
+                          loading: () => const Row(
+                            children: [],
+                          ),
+                        );
+                      },
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return typesListStream.when(
+                          data: (data) {
+                            final accountOwnerCardType = data.firstWhere(
+                              (type) => type.id == accountOwnerCardTypeId,
+                              orElse: () => data.first,
+                            );
+
+                            data = [
+                              accountOwnerCardType,
+                              ...data,
+                            ];
+
+                            data.toSet().toSet();
+                            final remainProducts = data
+                                .where(
+                                  (customerCard) =>
+                                      customerAccountOwnerSelectedCardsTypes
+                                          .containsValue(customerCard) ==
+                                      false,
+                                )
+                                .toList();
+                            return CBCustomerAccountOwnerCardTypeSelectionDropdown(
+                              width: widget.formCardWidth / 4,
+                              menuHeigth: 500.0,
+                              label: 'Type',
+                              providerName: widget
+                                  .customerCardTypeSelectionDropdownProvider,
+                              dropdownMenuEntriesLabels: remainProducts,
+                              dropdownMenuEntriesValues: remainProducts,
+                            );
+                          },
+                          error: (error, stackTrace) =>
+                              CBCustomerAccountOwnerCardTypeSelectionDropdown(
+                            width: widget.formCardWidth / 4,
+                            menuHeigth: 500.0,
+                            label: 'Type',
+                            providerName: widget
+                                .customerCardTypeSelectionDropdownProvider,
+                            dropdownMenuEntriesLabels: const [],
+                            dropdownMenuEntriesValues: const [],
+                          ),
+                          loading: () =>
+                              CBCustomerAccountOwnerCardTypeSelectionDropdown(
+                            width: widget.formCardWidth / 4,
+                            menuHeigth: 500.0,
+                            label: 'Type',
+                            providerName: widget
+                                .customerCardTypeSelectionDropdownProvider,
+                            dropdownMenuEntriesLabels: const [],
+                            dropdownMenuEntriesValues: const [],
+                          ),
+                        );
+                      },
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showWidget.value = false;
+                        ref
+                            .read(typeAddedInputsProvider.notifier)
+                            .update((state) {
+                          // if input is visible, hide it
+                          state[widget.index] = showWidget.value;
+                          //  debugPrint('typeAddedInputsProvider');
+                          //  debugPrint(state.toString());
+
+                          return state;
+                        });
+
+                        // remove the selected product from customerAccountOwnerSelectedCardsTypes
+                        ref
+                            .read(customerAccountOwnerSelectedCardsTypesProvider
+                                .notifier)
+                            .update((state) {
+                          // since customerAccountOwnerSelectedCardsTypes use type selection dropdown provider as key
+                          state.remove(
+                              widget.customerCardTypeSelectionDropdownProvider);
+                          // debugPrint('customerAccountOwnerSelectedCardsTypesProvider');
+                          // debugPrint('length: ${state.length}');
+                          // debugPrint(state.toString());
+                          return state;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: CBColors.primaryColor,
+                        size: 30.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           )
         : const SizedBox();
