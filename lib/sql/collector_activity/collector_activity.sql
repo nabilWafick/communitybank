@@ -1,12 +1,12 @@
 CREATE OR REPLACE FUNCTION get_customer_periodic_activity
 (collection_begin_date TEXT, collection_end_date TEXT
 , collector_id BIGINT, settlements_total INT, customer_account_id 
-BIGINT,) RETURNS TABLE(date_collecte DATE, id_compte_client 
+BIGINT) RETURNS TABLE(date_collecte DATE, id_compte_client 
 BIGINT, id_client BIGINT, nom_client TEXT, prenoms_client 
 TEXT, id_charge_compte BIGINT, nom_charge_compte TEXT, 
 prenoms_charge_compte TEXT, ids_cartes BIGINT[], libelles_cartes TEXT[], 
 nombres_types_cartes INT[], ids_types BIGINT[], noms_types TEXT[], totaux_reglements_cartes 
-BIGINT[], montants_reglements_cartes NUMERIC[],) AS 
+BIGINT[], montants_reglements_cartes NUMERIC[]) AS 
 $$
 BEGIN
 	RETURN QUERY
