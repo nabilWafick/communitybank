@@ -1,53 +1,88 @@
--- SETTLEMENT TOTAL PER CUSTOMER PER CUSTOMER CARD PER TYPE
 SELECT
   types.id AS id_type,
   types.nom AS nom_type,
-  COALESCE(ARRAY_AGG(cartes.id), ARRAY[]::bigint[]) AS ids_cartes,
-  COALESCE(ARRAY_AGG(cartes.libelle), ARRAY[]::text[]) AS libelles_cartes,
-  COALESCE(ARRAY_AGG(cartes.nombre_types), ARRAY[]::int[]) AS nombres_types,
+  types.mise AS mise_type,
   COALESCE(
-    ARRAY_AGG(COALESCE(bilan_reglements.total_reglements, 0)),
-    ARRAY[]::int[]
+    ARRAY_AGG(subquery.id_charge_compte),
+    ARRAY[]::BIGINT[]
+  ) AS ids_charges_compte,
+  COALESCE(
+    ARRAY_AGG(subquery.charge_compte),
+    ARRAY[]::TEXT[]
+  ) AS charges_compte,
+  COALESCE(
+    ARRAY_AGG(subquery.id_compte_client),
+    ARRAY[]::BIGINT[]
+  ) AS ids_comptes_clients,
+  COALESCE(ARRAY_AGG(subquery.id_client), ARRAY[]::BIGINT[]) AS ids_clients,
+  COALESCE(ARRAY_AGG(subquery.client), ARRAY[]::TEXT[]) AS clients,
+  COALESCE(ARRAY_AGG(subquery.id_carte), ARRAY[]::BIGINT[]) AS ids_cartes,
+  COALESCE(
+    ARRAY_AGG(subquery.libelle_carte),
+    ARRAY[]::TEXT[]
+  ) AS libelles_cartes,
+  COALESCE(ARRAY_AGG(subquery.nombre_types), ARRAY[]::INT[]) AS nombres_types_cartes,
+  COALESCE(
+    ARRAY_AGG(subquery.total_reglements),
+    ARRAY[]::INT[]
   ) AS totaux_reglements_cartes,
-  COALESCE(ARRAY_AGG(comptes_clients.id), ARRAY[]::bigint[]) AS ids_comptes_clients,
-  COALESCE(ARRAY_AGG(charges_compte.id), ARRAY[]::bigint[]) AS ids_charges_compte,
-  COALESCE(ARRAY_AGG(charges_compte.nom), ARRAY[]::text[]) AS noms_charges_compte,
   COALESCE(
-    ARRAY_AGG(charges_compte.prenoms),
-    ARRAY[]::text[]
-  ) AS prenoms_charges_compte,
-  COALESCE(ARRAY_AGG(clients.id), ARRAY[]::bigint[]) AS ids_clients,
-  COALESCE(ARRAY_AGG(clients.nom), ARRAY[]::text[]) AS noms_clients,
-  COALESCE(ARRAY_AGG(clients.prenoms), ARRAY[]::text[]) AS prenoms_clients
+    ARRAY_AGG(subquery.montant_reglements),
+    ARRAY[]::NUMERIC[]
+  ) AS montants_reglements_cartes
 FROM
-   types
-  LEFT JOIN cartes ON types.id = cartes.id_type
-  LEFT JOIN comptes_clients ON cartes.id = ANY (comptes_clients.ids_cartes)
-  LEFT JOIN clients ON comptes_clients.id_client = clients.id
-  LEFT JOIN charges_compte ON comptes_clients.id_charge_compte = charges_compte.id
+  types
   LEFT JOIN (
     SELECT
-      id_carte,
+      comptes_clients.id AS id_compte_client,
+      clients.id AS id_client,
+      CONCAT(clients.nom, ' ', clients.prenoms) AS client,
+      charges_compte.id AS id_charge_compte,
+      CONCAT(charges_compte.nom, ' ', charges_compte.prenoms) AS charge_compte,
+      cartes.id AS id_carte,
+      cartes.libelle AS libelle_carte,
+      cartes.nombre_types AS nombre_types,
+      types.id AS id_type,
+      types.nom AS nom_type,
+      types.mise AS mise_type,
+      COALESCE(bilan_reglements.total_reglements, 0) AS total_reglements,
       COALESCE(
-        SUM(
-          CASE
-            WHEN est_valide THEN nombre
-            ELSE 0
-          END
-        ),
+        cartes.nombre_types * types.mise * bilan_reglements.total_reglements,
         0
-      ) AS total_reglements
+      ) AS montant_reglements
     FROM
-      reglements
-    GROUP BY
-      id_carte
-  ) AS bilan_reglements ON bilan_reglements.id_carte = cartes.id
-  --	WHERE
-  --  bilan_reglements.total_reglements >= 10
-  --  produits.id = product_id OR product_id IS NULL
-  --  and comptes_clients.id = customer_account_id OR customer_account_id IS NULL
+      cartes
+      LEFT JOIN types ON cartes.id_type = types.id
+      LEFT JOIN comptes_clients ON cartes.id = ANY (comptes_clients.ids_cartes)
+      LEFT JOIN clients ON comptes_clients.id_client = clients.id
+      LEFT JOIN charges_compte ON comptes_clients.id_charge_compte = charges_compte.id
+      LEFT JOIN (
+        SELECT
+          id_carte,
+          COALESCE(
+            SUM(
+              CASE
+                WHEN est_valide THEN nombre
+                ELSE 0
+              END
+            ),
+            0
+          ) AS total_reglements
+        FROM
+          reglements
+        GROUP BY
+          id_carte
+      ) AS bilan_reglements ON bilan_reglements.id_carte = cartes.id
+    ORDER BY
+      id_type,
+      nom_type,
+      charge_compte,
+      id_compte_client,
+      id_client,
+      client
+  ) AS subquery ON types.id = subquery.id_type
 GROUP BY
   types.id,
-  types.nom
+  subquery.id_type
 ORDER BY
   types.nom ASC;
