@@ -1,8 +1,10 @@
-DELETE FROM public.cartes c
+DELETE FROM cartes
 WHERE
     NOT EXISTS (
-        SELECT 1
-        FROM public.comptes_clients cc
+        SELECT
+            1
+        FROM
+            comptes_clients
         WHERE
-            c.id = ANY (cc.ids_cartes)
+            cartes.id = ANY (comptes_clients.ids_cartes)
     );
