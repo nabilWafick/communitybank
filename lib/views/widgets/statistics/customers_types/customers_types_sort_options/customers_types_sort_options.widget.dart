@@ -1,8 +1,11 @@
+import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/type/type_dropdown.widget.dart';
 //import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -32,6 +35,7 @@ class _CustomersTypesStatisticsSortOptionsState
   Widget build(BuildContext context) {
     final customersAccountsListStream =
         ref.watch(customersAccountsListStreamProvider);
+    final collectorsListStream = ref.watch(collectorsListStreamProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
     //  final CustomersTypesStatisticsDataCollectionDate =
     //      ref.watch(CustomersTypesStatisticsDataCollectionDateProvider);
@@ -92,6 +96,42 @@ class _CustomersTypesStatisticsSortOptionsState
                       customerId: 0,
                       collectorId: 0,
                       customerCardsIds: [],
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
+                ),
+              ),
+              CBListCollectorDropdown(
+                width: 350.0,
+                menuHeigth: 500.0,
+                label: 'Chargé de compte',
+                providerName: 'customers-types-statistics-collector',
+                dropdownMenuEntriesLabels: collectorsListStream.when(
+                  data: (data) => [
+                    Collector(
+                      name: 'Tous',
+                      firstnames: '',
+                      phoneNumber: '',
+                      address: 'Address',
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                    ...data
+                  ],
+                  error: (error, stackTrace) => [],
+                  loading: () => [],
+                ),
+                dropdownMenuEntriesValues: collectorsListStream.when(
+                  data: (data) => [
+                    Collector(
+                      name: 'Tous',
+                      firstnames: '',
+                      phoneNumber: '',
+                      address: 'Address',
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),

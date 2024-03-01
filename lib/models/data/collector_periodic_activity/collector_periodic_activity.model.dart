@@ -8,27 +8,23 @@ class CollectorPeriodicActivity {
   final DateTime collectionDate;
   final int customerAccountId;
   final int customerId;
-  final String customerName;
-  final String customerFirstnames;
+  final String customer;
   final int collectorId;
-  final String collectorName;
-  final String collectorFirstnames;
+  final String collector;
   final List<dynamic> customersCardsIds;
-  final List<String> customersCardsLabels;
+  final List<dynamic> customersCardsLabels;
   final List<dynamic> customersCardsTypesNumbers;
   final List<dynamic> typesIds;
   final List<dynamic> typesNames;
   final List<dynamic> customerCardSettlementsTotals;
-  final List<double> customerCardSettlementsAmounts;
+  final List<dynamic> customerCardSettlementsAmounts;
   CollectorPeriodicActivity({
     required this.collectionDate,
     required this.customerAccountId,
     required this.customerId,
-    required this.customerName,
-    required this.customerFirstnames,
+    required this.customer,
     required this.collectorId,
-    required this.collectorName,
-    required this.collectorFirstnames,
+    required this.collector,
     required this.customersCardsIds,
     required this.customersCardsLabels,
     required this.customersCardsTypesNumbers,
@@ -42,28 +38,24 @@ class CollectorPeriodicActivity {
     DateTime? collectionDate,
     int? customerAccountId,
     int? customerId,
-    String? customerName,
-    String? customerFirstnames,
+    String? customer,
     int? collectorId,
-    String? collectorName,
-    String? collectorFirstnames,
+    String? collector,
     List<dynamic>? customersCardsIds,
-    List<String>? customersCardsLabels,
+    List<dynamic>? customersCardsLabels,
     List<dynamic>? customersCardsTypesNumbers,
     List<dynamic>? typesIds,
     List<dynamic>? typesNames,
     List<dynamic>? customerCardSettlementsTotals,
-    List<double>? customerCardSettlementsAmounts,
+    List<dynamic>? customerCardSettlementsAmounts,
   }) {
     return CollectorPeriodicActivity(
       collectionDate: collectionDate ?? this.collectionDate,
       customerAccountId: customerAccountId ?? this.customerAccountId,
       customerId: customerId ?? this.customerId,
-      customerName: customerName ?? this.customerName,
-      customerFirstnames: customerFirstnames ?? this.customerFirstnames,
+      customer: customer ?? this.customer,
       collectorId: collectorId ?? this.collectorId,
-      collectorName: collectorName ?? this.collectorName,
-      collectorFirstnames: collectorFirstnames ?? this.collectorFirstnames,
+      collector: collector ?? this.collector,
       customersCardsIds: customersCardsIds ?? this.customersCardsIds,
       customersCardsLabels: customersCardsLabels ?? this.customersCardsLabels,
       customersCardsTypesNumbers:
@@ -83,11 +75,9 @@ class CollectorPeriodicActivity {
           collectionDate.toIso8601String(),
       CollectorPeriodicActivityRPC.customerAccountId: customerAccountId,
       CollectorPeriodicActivityRPC.customerId: customerId,
-      CollectorPeriodicActivityRPC.customerName: customerName,
-      CollectorPeriodicActivityRPC.customerFirstnames: customerFirstnames,
+      CollectorPeriodicActivityRPC.customer: customer,
       CollectorPeriodicActivityRPC.collectorId: collectorId,
-      CollectorPeriodicActivityRPC.collectorName: collectorName,
-      CollectorPeriodicActivityRPC.collectorFirstnames: collectorFirstnames,
+      CollectorPeriodicActivityRPC.collector: collector,
       CollectorPeriodicActivityRPC.customersCardsIds: customersCardsIds,
       CollectorPeriodicActivityRPC.customersCardsLabels: customersCardsLabels,
       CollectorPeriodicActivityRPC.customersCardsTypesNumbers:
@@ -102,38 +92,53 @@ class CollectorPeriodicActivity {
   }
 
   factory CollectorPeriodicActivity.fromMap(Map<String, dynamic> map) {
+    try {
+      return CollectorPeriodicActivity(
+        collectionDate:
+            DateTime.parse(map[CollectorPeriodicActivityRPC.collectionDate]),
+        customerAccountId:
+            map[CollectorPeriodicActivityRPC.customerAccountId] as int,
+        customerId: map[CollectorPeriodicActivityRPC.customerId] as int,
+        customer: map[CollectorPeriodicActivityRPC.customer] as String,
+        collectorId: map[CollectorPeriodicActivityRPC.collectorId] as int,
+        collector: map[CollectorPeriodicActivityRPC.collector] as String,
+        customersCardsIds: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.customersCardsIds])
+                as List<dynamic>),
+        customersCardsLabels: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.customersCardsLabels])
+                as List<dynamic>),
+        customersCardsTypesNumbers: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.customersCardsTypesNumbers])
+                as List<dynamic>),
+        typesIds: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.typesIds]) as List<dynamic>),
+        typesNames: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.typesNames]) as List<dynamic>),
+        customerCardSettlementsTotals: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.customerCardSettlementsTotals])
+                as List<dynamic>),
+        customerCardSettlementsAmounts: List<dynamic>.from(
+            (map[CollectorPeriodicActivityRPC.customerCardSettlementsAmounts])
+                as List<dynamic>),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
     return CollectorPeriodicActivity(
-      collectionDate:
-          DateTime.parse(map[CollectorPeriodicActivityRPC.collectionDate]),
-      customerAccountId:
-          map[CollectorPeriodicActivityRPC.customerAccountId] as int,
-      customerId: map[CollectorPeriodicActivityRPC.customerId] as int,
-      customerName: map[CollectorPeriodicActivityRPC.customerName] as String,
-      customerFirstnames:
-          map[CollectorPeriodicActivityRPC.customerFirstnames] as String,
-      collectorId: map[CollectorPeriodicActivityRPC.collectorId] as int,
-      collectorName: map[CollectorPeriodicActivityRPC.collectorName] as String,
-      collectorFirstnames:
-          map[CollectorPeriodicActivityRPC.collectorFirstnames] as String,
-      customersCardsIds: List<dynamic>.from(
-          (map[CollectorPeriodicActivityRPC.customersCardsIds])
-              as List<dynamic>),
-      customersCardsLabels: List<String>.from(
-          (map[CollectorPeriodicActivityRPC.customersCardsLabels])
-              as List<String>),
-      customersCardsTypesNumbers: List<dynamic>.from(
-          (map[CollectorPeriodicActivityRPC.customersCardsTypesNumbers])
-              as List<dynamic>),
-      typesIds: List<dynamic>.from(
-          (map[CollectorPeriodicActivityRPC.typesIds]) as List<dynamic>),
-      typesNames: List<dynamic>.from(
-          (map[CollectorPeriodicActivityRPC.typesNames]) as List<dynamic>),
-      customerCardSettlementsTotals: List<dynamic>.from(
-          (map[CollectorPeriodicActivityRPC.customerCardSettlementsTotals])
-              as List<dynamic>),
-      customerCardSettlementsAmounts: List<double>.from(
-          (map[CollectorPeriodicActivityRPC.customerCardSettlementsAmounts])
-              as List<double>),
+      collectionDate: DateTime.now(),
+      customerAccountId: 0,
+      customerId: 0,
+      customer: 'Customer',
+      collectorId: 0,
+      collector: 'Collector',
+      customersCardsIds: [],
+      customersCardsLabels: [],
+      customersCardsTypesNumbers: [],
+      typesIds: [],
+      typesNames: [],
+      customerCardSettlementsTotals: [],
+      customerCardSettlementsAmounts: [],
     );
   }
 
@@ -145,7 +150,7 @@ class CollectorPeriodicActivity {
 
   @override
   String toString() {
-    return 'CollectorPeriodicActivity(collectionDate: $collectionDate, customerAccountId: $customerAccountId, customerId: $customerId, customerName: $customerName, customerFirstnames: $customerFirstnames, collectorId: $collectorId, collectorName: $collectorName, collectorFirstnames: $collectorFirstnames, customersCardsIds: $customersCardsIds, customersCardsLabels: $customersCardsLabels, customersCardsTypesNumbers: $customersCardsTypesNumbers, typesIds: $typesIds, typesNames: $typesNames, customerCardSettlementsTotals: $customerCardSettlementsTotals, customerCardSettlementsAmounts: $customerCardSettlementsAmounts)';
+    return 'CollectorPeriodicActivity(collectionDate: $collectionDate, customerAccountId: $customerAccountId, customerId: $customerId, customer: $customer, collectorId: $collectorId, collector: $collector,  customersCardsIds: $customersCardsIds, customersCardsLabels: $customersCardsLabels, customersCardsTypesNumbers: $customersCardsTypesNumbers, typesIds: $typesIds, typesNames: $typesNames, customerCardSettlementsTotals: $customerCardSettlementsTotals, customerCardSettlementsAmounts: $customerCardSettlementsAmounts)';
   }
 
   @override
@@ -155,11 +160,9 @@ class CollectorPeriodicActivity {
     return other.collectionDate == collectionDate &&
         other.customerAccountId == customerAccountId &&
         other.customerId == customerId &&
-        other.customerName == customerName &&
-        other.customerFirstnames == customerFirstnames &&
+        other.customer == customer &&
         other.collectorId == collectorId &&
-        other.collectorName == collectorName &&
-        other.collectorFirstnames == collectorFirstnames &&
+        other.collector == collector &&
         listEquals(other.customersCardsIds, customersCardsIds) &&
         listEquals(other.customersCardsLabels, customersCardsLabels) &&
         listEquals(
@@ -177,11 +180,9 @@ class CollectorPeriodicActivity {
     return collectionDate.hashCode ^
         customerAccountId.hashCode ^
         customerId.hashCode ^
-        customerName.hashCode ^
-        customerFirstnames.hashCode ^
+        customer.hashCode ^
         collectorId.hashCode ^
-        collectorName.hashCode ^
-        collectorFirstnames.hashCode ^
+        collector.hashCode ^
         customersCardsIds.hashCode ^
         customersCardsLabels.hashCode ^
         customersCardsTypesNumbers.hashCode ^

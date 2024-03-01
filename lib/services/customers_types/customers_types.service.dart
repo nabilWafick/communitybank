@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class CustomersTypesService {
   static Future<List<Map<String, dynamic>>> getCustomersTypes({
     required int? customerAccountId,
+    required int? collectorId,
     required int? typeId,
   }) async {
     List<Map<String, dynamic>> response;
@@ -15,10 +16,10 @@ class CustomersTypesService {
         CustomersTypesRPC.functionName,
         params: {
           'customer_account_id': customerAccountId,
+          'collector_id': collectorId,
           'type_id': typeId,
         },
       ).select<List<Map<String, dynamic>>>();
-
       // return the result data
       return response;
     } catch (error) {

@@ -5,36 +5,63 @@ import 'package:communitybank/models/rpc/customers_types/customers_types_rpc.mod
 import 'package:flutter/foundation.dart';
 
 class CustomersTypes {
-  int typeId;
-  String typeName;
-  List<dynamic> customersAccountsIds;
-  List<dynamic> customersIds;
-  List<dynamic> customersNames;
-  List<dynamic> customersFirstnames;
+  final int typeId;
+  final String typeName;
+  final double typeStake;
+  final List<dynamic> collectorsIds;
+  final List<dynamic> collectorsNames;
+  final List<dynamic> customersAccountsIds;
+  final List<dynamic> customersIds;
+  final List<dynamic> customers;
+  final List<dynamic> customersCardsLabels;
+  final List<dynamic> customersCardsTypesNumbers;
+  final List<dynamic> customerCardSettlementsTotals;
+  final List<dynamic> customerCardSettlementsAmounts;
   CustomersTypes({
     required this.typeId,
     required this.typeName,
+    required this.typeStake,
+    required this.collectorsIds,
+    required this.collectorsNames,
     required this.customersAccountsIds,
     required this.customersIds,
-    required this.customersNames,
-    required this.customersFirstnames,
+    required this.customers,
+    required this.customersCardsLabels,
+    required this.customersCardsTypesNumbers,
+    required this.customerCardSettlementsTotals,
+    required this.customerCardSettlementsAmounts,
   });
 
   CustomersTypes copyWith({
     int? typeId,
     String? typeName,
+    double? typeStake,
+    List<dynamic>? collectorsIds,
+    List<dynamic>? collectorsNames,
     List<dynamic>? customersAccountsIds,
     List<dynamic>? customersIds,
-    List<dynamic>? customersNames,
-    List<dynamic>? customersFirstnames,
+    List<dynamic>? customers,
+    List<dynamic>? customersCardsLabels,
+    List<dynamic>? customersCardsTypesNumbers,
+    List<dynamic>? customerCardSettlementsTotals,
+    List<dynamic>? customerCardSettlementsAmounts,
   }) {
     return CustomersTypes(
       typeId: typeId ?? this.typeId,
       typeName: typeName ?? this.typeName,
+      typeStake: typeStake ?? this.typeStake,
+      collectorsIds: collectorsIds ?? this.collectorsIds,
+      collectorsNames: collectorsNames ?? this.collectorsNames,
       customersAccountsIds: customersAccountsIds ?? this.customersAccountsIds,
       customersIds: customersIds ?? this.customersIds,
-      customersNames: customersNames ?? this.customersNames,
-      customersFirstnames: customersFirstnames ?? this.customersFirstnames,
+      customers: customers ?? this.customers,
+      customersCardsLabels: customersCardsLabels ?? this.customersCardsLabels,
+      customersCardsTypesNumbers:
+          customersCardsTypesNumbers ?? this.customersCardsTypesNumbers,
+      customerCardSettlementsTotals:
+          customerCardSettlementsTotals ?? this.customerCardSettlementsTotals,
+      customerCardSettlementsAmounts:
+          customerCardSettlementsAmounts ?? this.customerCardSettlementsAmounts,
     );
   }
 
@@ -42,10 +69,18 @@ class CustomersTypes {
     return <String, dynamic>{
       CustomersTypesRPC.typeId: typeId,
       CustomersTypesRPC.typeName: typeName,
+      CustomersTypesRPC.typeStake: typeStake,
+      CustomersTypesRPC.collectorsIds: collectorsIds,
+      CustomersTypesRPC.collectorsNames: collectorsNames,
       CustomersTypesRPC.customersAccountsIds: customersAccountsIds,
       CustomersTypesRPC.customersIds: customersIds,
-      CustomersTypesRPC.customersNames: customersNames,
-      CustomersTypesRPC.customersFirstnames: customersFirstnames,
+      CustomersTypesRPC.customers: customers,
+      CustomersTypesRPC.customersCardsLabels: customersCardsLabels,
+      CustomersTypesRPC.customersCardsTypesNumbers: customersCardsTypesNumbers,
+      CustomersTypesRPC.customerCardSettlementsTotals:
+          customerCardSettlementsTotals,
+      CustomersTypesRPC.customerCardSettlementsAmounts:
+          customerCardSettlementsAmounts,
     };
   }
 
@@ -53,14 +88,27 @@ class CustomersTypes {
     return CustomersTypes(
       typeId: map[CustomersTypesRPC.typeId] as int,
       typeName: map[CustomersTypesRPC.typeName] as String,
+      typeStake: map[CustomersTypesRPC.typeStake] as double,
+      collectorsIds: List<dynamic>.from(
+          map[CustomersTypesRPC.collectorsIds] as List<dynamic>),
+      collectorsNames: List<dynamic>.from(
+          map[CustomersTypesRPC.collectorsNames] as List<dynamic>),
       customersAccountsIds: List<dynamic>.from(
-          (map[CustomersTypesRPC.customersAccountsIds]) as List<dynamic>),
+          map[CustomersTypesRPC.customersAccountsIds] as List<dynamic>),
       customersIds: List<dynamic>.from(
-          (map[CustomersTypesRPC.customersIds]) as List<dynamic>),
-      customersNames: List<dynamic>.from(
-          (map[CustomersTypesRPC.customersNames]) as List<dynamic>),
-      customersFirstnames: List<dynamic>.from(
-          (map[CustomersTypesRPC.customersFirstnames]) as List<dynamic>),
+          map[CustomersTypesRPC.customersIds] as List<dynamic>),
+      customers:
+          List<dynamic>.from(map[CustomersTypesRPC.customers] as List<dynamic>),
+      customersCardsLabels: List<dynamic>.from(
+          map[CustomersTypesRPC.customersCardsLabels] as List<dynamic>),
+      customersCardsTypesNumbers: List<dynamic>.from(
+          map[CustomersTypesRPC.customersCardsTypesNumbers] as List<dynamic>),
+      customerCardSettlementsTotals: List<dynamic>.from(
+          map[CustomersTypesRPC.customerCardSettlementsTotals]
+              as List<dynamic>),
+      customerCardSettlementsAmounts: List<dynamic>.from(
+          map[CustomersTypesRPC.customerCardSettlementsAmounts]
+              as List<dynamic>),
     );
   }
 
@@ -71,7 +119,7 @@ class CustomersTypes {
 
   @override
   String toString() {
-    return 'CustomersTypes(typeId: $typeId, typeName: $typeName, customersAccountsIds: $customersAccountsIds, customersIds: $customersIds, customersNames: $customersNames, customersFirstnames: $customersFirstnames)';
+    return 'CustomersTypes(typeId: $typeId, typeName: $typeName, typeStake: $typeStake, collectorsIds: $collectorsIds, collectorsNames: $collectorsNames, customersAccountsIds: $customersAccountsIds, customersIds: $customersIds, customers: $customers, customersCardsLabels: $customersCardsLabels, customersCardsTypesNumbers: $customersCardsTypesNumbers, customerCardSettlementsTotals: $customerCardSettlementsTotals, customerCardSettlementsAmounts: $customerCardSettlementsAmounts)';
   }
 
   @override
@@ -80,19 +128,34 @@ class CustomersTypes {
 
     return other.typeId == typeId &&
         other.typeName == typeName &&
+        other.typeStake == typeStake &&
+        listEquals(other.collectorsIds, collectorsIds) &&
+        listEquals(other.collectorsNames, collectorsNames) &&
         listEquals(other.customersAccountsIds, customersAccountsIds) &&
         listEquals(other.customersIds, customersIds) &&
-        listEquals(other.customersNames, customersNames) &&
-        listEquals(other.customersFirstnames, customersFirstnames);
+        listEquals(other.customers, customers) &&
+        listEquals(other.customersCardsLabels, customersCardsLabels) &&
+        listEquals(
+            other.customersCardsTypesNumbers, customersCardsTypesNumbers) &&
+        listEquals(other.customerCardSettlementsTotals,
+            customerCardSettlementsTotals) &&
+        listEquals(other.customerCardSettlementsAmounts,
+            customerCardSettlementsAmounts);
   }
 
   @override
   int get hashCode {
     return typeId.hashCode ^
         typeName.hashCode ^
+        typeStake.hashCode ^
+        collectorsIds.hashCode ^
+        collectorsNames.hashCode ^
         customersAccountsIds.hashCode ^
         customersIds.hashCode ^
-        customersNames.hashCode ^
-        customersFirstnames.hashCode;
+        customers.hashCode ^
+        customersCardsLabels.hashCode ^
+        customersCardsTypesNumbers.hashCode ^
+        customerCardSettlementsTotals.hashCode ^
+        customerCardSettlementsAmounts.hashCode;
   }
 }

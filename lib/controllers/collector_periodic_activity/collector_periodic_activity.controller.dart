@@ -7,6 +7,8 @@ class CollectorPeriodicActivityController {
     required DateTime? collectionBeginDate,
     required DateTime? collectionEndDate,
     required int? collectorId,
+    required int? customerAccountId,
+    required int? settlementsTotal,
   }) async {
     final collectorPeriodicActivities =
         await CollectorPeriodicActivityService.getCollectorPeriodicActivity(
@@ -17,14 +19,18 @@ class CollectorPeriodicActivityController {
           ? FunctionsController.getSQLFormatDate(dateTime: collectionEndDate)
           : null,
       collectorId: collectorId,
+      customerAccountId: customerAccountId,
+      settlementsTotal: settlementsTotal,
     );
+    //  debugPrint('customerAccountId: $customerAccountId');
 
-    return collectorPeriodicActivities
-        .map(
-          (collectorPeriodicActivity) => CollectorPeriodicActivity.fromMap(
-            collectorPeriodicActivity,
-          ),
-        )
-        .toList();
+    return collectorPeriodicActivities.map(
+      (collectorPeriodicActivity) {
+        // debugPrint('collectorPeriodicActivity: $collectorPeriodicActivity');
+        return CollectorPeriodicActivity.fromMap(
+          collectorPeriodicActivity,
+        );
+      },
+    ).toList();
   }
 }

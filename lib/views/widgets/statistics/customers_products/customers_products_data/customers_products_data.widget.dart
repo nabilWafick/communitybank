@@ -147,21 +147,14 @@ class _CustomersProductsStatisticsDataState
                   ),
                   Consumer(
                     builder: (context, ref, child) {
-                      final customersNames = customersProducts.customersNames;
-                      final customersFirstnames =
-                          customersProducts.customersFirstnames;
-                      String customers = '';
+                      final customers = customersProducts.customers;
+                      String customerss = '';
 
-                      for (int i = 0; i < customersNames.length; ++i) {
-                        if (customers.isEmpty &&
-                            customersNames[i] != null &&
-                            customersFirstnames[i] != null) {
-                          customers =
-                              '${customersNames[i]} ${customersFirstnames[i]}';
-                        } else if (customersNames[i] != null &&
-                            customersFirstnames[i] != null) {
-                          customers =
-                              '$customers, ${customersNames[i]} ${customersFirstnames[i]}';
+                      for (int i = 0; i < customers.length; ++i) {
+                        if (customerss.isEmpty && customers[i] != null) {
+                          customerss = customers[i];
+                        } else if (customers[i] != null) {
+                          customerss = '$customerss, ${customers[i]}';
                         }
                       }
                       return Container(
@@ -170,7 +163,7 @@ class _CustomersProductsStatisticsDataState
                         height: 30.0,
                         child: CBText(
                           text: FunctionsController.truncateText(
-                            text: customers,
+                            text: customerss,
                             maxLength: 110,
                           ),
                           fontSize: 12.0,

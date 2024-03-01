@@ -32,7 +32,7 @@ Future<void> main() async {
       logLevel: RealtimeLogLevel.info,
     ),
   );
-
+/*
   // logout after user stopping app
   WidgetsBinding.instance.addPostFrameCallback(
     (timeStamp) {
@@ -43,7 +43,7 @@ Future<void> main() async {
       );
     },
   );
-
+*/
   await DesktopWindow.setMinWindowSize(
     const Size(
       1280.0,
@@ -143,12 +143,12 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.paused) {
+    /*  if (state == AppLifecycleState.paused) {
       await AuthFunctions.logout();
     }
     if (state == AppLifecycleState.detached) {
       await AuthFunctions.logout();
-    }
+    }*/
     super.didChangeAppLifecycleState(state);
   }
 

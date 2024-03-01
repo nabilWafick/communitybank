@@ -1,9 +1,8 @@
-import 'package:communitybank/models/rpc/collector_daily_activity/collector_daily_activity_rpc.model.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CollectorDailyActivityService {
-  static Future<List<Map<String, dynamic>>> getCollectorDailyActivity({
+class ProductsForecastsService {
+  static Future<List<Map<String, dynamic>>> getProductsForecasts({
     required String? collectionDate,
     required int? collectorId,
   }) async {
@@ -12,7 +11,7 @@ class CollectorDailyActivityService {
 
     try {
       response = await supabase.rpc(
-        CollectorDailyActivityRPC.functionName,
+        'get_products_forecasts',
         params: {
           'collection_date': collectionDate,
           'collector_id': collectorId,

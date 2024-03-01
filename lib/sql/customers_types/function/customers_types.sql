@@ -15,7 +15,7 @@ RETURNS TABLE (
     ids_cartes bigint[],
     libelles_cartes text[],
     nombres_types_cartes int[],
-    totaux_reglements_cartes int[],
+    totaux_reglements_cartes bigint[],
     montants_reglements_cartes numeric[]
 ) AS 
 $$

@@ -64,13 +64,10 @@ class CustomersProductsDetailsShower extends ConsumerWidget {
                   child: ListView.builder(
                     itemCount: customersProducts.customersIds.length,
                     itemBuilder: (context, index) {
-                      if (customersProducts.customersNames[index] != null &&
-                          customersProducts.customersFirstnames[index] !=
-                              null) {
+                      if (customersProducts.customers[index] != null) {
                         return ListTile(
                           title: CBText(
-                            text:
-                                '${customersProducts.customersNames[index]} ${customersProducts.customersFirstnames[index]}',
+                            text: '${customersProducts.customers[index]}',
                             fontSize: 14.0,
                             fontWeight: FontWeight.w500,
                             textAlign: TextAlign.left,

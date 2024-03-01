@@ -1,8 +1,8 @@
-import 'package:communitybank/controllers/customer_periodic_activity/customer_periodic_activity.controller.dart';
+import 'package:communitybank/controllers/collector_periodic_activity/collector_periodic_activity.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/customer_periodic_activity/customer_periodic_activity.model.dart';
+import 'package:communitybank/models/data/collector_periodic_activity/collector_periodic_activity.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_sort_options/customer_periodic_activity_sort_options.widget.dart';
+import 'package:communitybank/views/widgets/activities/collector_periodic_activity/collector_periodic_activity_sort_options/collector_periodic_activity_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
@@ -13,12 +13,12 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-final customerPeriodicActivityDataProvider =
-    StreamProvider<List<CustomerPeriodicActivity>>((ref) async* {
+final collectorPeriodicActivityDataProvider =
+    StreamProvider<List<CollectorPeriodicActivity>>((ref) async* {
   final collectionBeginDate =
-      ref.watch(customerPeriodicActivityCollectionBeginDateProvider);
+      ref.watch(collectorPeriodicActivityCollectionBeginDateProvider);
   final collectionEndDate =
-      ref.watch(customerPeriodicActivityCollectionEndDateProvider);
+      ref.watch(collectorPeriodicActivityCollectionEndDateProvider);
   final collector = ref.watch(
     listCollectorDropdownProvider('collector-periodic-activity-collector'),
   );
@@ -30,7 +30,7 @@ final customerPeriodicActivityDataProvider =
     ref.watch(searchProvider('collector-periodic-activity-settlements-number')),
   );
 
-  yield* CustomerPeriodicActivityController.getCustomerPeriodicActivity(
+  yield* CollectorPeriodicActivityController.getCollectorPeriodicActivity(
     collectionBeginDate: collectionBeginDate,
     collectionEndDate: collectionEndDate,
     collectorId: collector.id == 0 ? null : collector.id!,
@@ -40,6 +40,11 @@ final customerPeriodicActivityDataProvider =
             : customerAccount.id,
     settlementsTotal: settelementsTotal,
   ).asStream();
+});
+
+double settlementsAmountsTotals = 0;
+final settlementsAmountsTotalsProvider = StateProvider<double>((ref) {
+  return 0;
 });
 
 class CollectorPeriodicActivityData extends ConsumerStatefulWidget {
@@ -59,17 +64,16 @@ class _CollectorPeriodicActivityDataState
 
   @override
   Widget build(BuildContext context) {
-    final customerPeriodicActivityDataStream =
-        ref.watch(customerPeriodicActivityDataProvider);
+    final collectorPeriodicActivityDataStream =
+        ref.watch(collectorPeriodicActivityDataProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
 
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        child: customerPeriodicActivityDataStream.when(
+        child: collectorPeriodicActivityDataStream.when(
           data: (data) {
-            //  debugPrint('Data Model length: ${data.length}');
             return HorizontalDataTable(
               leftHandSideColumnWidth: 100,
               rightHandSideColumnWidth: MediaQuery.of(context).size.width + 300,
@@ -101,7 +105,7 @@ class _CollectorPeriodicActivityDataState
                   ),
                 ),
                 Container(
-                  width: 400.0,
+                  width: 300.0,
                   height: 50.0,
                   alignment: Alignment.centerLeft,
                   child: const CBText(
@@ -123,7 +127,7 @@ class _CollectorPeriodicActivityDataState
                   ),
                 ),
                 Container(
-                  width: 400.0,
+                  width: 300.0,
                   height: 50.0,
                   alignment: Alignment.centerLeft,
                   child: const CBText(
@@ -134,7 +138,7 @@ class _CollectorPeriodicActivityDataState
                   ),
                 ),
                 Container(
-                  width: 400.0,
+                  width: 300.0,
                   height: 50.0,
                   alignment: Alignment.centerLeft,
                   child: const CBText(
@@ -168,7 +172,7 @@ class _CollectorPeriodicActivityDataState
                 );
               },
               rightSideItemBuilder: (BuildContext context, int index) {
-                final customerPeriodicActivity = data[index];
+                final collectorPeriodicActivity = data[index];
                 return Row(
                   children: [
                     Container(
@@ -177,17 +181,7 @@ class _CollectorPeriodicActivityDataState
                       height: 30.0,
                       child: CBText(
                         text: format
-                            .format(customerPeriodicActivity.collectionDate),
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      width: 400.0,
-                      height: 30.0,
-                      child: CBText(
-                        text:
-                            '${customerPeriodicActivity.customerName} ${customerPeriodicActivity.customerFirstnames}',
+                            .format(collectorPeriodicActivity.collectionDate),
                         fontSize: 12.0,
                       ),
                     ),
@@ -196,22 +190,33 @@ class _CollectorPeriodicActivityDataState
                       width: 300.0,
                       height: 30.0,
                       child: CBText(
-                        text:
-                            '${customerPeriodicActivity.collectorName} ${customerPeriodicActivity.collectorFirstnames}',
+                        text: FunctionsController.truncateText(
+                          text: collectorPeriodicActivity.customer,
+                          maxLength: 20,
+                        ),
+                        fontSize: 12.0,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: 300.0,
+                      height: 30.0,
+                      child: CBText(
+                        text: collectorPeriodicActivity.collector,
                         fontSize: 12.0,
                         textAlign: TextAlign.center,
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      width: 400.0,
+                      width: 300.0,
                       height: 30.0,
                       child: Consumer(
                         builder: (context, ref, child) {
                           String customerCards = '';
 
                           for (String customerCardsLabel
-                              in customerPeriodicActivity
+                              in collectorPeriodicActivity
                                   .customersCardsLabels) {
                             if (customerCards.isEmpty) {
                               customerCards = customerCardsLabel;
@@ -233,13 +238,13 @@ class _CollectorPeriodicActivityDataState
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
-                      width: 400.0,
+                      width: 300.0,
                       height: 30.0,
                       child: Consumer(
                         builder: (context, ref, child) {
                           final typesNames =
-                              customerPeriodicActivity.typesNames;
-                          final settlementsTotals = customerPeriodicActivity
+                              collectorPeriodicActivity.typesNames;
+                          final settlementsTotals = collectorPeriodicActivity
                               .customerCardSettlementsTotals;
                           String types = '';
 
@@ -268,13 +273,14 @@ class _CollectorPeriodicActivityDataState
                       child: Consumer(
                         builder: (context, ref, child) {
                           final customerCardSettlementsAmounts =
-                              customerPeriodicActivity
+                              collectorPeriodicActivity
                                   .customerCardSettlementsAmounts;
                           dynamic settlementsAmountsTotal = 0;
                           for (dynamic customerSettlementAmount
                               in customerCardSettlementsAmounts) {
                             settlementsAmountsTotal += customerSettlementAmount;
                           }
+
                           return CBText(
                             text: settlementsAmountsTotal.ceil().toString(),
                             fontSize: 12.0,
@@ -285,6 +291,65 @@ class _CollectorPeriodicActivityDataState
                   ],
                 );
               },
+              footerWidgets: [
+                Container(
+                  width: 200.0,
+                  height: 50.0,
+                  alignment: Alignment.center,
+                  child: CBText(
+                    text: data.length.toString(),
+                    textAlign: TextAlign.center,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 300.0,
+                  height: 30.0,
+                  child: const SizedBox(),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 300.0,
+                  height: 30.0,
+                  child: const SizedBox(),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 300.0,
+                  height: 30.0,
+                  child: data.isNotEmpty
+                      ? CBText(
+                          text: data[0].collector,
+                          fontSize: 12.0,
+                          textAlign: TextAlign.center,
+                        )
+                      : const SizedBox(),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 300.0,
+                  height: 30.0,
+                  child: const SizedBox(),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 300.0,
+                  height: 30.0,
+                  child: const SizedBox(),
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 200.0,
+                  height: 30.0,
+                  child: const CBText(
+                    text: 'Footer',
+                    //settlementsAmountsTotals.ceil().toString(),
+                    fontSize: 12.0,
+                  ),
+                ),
+              ],
               rowSeparatorWidget: const Divider(),
               scrollPhysics: const BouncingScrollPhysics(),
               horizontalScrollPhysics: const BouncingScrollPhysics(),

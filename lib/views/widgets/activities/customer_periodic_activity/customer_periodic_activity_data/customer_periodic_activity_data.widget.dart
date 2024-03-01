@@ -1,17 +1,11 @@
-import 'package:communitybank/controllers/customer_periodic_activity/customer_periodic_activity.controller.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
-import 'package:communitybank/models/data/customer_periodic_activity/customer_periodic_activity.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_card_card/customer_card_card.widget.dart';
 import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_cards_horizontal_scroller/customer_cards_horizontal_scroller.widget.dart';
-import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_sort_options/customer_periodic_activity_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/customer_card_settlements_details_printing.widget.dart';
 import 'package:flutter/material.dart';
@@ -19,35 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-
-final customerPeriodicActivityDataProvider =
-    StreamProvider<List<CustomerPeriodicActivity>>((ref) async* {
-  final collectionBeginDate =
-      ref.watch(customerPeriodicActivityCollectionBeginDateProvider);
-  final collectionEndDate =
-      ref.watch(customerPeriodicActivityCollectionEndDateProvider);
-  final collector = ref.watch(
-    listCollectorDropdownProvider('customer-periodic-activity-collector'),
-  );
-  final customerAccount = ref.watch(
-    listCustomerAccountDropdownProvider(
-        'customer-periodic-activity-customer-account'),
-  );
-  final settelementsTotal = int.tryParse(
-    ref.watch(searchProvider('customer-periodic-activity-settlements-number')),
-  );
-
-  yield* CustomerPeriodicActivityController.getCustomerPeriodicActivity(
-    collectionBeginDate: collectionBeginDate,
-    collectionEndDate: collectionEndDate,
-    collectorId: collector.id == 0 ? null : collector.id!,
-    customerAccountId:
-        customerAccount.id == 0 /* || customerAccount.id == null*/
-            ? null
-            : customerAccount.id,
-    settlementsTotal: settelementsTotal,
-  ).asStream();
-});
 
 final customerPeriodicActivitySelectedCustomerAccountProvider =
     StateProvider<CustomerAccount?>((ref) {

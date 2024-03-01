@@ -1,7 +1,8 @@
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/collector/collector.model.dart';
+import 'package:communitybank/models/data/collector_periodic_activity/collector_periodic_activity.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
-import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_periodic_activity_data.widget.dart';
+import 'package:communitybank/views/widgets/activities/collector_periodic_activity/collector_periodic_activity_data/collector_periodic_activity_data.widget.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
@@ -16,12 +17,12 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 //import 'package:intl/intl.dart';
 
-final customerPeriodicActivityCollectionBeginDateProvider =
+final collectorPeriodicActivityCollectionBeginDateProvider =
     StateProvider<DateTime?>((ref) {
   return;
 });
 
-final customerPeriodicActivityCollectionEndDateProvider =
+final collectorPeriodicActivityCollectionEndDateProvider =
     StateProvider<DateTime?>((ref) {
   return;
 });
@@ -47,10 +48,10 @@ class _CollectorPeriodicActivitySortOptionsState
     final collectorsListStream = ref.watch(collectorsListStreamProvider);
     final customersAccountsListStream =
         ref.watch(customersAccountsListStreamProvider);
-    final customerPeriodicActivityCollectionDate =
-        ref.watch(customerPeriodicActivityCollectionBeginDateProvider);
-    final customerPeriodicActivityCollectionEndDate =
-        ref.watch(customerPeriodicActivityCollectionEndDateProvider);
+    final collectorPeriodicActivityCollectionDate =
+        ref.watch(collectorPeriodicActivityCollectionBeginDateProvider);
+    final collectorPeriodicActivityCollectionEndDate =
+        ref.watch(collectorPeriodicActivityCollectionEndDateProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
     return Container(
@@ -59,6 +60,7 @@ class _CollectorPeriodicActivitySortOptionsState
       ),
       width: double.maxFinite,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -71,7 +73,7 @@ class _CollectorPeriodicActivitySortOptionsState
                   icon: Icons.refresh,
                   text: 'Rafraichir',
                   onTap: () {
-                    ref.invalidate(customerPeriodicActivityDataProvider);
+                    ref.invalidate(collectorPeriodicActivityDataProvider);
                   },
                 ),
               ),
@@ -98,7 +100,7 @@ class _CollectorPeriodicActivitySortOptionsState
                           context: context,
                           ref: ref,
                           stateProvider:
-                              customerPeriodicActivityCollectionBeginDateProvider,
+                              collectorPeriodicActivityCollectionBeginDateProvider,
                         );
                       },
                     ),
@@ -107,9 +109,9 @@ class _CollectorPeriodicActivitySortOptionsState
                     ),
                     Flexible(
                       child: CBText(
-                        text: customerPeriodicActivityCollectionDate != null
+                        text: collectorPeriodicActivityCollectionDate != null
                             ? format
-                                .format(customerPeriodicActivityCollectionDate)
+                                .format(collectorPeriodicActivityCollectionDate)
                             : '',
                         fontSize: 12.5,
                         fontWeight: FontWeight.w500,
@@ -134,7 +136,7 @@ class _CollectorPeriodicActivitySortOptionsState
                           context: context,
                           ref: ref,
                           stateProvider:
-                              customerPeriodicActivityCollectionEndDateProvider,
+                              collectorPeriodicActivityCollectionEndDateProvider,
                         );
                       },
                     ),
@@ -143,9 +145,9 @@ class _CollectorPeriodicActivitySortOptionsState
                     ),
                     Flexible(
                       child: CBText(
-                        text: customerPeriodicActivityCollectionEndDate != null
+                        text: collectorPeriodicActivityCollectionEndDate != null
                             ? format.format(
-                                customerPeriodicActivityCollectionEndDate)
+                                collectorPeriodicActivityCollectionEndDate)
                             : '',
                         fontSize: 12.5,
                         fontWeight: FontWeight.w500,
@@ -257,6 +259,64 @@ class _CollectorPeriodicActivitySortOptionsState
               ),
             ],
           ),
+          Center(
+            child: Container(
+              margin: const EdgeInsets.only(
+                top: 10.0,
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  const CBText(
+                    text: 'Total Réglé:',
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final collectorPeriodicActivityDataStream =
+                          ref.watch(collectorPeriodicActivityDataProvider);
+
+                      return collectorPeriodicActivityDataStream.when(
+                        data: (data) {
+                          double settlementsAmountsTotals = 0;
+
+                          for (CollectorPeriodicActivity collectorPeriodicActivity
+                              in data) {
+                            for (int i = 0;
+                                i <
+                                    collectorPeriodicActivity
+                                        .customerCardSettlementsAmounts.length;
+                                i++) {
+                              settlementsAmountsTotals +=
+                                  collectorPeriodicActivity
+                                      .customerCardSettlementsAmounts[i];
+                            }
+                          }
+                          return CBText(
+                            text: '${settlementsAmountsTotals.ceil()}f',
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w500,
+                          );
+                        },
+                        error: (error, stackTrace) => const CBText(
+                          text: '',
+                          fontSize: 12.0,
+                        ),
+                        loading: () => const CBText(
+                          text: '',
+                          fontSize: 12.0,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );

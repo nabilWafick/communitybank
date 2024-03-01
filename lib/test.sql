@@ -1,25 +1,4 @@
-CREATE
-OR REPLACE FUNCTION get_collector_periodic_activity (
-  collection_begin_date TEXT,
-  collection_end_date TEXT,
-  collector_id BIGINT,
-  settlements_total INT,
-  customer_account_id BIGINT
-) RETURNS TABLE (
-  date_collecte TIMESTAMPTZ,
-  id_compte_client BIGINT,
-  id_client BIGINT,
-  client TEXT,
-  id_charge_compte BIGINT,
-  charge_compte TEXT,
-  ids_cartes BIGINT[],
-  libelles_cartes TEXT[],
-  nombres_types_cartes INT[],
-  ids_types BIGINT[],
-  noms_types TEXT[],
-  totaux_reglements_cartes BIGINT[],
-  montants_reglements_cartes NUMERIC[]
-) AS $$
+
 BEGIN
 	RETURN QUERY
 	SELECT
@@ -106,4 +85,3 @@ BEGIN
 	    subquery.id_charge_compte,
 	    subquery.charge_compte;
 END;
-$$ LANGUAGE plpgsql;

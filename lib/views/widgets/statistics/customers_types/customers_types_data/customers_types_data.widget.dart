@@ -2,6 +2,7 @@ import 'package:communitybank/controllers/customers_types/customers_types.contro
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customers_types/customers_types.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/type/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
@@ -18,12 +19,16 @@ final customersTypesStatisticsDataStreamProvider =
     listCustomerAccountDropdownProvider(
         'customers-types-statistics-customer-account'),
   );
+  final selectedCollector = ref.watch(
+    listCollectorDropdownProvider('customers-types-statistics-collector'),
+  );
   final selectedType = ref.watch(
     listTypeDropdownProvider('customers-types-statistics-type'),
   );
 
   yield* CustomersTypesController.getCustomersTypes(
     customerAccountId: selectedCustomerAccount.id,
+    collectorId: selectedCollector.id == 0 ? null : selectedCollector.id,
     typeId: selectedType.id == 0 ? null : selectedType.id,
   ).asStream();
 });
@@ -169,21 +174,15 @@ class _CustomersTypesStatisticsDataState
                   ),
                   Consumer(
                     builder: (context, ref, child) {
-                      final customersNames = customersTypes.customersNames;
-                      final customersFirstnames =
-                          customersTypes.customersFirstnames;
-                      String customers = '';
+                      final customers = customersTypes.customers;
 
-                      for (int i = 0; i < customersNames.length; ++i) {
-                        if (customers.isEmpty &&
-                            customersNames[i] != null &&
-                            customersFirstnames[i] != null) {
-                          customers =
-                              '${customersNames[i]} ${customersFirstnames[i]}';
-                        } else if (customersNames[i] != null &&
-                            customersFirstnames[i] != null) {
-                          customers =
-                              '$customers, ${customersNames[i]} ${customersFirstnames[i]}';
+                      String customerss = '';
+
+                      for (int i = 0; i < customers.length; ++i) {
+                        if (customerss.isEmpty && customers[i] != null) {
+                          customerss = customers[i];
+                        } else if (customers[i] != null) {
+                          customerss = '$customerss, ${customers[i]}';
                         }
                       }
                       return Container(
@@ -192,7 +191,7 @@ class _CustomersTypesStatisticsDataState
                         height: 30.0,
                         child: CBText(
                           text: FunctionsController.truncateText(
-                            text: customers,
+                            text: customerss,
                             maxLength: 110,
                           ),
                           fontSize: 12.0,

@@ -9,15 +9,14 @@ class CustomersProducts {
   String productName;
   List<dynamic> customersAccountsIds;
   List<dynamic> customersIds;
-  List<dynamic> customersNames;
-  List<dynamic> customersFirstnames;
+  List<dynamic> customers;
+
   CustomersProducts({
     required this.productId,
     required this.productName,
     required this.customersAccountsIds,
     required this.customersIds,
-    required this.customersNames,
-    required this.customersFirstnames,
+    required this.customers,
   });
 
   CustomersProducts copyWith({
@@ -25,7 +24,7 @@ class CustomersProducts {
     String? productName,
     List<dynamic>? customersAccountsIds,
     List<dynamic>? customersIds,
-    List<dynamic>? customersNames,
+    List<dynamic>? customers,
     List<dynamic>? customersFirstnames,
   }) {
     return CustomersProducts(
@@ -33,8 +32,7 @@ class CustomersProducts {
       productName: productName ?? this.productName,
       customersAccountsIds: customersAccountsIds ?? this.customersAccountsIds,
       customersIds: customersIds ?? this.customersIds,
-      customersNames: customersNames ?? this.customersNames,
-      customersFirstnames: customersFirstnames ?? this.customersFirstnames,
+      customers: customers ?? this.customers,
     );
   }
 
@@ -44,8 +42,7 @@ class CustomersProducts {
       CustomersProductsRPC.productName: productName,
       CustomersProductsRPC.customersAccountsIds: customersAccountsIds,
       CustomersProductsRPC.customersIds: customersIds,
-      CustomersProductsRPC.customersNames: customersNames,
-      CustomersProductsRPC.customersFirstnames: customersFirstnames,
+      CustomersProductsRPC.customers: customers,
     };
   }
 
@@ -57,10 +54,8 @@ class CustomersProducts {
           (map[CustomersProductsRPC.customersAccountsIds]) as List<dynamic>),
       customersIds: List<dynamic>.from(
           (map[CustomersProductsRPC.customersIds]) as List<dynamic>),
-      customersNames: List<dynamic>.from(
-          (map[CustomersProductsRPC.customersNames]) as List<dynamic>),
-      customersFirstnames: List<dynamic>.from(
-          (map[CustomersProductsRPC.customersFirstnames]) as List<dynamic>),
+      customers: List<dynamic>.from(
+          (map[CustomersProductsRPC.customers]) as List<dynamic>),
     );
   }
 
@@ -71,7 +66,7 @@ class CustomersProducts {
 
   @override
   String toString() {
-    return 'CustomersProducts(productId: $productId, productName: $productName, customersAccountsIds: $customersAccountsIds, customersIds: $customersIds, customersNames: $customersNames, customersFirstnames: $customersFirstnames)';
+    return 'CustomersProducts(productId: $productId, productName: $productName, customersAccountsIds: $customersAccountsIds, customersIds: $customersIds, customers: $customers)';
   }
 
   @override
@@ -82,8 +77,7 @@ class CustomersProducts {
         other.productName == productName &&
         listEquals(other.customersAccountsIds, customersAccountsIds) &&
         listEquals(other.customersIds, customersIds) &&
-        listEquals(other.customersNames, customersNames) &&
-        listEquals(other.customersFirstnames, customersFirstnames);
+        listEquals(other.customers, customers);
   }
 
   @override
@@ -92,7 +86,6 @@ class CustomersProducts {
         productName.hashCode ^
         customersAccountsIds.hashCode ^
         customersIds.hashCode ^
-        customersNames.hashCode ^
-        customersFirstnames.hashCode;
+        customers.hashCode;
   }
 }
