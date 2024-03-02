@@ -9,7 +9,7 @@ class CustomersTypes {
   final String typeName;
   final double typeStake;
   final List<dynamic> collectorsIds;
-  final List<dynamic> collectorsNames;
+  final List<dynamic> collectors;
   final List<dynamic> customersAccountsIds;
   final List<dynamic> customersIds;
   final List<dynamic> customers;
@@ -22,7 +22,7 @@ class CustomersTypes {
     required this.typeName,
     required this.typeStake,
     required this.collectorsIds,
-    required this.collectorsNames,
+    required this.collectors,
     required this.customersAccountsIds,
     required this.customersIds,
     required this.customers,
@@ -37,7 +37,7 @@ class CustomersTypes {
     String? typeName,
     double? typeStake,
     List<dynamic>? collectorsIds,
-    List<dynamic>? collectorsNames,
+    List<dynamic>? collectors,
     List<dynamic>? customersAccountsIds,
     List<dynamic>? customersIds,
     List<dynamic>? customers,
@@ -51,7 +51,7 @@ class CustomersTypes {
       typeName: typeName ?? this.typeName,
       typeStake: typeStake ?? this.typeStake,
       collectorsIds: collectorsIds ?? this.collectorsIds,
-      collectorsNames: collectorsNames ?? this.collectorsNames,
+      collectors: collectors ?? this.collectors,
       customersAccountsIds: customersAccountsIds ?? this.customersAccountsIds,
       customersIds: customersIds ?? this.customersIds,
       customers: customers ?? this.customers,
@@ -71,7 +71,7 @@ class CustomersTypes {
       CustomersTypesRPC.typeName: typeName,
       CustomersTypesRPC.typeStake: typeStake,
       CustomersTypesRPC.collectorsIds: collectorsIds,
-      CustomersTypesRPC.collectorsNames: collectorsNames,
+      CustomersTypesRPC.collectors: collectors,
       CustomersTypesRPC.customersAccountsIds: customersAccountsIds,
       CustomersTypesRPC.customersIds: customersIds,
       CustomersTypesRPC.customers: customers,
@@ -91,8 +91,8 @@ class CustomersTypes {
       typeStake: map[CustomersTypesRPC.typeStake] as double,
       collectorsIds: List<dynamic>.from(
           map[CustomersTypesRPC.collectorsIds] as List<dynamic>),
-      collectorsNames: List<dynamic>.from(
-          map[CustomersTypesRPC.collectorsNames] as List<dynamic>),
+      collectors: List<dynamic>.from(
+          map[CustomersTypesRPC.collectors] as List<dynamic>),
       customersAccountsIds: List<dynamic>.from(
           map[CustomersTypesRPC.customersAccountsIds] as List<dynamic>),
       customersIds: List<dynamic>.from(
@@ -119,7 +119,7 @@ class CustomersTypes {
 
   @override
   String toString() {
-    return 'CustomersTypes(typeId: $typeId, typeName: $typeName, typeStake: $typeStake, collectorsIds: $collectorsIds, collectorsNames: $collectorsNames, customersAccountsIds: $customersAccountsIds, customersIds: $customersIds, customers: $customers, customersCardsLabels: $customersCardsLabels, customersCardsTypesNumbers: $customersCardsTypesNumbers, customerCardSettlementsTotals: $customerCardSettlementsTotals, customerCardSettlementsAmounts: $customerCardSettlementsAmounts)';
+    return 'CustomersTypes(typeId: $typeId, typeName: $typeName, typeStake: $typeStake, collectorsIds: $collectorsIds, collectors: $collectors, customersAccountsIds: $customersAccountsIds, customersIds: $customersIds, customers: $customers, customersCardsLabels: $customersCardsLabels, customersCardsTypesNumbers: $customersCardsTypesNumbers, customerCardSettlementsTotals: $customerCardSettlementsTotals, customerCardSettlementsAmounts: $customerCardSettlementsAmounts)';
   }
 
   @override
@@ -130,7 +130,7 @@ class CustomersTypes {
         other.typeName == typeName &&
         other.typeStake == typeStake &&
         listEquals(other.collectorsIds, collectorsIds) &&
-        listEquals(other.collectorsNames, collectorsNames) &&
+        listEquals(other.collectors, collectors) &&
         listEquals(other.customersAccountsIds, customersAccountsIds) &&
         listEquals(other.customersIds, customersIds) &&
         listEquals(other.customers, customers) &&
@@ -149,7 +149,7 @@ class CustomersTypes {
         typeName.hashCode ^
         typeStake.hashCode ^
         collectorsIds.hashCode ^
-        collectorsNames.hashCode ^
+        collectors.hashCode ^
         customersAccountsIds.hashCode ^
         customersIds.hashCode ^
         customers.hashCode ^

@@ -42,18 +42,18 @@ class CustomerCardCard extends ConsumerWidget {
               .state = customerCard;
         },
         child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 15.0,
-            ),
-            child: Consumer(
-              builder: (context, ref, child) {
-                final customersCardsListStream =
-                    ref.watch(customersCardsListStreamProvider);
+          padding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 15.0,
+          ),
+          child: Consumer(
+            builder: (context, ref, child) {
+              final customersCardsListStream =
+                  ref.watch(customersCardsListStreamProvider);
 
-                return customersCardsListStream.when(
-                  data: (data) {
-                    /* String customerCardLabel = '';
+              return customersCardsListStream.when(
+                data: (data) {
+                  /* String customerCardLabel = '';
 
                     for (CustomerCard customerCard in data) {
                       if (customerCard.id ==
@@ -63,34 +63,20 @@ class CustomerCardCard extends ConsumerWidget {
                       }
                     }*/
 
-                    final realTimeCustomerCard = data.firstWhere(
-                      (realTimeCustomerCard) =>
-                          customerCard.id == realTimeCustomerCard.id,
-                      orElse: () => CustomerCard(
-                        label: '',
-                        typeId: 0,
-                        typeNumber: 0,
-                        createdAt: DateTime.now(),
-                        updatedAt: DateTime.now(),
-                      ),
-                    );
+                  final realTimeCustomerCard = data.firstWhere(
+                    (realTimeCustomerCard) =>
+                        customerCard.id == realTimeCustomerCard.id,
+                    orElse: () => CustomerCard(
+                      label: '',
+                      typeId: 0,
+                      typeNumber: 0,
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                  );
 
-                    return CBText(
-                      text: realTimeCustomerCard.label,
-
-                      // sidebarSubOptionData.name
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                      .id ==
-                                  customerCard.id
-                              ? CBColors.primaryColor
-                              : Colors.white,
-                    );
-                  },
-                  error: (error, stackTrace) => CBText(
-                    text: customerCard.label,
+                  return CBText(
+                    text: realTimeCustomerCard.label,
 
                     // sidebarSubOptionData.name
                     fontSize: 11,
@@ -101,23 +87,36 @@ class CustomerCardCard extends ConsumerWidget {
                                 customerCard.id
                             ? CBColors.primaryColor
                             : Colors.white,
-                  ),
-                  loading: () => CBText(
-                    text: '',
+                  );
+                },
+                error: (error, stackTrace) => CBText(
+                  text: customerCard.label,
 
-                    // sidebarSubOptionData.name
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                                    .id ==
-                                customerCard.id
-                            ? CBColors.primaryColor
-                            : Colors.white,
-                  ),
-                );
-              },
-            )),
+                  // sidebarSubOptionData.name
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                              .id ==
+                          customerCard.id
+                      ? CBColors.primaryColor
+                      : Colors.white,
+                ),
+                loading: () => CBText(
+                  text: '',
+
+                  // sidebarSubOptionData.name
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                              .id ==
+                          customerCard.id
+                      ? CBColors.primaryColor
+                      : Colors.white,
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

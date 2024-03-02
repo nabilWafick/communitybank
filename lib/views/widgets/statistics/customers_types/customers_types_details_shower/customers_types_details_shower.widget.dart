@@ -13,7 +13,7 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const formCardWidth = 500.0;
+    const formCardWidth = 700.0;
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -61,12 +61,36 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                     itemCount: customersTypes.customersIds.length,
                     itemBuilder: (context, index) {
                       if (customersTypes.customers[index] != null) {
-                        return ListTile(
-                          title: CBText(
-                            text: '${customersTypes.customers[index]}',
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500,
-                            textAlign: TextAlign.left,
+                        return Container(
+                          padding: const EdgeInsets.symmetric(vertical: 2.0),
+                          child: Row(
+                            children: [
+                              CBText(
+                                text: '${customersTypes.collectors[index]}',
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                                textAlign: TextAlign.left,
+                              ),
+                              const SizedBox(
+                                width: 25.0,
+                              ),
+                              CBText(
+                                text: '${customersTypes.customers[index]}',
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                                textAlign: TextAlign.left,
+                              ),
+                              const SizedBox(
+                                width: 25.0,
+                              ),
+                              CBText(
+                                text:
+                                    '${customersTypes.customerCardSettlementsAmounts[index].ceil()}',
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w500,
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
                           ),
                         );
                       }

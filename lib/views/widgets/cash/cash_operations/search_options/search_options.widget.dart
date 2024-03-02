@@ -1,4 +1,6 @@
+import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/controllers/settlement/settlement.controller.dart';
+import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
@@ -8,6 +10,7 @@ import 'package:communitybank/views/widgets/cash/cash_operations/search_options/
 import 'package:communitybank/views/widgets/cash/cash_operations/search_options/customer_card_dropdown/customer_card_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/multiple_settlements/multiple_setllements_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,6 +72,8 @@ class CashOperationsSearchOptions extends ConsumerWidget {
         ref.watch(customersAccountsListStreamProvider);
     final customersCardsWithOwners =
         ref.watch(customersCardsWithOwnerListStreamProvider);
+    final cashOperationsSelectedCustomerAccount =
+        ref.watch(cashOperationsSelectedCustomerAccountProvider);
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -155,7 +160,24 @@ class CashOperationsSearchOptions extends ConsumerWidget {
               error: (error, stackTrace) => [],
               loading: () => [],
             ),
-          )
+          ),
+          cashOperationsSelectedCustomerAccount != null &&
+                  cashOperationsSelectedCustomerAccount
+                          .customerCardsIds.length >
+                      1
+              ? CBIconButton(
+                  icon: Icons.add_circle,
+                  text: 'Régler plusieurs cartes',
+                  onTap: () {
+                    ref.read(settlementCollectionDateProvider.notifier).state =
+                        null;
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: const MultipleSettlementsAddingForm(),
+                    );
+                  },
+                )
+              : const SizedBox(),
         ],
       ),
     );

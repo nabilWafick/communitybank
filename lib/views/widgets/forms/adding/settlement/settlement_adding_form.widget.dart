@@ -155,7 +155,7 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                             Flexible(
                               child: CBText(
                                 text: settlementCollectionDate != null
-                                    ? '${format.format(settlementCollectionDate)}  ${settlementCollectionDate.hour}:${settlementCollectionDate.minute}'
+                                    ? format.format(settlementCollectionDate)
                                     : '',
                                 fontSize: 12.5,
                                 fontWeight: FontWeight.w500,
