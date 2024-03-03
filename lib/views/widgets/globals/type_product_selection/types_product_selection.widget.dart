@@ -122,9 +122,7 @@ class _TypeProductSelectionState extends ConsumerState<TypeProductSelection> {
                               // since typeSelectedProducts use type selection dropdown provider as key
                               state.remove(
                                   widget.productSelectionDropdownProvider);
-                              // debugPrint('typeSelectedProductsProvider');
-                              // debugPrint('length: ${state.length}');
-                              // debugPrint(state.toString());
+
                               return state;
                             });
                           },

@@ -1,3 +1,4 @@
+import 'package:communitybank/controllers/forms/validators/multiple_settlements/multiple_settlements.validator.dart';
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
@@ -171,6 +172,16 @@ class CashOperationsSearchOptions extends ConsumerWidget {
                   onTap: () {
                     ref.read(settlementCollectionDateProvider.notifier).state =
                         null;
+                    ref
+                        .read(
+                          multipleSettlementsAddedInputsProvider.notifier,
+                        )
+                        .state = {};
+                    ref
+                        .read(
+                          multipleSettlementsSelectedTypesProvider.notifier,
+                        )
+                        .state = {};
                     FunctionsController.showAlertDialog(
                       context: context,
                       alertDialog: const MultipleSettlementsAddingForm(),

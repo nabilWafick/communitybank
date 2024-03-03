@@ -1,17 +1,17 @@
-import 'package:communitybank/controllers/forms/on_changed/settlement/settlement.on_changed.dart';
+import 'package:communitybank/controllers/forms/on_changed/multiple_settlements/multiple_settlements.on_changed.dart';
+import 'package:communitybank/controllers/forms/validators/multiple_settlements/multiple_settlements.validator.dart';
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/models/data/collection/collection.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/utils/utils.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations_infos/customer_card_infos/customer_card_card/customer_card_card.widget.dart';
 import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/cash/collections/collections.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/multiple_settlements/settlement_number_textformfield/settlement_number_textformfield.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/multiple_settlements/type_dropdown/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
@@ -52,8 +52,6 @@ class _MultipleSettlementsAddingFormState
             : 500.0;
     final settlementCollectionDate =
         ref.watch(settlementCollectionDateProvider);
-    final customersCardsListStream =
-        ref.watch(customersCardsListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
 
@@ -224,41 +222,51 @@ class _MultipleSettlementsAddingFormState
                       vertical: 20.0,
                     ),
                     child: CBIconButton(
-                      onTap: () {},
+                      onTap: () {
+                        if (ref
+                                .watch(multipleSettlementsAddedInputsProvider)
+                                .length <
+                            cashOperationsSelectedCustomerAccount
+                                .customerCardsIds.length) {
+                          ref
+                              .read(multipleSettlementsAddedInputsProvider
+                                  .notifier)
+                              .update((state) {
+                            return {
+                              ...state,
+                              DateTime.now().millisecondsSinceEpoch: true,
+                            };
+                          });
+                        }
+                      },
                       icon: Icons.add_circle,
-                      text: 'Ajouter un carte',
+                      text: 'Ajouter une carte',
                     ),
                   ),
-                  StaggeredGrid.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 5.0,
-                    crossAxisSpacing: 5.0,
-                    children:
-                        cashOperationsSelectedCustomerAccount.customerCardsIds
-                            .map(
-                              (customerCardId) => customersCardsListStream.when(
-                                data: (data) {
-                                  final realTimeCustomerCard = data.firstWhere(
-                                    (customerCard) =>
-                                        customerCard.id == customerCardId,
-                                    orElse: () => CustomerCard(
-                                      label: 'Undefined',
-                                      typeId: 0,
-                                      typeNumber: 0,
-                                      createdAt: DateTime.now(),
-                                      updatedAt: DateTime.now(),
-                                    ),
-                                  );
-                                  return CustomerCardSettlementCard(
-                                    customerCard: realTimeCustomerCard,
-                                  );
-                                },
-                                error: (error, stackTrace) => const SizedBox(),
-                                loading: () => const SizedBox(),
-                              ),
-                            )
-                            .toList(),
-                  )
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final customerCardsSettlemenentCardsMaps = ref.watch(
+                        multipleSettlementsAddedInputsProvider,
+                      );
+                      List<Widget> customerCardsSettlemenentCardsList = [];
+                      for (MapEntry mapEntry
+                          in customerCardsSettlemenentCardsMaps.entries) {
+                        customerCardsSettlemenentCardsList.add(
+                            CustomerCardSettlementCard(
+                                index: mapEntry.key,
+                                isVisible: mapEntry.value,
+                                customerCardSettlementTypeDropdownProvider:
+                                    'multiple-settements-customer-card-${mapEntry.key}'));
+                      }
+
+                      return StaggeredGrid.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 5.0,
+                        crossAxisSpacing: 5.0,
+                        children: customerCardsSettlemenentCardsList,
+                      );
+                    },
+                  ),
                 ],
               ),
               const SizedBox(
@@ -286,12 +294,17 @@ class _MultipleSettlementsAddingFormState
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
+                              final isFormValid =
+                                  formKey.currentState!.validate();
+                              if (isFormValid) {}
+
+                              /*
                               SettlementCRUDFunctions.create(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
                                 showValidatedButton: showValidatedButton,
-                              );
+                              );*/
                             },
                           ),
                         )
@@ -307,10 +320,14 @@ class _MultipleSettlementsAddingFormState
 }
 
 class CustomerCardSettlementCard extends StatefulHookConsumerWidget {
-  final CustomerCard customerCard;
+  final int index;
+  final bool isVisible;
+  final String customerCardSettlementTypeDropdownProvider;
   const CustomerCardSettlementCard({
     super.key,
-    required this.customerCard,
+    required this.index,
+    required this.isVisible,
+    required this.customerCardSettlementTypeDropdownProvider,
   });
 
   @override
@@ -322,10 +339,34 @@ class _CustomerCardSettlementCardState
     extends ConsumerState<CustomerCardSettlementCard> {
   @override
   Widget build(BuildContext context) {
-    final showForm = useState<bool>(true);
+    final showForm = useState<bool>(widget.isVisible);
     final cashOperationsSelectedCustomerAccountOwnerCustomerCards = ref
         .watch(cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider);
+    final cashOperationsSelectedCustomerAccount =
+        ref.watch(cashOperationsSelectedCustomerAccountProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
+    final multipleSettlementsSelectedTypes =
+        ref.watch(multipleSettlementsSelectedTypesProvider);
+
+    final selectedCustomerCard = useState<CustomerCard>(
+      CustomerCard(
+        label: 'Carte *',
+        typeId: 0,
+        typeNumber: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+    );
+
+    final selectedType = ref.watch(
+      multipleSettlementsSelectedTypeDropdownProvider(
+          widget.customerCardSettlementTypeDropdownProvider),
+    );
+
+    final settlementNumber = ref.watch(
+      multipleSettlementsSettlementNumberProvider(widget.index),
+    );
+
     return showForm.value
         ? SizedBox(
             width: 500,
@@ -334,53 +375,145 @@ class _CustomerCardSettlementCardState
                 Container(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 15.0,
+                    vertical: 10.0,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomerCardWidget(
-                        customerCard: widget.customerCard,
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final customerCardsListStream =
+                              ref.watch(customersCardsListStreamProvider);
+                          final selectedCustomerCardSettlementType = ref.watch(
+                            multipleSettlementsSelectedTypeDropdownProvider(
+                                widget
+                                    .customerCardSettlementTypeDropdownProvider),
+                          );
+
+                          return customerCardsListStream.when(
+                            data: (data) {
+                              final realCustomerCard = data.firstWhere(
+                                (customerCard) =>
+                                    cashOperationsSelectedCustomerAccount!
+                                        .customerCardsIds
+                                        .contains(customerCard.id) &&
+                                    customerCard.typeId ==
+                                        selectedCustomerCardSettlementType.id,
+                                orElse: () => CustomerCard(
+                                  label: 'Carte *',
+                                  typeId: 0,
+                                  typeNumber: 0,
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                ),
+                              );
+
+                              Future.delayed(
+                                const Duration(
+                                  milliseconds: 100,
+                                ),
+                                () {
+                                  selectedCustomerCard.value = realCustomerCard;
+                                },
+                              );
+
+                              return CustomerCardWidget(
+                                customerCard: realCustomerCard,
+                              );
+                            },
+                            error: (error, stackTrace) => CustomerCardWidget(
+                              customerCard: CustomerCard(
+                                label: 'Carte *',
+                                typeId: 0,
+                                typeNumber: 0,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              ),
+                            ),
+                            loading: () => CustomerCardWidget(
+                              customerCard: CustomerCard(
+                                label: 'Carte *',
+                                typeId: 0,
+                                typeNumber: 0,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          left: 100.0,
+                      CBMultipleSettlementsCustomerCardTypeDropdown(
+                        label: 'Type',
+                        providerName:
+                            widget.customerCardSettlementTypeDropdownProvider,
+                        dropdownMenuEntriesLabels: typesListStream.when(
+                          data: (data) => data
+                              .where((type) =>
+                                      // get all only customers cards types and unselected types for multiple settlements card
+                                      cashOperationsSelectedCustomerAccountOwnerCustomerCards
+                                          .any(
+                                        (customerCard) =>
+                                            customerCard.typeId == type.id,
+                                      ) /* &&
+                                    !multipleSettlementsSelectedTypes
+                                        .containsValue(type),*/
+                                  )
+                              .toList(),
+                          error: (errror, stackTrace) => [],
+                          loading: () => [],
                         ),
-                        child: CBFormTypeDropdown(
-                          label: 'Type',
-                          providerName: '',
-                          dropdownMenuEntriesLabels: typesListStream.when(
-                            data: (data) => data
-                                .where(
-                                  (type) =>
+                        dropdownMenuEntriesValues: typesListStream.when(
+                          data: (data) => data
+                              .where((type) =>
+                                      // get all only customers cards types and unselected types for multiple settlements card
                                       cashOperationsSelectedCustomerAccountOwnerCustomerCards
                                           .any(
-                                    (customerCard) =>
-                                        customerCard.typeId == type.id,
-                                  ),
-                                )
-                                .toList(),
-                            error: (errror, stackTrace) => [],
-                            loading: () => [],
-                          ),
-                          dropdownMenuEntriesValues: typesListStream.when(
-                            data: (data) => data
-                                .where(
-                                  (type) =>
-                                      cashOperationsSelectedCustomerAccountOwnerCustomerCards
-                                          .any(
-                                    (customerCard) =>
-                                        customerCard.typeId == type.id,
-                                  ),
-                                )
-                                .toList(),
-                            error: (errror, stackTrace) => [],
-                            loading: () => [],
-                          ),
+                                        (customerCard) =>
+                                            customerCard.typeId == type.id,
+                                      )
+                                  /* &&
+                                    !multipleSettlementsSelectedTypes
+                                        .containsValue(type),*/
+                                  )
+                              .toList(),
+                          error: (errror, stackTrace) => [],
+                          loading: () => [],
                         ),
                       ),
                       IconButton(
                         onPressed: () {
-                          showForm.value = !showForm.value;
+                          showForm.value = false;
+
+                          ref
+                              .read(multipleSettlementsAddedInputsProvider
+                                  .notifier)
+                              .update(
+                            (state) {
+                              // if input is visible, hide it
+                              state[widget.index] = showForm.value;
+
+                              return state;
+                            },
+                          );
+
+                          // remove the selected type from multipleSettlementsSelectedTypes
+
+                          ref
+                              .read(
+                            multipleSettlementsSelectedTypesProvider.notifier,
+                          )
+                              .update(
+                            (state) {
+                              // since typeSelectedProducts use type selection
+                              // dropdown provider as key
+                              state.remove(
+                                widget
+                                    .customerCardSettlementTypeDropdownProvider,
+                              );
+
+                              return state;
+                            },
+                          );
                         },
                         icon: const Icon(
                           Icons.close,
@@ -398,14 +531,15 @@ class _CustomerCardSettlementCardState
                         horizontal: 10.0,
                       ),
                       width: 500,
-                      child: const CBTextFormField(
+                      child: CBMultipleSettementsSettlementNumberTextFormField(
+                        inputIndex: widget.index,
                         label: 'Nombre',
                         hintText: 'Nombre',
-                        isMultilineTextForm: false,
-                        obscureText: false,
-                        textInputType: TextInputType.name,
-                        validator: SettlementValidors.settlementNumber,
-                        onChanged: SettlementOnChanged.settlementName,
+                        textInputType: TextInputType.number,
+                        validator: MultipleSettlementsValidators
+                            .multipleSettlementsSettlementNumber,
+                        onChanged: MultipleSttlementsOnChanged
+                            .multipleSettlementsSettlementNumber,
                       ),
                     ),
                     Container(
@@ -414,15 +548,16 @@ class _CustomerCardSettlementCardState
                         horizontal: 10.0,
                         vertical: 5.0,
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          CBText(
+                          const CBText(
                             text: 'Montant: ',
                             fontSize: 12,
                           ),
                           CBText(
-                            text: '0f',
+                            text:
+                                '${selectedCustomerCard.value.typeNumber * selectedType.stake.ceil() * settlementNumber}f',
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
