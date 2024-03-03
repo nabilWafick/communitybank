@@ -50,16 +50,33 @@ class _CBMultipleSettlementsCustomerCardTypeDropdownState
         ), () {
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
+        // set as selected value the first value found and which are not in
+        // in selected group
         ref
             .read(multipleSettlementsSelectedTypeDropdownProvider(
                     widget.providerName)
                 .notifier)
-            .state = widget.dropdownMenuEntriesValues[0];
+            .state = widget.dropdownMenuEntriesValues.firstWhere(
+          (type) =>
+              ref
+                  .read(multipleSettlementsSelectedTypesProvider)
+                  .containsValue(type) ==
+              false,
+          orElse: () => widget.dropdownMenuEntriesValues[0],
+        );
         // put the selected item in the selectedType map so as to reduce items for the remain dropdowns
         ref
             .read(multipleSettlementsSelectedTypesProvider.notifier)
             .update((state) {
-          state[widget.providerName] = widget.dropdownMenuEntriesValues[0];
+          state[widget.providerName] =
+              widget.dropdownMenuEntriesValues.firstWhere(
+            (type) =>
+                ref
+                    .read(multipleSettlementsSelectedTypesProvider)
+                    .containsValue(type) ==
+                false,
+            orElse: () => widget.dropdownMenuEntriesValues[0],
+          );
           return state;
         });
       }
@@ -104,31 +121,36 @@ class _CBMultipleSettlementsCustomerCardTypeDropdownState
           .toList(),
       trailingIcon: const Icon(Icons.arrow_drop_down),
       onSelected: (value) {
-        // put the selected item in the selectedType map so as to reduce items for the remain dropdowns
+        // check if the value are not yet selected in another form
 
-        // set the selected Type
-        ref
-            .read(multipleSettlementsSelectedTypeDropdownProvider(
-                    widget.providerName)
-                .notifier)
-            .state = value!;
-        // // remove the last selected Type from tySelectedTypes
-        // ref.read(multipleSettlementsSelectedTypesProvider.notifier).update((state) {
-        //   // since multipleSettlementsSelectedTypes use type selection dropdown provider as key
-        //   state.remove(widget.providerName);
-        //   return state;
-        // });
+        if (ref
+                .read(multipleSettlementsSelectedTypesProvider)
+                .containsValue(value!) ==
+            false) {
+          // set the selected Type
+          ref
+              .read(multipleSettlementsSelectedTypeDropdownProvider(
+                      widget.providerName)
+                  .notifier)
+              .state = value;
+          // // remove the last selected Type from tySelectedTypes
+          // ref.read(multipleSettlementsSelectedTypesProvider.notifier).update((state) {
+          //   // since multipleSettlementsSelectedTypes use type selection dropdown provider as key
+          //   state.remove(widget.providerName);
+          //   return state;
+          // });
 
-        // put the selected item in the selectedType map so as to reduce items for the remain dropdowns
-        ref
-            .read(multipleSettlementsSelectedTypesProvider.notifier)
-            .update((state) {
-          state[widget.providerName] = value;
-          return state;
-        });
+          // put the selected item in the selectedType map so as to reduce items for the remain dropdowns
+          ref
+              .read(multipleSettlementsSelectedTypesProvider.notifier)
+              .update((state) {
+            state[widget.providerName] = value;
+            return state;
+          });
 
-        //  debugPrint('dropdown value: ${value.toString()}');
-        //  debugPrint(ref.watch(multipleSettlementsSelectedTypesProvider).toString());
+          //  debugPrint('dropdown value: ${value.toString()}');
+          //  debugPrint(ref.watch(multipleSettlementsSelectedTypesProvider).toString());
+        }
       },
     );
   }

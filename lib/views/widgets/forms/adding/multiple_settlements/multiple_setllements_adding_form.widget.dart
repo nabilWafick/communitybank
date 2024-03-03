@@ -345,8 +345,6 @@ class _CustomerCardSettlementCardState
     final cashOperationsSelectedCustomerAccount =
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
     final typesListStream = ref.watch(typesListStreamProvider);
-    final multipleSettlementsSelectedTypes =
-        ref.watch(multipleSettlementsSelectedTypesProvider);
 
     final selectedCustomerCard = useState<CustomerCard>(
       CustomerCard(
@@ -386,13 +384,13 @@ class _CustomerCardSettlementCardState
                               ref.watch(customersCardsListStreamProvider);
                           final selectedCustomerCardSettlementType = ref.watch(
                             multipleSettlementsSelectedTypeDropdownProvider(
-                                widget
-                                    .customerCardSettlementTypeDropdownProvider),
+                              widget.customerCardSettlementTypeDropdownProvider,
+                            ),
                           );
 
                           return customerCardsListStream.when(
                             data: (data) {
-                              final realCustomerCard = data.firstWhere(
+                              final realTimeCustomerCard = data.firstWhere(
                                 (customerCard) =>
                                     cashOperationsSelectedCustomerAccount!
                                         .customerCardsIds
@@ -413,12 +411,30 @@ class _CustomerCardSettlementCardState
                                   milliseconds: 100,
                                 ),
                                 () {
-                                  selectedCustomerCard.value = realCustomerCard;
+                                  // this is for calculating and showing
+                                  // settlement amount
+                                  selectedCustomerCard.value =
+                                      realTimeCustomerCard;
+
+                                  // store customer card in
+                                  // multipleSettlementsSelectedCustomerCards
+                                  // like selected type are stored
+
+                                  ref
+                                      .read(
+                                          multipleSettlementsSelectedCustomerCardsProvider
+                                              .notifier)
+                                      .update((state) {
+                                    state[widget
+                                            .customerCardSettlementTypeDropdownProvider] =
+                                        realTimeCustomerCard;
+                                    return state;
+                                  });
                                 },
                               );
 
                               return CustomerCardWidget(
-                                customerCard: realCustomerCard,
+                                customerCard: realTimeCustomerCard,
                               );
                             },
                             error: (error, stackTrace) => CustomerCardWidget(
@@ -447,18 +463,16 @@ class _CustomerCardSettlementCardState
                         providerName:
                             widget.customerCardSettlementTypeDropdownProvider,
                         dropdownMenuEntriesLabels: typesListStream.when(
-                          data: (data) => data
-                              .where((type) =>
-                                      // get all only customers cards types and unselected types for multiple settlements card
-                                      cashOperationsSelectedCustomerAccountOwnerCustomerCards
-                                          .any(
-                                        (customerCard) =>
-                                            customerCard.typeId == type.id,
-                                      ) /* &&
+                          data: (data) => data.where((type) {
+                            // get all only customers cards types and unselected types for multiple settlements card
+                            return cashOperationsSelectedCustomerAccountOwnerCustomerCards
+                                .any(
+                              (customerCard) => customerCard.typeId == type.id,
+                            );
+                          } /* &&
                                     !multipleSettlementsSelectedTypes
                                         .containsValue(type),*/
-                                  )
-                              .toList(),
+                              ).toList(),
                           error: (errror, stackTrace) => [],
                           loading: () => [],
                         ),
@@ -514,6 +528,19 @@ class _CustomerCardSettlementCardState
                               return state;
                             },
                           );
+
+                          // remove the selected customer card from multipleSettlementsSelectedCustomerCards
+
+                          // customer cards and types used the same mapEntry.key
+                          ref
+                              .read(
+                                  multipleSettlementsSelectedCustomerCardsProvider
+                                      .notifier)
+                              .update((state) {
+                            state.remove(widget
+                                .customerCardSettlementTypeDropdownProvider);
+                            return state;
+                          });
                         },
                         icon: const Icon(
                           Icons.close,
