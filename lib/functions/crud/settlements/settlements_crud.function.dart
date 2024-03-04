@@ -310,7 +310,7 @@ class SettlementCRUDFunctions {
             }
 
             List<ServiceResponse> settlementCreationResponses = [];
-            for (int i = 0; i > selectedTypes.length; ++i) {
+            for (int i = 0; i < selectedTypes.length; ++i) {
               final response = await singleSettlementCreation(
                 ref: ref,
                 context: context,
@@ -322,10 +322,40 @@ class SettlementCRUDFunctions {
               settlementCreationResponses.add(response);
             }
 
-            final isAllSettlementCreationSucceed =
-                settlementCreationResponses.every(
-              (response) => response == ServiceResponse.success,
-            );
+/*
+            List<ServiceResponse> settlementCreationResponses = [];
+
+// create a list to hold all the futures
+            List<Future<ServiceResponse>> futures = [];
+
+            for (int i = 0; i < selectedTypes.length; ++i) {
+              // Add each future to the list without awaiting them
+              futures.add(singleSettlementCreation(
+                ref: ref,
+                context: context,
+                showValidatedButton: showValidatedButton,
+                customerCard: selectedCustomerCards[i],
+                type: selectedTypes[i],
+                settlementNumber: settlementsNumbers[i],
+              ));
+            }
+
+// wait for all futures to complete simultaneously
+            List<ServiceResponse> responses = await Future.wait(futures);
+
+// add all the responses to the settlementCreationResponses list
+            settlementCreationResponses.addAll(responses);
+            */
+
+            bool isAllSettlementCreationSucceed = false;
+
+            for (ServiceResponse response in settlementCreationResponses) {
+              if (response == ServiceResponse.success) {
+                isAllSettlementCreationSucceed = true;
+              } else {
+                isAllSettlementCreationSucceed = false;
+              }
+            }
 
             if (isAllSettlementCreationSucceed) {
               ref.read(responseDialogProvider.notifier).state =
@@ -334,7 +364,14 @@ class SettlementCRUDFunctions {
                 response: 'Opération Terminée \n Totalement réussie',
               );
               showValidatedButton.value = true;
-              Navigator.of(context).pop();
+              FunctionsController.showAlertDialog(
+                context: context,
+                alertDialog: const ResponseDialog(),
+              );
+              Future.delayed(const Duration(milliseconds: 1500), () {
+                Navigator.of(context).pop();
+              });
+              //  Navigator.of(context).pop();
             } else {
               ref.read(responseDialogProvider.notifier).state =
                   ResponseDialogModel(
@@ -342,11 +379,11 @@ class SettlementCRUDFunctions {
                 response: 'Opération Terminée \n Non Totalement réussie',
               );
               showValidatedButton.value = true;
+              FunctionsController.showAlertDialog(
+                context: context,
+                alertDialog: const ResponseDialog(),
+              );
             }
-            FunctionsController.showAlertDialog(
-              context: context,
-              alertDialog: const ResponseDialog(),
-            );
           }
         }
       }
@@ -380,6 +417,7 @@ class SettlementCRUDFunctions {
       // if the number of settlement done before plus the number of settlement to add is greater than 372 (the total number of settelements of a customer card)
 
       if (customerCardSettlementsNumbersTotal + settlementNumber > 372) {
+        /*
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: ServiceResponse.failed,
           response:
@@ -389,7 +427,8 @@ class SettlementCRUDFunctions {
         FunctionsController.showAlertDialog(
           context: context,
           alertDialog: const ResponseDialog(),
-        );
+        );*/
+        return ServiceResponse.failed;
       } else {
         // check if the collector have made a collection that day
         final collectorsCollections = await CollectionsController.getAll(
@@ -399,7 +438,7 @@ class SettlementCRUDFunctions {
         ).first;
 
         if (collectorsCollections.isEmpty) {
-          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          /* ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
             serviceResponse: ServiceResponse.failed,
             response:
                 '${type.name} \nOpération échouée \n Le collecteur n\'a pas effectué de collecte ce jour',
@@ -408,7 +447,8 @@ class SettlementCRUDFunctions {
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
-          );
+          );*/
+          return ServiceResponse.failed;
         } else {
           final collectorCollection = collectorsCollections.first;
 
@@ -417,7 +457,7 @@ class SettlementCRUDFunctions {
           if (collectorCollection.rest -
                   settlementNumber * customerCard.typeNumber * type.stake <
               0) {
-            ref.read(responseDialogProvider.notifier).state =
+            /* ref.read(responseDialogProvider.notifier).state =
                 ResponseDialogModel(
               serviceResponse: ServiceResponse.failed,
               response:
@@ -427,7 +467,8 @@ class SettlementCRUDFunctions {
             FunctionsController.showAlertDialog(
               context: context,
               alertDialog: const ResponseDialog(),
-            );
+            );*/
+            return ServiceResponse.failed;
           } else {
             // ready for doing the settlement
             // update collection rest amount
@@ -446,7 +487,7 @@ class SettlementCRUDFunctions {
             );
 
             if (collectionUpdateStatus == ServiceResponse.failed) {
-              ref.read(responseDialogProvider.notifier).state =
+              /*  ref.read(responseDialogProvider.notifier).state =
                   ResponseDialogModel(
                 serviceResponse: ServiceResponse.failed,
                 response:
@@ -457,6 +498,8 @@ class SettlementCRUDFunctions {
                 context: context,
                 alertDialog: const ResponseDialog(),
               );
+              */
+              return ServiceResponse.failed;
             } else {
               ServiceResponse settlementStatus;
 
@@ -485,7 +528,7 @@ class SettlementCRUDFunctions {
                   response: '${type.name} \n Opération réussie',
                 );
                 //  showValidatedButton.value = true;
-                //   Navigator.of(context).pop();
+                // Navigator.of(context).pop();
               } else {
                 ref.read(responseDialogProvider.notifier).state =
                     ResponseDialogModel(
@@ -494,18 +537,16 @@ class SettlementCRUDFunctions {
                 );
                 //  showValidatedButton.value = true;
               }
-              FunctionsController.showAlertDialog(
+              /*  FunctionsController.showAlertDialog(
                 context: context,
                 alertDialog: const ResponseDialog(),
-              );
+              );*/
               return settlementStatus;
             }
           }
         }
       }
     }
-
-    return ServiceResponse.failed;
   }
 
   static Future<void> update({
