@@ -6,6 +6,7 @@ import 'package:communitybank/controllers/forms/validators/settlement/settlement
 import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
@@ -84,7 +85,7 @@ class SettlementCRUDFunctions {
                 ResponseDialogModel(
               serviceResponse: ServiceResponse.failed,
               response:
-                  'Opération échouée \n Le collecteur n\'a pas effectué  de collecte ce jour',
+                  'Opération échouée \n Le collecteur n\'a pas effectué de collecte ce jour',
             );
             showValidatedButton.value = true;
             FunctionsController.showAlertDialog(
@@ -212,6 +213,7 @@ class SettlementCRUDFunctions {
           alertDialog: const ResponseDialog(),
         );
       } else {
+        // check types repetition
         // store customer types
         List<Type> selectedTypes = [];
         // check if a type repeated
@@ -223,7 +225,7 @@ class SettlementCRUDFunctions {
         }
 
         // verify if a Type is repeated or is selected more than one time
-        // in typeSelectedTypes
+        // in multipleSettlementsSelectedTypes
         bool isTypeRepeated = false; // used to detect repetion
         // used to count the Type occurrences number
         int typeNumber = 0;
@@ -249,7 +251,7 @@ class SettlementCRUDFunctions {
           showValidatedButton.value = true;
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
             serviceResponse: ServiceResponse.failed,
-            response: 'Répétition de produit dans le type',
+            response: 'Répétition de type au niveau du règlement',
           );
           FunctionsController.showAlertDialog(
             context: context,
@@ -257,100 +259,253 @@ class SettlementCRUDFunctions {
           );
           isTypeRepeated = false;
           typeNumber = 0;
-        }
-
-        final settlementCollectionDate =
-            ref.watch(settlementCollectionDateProvider);
-
-        // if collection date have not been selected
-        if (settlementCollectionDate == null) {
-          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-            serviceResponse: ServiceResponse.failed,
-            response: 'La date de collecte n\'a  pas été selectionnée',
-          );
-          showValidatedButton.value = true;
-          FunctionsController.showAlertDialog(
-            context: context,
-            alertDialog: const ResponseDialog(),
-          );
         } else {
-          showValidatedButton.value = false;
-          final multipleSettlementsSelectedCustomerCards =
-              ref.watch(multipleSettlementsSelectedCustomerCardsProvider);
-          final multipleSettlementsAddedInputs =
-              ref.watch(multipleSettlementsAddedInputsProvider);
-          final settlementCollector =
-              ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
-          // store customer cards
-          List<CustomerCard> selectedCustomerCards = [];
+          final settlementCollectionDate =
+              ref.watch(settlementCollectionDateProvider);
 
-          // store the number of settlements
-          List<int> settlementsNumbers = [];
-
-          for (MapEntry multipleSettlementsSelectedCustomerCardsEntry
-              in multipleSettlementsSelectedCustomerCards.entries) {
-            selectedCustomerCards.add(
-              multipleSettlementsSelectedCustomerCardsEntry.value,
-            );
-          }
-
-          for (MapEntry multipleSettlementsAddedInputsEntry
-              in multipleSettlementsAddedInputs.entries) {
-            // verify if the input is visible
-            if (multipleSettlementsAddedInputsEntry.value) {
-              settlementsNumbers.add(
-                ref.watch(
-                  multipleSettlementsSettlementNumberProvider(
-                    multipleSettlementsAddedInputsEntry.key,
-                  ),
-                ),
-              );
-            }
-          }
-
-          List<ServiceResponse> settlementCreationResponses = [];
-          for (int i = 0; i > selectedTypes.length; ++i) {
-            final response = await singleSettlementCreation(
-              customerCard: selectedCustomerCards[i],
-              type: selectedTypes[i],
-              settlementNumber: settlementsNumbers[i],
-            );
-            settlementCreationResponses.add(response);
-          }
-
-          final isAllCreationSucceed = settlementCreationResponses.every(
-            (response) => response == ServiceResponse.success,
-          );
-
-          if (isAllCreationSucceed) {
+          // if collection date have not been selected
+          if (settlementCollectionDate == null) {
             ref.read(responseDialogProvider.notifier).state =
                 ResponseDialogModel(
               serviceResponse: ServiceResponse.failed,
-              response: 'Opération Terminée \n Totalement réussie',
+              response: 'La date de collecte n\'a  pas été selectionnée',
             );
             showValidatedButton.value = true;
-            Navigator.of(context).pop();
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
           } else {
-            ResponseDialogModel(
-              serviceResponse: ServiceResponse.failed,
-              response: 'Opération Terminée \n Non Totalement réussie',
+            showValidatedButton.value = false;
+            final multipleSettlementsSelectedCustomerCards =
+                ref.watch(multipleSettlementsSelectedCustomerCardsProvider);
+            final multipleSettlementsAddedInputs =
+                ref.watch(multipleSettlementsAddedInputsProvider);
+
+            // store customer cards
+            List<CustomerCard> selectedCustomerCards = [];
+
+            // store the number of settlements
+            List<int> settlementsNumbers = [];
+
+            for (MapEntry multipleSettlementsSelectedCustomerCardsEntry
+                in multipleSettlementsSelectedCustomerCards.entries) {
+              selectedCustomerCards.add(
+                multipleSettlementsSelectedCustomerCardsEntry.value,
+              );
+            }
+
+            for (MapEntry multipleSettlementsAddedInputsEntry
+                in multipleSettlementsAddedInputs.entries) {
+              // verify if the input is visible
+              if (multipleSettlementsAddedInputsEntry.value) {
+                settlementsNumbers.add(
+                  ref.watch(
+                    multipleSettlementsSettlementNumberProvider(
+                      multipleSettlementsAddedInputsEntry.key,
+                    ),
+                  ),
+                );
+              }
+            }
+
+            List<ServiceResponse> settlementCreationResponses = [];
+            for (int i = 0; i > selectedTypes.length; ++i) {
+              final response = await singleSettlementCreation(
+                ref: ref,
+                context: context,
+                showValidatedButton: showValidatedButton,
+                customerCard: selectedCustomerCards[i],
+                type: selectedTypes[i],
+                settlementNumber: settlementsNumbers[i],
+              );
+              settlementCreationResponses.add(response);
+            }
+
+            final isAllSettlementCreationSucceed =
+                settlementCreationResponses.every(
+              (response) => response == ServiceResponse.success,
+            );
+
+            if (isAllSettlementCreationSucceed) {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.success,
+                response: 'Opération Terminée \n Totalement réussie',
+              );
+              showValidatedButton.value = true;
+              Navigator.of(context).pop();
+            } else {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.failed,
+                response: 'Opération Terminée \n Non Totalement réussie',
+              );
+              showValidatedButton.value = true;
+            }
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
             );
           }
-          FunctionsController.showAlertDialog(
-            context: context,
-            alertDialog: const ResponseDialog(),
-          );
         }
       }
     }
   }
 
   static Future<ServiceResponse> singleSettlementCreation({
+    required WidgetRef ref,
+    required BuildContext context,
+    required ValueNotifier showValidatedButton,
     required CustomerCard customerCard,
     required Type type,
     required int settlementNumber,
   }) async {
-    return ServiceResponse.waiting;
+    final settlementCollector =
+        ref.watch(cashOperationsSelectedCustomerAccountCollectorProvider);
+    final settlementCollectionDate =
+        ref.watch(settlementCollectionDateProvider);
+
+    {
+      final customerCardSettlements = await SettlementsController.getAll(
+        customerCardId: customerCard.id,
+      ).first;
+
+      int customerCardSettlementsNumbersTotal = 0;
+
+      for (Settlement settlement in customerCardSettlements) {
+        customerCardSettlementsNumbersTotal += settlement.number;
+      }
+
+      // if the number of settlement done before plus the number of settlement to add is greater than 372 (the total number of settelements of a customer card)
+
+      if (customerCardSettlementsNumbersTotal + settlementNumber > 372) {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: ServiceResponse.failed,
+          response:
+              '${type.name} \n Le nombre de règlement à ajouter est supérieur au restant',
+        );
+        //  showValidatedButton.value = true;
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
+      } else {
+        // check if the collector have made a collection that day
+        final collectorsCollections = await CollectionsController.getAll(
+          collectorId: settlementCollector!.id!,
+          collectedAt: settlementCollectionDate,
+          agentId: 0,
+        ).first;
+
+        if (collectorsCollections.isEmpty) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response:
+                '${type.name} \nOpération échouée \n Le collecteur n\'a pas effectué de collecte ce jour',
+          );
+          //  showValidatedButton.value = true;
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        } else {
+          final collectorCollection = collectorsCollections.first;
+
+          // check if the rest of amount of that collection is enough for
+          // doing the settlement
+          if (collectorCollection.rest -
+                  settlementNumber * customerCard.typeNumber * type.stake <
+              0) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: ServiceResponse.failed,
+              response:
+                  '${type.name} \n Opération échouée \n Le montant restant de la collecte du collecteur est insuffisant',
+            );
+            //  showValidatedButton.value = true;
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
+          } else {
+            // ready for doing the settlement
+            // update collection rest amount
+            ServiceResponse collectionUpdateStatus;
+
+            // substract settlement amount from collectorCollection rest
+            final newCollectorCollection = collectorCollection.copyWith(
+              rest: collectorCollection.rest -
+                  settlementNumber * customerCard.typeNumber * type.stake,
+              updatedAt: DateTime.now(),
+            );
+
+            collectionUpdateStatus = await CollectionsController.update(
+              id: collectorCollection.id!,
+              collection: newCollectorCollection,
+            );
+
+            if (collectionUpdateStatus == ServiceResponse.failed) {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.failed,
+                response:
+                    '${type.name} \n Opération échouée \n Le montant restant de la collecte du collecteur n\'a pas pu été mis à jour',
+              );
+              //  showValidatedButton.value = true;
+              FunctionsController.showAlertDialog(
+                context: context,
+                alertDialog: const ResponseDialog(),
+              );
+            } else {
+              ServiceResponse settlementStatus;
+
+              final prefs = await SharedPreferences.getInstance();
+              final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+              final settlement = Settlement(
+                number: settlementNumber,
+                cardId: customerCard.id!,
+                agentId: agentId ?? 0,
+                collectionId: collectorCollection.id!,
+                collectedAt: settlementCollectionDate!,
+                isValiated: true,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              );
+
+              settlementStatus = await SettlementsController.create(
+                settlement: settlement,
+              );
+
+              if (settlementStatus == ServiceResponse.success) {
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: settlementStatus,
+                  response: '${type.name} \n Opération réussie',
+                );
+                //  showValidatedButton.value = true;
+                //   Navigator.of(context).pop();
+              } else {
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: settlementStatus,
+                  response: '${type.name} \n Opération échouée',
+                );
+                //  showValidatedButton.value = true;
+              }
+              FunctionsController.showAlertDialog(
+                context: context,
+                alertDialog: const ResponseDialog(),
+              );
+              return settlementStatus;
+            }
+          }
+        }
+      }
+    }
+
+    return ServiceResponse.failed;
   }
 
   static Future<void> update({
@@ -429,7 +584,7 @@ class SettlementCRUDFunctions {
                   ResponseDialogModel(
                 serviceResponse: ServiceResponse.failed,
                 response:
-                    'Opération échouée \n Le collecteur n\'a pas effectué  de collecte ce jour',
+                    'Opération échouée \n Le collecteur n\'a pas effectué de collecte ce jour',
               );
               showValidatedButton.value = true;
               FunctionsController.showAlertDialog(

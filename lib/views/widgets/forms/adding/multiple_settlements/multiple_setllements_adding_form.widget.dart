@@ -222,6 +222,7 @@ class _MultipleSettlementsAddingFormState
                       vertical: 20.0,
                     ),
                     child: CBIconButton(
+                      // limit the number of customer card settlement form to exactly the number of customer card
                       onTap: () {
                         if (ref
                                 .watch(multipleSettlementsAddedInputsProvider)
@@ -294,7 +295,7 @@ class _MultipleSettlementsAddingFormState
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              SettlementCRUDFunctions.createMultopleSettlements(
+                              SettlementCRUDFunctions.createMultipleSettlements(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
