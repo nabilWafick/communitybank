@@ -7,8 +7,8 @@ class CustomersTypesPerCollector {
   final int typeId;
   final String typeName;
   final double typeStake;
-  final int collectorId;
-  final String collector;
+  final dynamic collectorId;
+  final dynamic collector;
   final List<dynamic> customersAccountsIds;
   final List<dynamic> customersIds;
   final List<dynamic> customers;
