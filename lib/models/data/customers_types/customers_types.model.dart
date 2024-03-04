@@ -67,38 +67,61 @@ class CustomersTypes {
   }
 
   List<CustomersTypesPerCollector> getPerCollector() {
-    List<CustomersTypesPerCollector> customersTypesPerCollector = [];
-    for (int i = 0; i < collectorsIds.length; ++i) {
+    List<CustomersTypesPerCollector> customersTypesPerCollectorList = [];
+    for (int i = 0; i < collectorsIds.length; i++) {
       dynamic collectorId = collectorsIds[i];
       dynamic collector = collectors[i];
+      List<dynamic> typeCustomersAccountsIds = [];
       List<dynamic> typeCustomersIds = [];
       List<dynamic> typeCustomers = [];
       List<dynamic> typeCustomersCardsLabels = [];
       List<dynamic> typeCustomersCardsTypesNumbers = [];
       List<dynamic> typeCustomersCardsSettlementsTotals = [];
       List<dynamic> typeCustomersCardsSettlementsAmounts = [];
-      // used for controling
+      // used for controling the loop
       int j = 0;
-      while (i != collectorsIds.length) {
-        // check if it the first collector or if the previous collector is the
-        if (i == 0 || collectorsIds[i - 1] == collectorsIds[i]) {
-          typeCustomersIds.add(customersIds[i]);
-          typeCustomers.add(customers[i]);
-          typeCustomersCardsLabels.add(customersCardsLabels[i]);
-          typeCustomersCardsTypesNumbers.add(customersCardsTypesNumbers[i]);
-          typeCustomersCardsSettlementsTotals
-              .add(customersCardsSettlementsTotals[i]);
-          typeCustomersCardsSettlementsAmounts
-              .add(customersCardsSettlementsAmounts[i]);
+      while (j != customersAccountsIds.length && i != collectors.length) {
+        typeCustomersAccountsIds.add(customersAccountsIds[i]);
+        typeCustomersIds.add(customersIds[i]);
+        typeCustomers.add(customers[i]);
+        typeCustomersCardsLabels.add(customersCardsLabels[i]);
+        typeCustomersCardsTypesNumbers.add(customersCardsTypesNumbers[i]);
+        typeCustomersCardsSettlementsTotals
+            .add(customersCardsSettlementsTotals[i]);
+        typeCustomersCardsSettlementsAmounts
+            .add(customersCardsSettlementsAmounts[i]);
 
-          ++i;
+        if (i != collectors.length - 1 &&
+            collectorsIds[i] != collectorsIds[i + 1]) {
+          // for stopping while loop
+          j = collectorsIds.length;
         } else {
+          // increment j for a good looping
+          ++j;
+          // increment i because, at this step, it still in the loop
+          // and will be used to stop the loop
           ++i;
-          break;
         }
       }
+      final customersTypesPerCollector = CustomersTypesPerCollector(
+        typeId: typeId,
+        typeName: typeName,
+        typeStake: typeStake,
+        collectorId: collectorId,
+        collector: collector,
+        customersAccountsIds: typeCustomersAccountsIds,
+        customersIds: typeCustomersIds,
+        customers: typeCustomers,
+        customersCardsLabels: typeCustomersCardsLabels,
+        customersCardsTypesNumbers: typeCustomersCardsTypesNumbers,
+        customersCardsSettlementsTotals: typeCustomersCardsSettlementsTotals,
+        customersCardsSettlementsAmounts: typeCustomersCardsSettlementsAmounts,
+      );
+      customersTypesPerCollectorList.add(
+        customersTypesPerCollector,
+      );
     }
-    return [];
+    return customersTypesPerCollectorList;
   }
 
   Map<String, dynamic> toMap() {
