@@ -85,7 +85,7 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                               ),
                               CBText(
                                 text:
-                                    '${customersTypes.customerCardSettlementsAmounts[index].ceil()}',
+                                    '${customersTypes.customersCardsSettlementsAmounts[index].ceil()}',
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.w500,
                                 textAlign: TextAlign.left,

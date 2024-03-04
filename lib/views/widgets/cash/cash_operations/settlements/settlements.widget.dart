@@ -67,7 +67,7 @@ class _CashOperationsSettlementsState
             .when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 850,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 350,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,

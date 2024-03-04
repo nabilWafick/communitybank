@@ -10,8 +10,8 @@ class CustomersTypesRPC {
   static const String customers = 'clients';
   static const String customersCardsLabels = 'libelles_cartes';
   static const String customersCardsTypesNumbers = 'nombres_types_cartes';
-  static const String customerCardSettlementsTotals =
+  static const String customersCardsSettlementsTotals =
       'totaux_reglements_cartes';
-  static const String customerCardSettlementsAmounts =
+  static const String customersCardsSettlementsAmounts =
       'montants_reglements_cartes';
 }

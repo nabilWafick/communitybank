@@ -309,8 +309,18 @@ class SettlementCRUDFunctions {
               }
             }
 
+            debugPrint('======= CHECKING =======');
+            debugPrint('selected types: $selectedTypes');
+            debugPrint('selected customerCards: $selectedCustomerCards');
+            debugPrint('settlements number: $settlementsNumbers');
+
             List<ServiceResponse> settlementCreationResponses = [];
             for (int i = 0; i < selectedTypes.length; ++i) {
+              debugPrint('setllement ${i + 1}');
+              debugPrint('type:${selectedTypes[i]} ');
+              debugPrint('customer card:${selectedCustomerCards[i]} ');
+              debugPrint('settlement number :${settlementsNumbers[i]} ');
+
               final response = await singleSettlementCreation(
                 ref: ref,
                 context: context,
@@ -321,31 +331,6 @@ class SettlementCRUDFunctions {
               );
               settlementCreationResponses.add(response);
             }
-
-/*
-            List<ServiceResponse> settlementCreationResponses = [];
-
-// create a list to hold all the futures
-            List<Future<ServiceResponse>> futures = [];
-
-            for (int i = 0; i < selectedTypes.length; ++i) {
-              // Add each future to the list without awaiting them
-              futures.add(singleSettlementCreation(
-                ref: ref,
-                context: context,
-                showValidatedButton: showValidatedButton,
-                customerCard: selectedCustomerCards[i],
-                type: selectedTypes[i],
-                settlementNumber: settlementsNumbers[i],
-              ));
-            }
-
-// wait for all futures to complete simultaneously
-            List<ServiceResponse> responses = await Future.wait(futures);
-
-// add all the responses to the settlementCreationResponses list
-            settlementCreationResponses.addAll(responses);
-            */
 
             bool isAllSettlementCreationSucceed = false;
 
@@ -516,6 +501,7 @@ class SettlementCRUDFunctions {
                 createdAt: DateTime.now(),
                 updatedAt: DateTime.now(),
               );
+              debugPrint('added setlement: $settlement');
 
               settlementStatus = await SettlementsController.create(
                 settlement: settlement,

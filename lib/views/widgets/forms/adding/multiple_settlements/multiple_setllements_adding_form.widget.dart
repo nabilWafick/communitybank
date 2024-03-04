@@ -253,11 +253,13 @@ class _MultipleSettlementsAddingFormState
                       for (MapEntry mapEntry
                           in customerCardsSettlemenentCardsMaps.entries) {
                         customerCardsSettlemenentCardsList.add(
-                            CustomerCardSettlementCard(
-                                index: mapEntry.key,
-                                isVisible: mapEntry.value,
-                                customerCardSettlementTypeDropdownProvider:
-                                    'multiple-settements-customer-card-${mapEntry.key}'));
+                          CustomerCardSettlementCard(
+                            index: mapEntry.key,
+                            isVisible: mapEntry.value,
+                            customerCardSettlementTypeDropdownProvider:
+                                'multiple-settements-customer-card-${mapEntry.key}',
+                          ),
+                        );
                       }
 
                       return StaggeredGrid.count(

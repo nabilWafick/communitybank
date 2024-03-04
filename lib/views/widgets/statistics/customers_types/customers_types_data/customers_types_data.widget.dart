@@ -369,5 +369,3 @@ class _CustomersTypesStatisticsDataState
     );
   }
 }
-
-class TypeCustomer {}

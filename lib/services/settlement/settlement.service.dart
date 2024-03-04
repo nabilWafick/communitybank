@@ -46,6 +46,30 @@ class SettlementsService {
     return null;
   }
 
+  static Future<List<Map<String, dynamic>>> getByCustomerCardId({
+    required int customerCardId,
+  }) async {
+    List<Map<String, dynamic>>? response;
+    final supabase = Supabase.instance.client;
+
+    try {
+      // get a specific line
+      response = await supabase
+          .from(SettlementTable.tableName)
+          .select<List<Map<String, dynamic>>>()
+          .eq(
+            SettlementTable.cardId,
+            customerCardId,
+          );
+      // return the result data
+      return response;
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+
+    return [];
+  }
+
   static Stream<List<Map<String, dynamic>>> getAll(
       {required int? customerCardId}) async* {
     final supabase = Supabase.instance.client;

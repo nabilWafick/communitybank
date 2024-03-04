@@ -170,18 +170,29 @@ class CashOperationsSearchOptions extends ConsumerWidget {
                   icon: Icons.add_circle,
                   text: 'Régler plusieurs cartes',
                   onTap: () {
+                    // reset collection date provider
                     ref.read(settlementCollectionDateProvider.notifier).state =
                         null;
+                    // reset added inputs provider
                     ref
                         .read(
                           multipleSettlementsAddedInputsProvider.notifier,
                         )
                         .state = {};
+                    // reset selected types provider
                     ref
                         .read(
                           multipleSettlementsSelectedTypesProvider.notifier,
                         )
                         .state = {};
+                    // reset selected customer cards provider
+                    ref
+                        .read(
+                          multipleSettlementsSelectedCustomerCardsProvider
+                              .notifier,
+                        )
+                        .state = {};
+
                     FunctionsController.showAlertDialog(
                       context: context,
                       alertDialog: const MultipleSettlementsAddingForm(),
