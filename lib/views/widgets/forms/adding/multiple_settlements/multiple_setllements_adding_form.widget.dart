@@ -294,17 +294,12 @@ class _MultipleSettlementsAddingFormState
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              final isFormValid =
-                                  formKey.currentState!.validate();
-                              if (isFormValid) {}
-
-                              /*
-                              SettlementCRUDFunctions.create(
+                              SettlementCRUDFunctions.createMultopleSettlements(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
                                 showValidatedButton: showValidatedButton,
-                              );*/
+                              );
                             },
                           ),
                         )
