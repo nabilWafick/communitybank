@@ -178,6 +178,7 @@ class _ProductsForecastsStatisticsSortOptionsState
                 width: 200,
                 height: 70.0,
                 child: TextFormField(
+                  initialValue: '186',
                   cursorHeight: 20.0,
                   style: const TextStyle(
                     fontSize: 12.0,

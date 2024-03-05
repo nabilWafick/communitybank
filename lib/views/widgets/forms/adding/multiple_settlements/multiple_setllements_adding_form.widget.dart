@@ -60,259 +60,248 @@ class _MultipleSettlementsAddingFormState
         vertical: 20.0,
         horizontal: 10.0,
       ),
-      content: Container(
-        // color: Colors.blueGrey,
-        padding: const EdgeInsets.all(20.0),
-        width: formCardWidth,
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            // crossAxisAlignment: CrossAxisAlignment.center,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const CBText(
-                        text: 'Règlements Multiples',
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.close_rounded,
-                          color: CBColors.primaryColor,
-                          size: 30.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 25.0,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: 450,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CBIconButton(
-                                icon: Icons.date_range,
-                                text: 'Date de Collecte',
-                                onTap: () {
-                                  FunctionsController.showDateTime(
-                                    context: context,
-                                    ref: ref,
-                                    stateProvider:
-                                        settlementCollectionDateProvider,
-                                  );
-                                },
-                              ),
-                              const SizedBox(
-                                width: 10.0,
-                              ),
-                              Flexible(
-                                child: CBText(
-                                  text: settlementCollectionDate != null
-                                      ? format.format(settlementCollectionDate)
-                                      : '',
-                                  fontSize: 12.5,
-                                  fontWeight: FontWeight.w500,
-                                  textOverflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              //   const SizedBox(),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                          ),
-                          width: 450.0,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const CBText(
-                                text: 'Montant Collecte Restant: ',
-                                fontSize: 12.0,
-                              ),
-                              settlementCollectionDate != null
-                                  ? Consumer(
-                                      builder: (context, ref, child) {
-                                        final settlementCollector = ref.watch(
-                                            cashOperationsSelectedCustomerAccountCollectorProvider);
-
-                                        final collectorsCollections = ref.watch(
-                                            collectionsListStreamProvider);
-
-                                        return collectorsCollections.when(
-                                          data: (data) {
-                                            // store the collector collection
-                                            // that have the same date whith the
-                                            // selected settlement date
-                                            final collectorCollection =
-                                                data.firstWhere(
-                                              (collection) =>
-                                                  collection.collectorId ==
-                                                      settlementCollector!
-                                                          .id! &&
-                                                  collection.collectedAt.year ==
-                                                      settlementCollectionDate
-                                                          .year &&
-                                                  collection
-                                                          .collectedAt.month ==
-                                                      settlementCollectionDate
-                                                          .month &&
-                                                  collection.collectedAt.day ==
-                                                      settlementCollectionDate
-                                                          .day,
-                                              orElse: () => Collection(
-                                                collectorId:
-                                                    settlementCollector!.id!,
-                                                amount: 0,
-                                                rest: 0,
-                                                agentId: 0,
-                                                collectedAt:
-                                                    settlementCollectionDate,
-                                                createdAt: DateTime.now(),
-                                                updatedAt: DateTime.now(),
-                                              ),
-                                            );
-                                            return CBText(
-                                              text:
-                                                  '${collectorCollection.rest.ceil().toString()}f',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w500,
-                                            );
-                                          },
-                                          error: (error, stackTrace) =>
-                                              const CBText(text: ''),
-                                          loading: () => const CBText(text: ''),
-                                        );
-                                      },
-                                    )
-                                  : const CBText(text: ''),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 20.0,
-                    ),
-                    child: CBIconButton(
-                      // limit the number of customer card settlement form to exactly the number of customer card
-                      onTap: () {
-                        if (ref
-                                .watch(multipleSettlementsAddedInputsProvider)
-                                .length <
-                            cashOperationsSelectedCustomerAccount
-                                .customerCardsIds.length) {
-                          ref
-                              .read(multipleSettlementsAddedInputsProvider
-                                  .notifier)
-                              .update((state) {
-                            return {
-                              ...state,
-                              DateTime.now().millisecondsSinceEpoch: true,
-                            };
-                          });
-                        }
-                      },
-                      icon: Icons.add_circle,
-                      text: 'Ajouter une carte',
-                    ),
-                  ),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final customerCardsSettlemenentCardsMaps = ref.watch(
-                        multipleSettlementsAddedInputsProvider,
-                      );
-                      List<Widget> customerCardsSettlemenentCardsList = [];
-                      for (MapEntry mapEntry
-                          in customerCardsSettlemenentCardsMaps.entries) {
-                        customerCardsSettlemenentCardsList.add(
-                          CustomerCardSettlementCard(
-                            index: mapEntry.key,
-                            isVisible: mapEntry.value,
-                            customerCardSettlementTypeDropdownProvider:
-                                'multiple-settements-customer-card-${mapEntry.key}',
-                          ),
-                        );
-                      }
-
-                      return StaggeredGrid.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 5.0,
-                        crossAxisSpacing: 5.0,
-                        children: customerCardsSettlemenentCardsList,
-                      );
-                    },
-                  ),
-                ],
+              const CBText(
+                text: 'Règlements Multiples',
+                fontSize: 20.0,
+                fontWeight: FontWeight.w600,
               ),
-              const SizedBox(
-                height: 35.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: 170.0,
-                    child: CBElevatedButton(
-                      text: 'Fermer',
-                      backgroundColor: CBColors.sidebarTextColor,
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20.0,
-                  ),
-                  showValidatedButton.value
-                      ? SizedBox(
-                          width: 170.0,
-                          child: CBElevatedButton(
-                            text: 'Valider',
-                            onPressed: () async {
-                              SettlementCRUDFunctions.createMultipleSettlements(
-                                context: context,
-                                formKey: formKey,
-                                ref: ref,
-                                showValidatedButton: showValidatedButton,
-                              );
-                            },
-                          ),
-                        )
-                      : const SizedBox(),
-                ],
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: CBColors.primaryColor,
+                  size: 30.0,
+                ),
               ),
             ],
           ),
+          Container(
+            margin: const EdgeInsets.only(
+              top: 30,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                  ),
+                  width: 500,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CBIconButton(
+                        icon: Icons.date_range,
+                        text: 'Date de Collecte',
+                        onTap: () {
+                          FunctionsController.showDateTime(
+                            context: context,
+                            ref: ref,
+                            stateProvider: settlementCollectionDateProvider,
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Flexible(
+                        child: CBText(
+                          text: settlementCollectionDate != null
+                              ? format.format(settlementCollectionDate)
+                              : '',
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w500,
+                          textOverflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      //   const SizedBox(),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                  ),
+                  width: 500.0,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const CBText(
+                        text: 'Montant Collecte Restant: ',
+                        fontSize: 12.0,
+                      ),
+                      settlementCollectionDate != null
+                          ? Consumer(
+                              builder: (context, ref, child) {
+                                final settlementCollector = ref.watch(
+                                    cashOperationsSelectedCustomerAccountCollectorProvider);
+
+                                final collectorsCollections =
+                                    ref.watch(collectionsListStreamProvider);
+
+                                return collectorsCollections.when(
+                                  data: (data) {
+                                    // store the collector collection
+                                    // that have the same date whith the
+                                    // selected settlement date
+                                    final collectorCollection = data.firstWhere(
+                                      (collection) =>
+                                          collection.collectorId ==
+                                              settlementCollector!.id! &&
+                                          collection.collectedAt.year ==
+                                              settlementCollectionDate.year &&
+                                          collection.collectedAt.month ==
+                                              settlementCollectionDate.month &&
+                                          collection.collectedAt.day ==
+                                              settlementCollectionDate.day,
+                                      orElse: () => Collection(
+                                        collectorId: settlementCollector!.id!,
+                                        amount: 0,
+                                        rest: 0,
+                                        agentId: 0,
+                                        collectedAt: settlementCollectionDate,
+                                        createdAt: DateTime.now(),
+                                        updatedAt: DateTime.now(),
+                                      ),
+                                    );
+                                    return CBText(
+                                      text:
+                                          '${collectorCollection.rest.ceil().toString()}f',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    );
+                                  },
+                                  error: (error, stackTrace) =>
+                                      const CBText(text: ''),
+                                  loading: () => const CBText(text: ''),
+                                );
+                              },
+                            )
+                          : const CBText(text: ''),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          //  color: Colors.blueGrey,
+          padding: const EdgeInsets.all(20.0),
+          width: formCardWidth,
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 20.0,
+                  ),
+                  child: CBIconButton(
+                    // limit the number of customer card settlement form to exactly the number of customer card
+                    onTap: () {
+                      if (ref
+                              .watch(multipleSettlementsAddedInputsProvider)
+                              .length <
+                          cashOperationsSelectedCustomerAccount
+                              .customerCardsIds.length) {
+                        ref
+                            .read(
+                                multipleSettlementsAddedInputsProvider.notifier)
+                            .update((state) {
+                          return {
+                            ...state,
+                            DateTime.now().millisecondsSinceEpoch: true,
+                          };
+                        });
+                      }
+                    },
+                    icon: Icons.add_circle,
+                    text: 'Ajouter une carte',
+                  ),
+                ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final customerCardsSettlemenentCardsMaps = ref.watch(
+                      multipleSettlementsAddedInputsProvider,
+                    );
+                    List<Widget> customerCardsSettlemenentCardsList = [];
+                    for (MapEntry mapEntry
+                        in customerCardsSettlemenentCardsMaps.entries) {
+                      customerCardsSettlemenentCardsList.add(
+                        CustomerCardSettlementCard(
+                          index: mapEntry.key,
+                          isVisible: mapEntry.value,
+                          customerCardSettlementTypeDropdownProvider:
+                              'multiple-settements-customer-card-${mapEntry.key}',
+                        ),
+                      );
+                    }
+
+                    return StaggeredGrid.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 5.0,
+                      crossAxisSpacing: 5.0,
+                      children: customerCardsSettlemenentCardsList,
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
+      actions: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              width: 170.0,
+              child: CBElevatedButton(
+                text: 'Fermer',
+                backgroundColor: CBColors.sidebarTextColor,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            const SizedBox(
+              width: 20.0,
+            ),
+            showValidatedButton.value
+                ? SizedBox(
+                    width: 170.0,
+                    child: CBElevatedButton(
+                      text: 'Valider',
+                      onPressed: () async {
+                        SettlementCRUDFunctions.createMultipleSettlements(
+                          context: context,
+                          formKey: formKey,
+                          ref: ref,
+                          showValidatedButton: showValidatedButton,
+                        );
+                      },
+                    ),
+                  )
+                : const SizedBox(),
+          ],
+        ),
+      ],
     );
   }
 }

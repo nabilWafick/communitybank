@@ -77,11 +77,14 @@ class ProductForecastDetailsShower extends ConsumerWidget {
                                     const SizedBox(
                                       height: 20.0,
                                     ),
-                                    SizedBox(
-                                      height: 300.0,
+                                    ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        minHeight: 80,
+                                        maxHeight: 300.0,
+                                      ),
                                       child: HorizontalDataTable(
                                         leftHandSideColumnWidth: 100,
-                                        rightHandSideColumnWidth: 1400,
+                                        rightHandSideColumnWidth: 1700,
                                         itemCount: productForecastPerCollector
                                             .customersAccountsIds.length,
                                         isFixedHeader: true,
@@ -106,7 +109,7 @@ class ProductForecastDetailsShower extends ConsumerWidget {
                                             height: 50.0,
                                             alignment: Alignment.centerLeft,
                                             child: const CBText(
-                                              text: 'Clients',
+                                              text: 'Client',
                                               textAlign: TextAlign.start,
                                               fontSize: 12.0,
                                               fontWeight: FontWeight.w500,
@@ -129,6 +132,17 @@ class ProductForecastDetailsShower extends ConsumerWidget {
                                             alignment: Alignment.center,
                                             child: const CBText(
                                               text: 'Type',
+                                              textAlign: TextAlign.center,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 300.0,
+                                            height: 50.0,
+                                            alignment: Alignment.centerLeft,
+                                            child: const CBText(
+                                              text: 'Carte',
                                               textAlign: TextAlign.center,
                                               fontSize: 12.0,
                                               fontWeight: FontWeight.w500,
@@ -222,6 +236,21 @@ class ProductForecastDetailsShower extends ConsumerWidget {
                                                   text:
                                                       productForecastPerCollector
                                                           .typesNames[index]
+                                                          .toString(),
+                                                  textAlign: TextAlign.center,
+                                                  fontSize: 12.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 300.0,
+                                                height: 30.0,
+                                                alignment: Alignment.centerLeft,
+                                                child: CBText(
+                                                  text:
+                                                      productForecastPerCollector
+                                                          .customersCardsLabels[
+                                                              index]
                                                           .toString(),
                                                   textAlign: TextAlign.center,
                                                   fontSize: 12.0,

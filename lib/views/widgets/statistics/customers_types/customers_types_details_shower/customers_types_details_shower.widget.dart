@@ -81,7 +81,7 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                                       height: 300.0,
                                       child: HorizontalDataTable(
                                         leftHandSideColumnWidth: 100,
-                                        rightHandSideColumnWidth: 1000,
+                                        rightHandSideColumnWidth: 1300,
                                         itemCount: customersTypesPerCollector
                                             .customersAccountsIds.length,
                                         isFixedHeader: true,
@@ -106,8 +106,19 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                                             height: 50.0,
                                             alignment: Alignment.centerLeft,
                                             child: const CBText(
-                                              text: 'Clients',
+                                              text: 'Client',
                                               textAlign: TextAlign.start,
+                                              fontSize: 12.0,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 300.0,
+                                            height: 50.0,
+                                            alignment: Alignment.centerLeft,
+                                            child: const CBText(
+                                              text: 'Carte',
+                                              textAlign: TextAlign.center,
                                               fontSize: 12.0,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -174,6 +185,21 @@ class CustomersTypesDetailsShower extends ConsumerWidget {
                                                     maxLength: 30,
                                                   ),
                                                   textAlign: TextAlign.start,
+                                                  fontSize: 12.0,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              Container(
+                                                width: 300.0,
+                                                height: 30.0,
+                                                alignment: Alignment.centerLeft,
+                                                child: CBText(
+                                                  text:
+                                                      customersTypesPerCollector
+                                                          .customersCardsLabels[
+                                                              index]
+                                                          .toString(),
+                                                  textAlign: TextAlign.center,
                                                   fontSize: 12.0,
                                                   fontWeight: FontWeight.w500,
                                                 ),

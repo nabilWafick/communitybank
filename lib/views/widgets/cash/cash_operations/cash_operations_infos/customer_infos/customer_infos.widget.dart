@@ -74,10 +74,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
               // this check is doing because of refreshing effect
 
-              if (ref.watch(
-                      cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                          'cash-operations-search-options-customer-account')) !=
-                  null) {
+              if (next != null) {
                 ref
                     .read(
                       cashOperationsSelectedCustomerAccountOwnerProvider
@@ -85,11 +82,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                     )
                     .state = data.firstWhere((customer) =>
                         customer.id! ==
-                        // watch the cash operations customer account dropdown
-                        ref
-                            .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                                'cash-operations-search-options-customer-account'))!
-                            .customerId
+                        // watch new the selected customer account
+                        next.customerId
                     //   cashOperationsSelectedCustomerAccount!.customerId,
                     );
               }
@@ -102,10 +96,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
           collectorsListStream.when(
             data: (data) {
               // set the current ower account collector
-              if (ref.watch(
-                      cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                          'cash-operations-search-options-customer-account')) !=
-                  null) {
+              if (next != null) {
                 ref
                     .read(
                       cashOperationsSelectedCustomerAccountCollectorProvider
@@ -113,12 +104,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                     )
                     .state = data.firstWhere((collector) =>
                         collector.id! ==
-                        // watch the cash operations customer account dropdown
-
-                        ref
-                            .watch(cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                                'cash-operations-search-options-customer-account'))!
-                            .collectorId
+                        // watch new the selected customer account
+                        next.collectorId
 
                     //  cashOperationsSelectedCustomerAccount!.collectorId,
                     );
@@ -131,10 +118,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
           //  update customer cards
           customersCardsListStream.when(
             data: (data) {
-              if (ref.watch(
-                      cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                          'cash-operations-search-options-customer-account')) !=
-                  null) {
+              if (next != null) {
                 ref
                     .read(
                       cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider
@@ -143,13 +127,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                     .state = data
                     .where(
                       (customerCard) =>
-                          ref
-                              .watch(
-                                cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                                    'cash-operations-search-options-customer-account'),
-                              )!
-                              .customerCardsIds
-                              .contains(customerCard.id!) &&
+                          next.customerCardsIds.contains(customerCard.id!) &&
                           customerCard.satisfiedAt == null &&
                           customerCard.repaidAt == null,
                     )
@@ -169,6 +147,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                     .state = ref.watch(
                   cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
                 )[0];
+                // update cash operations customer card dropdown selected item
+
                 ref
                     .read(
                         cashOperationsSearchOptionsCustomerCardDropdownProvider(
@@ -178,8 +158,6 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                   cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
                 )[0];
               }
-
-              // update cash operations customer card dropdown selected item
             },
             error: (error, stackTrace) {},
             loading: () {},
@@ -198,72 +176,6 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
       //  debugPrint('selected customer card listener');
 
       Future.delayed(const Duration(milliseconds: 100), () {
-        final cashOperationsSelectedCustomerAccountOwnerSelectedCard =
-            ref.watch(
-          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
-        );
-
-/*
-
-//?========
-        //  update customer cards
-        customersCardsListStream.when(
-          data: (data) {
-            if (ref.watch(
-                    cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                        'cash-operations-search-options-customer-account')) !=
-                null) {
-              ref
-                  .read(
-                    cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider
-                        .notifier,
-                  )
-                  .state = data
-                  .where(
-                    (customerCard) =>
-                        ref
-                            .watch(
-                              cashOperationsSearchOptionsCustomerAccountDropdownProvider(
-                                  'cash-operations-search-options-customer-account'),
-                            )!
-                            .customerCardsIds
-                            .contains(customerCard.id!) &&
-                        customerCard.satisfiedAt == null &&
-                        customerCard.repaidAt == null,
-                  )
-                  .toList();
-            }
-
-            if (ref
-                .watch(
-                  cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
-                )
-                .isNotEmpty) {
-              ref
-                  .read(
-                    cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider
-                        .notifier,
-                  )
-                  .state = ref.watch(
-                cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
-              )[0];
-              ref
-                  .read(cashOperationsSearchOptionsCustomerCardDropdownProvider(
-                    'cash-operations-search-options-customer-card',
-                  ).notifier)
-                  .state = ref.watch(
-                cashOperationsSelectedCustomerAccountOwnerCustomerCardsProvider,
-              )[0];
-            }
-
-            // update cash operations customer card dropdown selected item
-          },
-          error: (error, stackTrace) {},
-          loading: () {},
-        );
-
-//?========
-*/
 // if there is no account selected and selection begin by card or if the customer card selected is not for the owner of the previous customer card
         if (cashOperationsSelectedCustomerAccount == null ||
             cashOperationsSelectedCustomerAccountOwnerSelectedCard != null &&
@@ -272,9 +184,8 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                         .customerAccountId) {
           customersAccountsListStream.when(
             data: (data) {
-              // update the selected customer account dropdown
-              if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                  null) {
+              // update new the selected customer account dropdown
+              if (next != null) {
                 ref
                     .read(
                       cashOperationsSearchOptionsCustomerAccountDropdownProvider(
@@ -283,9 +194,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                     )
                     .state = data.firstWhere(
                   (customerAccount) =>
-                      customerAccount.id ==
-                      cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                          .customerAccountId,
+                      customerAccount.id == next.customerAccountId,
                   orElse: () => cashOperationsSelectedCustomerAccount!,
                 );
               }
@@ -295,9 +204,7 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
                   .read(cashOperationsSelectedCustomerAccountProvider.notifier)
                   .state = data.firstWhere(
                 (customerAccount) =>
-                    customerAccount.id ==
-                    cashOperationsSelectedCustomerAccountOwnerSelectedCard!
-                        .customerAccountId,
+                    customerAccount.id == next!.customerAccountId,
                 orElse: () => cashOperationsSelectedCustomerAccount!,
               );
             },
@@ -309,16 +216,13 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
         // update cash operations customer card dropdown selected item
         customersCardsListStream.when(
           data: (data) {
-            if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                null) {
+            if (next != null) {
               ref
                   .read(cashOperationsSearchOptionsCustomerCardDropdownProvider(
                     'cash-operations-search-options-customer-card',
                   ).notifier)
                   .state = data.firstWhere(
-                (customerCard) =>
-                    cashOperationsSelectedCustomerAccountOwnerSelectedCard.id ==
-                    customerCard.id,
+                (customerCard) => next.id == customerCard.id,
               );
             }
           },
@@ -326,24 +230,17 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
           loading: () {},
         );
 
-        // update  selected custumer card type
+        // update  selected customer card type
         typesListStream.when(
           data: (data) {
-            if (cashOperationsSelectedCustomerAccountOwnerSelectedCard !=
-                null) {
+            if (next != null) {
               ref
                   .read(
                     cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider
                         .notifier,
                   )
                   .state = data.firstWhere(
-                (type) =>
-                    type.id ==
-                    ref
-                        .watch(
-                          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
-                        )!
-                        .typeId,
+                (type) => type.id == next.typeId,
               );
             }
           },

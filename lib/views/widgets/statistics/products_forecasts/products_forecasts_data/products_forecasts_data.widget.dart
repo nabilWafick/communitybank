@@ -70,7 +70,7 @@ class _ProductsForecastsStatisticsDataState
         child: productsForecastsStatisticsDataStream.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 300,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 500,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -109,7 +109,7 @@ class _ProductsForecastsStatisticsDataState
                 height: 50.0,
                 alignment: Alignment.center,
                 child: const CBText(
-                  text: 'Nombre',
+                  text: 'Nombre Produits',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -121,6 +121,17 @@ class _ProductsForecastsStatisticsDataState
                 alignment: Alignment.center,
                 child: const CBText(
                   text: 'Montant',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Nombre Comptes',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -189,10 +200,7 @@ class _ProductsForecastsStatisticsDataState
                     width: 200.0,
                     height: 30.0,
                     child: CBText(
-                      text: productForecast.customersIds.isEmpty ||
-                              productForecast.customersIds.first == null
-                          ? '0'
-                          : productForecast.customersIds.length.toString(),
+                      text: productForecast.forecastNumber.toString(),
                       fontSize: 12.0,
                     ),
                   ),
@@ -205,6 +213,19 @@ class _ProductsForecastsStatisticsDataState
                         text: productForecast.forecastAmount.ceil().toString(),
                         maxLength: 40,
                       ),
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 200.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: productForecast.customersAccountsIds.isEmpty ||
+                              productForecast.customersAccountsIds.first == null
+                          ? '0'
+                          : productForecast.customersAccountsIds.length
+                              .toString(),
                       fontSize: 12.0,
                     ),
                   ),

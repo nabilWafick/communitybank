@@ -4,7 +4,9 @@ import 'package:communitybank/controllers/forms/validators/customer_card/custome
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
@@ -197,6 +199,13 @@ class _CashOperationsCustomerCardInfosState
                                     customerCard.id ==
                                     cashOperationsSelectedCustomerAccountOwnerSelectedCard
                                         .id,
+                                orElse: () => CustomerCard(
+                                  label: 'Carte *',
+                                  typeId: 1,
+                                  typeNumber: 1,
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                ),
                               );
                               return CustomerCardData(
                                 label: 'Carte',
@@ -231,16 +240,29 @@ class _CashOperationsCustomerCardInfosState
                                       cashOperationsSelectedCustomerAccountOwnerSelectedCard
                                           .typeId;
                                 },
+                                orElse: () => Type(
+                                  name: 'Type *',
+                                  stake: 1,
+                                  productsIds: [],
+                                  productsNumber: [],
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                ),
                               );
                               return CustomerCardData(
-                                  label: 'Mise',
-                                  value: '${type.stake.ceil()}f');
+                                label: 'Mise',
+                                value: '${type.stake.ceil()}f',
+                              );
                             },
                             error: (error, stackTrace) =>
                                 const CustomerCardData(
-                                    label: 'Mise', value: ''),
+                              label: 'Mise',
+                              value: '',
+                            ),
                             loading: () => const CustomerCardData(
-                                label: 'Mise', value: ''),
+                              label: 'Mise',
+                              value: '',
+                            ),
                           )
                         : const CustomerCardData(
                             label: 'Mise',
@@ -273,15 +295,29 @@ class _CashOperationsCustomerCardInfosState
                                       cashOperationsSelectedCustomerAccountOwnerSelectedCard
                                           .typeId;
                                 },
+                                orElse: () => Type(
+                                  name: 'Type *',
+                                  stake: 1,
+                                  productsIds: [],
+                                  productsNumber: [],
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                ),
                               );
                               return CustomerCardData(
-                                  label: 'Type', value: type.name);
+                                label: 'Type',
+                                value: type.name,
+                              );
                             },
                             error: (error, stackTrace) =>
                                 const CustomerCardData(
-                                    label: 'Type', value: ''),
+                              label: 'Type',
+                              value: '',
+                            ),
                             loading: () => const CustomerCardData(
-                                label: 'Type', value: ''),
+                              label: 'Type',
+                              value: '',
+                            ),
                           )
                         : const CustomerCardData(
                             label: 'Type',
@@ -381,6 +417,13 @@ class _CashOperationsCustomerCardInfosState
                                     customerCard.id ==
                                     cashOperationsSelectedCustomerAccountOwnerSelectedCard
                                         .id,
+                                orElse: () => CustomerCard(
+                                  label: 'Carte *',
+                                  typeId: 1,
+                                  typeNumber: 1,
+                                  createdAt: DateTime.now(),
+                                  updatedAt: DateTime.now(),
+                                ),
                               );
                               return CustomerCardData(
                                 label: 'Nombre de Types',
@@ -497,6 +540,13 @@ class _CashOperationsCustomerCardInfosState
                                   customerCardData.id ==
                                   cashOperationsSelectedCustomerAccountOwnerSelectedCard
                                       .id,
+                              orElse: () => CustomerCard(
+                                label: 'Carte *',
+                                typeId: 1,
+                                typeNumber: 1,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              ),
                             );
 
                             return Column(
