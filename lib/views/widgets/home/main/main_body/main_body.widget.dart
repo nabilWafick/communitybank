@@ -17,7 +17,7 @@ import 'package:communitybank/views/pages/home/definitions/settlements/settlemen
 import 'package:communitybank/views/pages/home/definitions/types/types.page.dart';
 import 'package:communitybank/views/pages/home/statistics/customers_products/customers_products.page.dart';
 import 'package:communitybank/views/pages/home/statistics/customers_types/customers_types.pages.dart';
-import 'package:communitybank/views/pages/home/statistics/forecasts/forecasts.page.dart';
+import 'package:communitybank/views/pages/home/statistics/products_forecasts/products_forecasts.page.dart';
 import 'package:communitybank/views/widgets/home/home.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,7 +49,7 @@ class _MainBodyState extends ConsumerState<MainBody> {
     CollectorPeriodicActivityPage(),
     CustomersTypesPage(),
     CustomersProductsPage(),
-    ForecastsPage()
+    ProductsForecastsPage()
     //  EntriesPage(),
     //  FilesPage(),
     //  LogoutPage(),

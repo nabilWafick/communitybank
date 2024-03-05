@@ -33,11 +33,8 @@ final collectorPeriodicActivityDataProvider =
   yield* CollectorPeriodicActivityController.getCollectorPeriodicActivity(
     collectionBeginDate: collectionBeginDate,
     collectionEndDate: collectionEndDate,
-    collectorId: collector.id == 0 ? null : collector.id!,
-    customerAccountId:
-        customerAccount.id == 0 /* || customerAccount.id == null*/
-            ? null
-            : customerAccount.id,
+    collectorId: collector.id == 0 ? 0 : collector.id!,
+    customerAccountId: customerAccount.id == 0 ? null : customerAccount.id,
     settlementsTotal: settelementsTotal,
   ).asStream();
 });

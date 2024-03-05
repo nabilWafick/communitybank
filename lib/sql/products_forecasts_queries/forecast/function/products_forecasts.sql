@@ -1,3 +1,5 @@
+-- PRODUCT FORECAST
+
 CREATE OR REPLACE FUNCTION get_products_forecasts(
     product_id bigint,
     settlements_total int,
@@ -7,8 +9,8 @@ CREATE OR REPLACE FUNCTION get_products_forecasts(
 RETURNS TABLE (
     id_produit bigint,
     nom_produit text,
-    prix_achat_produit numeric,
-    prevision_nombre int,
+    prix_achat_produit numeric, 
+    prevision_nombre numeric,
     previson_montant numeric,
     nombres_produits_merites int[],
     nombres_produits_types int[],
@@ -194,12 +196,29 @@ BEGIN
             subquery4.prix_achat_produit
     ) AS subquery3 ON produits.id = subquery3.id_produit
     WHERE
-        produits.id = product_id
-    ORDER BY
+       product_id IS NULL OR produits.id = product_id    ORDER BY
         produits.nom ASC;
 END;
 $$
 LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 CREATE OR REPLACE FUNCTION get_products_forecasts(
     product_id bigint,
     settlements_total numeric,
@@ -396,8 +415,7 @@ BEGIN
             subquery4.prix_achat_produit
     ) AS subquery3 ON produits.id = subquery3.id_produit
     WHERE
-        produits.id = product_id
-    ORDER BY
+       product_id IS NULL OR produits.id = product_id    ORDER BY
         produits.nom ASC;
 END;
 $$
