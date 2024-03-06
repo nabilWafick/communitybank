@@ -115,4 +115,19 @@ class FunctionsController {
       return "${text.substring(0, maxLength)}...";
     }
   }
+
+  static String formatLargeNumber({
+    required double number,
+    required bool ceil,
+  }) {
+    if (number ~/ 1000000000 >= 1) {
+      return '${number ~/ 1000000000}Md';
+    } else if (number ~/ 1000000 >= 1) {
+      return '${number ~/ 1000000}M';
+    } else if (number ~/ 1000 >= 1) {
+      return '${number ~/ 1000}K';
+    } else {
+      return ceil ? number.ceil().toString() : number.toString();
+    }
+  }
 }
