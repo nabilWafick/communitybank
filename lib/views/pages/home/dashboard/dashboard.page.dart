@@ -1,5 +1,8 @@
 import 'package:communitybank/utils/utils.dart';
-import 'package:communitybank/views/widgets/dashboard/charts/line_chart2/line_chart2.widget.dart';
+import 'package:communitybank/views/widgets/dashboard/charts/default_column_chart/default_column_chart.widget.dart';
+import 'package:communitybank/views/widgets/dashboard/charts/default_doughnut_chart/default_doughnut_chart.widget.dart';
+import 'package:communitybank/views/widgets/dashboard/charts/default_line_chart/default_line_chart.widget.dart';
+import 'package:communitybank/views/widgets/dashboard/charts/pie_smart_data_label/pie_smart_data_label.widget.dart';
 import 'package:communitybank/views/widgets/dashboard/dashboard_card/dashboard_card.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
@@ -134,14 +137,44 @@ class DashboardPage extends ConsumerWidget {
                   ),
                 ),
                 Container(
-                  color: CBColors.primaryColor.withOpacity(.7),
+                  //  color: CBColors.primaryColor.withOpacity(.7),
                   margin: const EdgeInsets.symmetric(
                     horizontal: 20.0,
+                    vertical: 30.0,
                   ),
                   height: 500.0,
-
                   //  width: MediaQuery.of(context).size.width * .8,
-                  child: const DashboardLineChart2(),
+                  child: const DashboardDefaultColumnChart(),
+                ),
+                Container(
+                  //  color: CBColors.primaryColor.withOpacity(.7),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 30.0,
+                  ),
+                  height: 500.0,
+                  //  width: MediaQuery.of(context).size.width * .8,
+                  child: const DashboardDefaultLineChart(),
+                ),
+                Container(
+                  //  color: CBColors.primaryColor.withOpacity(.7),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 30.0,
+                  ),
+                  height: 1000.0,
+                  //  width: MediaQuery.of(context).size.width * .8,
+                  child: const DashboardPieSmartDataLabels(),
+                ),
+                Container(
+                  //  color: CBColors.primaryColor.withOpacity(.7),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 30.0,
+                  ),
+                  height: 700.0,
+                  //  width: MediaQuery.of(context).size.width * .8,
+                  child: const DashboardDefaultDoughnutChart(),
                 ),
               ],
             ),
