@@ -1,3 +1,4 @@
+import 'package:communitybank/functions/auth/auth.function.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
@@ -29,6 +30,7 @@ Future<void> main() async {
       logLevel: RealtimeLogLevel.info,
     ),
   );
+  // await AuthFunctions.logout();
 /*
   // logout after user stopping app
   WidgetsBinding.instance.addPostFrameCallback(

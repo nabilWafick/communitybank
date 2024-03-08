@@ -224,8 +224,7 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                     width: 500.0,
                     height: 30.0,
                     child: CBText(
-                      text:
-                          '${format.format(collection.collectedAt)}  ${collection.collectedAt.hour}:${collection.collectedAt.minute}',
+                      text: format.format(collection.collectedAt),
                       fontSize: 12.0,
                     ),
                   ),
