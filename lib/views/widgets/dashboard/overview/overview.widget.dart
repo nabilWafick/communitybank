@@ -1,68 +1,9 @@
-import 'package:communitybank/controllers/agents_total/agents_total.controller.dart';
-import 'package:communitybank/controllers/collections_totals/collections_totals.controller.dart';
-import 'package:communitybank/controllers/collectors_total/collectors_total.controller.dart';
-import 'package:communitybank/controllers/customers_accounts_total/customers_accounts_total.controller.dart';
-import 'package:communitybank/controllers/customers_cards_total/customers_cards_total.controller.dart';
-import 'package:communitybank/controllers/customers_total/customers_total.controller.dart';
-import 'package:communitybank/controllers/products_total/products_total.controller.dart';
-import 'package:communitybank/controllers/settlements_total/settlements_total.controller.dart';
-import 'package:communitybank/controllers/types_total/types_total.controller.dart';
-import 'package:communitybank/models/data/agents_total/agents_total.model.dart';
-import 'package:communitybank/models/data/collections_totals/collections_totals.model.dart';
-import 'package:communitybank/models/data/collectors_total/collectors_total.model.dart';
-import 'package:communitybank/models/data/customers_accounts_total/customers_accounts_total.model.dart';
-import 'package:communitybank/models/data/customers_cards_total/customers_cards_total.model.dart';
-import 'package:communitybank/models/data/customers_total/customers_total.model.dart';
-import 'package:communitybank/models/data/products_total/products_total.model.dart';
-import 'package:communitybank/models/data/settlements_total/settlements_total.model.dart';
-import 'package:communitybank/models/data/types_total/types_total.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/pages/home/dashboard/dashboard.page.dart';
 import 'package:communitybank/views/widgets/dashboard/dashboard_card/dashboard_card.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-final collectionsTotalsProvider =
-    StreamProvider<List<CollectionsTotals>>((ref) async* {
-  yield* CollectionsTotalsController.getTotals().asStream();
-});
-
-final customersTotalProvider =
-    StreamProvider<List<CustomersTotal>>((ref) async* {
-  yield* CustomersTotalController.getTotalNumber().asStream();
-});
-
-final collectorsTotalProvider =
-    StreamProvider<List<CollectorsTotal>>((ref) async* {
-  yield* CollectorsTotalController.getTotalNumber().asStream();
-});
-
-final customersAccountsTotalProvider =
-    StreamProvider<List<CustomersAccountsTotal>>((ref) async* {
-  yield* CustomersAccountsTotalController.getTotalNumber().asStream();
-});
-
-final customersCardsTotalProvider =
-    StreamProvider<List<CustomersCardsTotal>>((ref) async* {
-  yield* CustomersCardsTotalController.getTotalNumber().asStream();
-});
-
-final agentsTotalProvider = StreamProvider<List<AgentsTotal>>((ref) async* {
-  yield* AgentsTotalController.getTotalNumber().asStream();
-});
-
-final productsTotalProvider = StreamProvider<List<ProductsTotal>>((ref) async* {
-  yield* ProductsTotalController.getTotalNumber().asStream();
-});
-
-final typesTotalProvider = StreamProvider<List<TypesTotal>>((ref) async* {
-  yield* TypesTotalController.getTotalNumber().asStream();
-});
-
-final settlementsTotalProvider =
-    StreamProvider<List<SettlementsTotal>>((ref) async* {
-  yield* SettlementsTotalController.getTotalNumber().asStream();
-});
 
 class DashboardOverview extends StatefulHookConsumerWidget {
   const DashboardOverview({super.key});
@@ -84,6 +25,15 @@ class _DashboardOverviewState extends ConsumerState<DashboardOverview> {
     final typesTotal = ref.watch(typesTotalProvider);
     final productsTotal = ref.watch(productsTotalProvider);
     final settlementsTotal = ref.watch(settlementsTotalProvider);
+    //  final weeklyCollections = ref.watch(weeklyCollectionsProvider);
+    // final monthlyCollections = ref.watch(monthlyCollectionsProvider);
+    //  final yearlyCollections = ref.watch(yearlyCollectionsProvider);
+    //  final collectorsWeeklyCollections =
+    //      ref.watch(collectorsWeeklyCollectionsProvider);
+    // final collectorsMonthlyCollections =
+    //     ref.watch(collectorsMonthlyCollectionsProvider);
+    //  final collectorsYearlyCollections =
+    //      ref.watch(collectorsYearlyCollectionsProvider);
 
     return // *** GLOBAL VIEW ***
         Container(
@@ -103,6 +53,12 @@ class _DashboardOverviewState extends ConsumerState<DashboardOverview> {
               ref.invalidate(agentsTotalProvider);
               ref.invalidate(typesTotalProvider);
               ref.invalidate(productsTotalProvider);
+              ref.invalidate(weeklyCollectionsProvider);
+              ref.invalidate(monthlyCollectionsProvider);
+              ref.invalidate(yearlyCollectionsProvider);
+              ref.invalidate(collectorsWeeklyCollectionsProvider);
+              ref.invalidate(collectorsMonthlyCollectionsProvider);
+              ref.invalidate(collectorsYearlyCollectionsProvider);
             },
             icon: const Icon(
               Icons.refresh,
@@ -231,6 +187,75 @@ class _DashboardOverviewState extends ConsumerState<DashboardOverview> {
                 ),
                 ceil: true,
               ),
+              /*    DashboardCard(
+                label: 'Weekly Collections',
+                value: weeklyCollections.when(
+                  data: (data) {
+                    return data.isEmpty ? 0 : data.first.collectionAmount;
+                  },
+                  error: (error, stackTrace) => 0,
+                  loading: () => 0,
+                ),
+                ceil: true,
+              ),
+              DashboardCard(
+                label: 'Monthly Collections',
+                value: monthlyCollections.when(
+                  data: (data) {
+                    return data.isEmpty ? 0 : data.first.collectionAmount;
+                  },
+                  error: (error, stackTrace) => 0,
+                  loading: () => 0,
+                ),
+                ceil: true,
+              ),
+              DashboardCard(
+                label: 'Yearly Collections',
+                value: yearlyCollections.when(
+                  data: (data) {
+                    return data.isEmpty ? 0 : data.first.collectionAmount;
+                  },
+                  error: (error, stackTrace) => 0,
+                  loading: () => 0,
+                ),
+                ceil: true,
+              ),
+              DashboardCard(
+                label: 'Collectors Weekly Collections',
+                value: collectorsWeeklyCollections.when(
+                  data: (data) {
+                    return data.isEmpty ? 0 : data.first.collectionsAmounts[0];
+                  },
+                  error: (error, stackTrace) => 0,
+                  loading: () => 0,
+                ),
+                ceil: true,
+              ),
+            
+              DashboardCard(
+                label: 'Collectors Monthly Collections',
+                value: collectorsMonthlyCollections.when(
+                  data: (data) {
+                    debugPrint('first: ${data.first}');
+                    return data.isEmpty ? 0 : data.first.collectionsAmounts[0];
+                  },
+                  error: (error, stackTrace) => 0,
+                  loading: () => 0,
+                ),
+                ceil: true,
+              ),
+                  DashboardCard(
+                label: 'Collectors Yearly Collections',
+                value: collectorsYearlyCollections.when(
+                  data: (data) {
+                    return data.isEmpty ? 0 : data.first.collectionsAmounts[0];
+                  },
+                  error: (error, stackTrace) => 0,
+                  loading: () => 0,
+                ),
+                ceil: true,
+              ),
+          */
             ],
           )
         ],

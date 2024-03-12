@@ -14,10 +14,10 @@ class MonthlyCollectionsService {
           )
           .select<List<Map<String, dynamic>>>();
       // return the result data
-
+      //  debugPrint('Monthly Collections Data: $response');
       return response;
     } catch (error) {
-      // debugPrint('In RPC');
+      //  debugPrint('In Monthly Collections RPC');
       debugPrint(error.toString());
       return [];
     }

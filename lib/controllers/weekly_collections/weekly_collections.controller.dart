@@ -2,7 +2,7 @@ import 'package:communitybank/models/data/weekly_collections/weekly_collections.
 import 'package:communitybank/services/weekly_collections/weekly_collections.service.dart';
 
 class WeeklyCollectionsController {
-  static Future<List<WeeklyCollections>> getNumber() async {
+  static Future<List<WeeklyCollections>> getWeeklyCollections() async {
     final weeklyCollections =
         await WeeklyCollectionsService.getWeeklyCollections();
 

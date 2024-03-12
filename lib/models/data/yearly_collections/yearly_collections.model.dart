@@ -5,7 +5,7 @@ import 'package:communitybank/models/rpc/yearly_collections/yearly_collections_r
 
 class YearlyCollections {
   final String month;
-  final double collectionAmount;
+  final dynamic collectionAmount;
   YearlyCollections({
     required this.month,
     required this.collectionAmount,
@@ -13,7 +13,7 @@ class YearlyCollections {
 
   YearlyCollections copyWith({
     String? month,
-    double? collectionAmount,
+    dynamic collectionAmount,
   }) {
     return YearlyCollections(
       month: month ?? this.month,
@@ -31,7 +31,7 @@ class YearlyCollections {
   factory YearlyCollections.fromMap(Map<String, dynamic> map) {
     return YearlyCollections(
       month: map[YearlyCollectionsRPC.month] as String,
-      collectionAmount: map[YearlyCollectionsRPC.collectionAmount] as double,
+      collectionAmount: map[YearlyCollectionsRPC.collectionAmount] as dynamic,
     );
   }
 

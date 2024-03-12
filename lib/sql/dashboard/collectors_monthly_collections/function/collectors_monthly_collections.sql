@@ -5,7 +5,7 @@ or replace function get_collectors_monthly_collections () returns table (
   date_collecte timestamp with time zone,
   ids_charges_compte bigint[],
   charges_comptes text[],
-  montants_collectes real[]
+  montants_collectes numeric[]
 ) as $$
 BEGIN
 RETURN QUERY
@@ -55,7 +55,7 @@ from
       left join (
         select
           id_charge_compte,
-          DATE (date_collecte) as date_collecte,
+          DATE (collectes.date_collecte) as date_collecte,
           SUM(montant) as montant_collecte
         from
           collectes
@@ -63,7 +63,7 @@ from
           extract(
             MONTH
             from
-              date_collecte
+              collectes.date_collecte
           ) = extract(
             MONTH
             from
@@ -72,17 +72,17 @@ from
           and extract(
             YEAR
             from
-              date_collecte
+              collectes.date_collecte
           ) = extract(
             YEAR
             from
               CURRENT_DATE
           )
         group by
-          date_collecte,
+          collectes.date_collecte,
           id_charge_compte
         order by
-          date_collecte,
+         collectes.date_collecte,
           id_charge_compte
       ) as current_month_collections on DATE (current_month_collections.date_collecte) = DATE (dates_mois)
     order by

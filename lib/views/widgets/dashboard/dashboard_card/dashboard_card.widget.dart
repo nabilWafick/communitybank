@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class DashboardCard extends ConsumerWidget {
   final String label;
-  final double value;
+  final num value;
   final bool ceil;
 
   const DashboardCard({
@@ -23,12 +23,12 @@ class DashboardCard extends ConsumerWidget {
         shape: BoxShape.rectangle,
         borderRadius: BorderRadius.circular(10.0),
       ),
-      /* padding: const EdgeInsets.symmetric(
-        vertical: 20.0,
-        horizontal: 35.0,
-      ),*/
-      height: 150.0,
-      width: 200.0,
+      padding: const EdgeInsets.symmetric(
+        // vertical: 20.0,
+        horizontal: 20.0,
+      ),
+      height: 170.0,
+      width: 250.0,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +46,8 @@ class DashboardCard extends ConsumerWidget {
           ),
           CBText(
             text: label,
-            fontSize: 12.0,
+            fontSize: 12.5,
+            textAlign: TextAlign.center,
             fontWeight: FontWeight.w600,
           ),
         ],

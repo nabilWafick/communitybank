@@ -52,6 +52,9 @@ from
                     ),
                     id_charge_compte
             ) as current_year_collections on mois.numero_annee = current_year_collections.numero_mois
+        order by
+            mois.numero_annee,
+            id_charge_compte
     ) as collections_data on mois.numero_annee = collections_data.numero_mois
     and charges_compte.id = collections_data.id_charge_compte
 group by

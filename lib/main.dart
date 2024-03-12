@@ -1,4 +1,4 @@
-import 'package:communitybank/functions/auth/auth.function.dart';
+//import 'package:communitybank/functions/auth/auth.function.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';

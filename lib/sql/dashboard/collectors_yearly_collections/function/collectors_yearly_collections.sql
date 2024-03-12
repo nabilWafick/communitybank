@@ -4,7 +4,7 @@ or replace function get_collectors_yearly_collections () returns table (
   mois text,
   ids_charges_compte bigint[],
   charges_compte text[],
-  montants_collectes real[]
+  montants_collectes numeric[]
 ) as $$
 BEGIN
 RETURN QUERY
@@ -62,6 +62,9 @@ from
                     ),
                     id_charge_compte
             ) as current_year_collections on mois.numero_annee = current_year_collections.numero_mois
+             order by
+  mois.numero_annee,
+  id_charge_compte
     ) as collections_data on mois.numero_annee = collections_data.numero_mois
     and charges_compte.id = collections_data.id_charge_compte
 group by

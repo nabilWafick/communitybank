@@ -17,7 +17,7 @@ select
    date_part('dow', dates_mois) = jours.numero_semaine
   left join (
     select
-      DATE (date_collecte) as date_collecte,
+      DATE (collectes.date_collecte) as date_collecte,
       SUM(montant) as montant_collecte
     from
       collectes
@@ -25,7 +25,7 @@ select
       extract(
         MONTH
         from
-          date_collecte
+          collectes.date_collecte
       ) = extract(
         MONTH
         from
@@ -34,16 +34,16 @@ select
     and extract(
                 YEAR
                 from
-                    date_collecte
+                 collectes.date_collecte
             ) = extract(
                 YEAR
                 from
                     CURRENT_DATE
             )
     group by
-      date_collecte
+      collectes.date_collecte
     order by
-      date_collecte
+      collectes.date_collecte
   ) as current_month_collections on DATE(current_month_collections.date_collecte) = DATE(dates_mois)
 order by
   dates_mois;

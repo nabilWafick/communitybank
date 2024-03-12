@@ -2,7 +2,7 @@ import 'package:communitybank/models/data/yearly_collections/yearly_collections.
 import 'package:communitybank/services/yearly_collections/yearly_collections.service.dart';
 
 class YearlyCollectionsController {
-  static Future<List<YearlyCollections>> getNumber() async {
+  static Future<List<YearlyCollections>> getYearlyCollections() async {
     final yearlyCollections =
         await YearlyCollectionsService.getYearlyCollections();
 

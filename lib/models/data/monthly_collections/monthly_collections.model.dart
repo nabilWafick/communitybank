@@ -6,7 +6,7 @@ import 'package:communitybank/models/rpc/monthly_collections/monthly_collections
 class MonthlyCollections {
   final String day;
   final DateTime collectionDate;
-  final double collectionAmount;
+  final dynamic collectionAmount;
   MonthlyCollections({
     required this.day,
     required this.collectionDate,
@@ -16,7 +16,7 @@ class MonthlyCollections {
   MonthlyCollections copyWith({
     String? day,
     DateTime? collectionDate,
-    double? collectionAmount,
+    dynamic collectionAmount,
   }) {
     return MonthlyCollections(
       day: day ?? this.day,
@@ -37,7 +37,7 @@ class MonthlyCollections {
     return MonthlyCollections(
       day: map[MonthlyCollectionsRPC.day] as String,
       collectionDate: DateTime.parse(map[MonthlyCollectionsRPC.collectionDate]),
-      collectionAmount: map[MonthlyCollectionsRPC.collectionAmount] as double,
+      collectionAmount: map[MonthlyCollectionsRPC.collectionAmount] as dynamic,
     );
   }
 

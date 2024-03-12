@@ -48,15 +48,19 @@ class CollectorsMonthlyCollections {
   factory CollectorsMonthlyCollections.fromMap(Map<String, dynamic> map) {
     return CollectorsMonthlyCollections(
       day: map[CollectorsMonthlyCollectionsRPC.day] as String,
-      collectionDate:
-          DateTime.parse(map[CollectorsMonthlyCollectionsRPC.collectionDate]),
+      collectionDate: DateTime.parse(
+        map[CollectorsMonthlyCollectionsRPC.collectionDate],
+      ),
       collectorsIds: List<dynamic>.from(
-          map[CollectorsMonthlyCollectionsRPC.collectorsIds] as List<dynamic>),
+        map[CollectorsMonthlyCollectionsRPC.collectorsIds] as List<dynamic>,
+      ),
       collectors: List<dynamic>.from(
-          map[CollectorsMonthlyCollectionsRPC.collectors] as List<dynamic>),
+        map[CollectorsMonthlyCollectionsRPC.collectors] as List<dynamic>,
+      ),
       collectionsAmounts: List<dynamic>.from(
-          map[CollectorsMonthlyCollectionsRPC.collectionsAmounts]
-              as List<dynamic>),
+        map[CollectorsMonthlyCollectionsRPC.collectionsAmounts]
+            as List<dynamic>,
+      ),
     );
   }
 

@@ -6,7 +6,7 @@ or replace function get_collectors_weekly_collections () returns table (
   date_collecte timestamp with time zone,
   ids_charges_compte bigint[],
   charges_comptes text[],
-  montants_collectes real[]
+  montants_collectes numeric[]
 ) as $$
 BEGIN
 RETURN QUERY
@@ -32,7 +32,7 @@ from
             left join (
                 select
                     id_charge_compte,
-                    DATE (date_collecte) as date_collecte,
+                    DATE (collectes.date_collecte) as date_collecte,
                     SUM(montant) as montant_collecte
                 from
                     collectes
@@ -40,7 +40,7 @@ from
                     extract(
                         WEEK
                         from
-                            date_collecte
+                            collectes.date_collecte
                     ) = extract(
                         WEEK
                         from
@@ -49,7 +49,7 @@ from
                     and extract(
                         MONTH
                         from
-                            date_collecte
+                            collectes.date_collecte
                     ) = extract(
                         MONTH
                         from
@@ -58,17 +58,17 @@ from
                     and extract(
                         YEAR
                         from
-                            date_collecte
+                            collectes.date_collecte
                     ) = extract(
                         YEAR
                         from
                             CURRENT_DATE
                     )
                 group by
-                    date_collecte,
+                    collectes.date_collecte,
                     id_charge_compte
                 order by
-                    date_collecte,
+                    collectes.date_collecte,
                     id_charge_compte
             ) as current_week_collections on date_part ('dow', current_week_collections.date_collecte) = jours.numero_semaine
         order by

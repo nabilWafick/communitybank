@@ -2,7 +2,8 @@ import 'package:communitybank/models/data/collectors_monthly_collections/collect
 import 'package:communitybank/services/collectors_monthly_collections/collectors_monthly_collections.service.dart';
 
 class CollectorsMonthlyCollectionsController {
-  static Future<List<CollectorsMonthlyCollections>> getNumber() async {
+  static Future<List<CollectorsMonthlyCollections>>
+      getCollectorsMonthlyCollections() async {
     final collectorsMonthlyCollections =
         await CollectorsMonthlyCollectionsService
             .getCollectorsMonthlyCollections();

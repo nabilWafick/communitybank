@@ -14,7 +14,6 @@ class CollectionsTotalsService {
           )
           .select<List<Map<String, dynamic>>>();
 
-      debugPrint('response: $response');
       // return the result data
 
       return response;

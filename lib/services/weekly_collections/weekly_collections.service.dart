@@ -14,10 +14,10 @@ class WeeklyCollectionsService {
           )
           .select<List<Map<String, dynamic>>>();
       // return the result data
-
+      // debugPrint('Weekly Collections Data: $response');
       return response;
     } catch (error) {
-      // debugPrint('In RPC');
+      //   debugPrint('In Weekly Collections RPC');
       debugPrint(error.toString());
       return [];
     }

@@ -6,7 +6,7 @@ import 'package:communitybank/models/rpc/weekly_collections/weekly_collections_r
 class WeeklyCollections {
   final String day;
   final DateTime collectionDate;
-  final double collectionAmount;
+  final dynamic collectionAmount;
   WeeklyCollections({
     required this.day,
     required this.collectionDate,
@@ -16,7 +16,7 @@ class WeeklyCollections {
   WeeklyCollections copyWith({
     String? day,
     DateTime? collectionDate,
-    double? collectionAmount,
+    dynamic collectionAmount,
   }) {
     return WeeklyCollections(
       day: day ?? this.day,
@@ -37,9 +37,8 @@ class WeeklyCollections {
   factory WeeklyCollections.fromMap(Map<String, dynamic> map) {
     return WeeklyCollections(
       day: map[WeeklyCollectionsRPC.day] as String,
-      collectionDate: DateTime.fromMillisecondsSinceEpoch(
-          map[WeeklyCollectionsRPC.collectionDate] as int),
-      collectionAmount: map[WeeklyCollectionsRPC.collectionAmount] as double,
+      collectionDate: DateTime.parse(map[WeeklyCollectionsRPC.collectionDate]),
+      collectionAmount: map[WeeklyCollectionsRPC.collectionAmount] as dynamic,
     );
   }
 

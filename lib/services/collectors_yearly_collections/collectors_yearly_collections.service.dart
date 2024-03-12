@@ -15,10 +15,11 @@ class CollectorsYearlyCollectionsService {
           )
           .select<List<Map<String, dynamic>>>();
       // return the result data
+      //  debugPrint('Collectors Yearly Collections Data: $response');
 
       return response;
     } catch (error) {
-      // debugPrint('In RPC');
+      //  debugPrint('In Collectors Yearly Collections RPC');
       debugPrint(error.toString());
       return [];
     }

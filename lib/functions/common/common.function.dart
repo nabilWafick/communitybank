@@ -117,17 +117,27 @@ class FunctionsController {
   }
 
   static String formatLargeNumber({
-    required double number,
+    required num number,
     required bool ceil,
   }) {
-    if (number ~/ 1000000000 >= 1) {
-      return '${number ~/ 1000000000}Md';
-    } else if (number ~/ 1000000 >= 1) {
-      return '${number ~/ 1000000}M';
-    } else if (number ~/ 1000 >= 1) {
-      return '${number ~/ 1000}K';
+    if (number / 1000000000 >= 1) {
+      return number.remainder(1000000000) > 0
+          ? '${((number / 1000000000).toStringAsFixed(1)).replaceFirst(r'.', r',')}Md'
+          : '${(number / 1000000000).toStringAsFixed(0)}Md';
+    } else if (number / 1000000 >= 1) {
+      return number.remainder(1000000) > 0
+          ? '${((number / 1000000).toStringAsFixed(1)).replaceFirst(r'.', r',')}M'
+          : '${(number / 1000000).toStringAsFixed(0)}M';
+    } else if (number / 1000 >= 1) {
+      return number.remainder(1000) > 0
+          ? '${((number / 1000).toStringAsFixed(1)).replaceFirst(r'.', r',')}K'
+          : '${(number / 1000).toStringAsFixed(0)}K';
     } else {
-      return ceil ? number.ceil().toString() : number.toString();
+      // ceil is used for checking if the value passed will be rounded or
+      // not since va,ue on database are storing as decimal. So, value like 1200.0 are getting so it is nec dividing
+      return ceil
+          ? number.ceil().toString()
+          : number.toStringAsFixed(2).replaceFirst(r'.', r',');
     }
   }
 }
