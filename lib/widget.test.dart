@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:super_tooltip/super_tooltip.dart';
 
 final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {
   return;
@@ -38,31 +39,44 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
             CBText(
               text: 'Customers data length: $data',
             ),
+            SuperTooltip(
+              content: const CBText(
+                text: 'ToolTip test',
+              ),
+              arrowLength: 10,
+              arrowTipDistance: 10,
+              popupDirection: TooltipDirection.right,
+              child: const Icon(
+                Icons.more_vert,
+              ),
+            ),
             SizedBox(
               width: 500,
               child: CBElevatedButton(
                 onPressed: () async {
-                  final supabase = Supabase.instance.client;
-                  var query = /*
-                      supabase.from('clients').stream(primaryKey: ['id']).order(
-                    'id',
-                    ascending: true,
-                  );*/
-                      await supabase
-                          .from('clients')
-                          .select<List<Map<String, dynamic>>>()
-                          .order('id');
+                  /*
+                    final supabase = Supabase.instance.client;
+                    var query = /*
+                        supabase.from('clients').stream(primaryKey: ['id']).order(
+                      'id',
+                      ascending: true,
+                    );*/
+                        await supabase
+                            .from('clients')
+                            .select<List<Map<String, dynamic>>>()
+                            .order('id');
 
-                  final response = query;
+                    final response = query;
 
-                  debugPrint('response: $response');
+                    debugPrint('response: $response');
 
-                  setState(
-                    () {
-                      data = response.length;
-                    },
-                  );
-                  debugPrint('Customers data length: $data');
+                    setState(
+                      () {
+                        data = response.length;
+                      },
+                    );
+                    debugPrint('Customers data length: $data');
+                 */
                 },
                 text: 'Press',
               ),

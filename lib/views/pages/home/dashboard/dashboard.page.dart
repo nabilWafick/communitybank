@@ -28,8 +28,7 @@ import 'package:communitybank/models/data/settlements_total/settlements_total.mo
 import 'package:communitybank/models/data/types_total/types_total.model.dart';
 import 'package:communitybank/models/data/weekly_collections/weekly_collections.model.dart';
 import 'package:communitybank/models/data/yearly_collections/yearly_collections.model.dart';
-import 'package:communitybank/views/widgets/dashboard/collections_data_view/collections_data_view.widget.dart';
-import 'package:communitybank/views/widgets/dashboard/overview/overview.widget.dart';
+import 'package:communitybank/views/widgets/dashboard/dashboard.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -119,7 +118,10 @@ class DashboardPage extends ConsumerWidget {
         //   crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DashboardOverview(),
-          DashBoardCollectionsDataView(),
+          DashboardCollectionsDataView(),
+          DashboardTypesDataView(),
+          DashboardProductsDataView(),
+          DashboardProductsForecastsDataView(),
         ],
       ),
     );

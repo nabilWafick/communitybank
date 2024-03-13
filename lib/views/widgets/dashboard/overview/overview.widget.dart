@@ -1,7 +1,12 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/pages/home/dashboard/dashboard.page.dart';
 import 'package:communitybank/views/widgets/dashboard/dashboard_card/dashboard_card.widget.dart';
+import 'package:communitybank/views/widgets/definitions/products/products_sort_options/products_sort_options.widget.dart';
+import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:communitybank/views/widgets/statistics/customers_products/customers_products_data/customers_products_data.widget.dart';
+import 'package:communitybank/views/widgets/statistics/customers_types/customers_types.widgets.dart';
+import 'package:communitybank/views/widgets/statistics/products_forecasts/products_forecasts.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -25,15 +30,6 @@ class _DashboardOverviewState extends ConsumerState<DashboardOverview> {
     final typesTotal = ref.watch(typesTotalProvider);
     final productsTotal = ref.watch(productsTotalProvider);
     final settlementsTotal = ref.watch(settlementsTotalProvider);
-    //  final weeklyCollections = ref.watch(weeklyCollectionsProvider);
-    // final monthlyCollections = ref.watch(monthlyCollectionsProvider);
-    //  final yearlyCollections = ref.watch(yearlyCollectionsProvider);
-    //  final collectorsWeeklyCollections =
-    //      ref.watch(collectorsWeeklyCollectionsProvider);
-    // final collectorsMonthlyCollections =
-    //     ref.watch(collectorsMonthlyCollectionsProvider);
-    //  final collectorsYearlyCollections =
-    //      ref.watch(collectorsYearlyCollectionsProvider);
 
     return // *** GLOBAL VIEW ***
         Container(
@@ -42,8 +38,10 @@ class _DashboardOverviewState extends ConsumerState<DashboardOverview> {
       ),
       child: Column(
         children: [
-          IconButton(
-            onPressed: () {
+          CBIconButton(
+            icon: Icons.refresh,
+            text: 'Rafraîchir',
+            onTap: () {
               ref.invalidate(collectionsTotalsProvider);
               ref.invalidate(customersTotalProvider);
               ref.invalidate(collectorsTotalProvider);
@@ -59,10 +57,15 @@ class _DashboardOverviewState extends ConsumerState<DashboardOverview> {
               ref.invalidate(collectorsWeeklyCollectionsProvider);
               ref.invalidate(collectorsMonthlyCollectionsProvider);
               ref.invalidate(collectorsYearlyCollectionsProvider);
+              ref.invalidate(customersTypesStatisticsDataStreamProvider);
+              ref.invalidate(customersProductsStatisticsDataStreamProvider);
+              ref.invalidate(productsForecastsStatisticsDataStreamProvider);
+              ref.invalidate(
+                searchProvider(
+                  'products-forecasts-dashboard-settlements-number',
+                ),
+              );
             },
-            icon: const Icon(
-              Icons.refresh,
-            ),
           ),
           Container(
             alignment: Alignment.centerLeft,
