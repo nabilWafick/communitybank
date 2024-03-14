@@ -1,25 +1,24 @@
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
-import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_account_dopdown/customer_account_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/activities/customer_periodic_activity/customer_periodic_activity_data/customer_periodic_activity_data.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
-import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/customer_card_settlements_details_printing.widget.dart';
-
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_accounts/customer_account_dropdown/customer_account_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 //import 'package:intl/intl.dart';
 
-class CustomerPeriodicActivitySortOptions extends StatefulHookConsumerWidget {
-  const CustomerPeriodicActivitySortOptions({super.key});
+class TransfersBetweenCustomerCardsSortOptions
+    extends StatefulHookConsumerWidget {
+  const TransfersBetweenCustomerCardsSortOptions({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CustomerPeriodicActivitySortOptionsState();
+      _TransfersBetweenCustomerCardsSortOptionsState();
 }
 
-class _CustomerPeriodicActivitySortOptionsState
-    extends ConsumerState<CustomerPeriodicActivitySortOptions> {
+class _TransfersBetweenCustomerCardsSortOptionsState
+    extends ConsumerState<TransfersBetweenCustomerCardsSortOptions> {
   @override
   void initState() {
     super.initState();
@@ -30,10 +29,7 @@ class _CustomerPeriodicActivitySortOptionsState
   Widget build(BuildContext context) {
     final customersAccountsListStream =
         ref.watch(customersAccountsListStreamProvider);
-    final customerPeriodicActivitySelectedCustomerCard =
-        ref.watch(customerPeriodicActivitySelectedCustomerCardProvider);
 
-    //  final format = DateFormat.yMMMMEEEEd('fr');
     return Container(
       margin: const EdgeInsets.only(
         bottom: 20.0,
@@ -52,18 +48,10 @@ class _CustomerPeriodicActivitySortOptionsState
                 child: CBIconButton(
                   icon: Icons.refresh,
                   text: 'Rafraichir',
-                  onTap: () {
-                    ref.invalidate(
-                      customerCardSettlementsDetailsProvider(
-                        customerPeriodicActivitySelectedCustomerCard != null
-                            ? customerPeriodicActivitySelectedCustomerCard.id!
-                            : 0,
-                      ),
-                    );
-                  },
+                  onTap: () {},
                 ),
               ),
-              Container(
+              /*   Container(
                 margin: const EdgeInsets.symmetric(
                   vertical: 20.0,
                 ),
@@ -75,9 +63,10 @@ class _CustomerPeriodicActivitySortOptionsState
                   },
                 ),
               ),
+          */
             ],
           ),
-          CBCustomerActivityCustomerAccountDropdown(
+          CBTransfersBetweenCustomerCardsCustomerAccountDropdown(
             width: 400.0,
             menuHeigth: 500.0,
             label: 'Client',
@@ -91,7 +80,10 @@ class _CustomerPeriodicActivitySortOptionsState
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(),
                 ),
-                ...data,
+                ...data.where(
+                  (customerAccount) =>
+                      customerAccount.customerCardsIds.length > 1,
+                ),
               ],
               error: (error, stackTrace) => [],
               loading: () => [],
@@ -105,7 +97,10 @@ class _CustomerPeriodicActivitySortOptionsState
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(),
                 ),
-                ...data,
+                ...data.where(
+                  (customerAccount) =>
+                      customerAccount.customerCardsIds.length > 1,
+                ),
               ],
               error: (error, stackTrace) => [],
               loading: () => [],

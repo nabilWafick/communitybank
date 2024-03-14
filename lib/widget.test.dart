@@ -1,3 +1,4 @@
+import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,14 +37,116 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CBText(
-              text: 'Customers data length: $data',
-            ),
             SuperTooltip(
-              content: const CBText(
-                text: 'ToolTip test',
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5.0,
+                    ),
+                    width: 120.0,
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.file_open,
+                          size: 20.0,
+                          color: CBColors.primaryColor,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        CBText(
+                          text: 'Détails',
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5.0,
+                    ),
+                    width: 120.0,
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.edit,
+                          size: 20.0,
+                          //  color: Colors.green.shade700,
+                          color: CBColors.primaryColor,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        CBText(
+                          text: 'Éditer',
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5.0,
+                    ),
+                    width: 120.0,
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          size: 20.0,
+                          //  color: Colors.red.shade700,
+                          color: CBColors.primaryColor,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        CBText(
+                          text: 'Supprimer',
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 5.0,
+                    ),
+                    width: 120.0,
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons.close,
+                          size: 20.0,
+                          //  color: CBColors.sidebarTextColor,
+                          color: CBColors.primaryColor,
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        CBText(
+                          text: 'Fermer',
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
+              hideTooltipOnTap: true,
               arrowLength: 10,
+              showBarrier: false,
+              borderColor: CBColors.primaryColor,
+              shadowColor: CBColors.primaryColor,
+              shadowBlurRadius: 1,
+              shadowSpreadRadius: .5,
+              elevation: 5.0,
               arrowTipDistance: 10,
               popupDirection: TooltipDirection.right,
               child: const Icon(

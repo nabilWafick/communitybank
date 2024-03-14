@@ -10,6 +10,7 @@ class CustomerCard {
   int? customerAccountId;
   final DateTime? satisfiedAt;
   final DateTime? repaidAt;
+  final DateTime? transferredAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   CustomerCard({
@@ -20,6 +21,7 @@ class CustomerCard {
     this.customerAccountId,
     this.satisfiedAt,
     this.repaidAt,
+    this.transferredAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -32,6 +34,7 @@ class CustomerCard {
     int? customerAccountId,
     DateTime? satisfiedAt,
     DateTime? repaidAt,
+    DateTime? transferredAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -43,6 +46,7 @@ class CustomerCard {
       customerAccountId: customerAccountId ?? this.customerAccountId,
       satisfiedAt: satisfiedAt ?? this.satisfiedAt,
       repaidAt: repaidAt ?? this.repaidAt,
+      transferredAt: transferredAt ?? this.transferredAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -58,6 +62,7 @@ class CustomerCard {
       CustomerCardTable.customerAccountId: customerAccountId,
       CustomerCardTable.satisfiedAt: satisfiedAt?.toIso8601String(),
       CustomerCardTable.repaidAt: repaidAt?.toIso8601String(),
+      CustomerCardTable.transferredAt: transferredAt?.toIso8601String(),
     };
 
     if (!isAdding) {
@@ -80,6 +85,9 @@ class CustomerCard {
       repaidAt: map[CustomerCardTable.repaidAt] != null
           ? DateTime.parse(map[CustomerCardTable.repaidAt]!)
           : null,
+      transferredAt: map[CustomerCardTable.transferredAt] != null
+          ? DateTime.parse(map[CustomerCardTable.transferredAt]!)
+          : null,
       createdAt: DateTime.parse(map[CustomerCardTable.createdAt]),
       updatedAt: DateTime.parse(map[CustomerCardTable.updatedAt]),
     );
@@ -92,7 +100,7 @@ class CustomerCard {
 
   @override
   String toString() {
-    return 'CustomerCard(id: $id, label: $label, typeId: $typeId, typeNumber: $typeNumber, customerAccountId: $customerAccountId,  satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'CustomerCard(id: $id, label: $label, typeId: $typeId, typeNumber: $typeNumber, customerAccountId: $customerAccountId,  satisfiedAt: $satisfiedAt, repaidAt: $repaidAt, transferred: $transferredAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -106,6 +114,7 @@ class CustomerCard {
         other.typeNumber == typeNumber &&
         other.satisfiedAt == satisfiedAt &&
         other.repaidAt == repaidAt &&
+        other.transferredAt == transferredAt &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -118,6 +127,7 @@ class CustomerCard {
         typeNumber.hashCode ^
         satisfiedAt.hashCode ^
         repaidAt.hashCode ^
+        transferredAt.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

@@ -106,10 +106,10 @@ class CommunityBankApp extends ConsumerWidget {
       ),
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: const WidgetTest(),
-      //  const RegistrationPage(),
-      //  const LoginPage(),
-      // const MainApp(),
+      home: // const WidgetTest(),
+          //  const RegistrationPage(),
+          //  const LoginPage(),
+          const MainApp(),
       //  const LoginPage(),
     );
   }
