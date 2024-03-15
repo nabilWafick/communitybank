@@ -1,12 +1,14 @@
+import 'package:communitybank/controllers/settlement/settlement.controller.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/elevated_button/elevated_button.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_accounts/type_dropdown/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -39,6 +41,22 @@ final transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider =
 final transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider =
     StateProvider<Type?>((ref) {
   return;
+});
+
+final settlementsProvider = StreamProvider<List<Settlement>>((ref) async* {
+  yield* SettlementsController.getAll(
+    customerCardId: 0,
+  );
+});
+
+final transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider =
+    StateProvider<int>((ref) {
+  return 0;
+});
+
+final transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider =
+    StateProvider<int>((ref) {
+  return 0;
 });
 
 class TransfersBetweenCustomerCardsData extends StatefulHookConsumerWidget {
@@ -74,6 +92,13 @@ class _TransfersBetweenCustomerCardsDataState
         ref.watch(
             transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider);
 
+    final issuingCustomerCardSettlementsNumbersTotal = ref.watch(
+      transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider,
+    );
+    final receivingCustomerCardSettlementsNumbersTotal = ref.watch(
+      transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider,
+    );
+
     ref.listen(
       transfersBetweenCustomerCardsSelectedCustomerAccountProvider,
       (previous, next) {
@@ -101,24 +126,6 @@ class _TransfersBetweenCustomerCardsDataState
                           .notifier,
                     )
                     .state = customerCards;
-
-                // update issuing customer card
-                // take the first customer card by default
-                // as the issuingCustomerCard
-                ref
-                    .read(
-                        transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider
-                            .notifier)
-                    .state = customerCards[0];
-
-                // update issuing customer card
-                // take the first customer card by default
-                // as the receivingCustomerCard
-                ref
-                    .read(
-                        transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider
-                            .notifier)
-                    .state = customerCards[1];
               },
               error: (error, stackTrace) {},
               loading: () {},
@@ -128,77 +135,200 @@ class _TransfersBetweenCustomerCardsDataState
       },
     );
 
+    // update issuing card and type
     ref.listen(
-      transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider,
+      transfersTypeDropdownProvider(
+        'transfers-between-customer-cards-issuing-card-type',
+      ),
       (previous, next) {
         Future.delayed(
           const Duration(
             milliseconds: 100,
           ),
           () {
-            typeListStream.when(
-              data: (data) {
-                final selectedType = data.firstWhere(
-                  (type) => next?.typeId == type.id,
-                  orElse: () => Type(
-                    name: '',
-                    stake: 0,
-                    productsIds: [],
-                    productsNumber: [],
-                    createdAt: DateTime.now(),
-                    updatedAt: DateTime.now(),
-                  ),
-                );
-                ref
-                    .read(
-                      transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider
-                          .notifier,
-                    )
-                    .state = selectedType;
-              },
-              error: (error, stackTrace) {},
-              loading: () {},
+            // update issuingCustomerCardType
+            ref
+                .read(
+                  transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider
+                      .notifier,
+                )
+                .state = next;
+
+            final issuingCustomerCard =
+                transfersBetweenCustomerCardsSelectedCustomerCards.firstWhere(
+              (customerCard) => customerCard.typeId == next.id,
+              orElse: () => CustomerCard(
+                label: 'Carte *',
+                typeId: 1,
+                typeNumber: 1,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
             );
+
+            // update issuingCustomerCard
+            ref
+                .read(
+                  transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider
+                      .notifier,
+                )
+                .state = issuingCustomerCard;
           },
         );
       },
     );
 
+    // update receiving card and type
     ref.listen(
-      transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider,
+      transfersTypeDropdownProvider(
+        'transfers-between-customer-cards-receiving-card-type',
+      ),
       (previous, next) {
         Future.delayed(
           const Duration(
             milliseconds: 100,
           ),
           () {
-            typeListStream.when(
-              data: (data) {
-                final selectedType = data.firstWhere(
-                  (type) => next?.typeId == type.id,
-                  orElse: () => Type(
-                    name: '',
-                    stake: 0,
-                    productsIds: [],
-                    productsNumber: [],
-                    createdAt: DateTime.now(),
-                    updatedAt: DateTime.now(),
-                  ),
-                );
-                ref
-                    .read(
-                      transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider
-                          .notifier,
-                    )
-                    .state = selectedType;
-              },
-              error: (error, stackTrace) {},
-              loading: () {},
+            // update receivingCustomerCardType
+            ref
+                .read(
+                  transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider
+                      .notifier,
+                )
+                .state = next;
+
+            final receivingCustomerCard =
+                transfersBetweenCustomerCardsSelectedCustomerCards.firstWhere(
+              (customerCard) => customerCard.typeId == next.id,
+              orElse: () => CustomerCard(
+                label: 'Carte *',
+                typeId: 1,
+                typeNumber: 1,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
             );
+
+            // update issuingCustomerCard
+            ref
+                .read(
+                  transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider
+                      .notifier,
+                )
+                .state = receivingCustomerCard;
           },
         );
       },
     );
+
+// listening to issuing customer card
+    ref.listen(transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider,
+        (previous, next) {
+      Future.delayed(
+          const Duration(
+            milliseconds: 100,
+          ), () async {
+        final issuingCustomerCardSettlements =
+            await SettlementsController.getAll(
+          customerCardId: next?.id,
+        ).first;
+
+        int settlementsNumbersTotal = 0;
+        for (Settlement settlement in issuingCustomerCardSettlements) {
+          settlementsNumbersTotal += settlement.number;
+        }
+        ref
+            .read(
+              transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider
+                  .notifier,
+            )
+            .state = settlementsNumbersTotal;
+      });
+    });
+
+// listening to receiving customer card
+    ref.listen(
+        transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider,
+        (previous, next) {
+      Future.delayed(
+        const Duration(
+          milliseconds: 100,
+        ),
+        () async {
+          final receivingCustomerCardSettlements =
+              await SettlementsController.getAll(
+            customerCardId: next?.id,
+          ).first;
+
+          int settlementsNumbersTotal = 0;
+          for (Settlement settlement in receivingCustomerCardSettlements) {
+            settlementsNumbersTotal += settlement.number;
+          }
+          ref
+              .read(
+                transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider
+                    .notifier,
+              )
+              .state = settlementsNumbersTotal;
+        },
+      );
+    });
+
+    // listening to settlements stream for updating setlements data for each card
+    ref.listen(settlementsProvider, (previous, next) {
+      // issuing customer card settlements
+      if (transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+          transfersBetweenCustomerCardSelectedIssuingCustomerCard.id != null) {
+        Future.delayed(
+            const Duration(
+              milliseconds: 100,
+            ), () async {
+          final issuingCustomerCardSettlements =
+              await SettlementsController.getAll(
+            customerCardId:
+                transfersBetweenCustomerCardSelectedIssuingCustomerCard.id,
+          ).first;
+
+          int settlementsNumbersTotal = 0;
+          for (Settlement settlement in issuingCustomerCardSettlements) {
+            settlementsNumbersTotal += settlement.number;
+          }
+          ref
+              .read(
+                transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider
+                    .notifier,
+              )
+              .state = settlementsNumbersTotal;
+        });
+      }
+
+// receiving customer card settlements
+      if (transfersBetweenCustomerCardSelectedReceivingCustomerCard != null &&
+          transfersBetweenCustomerCardSelectedReceivingCustomerCard.id !=
+              null) {
+        Future.delayed(
+            const Duration(
+              milliseconds: 100,
+            ), () async {
+          final receivingCustomerCardSettlements =
+              await SettlementsController.getAll(
+            customerCardId:
+                transfersBetweenCustomerCardSelectedReceivingCustomerCard.id,
+          ).first;
+
+          int settlementsNumbersTotal = 0;
+          for (Settlement settlement in receivingCustomerCardSettlements) {
+            settlementsNumbersTotal += settlement.number;
+          }
+          ref
+              .read(
+                transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider
+                    .notifier,
+              )
+              .state = settlementsNumbersTotal;
+        });
+      }
+    });
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -231,7 +361,7 @@ class _TransfersBetweenCustomerCardsDataState
                 child: Column(
                   children: [
                     const CBText(
-                      text: 'Carte Émettrice',
+                      text: 'Compte Émetteur',
                       fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
@@ -244,30 +374,35 @@ class _TransfersBetweenCustomerCardsDataState
                         Consumer(
                           builder: (context, ref, child) {
                             final issuingCustomerCardType = ref.watch(
-                              formTypeDropdownProvider(
-                                  'transfers-between-customer-cards-issuing-card-type'),
-                            );
-                            return CustomerCardWidget(
-                              customerCard:
-                                  transfersBetweenCustomerCardsSelectedCustomerCards
-                                      .firstWhere(
-                                (customerCard) =>
-                                    customerCard.typeId ==
-                                    issuingCustomerCardType.id,
-                                orElse: () => CustomerCard(
-                                  label: 'Carte *',
-                                  typeId: 1,
-                                  typeNumber: 1,
-                                  createdAt: DateTime.now(),
-                                  updatedAt: DateTime.now(),
-                                ),
+                              transfersTypeDropdownProvider(
+                                'transfers-between-customer-cards-issuing-card-type',
                               ),
+                            );
+
+                            final issuingCustomerCard =
+                                transfersBetweenCustomerCardsSelectedCustomerCards
+                                    .firstWhere(
+                              (customerCard) =>
+                                  customerCard.typeId ==
+                                  issuingCustomerCardType.id,
+                              orElse: () => CustomerCard(
+                                label: 'Carte *',
+                                typeId: 1,
+                                typeNumber: 1,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              ),
+                            );
+
+                            return CustomerCardWidget(
+                              customerCard: issuingCustomerCard,
                             );
                           },
                         ),
-                        CBFormTypeDropdown(
+                        CBTransfersTypeDropdown(
                           label: 'Type',
                           width: 150,
+                          menuHeigth: 300.0,
                           providerName:
                               'transfers-between-customer-cards-issuing-card-type',
                           dropdownMenuEntriesLabels: typeListStream.when(
@@ -312,44 +447,80 @@ class _TransfersBetweenCustomerCardsDataState
                         children: [
                           OtherInfos(
                             label: 'Nombre Type',
-                            value:
-                                transfersBetweenCustomerCardSelectedIssuingCustomerCard
-                                        ?.typeNumber
-                                        .toString() ??
-                                    '',
+                            value: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                            .id !=
+                                        null
+                                ? transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                    .typeNumber
+                                    .toString()
+                                : '',
                           ),
                           OtherInfos(
                             label: 'Mise Type',
-                            value:
-                                '${transfersBetweenCustomerCardSelectedIssuingCustomerCardType?.stake.ceil() ?? ''}',
+                            value: transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                            .id !=
+                                        null
+                                ? '${transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake.ceil()}'
+                                : '',
                           ),
-                          const OtherInfos(
-                            label: 'Total Règlements',
-                            value: '20',
+                          Consumer(
+                            builder: (context, ref, child) {
+                              return OtherInfos(
+                                label: 'Total Règlements',
+                                value: transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                        null
+                                    ? issuingCustomerCardSettlementsNumbersTotal
+                                        .toString()
+                                    : '',
+                              );
+                            },
                           ),
-                          const OtherInfos(
-                            label: 'Montant Réglé',
-                            value: '2000f',
+                          Consumer(
+                            builder: (context, ref, child) {
+                              return OtherInfos(
+                                label: 'Montant Réglé',
+                                value: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                                            null &&
+                                        transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                            null
+                                    ? '${(transfersBetweenCustomerCardSelectedIssuingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake * issuingCustomerCardSettlementsNumbersTotal).ceil()}'
+                                    : '',
+                              );
+                            },
                           )
                         ],
                       ),
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CBText(
+                        const CBText(
                           text: 'Montant à transférer: ',
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5.0,
                         ),
-                        CBText(
-                          text: '1700f',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        // the amount to transfer is equal to customer card total amount *2/3 - 300. 300 for customerCard fee
+                        Consumer(
+                          builder: (context, ref, child) {
+                            return CBText(
+                              text: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                                          null &&
+                                      transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                          null
+                                  ? '${(2 * (transfersBetweenCustomerCardSelectedIssuingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake * issuingCustomerCardSettlementsNumbersTotal) / 3 - 300).ceil()}'
+                                  : '',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            );
+                          },
+                        )
                       ],
                     )
                   ],
@@ -375,7 +546,7 @@ class _TransfersBetweenCustomerCardsDataState
                 child: Column(
                   children: [
                     const CBText(
-                      text: 'Carte Réceptrice',
+                      text: 'Compte Récepteur',
                       fontSize: 14.0,
                       fontWeight: FontWeight.w500,
                     ),
@@ -387,33 +558,37 @@ class _TransfersBetweenCustomerCardsDataState
                       children: [
                         Consumer(
                           builder: (context, ref, child) {
-                            final issuingCustomerCardType = ref.watch(
-                              formTypeDropdownProvider(
-                                  'transfers-between-customer-cards-receving-card-type'),
-                            );
-                            return CustomerCardWidget(
-                              customerCard:
-                                  transfersBetweenCustomerCardsSelectedCustomerCards
-                                      .firstWhere(
-                                (customerCard) =>
-                                    customerCard.typeId ==
-                                    issuingCustomerCardType.id,
-                                orElse: () => CustomerCard(
-                                  label: 'Carte *',
-                                  typeId: 1,
-                                  typeNumber: 1,
-                                  createdAt: DateTime.now(),
-                                  updatedAt: DateTime.now(),
-                                ),
+                            final receivingCustomerCardType = ref.watch(
+                              transfersTypeDropdownProvider(
+                                'transfers-between-customer-cards-receiving-card-type',
                               ),
+                            );
+                            final receivingCustomerCard =
+                                transfersBetweenCustomerCardsSelectedCustomerCards
+                                    .firstWhere(
+                              (customerCard) =>
+                                  customerCard.typeId ==
+                                  receivingCustomerCardType.id,
+                              orElse: () => CustomerCard(
+                                label: 'Carte *',
+                                typeId: 1,
+                                typeNumber: 1,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              ),
+                            );
+
+                            return CustomerCardWidget(
+                              customerCard: receivingCustomerCard,
                             );
                           },
                         ),
-                        CBFormTypeDropdown(
+                        CBTransfersTypeDropdown(
                           label: 'Type',
                           width: 150,
+                          menuHeigth: 300.0,
                           providerName:
-                              'transfers-between-customer-cards-receving-card-type',
+                              'transfers-between-customer-cards-receiving-card-type',
                           dropdownMenuEntriesLabels: typeListStream.when(
                             data: (data) => data
                                 .where(
@@ -456,41 +631,76 @@ class _TransfersBetweenCustomerCardsDataState
                         children: [
                           OtherInfos(
                             label: 'Nombre Type',
-                            value:
-                                transfersBetweenCustomerCardSelectedReceivingCustomerCard
-                                        ?.typeNumber
-                                        .toString() ??
-                                    '',
+                            value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                            .id !=
+                                        null
+                                ? transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                    .typeNumber
+                                    .toString()
+                                : '',
                           ),
                           OtherInfos(
                             label: 'Mise Type',
-                            value:
-                                '${transfersBetweenCustomerCardSelectedReceivingCustomerCardType?.stake.ceil() ?? ''}',
+                            value: transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedReceivingCustomerCardType
+                                            .id !=
+                                        null
+                                ? '${transfersBetweenCustomerCardSelectedReceivingCustomerCardType.stake.ceil()}'
+                                : '',
                           ),
-                          const OtherInfos(
-                            label: 'Total Règlements',
-                            value: '50',
+                          Consumer(
+                            builder: (context, ref, child) {
+                              return OtherInfos(
+                                label: 'Total Règlements',
+                                value: transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                        null
+                                    ? receivingCustomerCardSettlementsNumbersTotal
+                                        .toString()
+                                    : '',
+                              );
+                            },
                           ),
-                          const OtherInfos(
-                            label: 'Montant Réglé',
-                            value: '2500f',
+                          Consumer(
+                            builder: (context, ref, child) {
+                              return OtherInfos(
+                                label: 'Montant Réglé',
+                                value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                            null &&
+                                        transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                            null
+                                    ? '${(transfersBetweenCustomerCardSelectedReceivingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedReceivingCustomerCardType.stake * receivingCustomerCardSettlementsNumbersTotal).ceil()}'
+                                    : '',
+                              );
+                            },
                           )
                         ],
                       ),
                     ),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CBText(
+                        const CBText(
                           text: 'Règlements à recevoir: ',
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5.0,
                         ),
+                        // the number of settlements to receive is equal to the amount to receive / receiving card type stake (round)
                         CBText(
-                          text: '34',
+                          text: transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+                                  transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                      null &&
+                                  transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                      null &&
+                                  transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                      null
+                              ? '${((2 * (transfersBetweenCustomerCardSelectedIssuingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake * issuingCustomerCardSettlementsNumbersTotal) / 3 - 300) / transfersBetweenCustomerCardSelectedReceivingCustomerCardType.stake).round()}'
+                              : '',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),

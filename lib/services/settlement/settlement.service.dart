@@ -84,7 +84,7 @@ class SettlementsService {
         ascending: true,
       );
 
-      if (customerCardId != null) {
+      if (customerCardId != null || customerCardId != 0) {
         query = query.eq(SettlementTable.cardId, customerCardId);
       }
 
