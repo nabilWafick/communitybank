@@ -3,7 +3,7 @@
 import 'package:communitybank/controllers/collection/collection.controller.dart';
 import 'package:communitybank/controllers/forms/validators/multiple_settlements/multiple_settlements.validator.dart';
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
-import 'package:communitybank/controllers/settlement/settlement.controller.dart';
+import 'package:communitybank/controllers/settlements/settlements.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/type/type.model.dart';
@@ -309,18 +309,8 @@ class SettlementCRUDFunctions {
               }
             }
 
-            debugPrint('======= CHECKING =======');
-            debugPrint('selected types: $selectedTypes');
-            debugPrint('selected customerCards: $selectedCustomerCards');
-            debugPrint('settlements number: $settlementsNumbers');
-
             List<ServiceResponse> settlementCreationResponses = [];
             for (int i = 0; i < selectedTypes.length; ++i) {
-              debugPrint('setllement ${i + 1}');
-              debugPrint('type:${selectedTypes[i]} ');
-              debugPrint('customer card:${selectedCustomerCards[i]} ');
-              debugPrint('settlement number :${settlementsNumbers[i]} ');
-
               final response = await singleSettlementCreation(
                 ref: ref,
                 context: context,

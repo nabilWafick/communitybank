@@ -1,6 +1,6 @@
 import 'package:communitybank/models/data/agent/agent.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
-import 'package:communitybank/services/agent/agent.service.dart';
+import 'package:communitybank/services/agents/agent.service.dart';
 
 class AgentsController {
   static Future<ServiceResponse> create({required Agent agent}) async {

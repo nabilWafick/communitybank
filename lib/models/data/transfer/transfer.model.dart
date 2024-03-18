@@ -5,6 +5,7 @@ import 'package:communitybank/models/tables/transfer/transfer_table.model.dart';
 
 class Transfer {
   int? id;
+  int customerAccountId;
   int issuingCustomerCardId;
   int receivingCustomerCardId;
   int agentId;
@@ -13,6 +14,7 @@ class Transfer {
   DateTime updatedAt;
   Transfer({
     this.id,
+    required this.customerAccountId,
     required this.issuingCustomerCardId,
     required this.receivingCustomerCardId,
     required this.agentId,
@@ -23,6 +25,7 @@ class Transfer {
 
   Transfer copyWith({
     int? id,
+    int? customerAccount,
     int? issuingCustomerCardId,
     int? receivingCustomerCardId,
     int? agentId,
@@ -32,6 +35,7 @@ class Transfer {
   }) {
     return Transfer(
       id: id ?? this.id,
+      customerAccountId: customerAccountId,
       issuingCustomerCardId:
           issuingCustomerCardId ?? this.issuingCustomerCardId,
       receivingCustomerCardId:
@@ -45,7 +49,7 @@ class Transfer {
 
   Map<String, dynamic> toMap({required bool isAdding}) {
     final map = {
-      TransferTable.id: id,
+      TransferTable.customerAccountId: customerAccountId,
       TransferTable.issuingCustomerCardId: issuingCustomerCardId,
       TransferTable.receivingCustomerCardId: receivingCustomerCardId,
       TransferTable.agentId: agentId,
@@ -61,6 +65,7 @@ class Transfer {
   factory Transfer.fromMap(Map<String, dynamic> map) {
     return Transfer(
       id: map[TransferTable.id] != null ? map[TransferTable.id] as int : null,
+      customerAccountId: map[TransferTable.customerAccountId] as int,
       issuingCustomerCardId: map[TransferTable.issuingCustomerCardId] as int,
       receivingCustomerCardId:
           map[TransferTable.receivingCustomerCardId] as int,
@@ -84,7 +89,7 @@ class Transfer {
 
   @override
   String toString() {
-    return 'Transfer(id: $id, issuingCustomerCardId: $issuingCustomerCardId, receivingCustomerCardId: $receivingCustomerCardId, agentId: $agentId, validatedAt: $validatedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Transfer(id: $id, customerAccountId: $customerAccountId, issuingCustomerCardId: $issuingCustomerCardId, receivingCustomerCardId: $receivingCustomerCardId, agentId: $agentId, validatedAt: $validatedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -92,6 +97,7 @@ class Transfer {
     if (identical(this, other)) return true;
 
     return other.id == id &&
+        other.customerAccountId == customerAccountId &&
         other.issuingCustomerCardId == issuingCustomerCardId &&
         other.receivingCustomerCardId == receivingCustomerCardId &&
         other.agentId == agentId &&
@@ -103,6 +109,7 @@ class Transfer {
   @override
   int get hashCode {
     return id.hashCode ^
+        customerAccountId.hashCode ^
         issuingCustomerCardId.hashCode ^
         receivingCustomerCardId.hashCode ^
         agentId.hashCode ^

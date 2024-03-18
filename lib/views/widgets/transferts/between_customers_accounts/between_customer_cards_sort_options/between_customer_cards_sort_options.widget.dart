@@ -1,7 +1,6 @@
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/transferts/between_customers_accounts/customer_account_dropdown/customer_account_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

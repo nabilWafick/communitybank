@@ -228,15 +228,22 @@ class _CollectionsListState extends ConsumerState<CollectionsList> {
                       fontSize: 12.0,
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 500.0,
-                    height: 30.0,
-                    child: CBText(
-                      text:
-                          '${format.format(collection.createdAt)}  ${collection.createdAt.hour}:${collection.createdAt.minute}',
-                      fontSize: 12.0,
-                    ),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final formatedTime = FunctionsController.getFormatedTime(
+                        dateTime: collection.createdAt,
+                      );
+                      return Container(
+                        alignment: Alignment.centerLeft,
+                        width: 500.0,
+                        height: 30.0,
+                        child: CBText(
+                          text:
+                              '${format.format(collection.createdAt)} $formatedTime',
+                          fontSize: 12.0,
+                        ),
+                      );
+                    },
                   ),
                   Container(
                     alignment: Alignment.centerLeft,

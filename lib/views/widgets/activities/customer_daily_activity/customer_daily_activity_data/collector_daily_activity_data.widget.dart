@@ -1,4 +1,4 @@
-import 'package:communitybank/controllers/settlement/settlement.controller.dart';
+import 'package:communitybank/controllers/settlements/settlements.controller.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';

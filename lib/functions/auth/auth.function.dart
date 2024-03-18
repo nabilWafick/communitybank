@@ -1,6 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:communitybank/controllers/agent/agent.controller.dart';
+import 'package:communitybank/controllers/agents/agents.controller.dart';
 import 'package:communitybank/controllers/auth/auth.controller.dart';
 import 'package:communitybank/controllers/forms/validators/login/login.validator.dart';
 import 'package:communitybank/controllers/forms/validators/registration/registration.validator.dart';

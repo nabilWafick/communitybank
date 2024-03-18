@@ -1,73 +1,86 @@
+import 'package:communitybank/controllers/transfers/transfers.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
+import 'package:communitybank/models/data/transfer/transfer.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
+import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
+import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/settlements/settlements_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/settlement/settlement_update_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/settlement/settlement_validation_status_update_confirmation_dialog.widegt.dart';
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/agent/agent_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-class CashOperationsSettlements extends StatefulHookConsumerWidget {
-  const CashOperationsSettlements({super.key});
+final transfersValidationsListStreamProvider =
+    StreamProvider<List<Transfer>>((ref) async* {
+  final selectedIssuingCustomerCard = ref.watch(
+    listCustomerCardDropdownProvider(
+        'transfer-between-customer-cards-issuing-card'),
+  );
+  final selectedReceivingCustomerCard = ref.watch(
+    listCustomerCardDropdownProvider(
+        'transfer-between-customer-cards-receiving-card'),
+  );
 
+  final selectedCustomerAccount = ref.watch(
+    listCustomerAccountDropdownProvider(
+        'transfer-between-customer-cards-customer-account'),
+  );
+
+  final selectedAgent = ref.watch(
+    listAgentDropdownProvider('transfer-between-customer-cards-agent'),
+  );
+
+  yield* TransfersController.getAll(
+    customerAccountId: selectedCustomerAccount.id,
+    issuingCustomerCardId: selectedIssuingCustomerCard.id,
+    receivingCustomerCardId: selectedReceivingCustomerCard.id,
+    agentId: selectedAgent.id,
+  );
+});
+
+class TransfersValidationsList extends ConsumerStatefulWidget {
+  const TransfersValidationsList({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CashOperationsSettlementsState();
+      _TransfersValidationsListState();
 }
 
-class _CashOperationsSettlementsState
-    extends ConsumerState<CashOperationsSettlements> {
+class _TransfersValidationsListState
+    extends ConsumerState<TransfersValidationsList> {
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('fr');
   }
 
+  final ScrollController verticalScrollController = ScrollController();
+  final ScrollController horizontalScrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    final cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements =
-        ref.watch(
-      cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider,
-    );
-    final cashOperationsSelectedCustomerAccountOwnerSelectedCardType =
-        ref.watch(
-            cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
-    final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref
-        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    final transfersValidationsListStream =
+        ref.watch(transfersValidationsListStreamProvider);
+    final customersAccountsListStream =
+        ref.watch(customersAccountsListStreamProvider);
+    final typesListStream = ref.watch(typesListStreamProvider);
+    final customersListStream = ref.watch(customersListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
 
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        margin: const EdgeInsets.only(top: 30.0),
-        decoration: BoxDecoration(
-          //  color: Colors.blueAccent,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(
-              15.0,
-            ),
-            topRight: Radius.circular(
-              15.0,
-            ),
-          ),
-          border: Border.all(
-            color: CBColors.sidebarTextColor.withOpacity(.5),
-            width: 1.5,
-          ),
-        ),
-        child: cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlements
-            .when(
+        child: transfersValidationsListStream.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 350,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 100,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -85,62 +98,73 @@ class _CashOperationsSettlementsState
                 ),
               ),
               Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Mise',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Montant',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Date de collecte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Date de saisie',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
                 width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte Émettrice',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte Réceptrice',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date d\'instance',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -149,10 +173,6 @@ class _CashOperationsSettlementsState
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
-              ),
-              const SizedBox(
-                width: 150.0,
-                height: 50.0,
               ),
               const SizedBox(
                 width: 150.0,
@@ -175,12 +195,59 @@ class _CashOperationsSettlementsState
               );
             },
             rightSideItemBuilder: (BuildContext context, int index) {
-              final settlement = data[index];
+              final transfer = data[index];
               return Row(
                 children: [
+                  // customer
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 200.0,
+                    width: 400.0,
+                    height: 30.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        return customersAccountsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerAccountData = data.firstWhere(
+                              (customerAccount) =>
+                                  customerAccount.id ==
+                                  transfer.customerAccountId,
+                            );
+
+                            final String realTimeCustomer =
+                                customersListStream.when(
+                              data: (data) {
+                                final accountOwner =
+                                    data.firstWhere((customer) {
+                                  return customer.id ==
+                                      realTimeCustomerAccountData.customerId;
+                                });
+
+                                return '${accountOwner.name} ${accountOwner.firstnames}';
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            );
+
+                            return CBText(
+                              text: realTimeCustomer,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // issuing customer card
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
                     height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
@@ -191,7 +258,8 @@ class _CashOperationsSettlementsState
                           data: (data) {
                             final realTimeCustomerCardData = data.firstWhere(
                               (customerCard) =>
-                                  customerCard.id == settlement.cardId,
+                                  customerCard.id ==
+                                  transfer.issuingCustomerCardId,
                             );
                             return CBText(
                               text: realTimeCustomerCardData.label,
@@ -208,40 +276,140 @@ class _CashOperationsSettlementsState
                       },
                     ),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 200.0,
-                    height: 30.0,
-                    child: CBText(
-                      text: settlement.number.toString(),
-                      fontSize: 12.0,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 200.0,
-                    height: 30.0,
-                    child: CBText(
-                      text:
-                          '${settlement.number * cashOperationsSelectedCustomerAccountOwnerSelectedCard!.typeNumber * cashOperationsSelectedCustomerAccountOwnerSelectedCardType!.stake.ceil()}',
-                      fontSize: 12.0,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+
+                  // issuing card type
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
-                    child: CBText(
-                      text: format.format(settlement.collectedAt),
-                      fontSize: 12.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final customersCardsListStream =
+                            ref.watch(customersCardsListStreamProvider);
+
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerCardData = data.firstWhere(
+                              (customerCard) =>
+                                  customerCard.id ==
+                                  transfer.issuingCustomerCardId,
+                            );
+
+                            final String realTimeType = typesListStream.when(
+                              data: (data) {
+                                final customerCardType =
+                                    data.firstWhere((type) {
+                                  return type.id ==
+                                      realTimeCustomerCardData.typeId;
+                                });
+
+                                return customerCardType.name;
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            );
+
+                            return CBText(
+                              text: realTimeType,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
+                        );
+                      },
                     ),
                   ),
+
+                  // receiving customer card
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final customersCardsListStream =
+                            ref.watch(customersCardsListStreamProvider);
+
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerCardData = data.firstWhere(
+                              (customerCard) =>
+                                  customerCard.id ==
+                                  transfer.receivingCustomerCardId,
+                            );
+                            return CBText(
+                              text: realTimeCustomerCardData.label,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // receiving card type
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        final customersCardsListStream =
+                            ref.watch(customersCardsListStreamProvider);
+
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerCardData = data.firstWhere(
+                              (customerCard) =>
+                                  customerCard.id ==
+                                  transfer.receivingCustomerCardId,
+                            );
+
+                            final String realTimeType = typesListStream.when(
+                              data: (data) {
+                                final customerCardType =
+                                    data.firstWhere((type) {
+                                  return type.id ==
+                                      realTimeCustomerCardData.typeId;
+                                });
+
+                                return customerCardType.name;
+                              },
+                              error: (error, stackTrace) => '',
+                              loading: () => '',
+                            );
+
+                            return CBText(
+                              text: realTimeType,
+                              fontSize: 12.0,
+                            );
+                          },
+                          error: (error, stackTrace) => const CBText(
+                            text: '',
+                          ),
+                          loading: () => const CBText(
+                            text: '',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
                   Consumer(
                     builder: (context, ref, child) {
                       final formatedTime = FunctionsController.getFormatedTime(
-                        dateTime: settlement.createdAt,
+                        dateTime: transfer.createdAt,
                       );
                       return Container(
                         alignment: Alignment.centerLeft,
@@ -249,15 +417,16 @@ class _CashOperationsSettlementsState
                         height: 30.0,
                         child: CBText(
                           text:
-                              '${format.format(settlement.createdAt)} $formatedTime',
+                              '${format.format(transfer.createdAt)} $formatedTime',
                           fontSize: 12.0,
                         ),
                       );
                     },
                   ),
+
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 400.0,
+                    width: 300.0,
                     height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
@@ -267,7 +436,7 @@ class _CashOperationsSettlementsState
                         return agentListStream.when(
                           data: (data) {
                             final realTimeAgentData = data.firstWhere(
-                              (agent) => agent.id == settlement.agentId,
+                              (agent) => agent.id == transfer.agentId,
                             );
                             return CBText(
                               text:
@@ -287,7 +456,7 @@ class _CashOperationsSettlementsState
                   ),
                   InkWell(
                     onTap: () async {
-                      FunctionsController.showAlertDialog(
+                      /*    FunctionsController.showAlertDialog(
                         context: context,
                         alertDialog:
                             SettlementValidationStatusUpdateConfirmationDialog(
@@ -295,13 +464,13 @@ class _CashOperationsSettlementsState
                           confirmToDelete:
                               SettlementCRUDFunctions.updateValidationStatus,
                         ),
-                      );
+                      );*/
                     },
                     child: Container(
                       width: 150.0,
                       height: 30.0,
                       alignment: Alignment.center,
-                      child: settlement.isValiated
+                      child: transfer.validatedAt != null
                           ? const Icon(
                               Icons.check,
                               color: Colors.green,
@@ -315,32 +484,13 @@ class _CashOperationsSettlementsState
                   ),
                   InkWell(
                     onTap: () async {
-                      await FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog:
-                            SettlementUpdateForm(settlement: settlement),
-                      );
-                    },
-                    child: Container(
-                      width: 150.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.green[500],
-                      ),
-                    ),
-                    // showEditIcon: true,
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      await FunctionsController.showAlertDialog(
+                      /*   await FunctionsController.showAlertDialog(
                         context: context,
                         alertDialog: SettlementDeletionConfirmationDialog(
                           settlement: settlement,
                           confirmToDelete: SettlementCRUDFunctions.delete,
                         ),
-                      );
+                      );*/
                     },
                     child: Container(
                       width: 150.0,
@@ -361,7 +511,7 @@ class _CashOperationsSettlementsState
           ),
           error: (error, stackTrace) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: 1450,
+            rightHandSideColumnWidth: 1500,
             itemCount: 0,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -379,62 +529,73 @@ class _CashOperationsSettlementsState
                 ),
               ),
               Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Mise',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Montant',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Date de collecte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Date de saisie',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
                 width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte Émettrice',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte Réceptrice',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date d\'instance',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -443,10 +604,6 @@ class _CashOperationsSettlementsState
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
-              ),
-              const SizedBox(
-                width: 150.0,
-                height: 50.0,
               ),
               const SizedBox(
                 width: 150.0,
@@ -497,62 +654,73 @@ class _CashOperationsSettlementsState
                 ),
               ),
               Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Mise',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 200.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Montant',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Date de collecte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
-                width: 300.0,
-                height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Date de saisie',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Container(
                 width: 400.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte Émettrice',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Carte Réceptrice',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Carte',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date d\'instance',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
@@ -561,10 +729,6 @@ class _CashOperationsSettlementsState
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
-              ),
-              const SizedBox(
-                width: 150.0,
-                height: 50.0,
               ),
               const SizedBox(
                 width: 150.0,

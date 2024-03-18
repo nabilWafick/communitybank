@@ -1,4 +1,7 @@
-import 'package:communitybank/controllers/settlement/settlement.controller.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:communitybank/controllers/settlements/settlements.controller.dart';
+import 'package:communitybank/functions/crud/transfers/transfers_crud.function.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
@@ -10,6 +13,7 @@ import 'package:communitybank/views/widgets/globals/elevated_button/elevated_but
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:communitybank/views/widgets/transferts/between_customers_accounts/type_dropdown/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -71,6 +75,7 @@ class _TransfersBetweenCustomerCardsDataState
     extends ConsumerState<TransfersBetweenCustomerCardsData> {
   @override
   Widget build(BuildContext context) {
+    final enableTransferButton = useState<bool>(true);
     final customersCardsListStream =
         ref.watch(customersCardsListStreamProvider);
     final typeListStream = ref.watch(typesListStreamProvider);
@@ -209,10 +214,10 @@ class _TransfersBetweenCustomerCardsDataState
               ),
             );
 
-            // update issuingCustomerCard
+            // update receivingCustomerCard
             ref
                 .read(
-                  transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider
+                  transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider
                       .notifier,
                 )
                 .state = receivingCustomerCard;
@@ -464,7 +469,7 @@ class _TransfersBetweenCustomerCardsDataState
                                     transfersBetweenCustomerCardSelectedIssuingCustomerCardType
                                             .id !=
                                         null
-                                ? '${transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake.ceil()}'
+                                ? '${transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake.toInt()}'
                                 : '',
                           ),
                           Consumer(
@@ -481,13 +486,26 @@ class _TransfersBetweenCustomerCardsDataState
                           ),
                           Consumer(
                             builder: (context, ref, child) {
+                              final amount = transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                                          null &&
+                                      transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                          null
+                                  ? (transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                              .typeNumber *
+                                          transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                              .stake *
+                                          issuingCustomerCardSettlementsNumbersTotal)
+                                      .ceil()
+                                  : 0;
                               return OtherInfos(
                                 label: 'Montant Réglé',
                                 value: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
                                             null &&
                                         transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
                                             null
-                                    ? '${(transfersBetweenCustomerCardSelectedIssuingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake * issuingCustomerCardSettlementsNumbersTotal).ceil()}'
+                                    ? amount > 0
+                                        ? '${amount}f'
+                                        : '0f'
                                     : '',
                               );
                             },
@@ -509,12 +527,28 @@ class _TransfersBetweenCustomerCardsDataState
                         // the amount to transfer is equal to customer card total amount *2/3 - 300. 300 for customerCard fee
                         Consumer(
                           builder: (context, ref, child) {
+                            final amount = transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                        null
+                                ? (2 *
+                                            (transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                                    .typeNumber *
+                                                transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                                    .stake *
+                                                issuingCustomerCardSettlementsNumbersTotal) /
+                                            3 -
+                                        300)
+                                    .ceil()
+                                : 0;
                             return CBText(
                               text: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
                                           null &&
                                       transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
                                           null
-                                  ? '${(2 * (transfersBetweenCustomerCardSelectedIssuingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake * issuingCustomerCardSettlementsNumbersTotal) / 3 - 300).ceil()}'
+                                  ? amount > 0
+                                      ? '${amount}f'
+                                      : '0f'
                                   : '',
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -632,10 +666,10 @@ class _TransfersBetweenCustomerCardsDataState
                           OtherInfos(
                             label: 'Nombre Type',
                             value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
-                                        null &&
+                                    null /* &&
                                     transfersBetweenCustomerCardSelectedReceivingCustomerCard
                                             .id !=
-                                        null
+                                        null*/
                                 ? transfersBetweenCustomerCardSelectedReceivingCustomerCard
                                     .typeNumber
                                     .toString()
@@ -665,13 +699,26 @@ class _TransfersBetweenCustomerCardsDataState
                           ),
                           Consumer(
                             builder: (context, ref, child) {
+                              final amount = transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                          null &&
+                                      transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                          null
+                                  ? (transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                              .typeNumber *
+                                          transfersBetweenCustomerCardSelectedReceivingCustomerCardType
+                                              .stake *
+                                          receivingCustomerCardSettlementsNumbersTotal)
+                                      .ceil()
+                                  : 0;
                               return OtherInfos(
                                 label: 'Montant Réglé',
                                 value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
                                             null &&
                                         transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
                                             null
-                                    ? '${(transfersBetweenCustomerCardSelectedReceivingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedReceivingCustomerCardType.stake * receivingCustomerCardSettlementsNumbersTotal).ceil()}'
+                                    ? amount > 0
+                                        ? '${amount}f'
+                                        : '0f'
                                     : '',
                               );
                             },
@@ -691,19 +738,44 @@ class _TransfersBetweenCustomerCardsDataState
                           width: 5.0,
                         ),
                         // the number of settlements to receive is equal to the amount to receive / receiving card type stake (round)
-                        CBText(
-                          text: transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
-                                  transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
-                                      null &&
-                                  transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
-                                      null &&
-                                  transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
-                                      null
-                              ? '${((2 * (transfersBetweenCustomerCardSelectedIssuingCustomerCard.typeNumber * transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake * issuingCustomerCardSettlementsNumbersTotal) / 3 - 300) / transfersBetweenCustomerCardSelectedReceivingCustomerCardType.stake).round()}'
-                              : '',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final settlementNumber = transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                        null
+                                ? ((2 *
+                                                (transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                                        .typeNumber *
+                                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                                        .stake *
+                                                    issuingCustomerCardSettlementsNumbersTotal) /
+                                                3 -
+                                            300) /
+                                        transfersBetweenCustomerCardSelectedReceivingCustomerCardType
+                                            .stake)
+                                    .round()
+                                : 0;
+                            return CBText(
+                              text: transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+                                      transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                          null &&
+                                      transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                          null &&
+                                      transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                          null
+                                  ? settlementNumber > 0
+                                      ? settlementNumber.toString()
+                                      : '0'
+                                  : '',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            );
+                          },
+                        )
                       ],
                     )
                   ],
@@ -717,7 +789,20 @@ class _TransfersBetweenCustomerCardsDataState
         ),*/
         SizedBox(
           width: 500.0,
-          child: CBElevatedButton(text: "Transférer", onPressed: () {}),
+          child: CBElevatedButton(
+            text: enableTransferButton.value
+                ? "Transférer"
+                : "Veuillez patienter",
+            onPressed: () async {
+              enableTransferButton.value
+                  ? await TransferCRUDFunctions.create(
+                      context: context,
+                      ref: ref,
+                      enableTransferButton: enableTransferButton,
+                    )
+                  : () {};
+            },
+          ),
         ),
       ],
     );

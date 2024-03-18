@@ -1,6 +1,6 @@
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
-import 'package:communitybank/services/settlement/settlement.service.dart';
+import 'package:communitybank/services/settlements/settlements.service.dart';
 
 class SettlementsController {
   static Future<ServiceResponse> create(
@@ -32,18 +32,6 @@ class SettlementsController {
     );
     //.asBroadcastStream();
   }
-
-/*
-  static Future<List<Settlement>> searchSettlement({required String name}) async {
-    final searchedSettlements = await SettlementsService.searchSettlement(name: name);
-
-    return searchedSettlements
-        .map(
-          (SettlementMap) => Settlement.fromMap(SettlementMap),
-        )
-        .toList();
-  }
-  */
 
   static Future<ServiceResponse> update(
       {required int id, required Settlement settlement}) async {

@@ -96,32 +96,6 @@ class SettlementsService {
     }
   }
 
-/*
-  static Future<List<Map<String, dynamic>>> searchSettlement(
-      {required String name}) async {
-    List<Map<String, dynamic>>? response;
-    final supabase = Supabase.instance.client;
-
-    try {
-      // get all Settlements which name contain "name"
-      response = await supabase
-              .from(SettlementTable.tableName)
-              .select<List<Map<String, dynamic>>>()
-              .ilike(SettlementTable.name, '%$name%')
-
-          //.or(filters)
-          // .ilike(SettlementTable.firstnames, '%$name%');
-          ;
-
-      // return the result data
-      return response;
-    } catch (error) {
-      debugPrint(error.toString());
-    }
-
-    return [];
-  }
-*/
   static Future<Map<String, dynamic>?> update(
       {required int id, required Settlement settlement}) async {
     List<Map<String, dynamic>>? response;
