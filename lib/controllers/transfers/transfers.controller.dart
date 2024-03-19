@@ -18,13 +18,11 @@ class TransfersController {
   }
 
   static Stream<List<Transfer>> getAll({
-    required int? customerAccountId,
     required int? issuingCustomerCardId,
     required int? receivingCustomerCardId,
     required int? agentId,
   }) async* {
     final transfersMapListStream = TransfersService.getAll(
-      customerAccountId: customerAccountId,
       issuingCustomerCardId: issuingCustomerCardId,
       receivingCustomerCardId: receivingCustomerCardId,
       agentId: agentId,

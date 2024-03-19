@@ -51,7 +51,6 @@ class TransfersService {
   }
 
   static Stream<List<Map<String, dynamic>>> getAll({
-    required int? customerAccountId,
     required int? issuingCustomerCardId,
     required int? receivingCustomerCardId,
     required int? agentId,
@@ -67,13 +66,6 @@ class TransfersService {
         TransferTable.id,
         ascending: true,
       );
-
-      if (customerAccountId != null || customerAccountId != 0) {
-        query = query.eq(
-          TransferTable.customerAccountId,
-          customerAccountId,
-        );
-      }
 
       if (issuingCustomerCardId != null || issuingCustomerCardId != 0) {
         query = query.eq(

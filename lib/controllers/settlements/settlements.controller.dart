@@ -16,8 +16,9 @@ class SettlementsController {
     return response == null ? null : Settlement.fromMap(response);
   }
 
-  static Stream<List<Settlement>> getAll(
-      {required int? customerCardId}) async* {
+  static Stream<List<Settlement>> getAll({
+    required int? customerCardId,
+  }) async* {
     final settlementsMapListStream = SettlementsService.getAll(
       customerCardId: customerCardId,
     );

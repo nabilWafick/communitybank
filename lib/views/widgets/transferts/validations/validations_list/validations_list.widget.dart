@@ -28,17 +28,16 @@ final transfersValidationsListStreamProvider =
         'transfer-between-customer-cards-receiving-card'),
   );
 
-  final selectedCustomerAccount = ref.watch(
+  /*final selectedCustomerAccount = ref.watch(
     listCustomerAccountDropdownProvider(
         'transfer-between-customer-cards-customer-account'),
   );
-
+*/
   final selectedAgent = ref.watch(
     listAgentDropdownProvider('transfer-between-customer-cards-agent'),
   );
 
   yield* TransfersController.getAll(
-    customerAccountId: selectedCustomerAccount.id,
     issuingCustomerCardId: selectedIssuingCustomerCard.id,
     receivingCustomerCardId: selectedReceivingCustomerCard.id,
     agentId: selectedAgent.id,
@@ -210,7 +209,7 @@ class _TransfersValidationsListState
                             final realTimeCustomerAccountData = data.firstWhere(
                               (customerAccount) =>
                                   customerAccount.id ==
-                                  transfer.customerAccountId,
+                                  transfer.issuingCustomerCardId,
                             );
 
                             final String realTimeCustomer =

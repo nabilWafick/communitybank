@@ -30,8 +30,6 @@ class TransferCRUDFunctions {
     final transfersBetweenCustomerCardSelectedIssuingCustomerCardType =
         ref.watch(
             transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider);
-    final transfersBetweenCustomerCardsSelectedCustomerAccount =
-        ref.watch(transfersBetweenCustomerCardsSelectedCustomerAccountProvider);
 
     final transfersBetweenCustomerCardSelectedReceivingCustomerCard = ref.watch(
         transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider);
@@ -61,15 +59,18 @@ class TransferCRUDFunctions {
           settlementsNumbersTotal += settlement.number;
         }
 
+        debugPrint('settlement total: $settlementsNumbersTotal');
+
         // calculate the amount to transefered
-        final issuingCustomerCardTransferedAmount = 2 *
-            ((transfersBetweenCustomerCardSelectedIssuingCustomerCard
+        final issuingCustomerCardTransferedAmount = ((2 *
+                    (transfersBetweenCustomerCardSelectedIssuingCustomerCard
                             .typeNumber *
                         transfersBetweenCustomerCardSelectedIssuingCustomerCardType!
                             .stake *
                         settlementsNumbersTotal) /
-                    3 -
-                300.round());
+                    3) -
+                300)
+            .round();
 
         // calculate the number of settlements to receive
         final settlementsNumberReceived = (issuingCustomerCardTransferedAmount /
@@ -78,6 +79,9 @@ class TransferCRUDFunctions {
             .round();
         if (issuingCustomerCardTransferedAmount <= 0 ||
             settlementsNumberReceived <= 0) {
+          debugPrint(
+              'issuingCustomerCardTransferedAmount: $issuingCustomerCardTransferedAmount');
+          debugPrint('settlements to receive: $settlementsNumberReceived');
           ref
               .read(
                 responseDialogProvider.notifier,
@@ -99,8 +103,6 @@ class TransferCRUDFunctions {
           final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
 
           final transfer = Transfer(
-            customerAccountId:
-                transfersBetweenCustomerCardsSelectedCustomerAccount!.id!,
             issuingCustomerCardId:
                 transfersBetweenCustomerCardSelectedIssuingCustomerCard.id,
             receivingCustomerCardId:

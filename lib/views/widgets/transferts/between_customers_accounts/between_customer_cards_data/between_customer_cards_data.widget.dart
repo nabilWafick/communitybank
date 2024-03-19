@@ -112,6 +112,37 @@ class _TransfersBetweenCustomerCardsDataState
             milliseconds: 100,
           ),
           () {
+            // reset providers for avoiding showing previous customer cards data
+            ref.invalidate(
+              transfersTypeDropdownProvider(
+                'transfers-between-customer-cards-issuing-card-type',
+              ),
+            );
+            ref.invalidate(
+              transfersTypeDropdownProvider(
+                'transfers-between-customer-cards-receiving-card-type',
+              ),
+            );
+            ref.invalidate(
+              transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider,
+            );
+            ref.invalidate(
+              transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider,
+            );
+            ref.invalidate(
+              transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider,
+            );
+            ref.invalidate(
+              transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider,
+            );
+            ref.invalidate(
+              transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider,
+            );
+
+            ref.invalidate(
+              transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider,
+            );
+
             customersCardsListStream.when(
               data: (data) {
                 final customerCards = data
@@ -233,21 +264,23 @@ class _TransfersBetweenCustomerCardsDataState
           const Duration(
             milliseconds: 100,
           ), () async {
-        final issuingCustomerCardSettlements =
-            await SettlementsController.getAll(
-          customerCardId: next?.id,
-        ).first;
+        if (next != null) {
+          final issuingCustomerCardSettlements =
+              await SettlementsController.getAll(
+            customerCardId: next.id ?? 1000000000000000000,
+          ).first;
 
-        int settlementsNumbersTotal = 0;
-        for (Settlement settlement in issuingCustomerCardSettlements) {
-          settlementsNumbersTotal += settlement.number;
+          int settlementsNumbersTotal = 0;
+          for (Settlement settlement in issuingCustomerCardSettlements) {
+            settlementsNumbersTotal += settlement.number;
+          }
+          ref
+              .read(
+                transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider
+                    .notifier,
+              )
+              .state = settlementsNumbersTotal;
         }
-        ref
-            .read(
-              transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider
-                  .notifier,
-            )
-            .state = settlementsNumbersTotal;
       });
     });
 
@@ -260,21 +293,23 @@ class _TransfersBetweenCustomerCardsDataState
           milliseconds: 100,
         ),
         () async {
-          final receivingCustomerCardSettlements =
-              await SettlementsController.getAll(
-            customerCardId: next?.id,
-          ).first;
+          if (next != null) {
+            final receivingCustomerCardSettlements =
+                await SettlementsController.getAll(
+              customerCardId: next.id ?? 1000000000000000000,
+            ).first;
 
-          int settlementsNumbersTotal = 0;
-          for (Settlement settlement in receivingCustomerCardSettlements) {
-            settlementsNumbersTotal += settlement.number;
+            int settlementsNumbersTotal = 0;
+            for (Settlement settlement in receivingCustomerCardSettlements) {
+              settlementsNumbersTotal += settlement.number;
+            }
+            ref
+                .read(
+                  transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider
+                      .notifier,
+                )
+                .state = settlementsNumbersTotal;
           }
-          ref
-              .read(
-                transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider
-                    .notifier,
-              )
-              .state = settlementsNumbersTotal;
         },
       );
     });
@@ -495,7 +530,7 @@ class _TransfersBetweenCustomerCardsDataState
                                           transfersBetweenCustomerCardSelectedIssuingCustomerCardType
                                               .stake *
                                           issuingCustomerCardSettlementsNumbersTotal)
-                                      .ceil()
+                                      .round()
                                   : 0;
                               return OtherInfos(
                                 label: 'Montant Réglé',
@@ -527,7 +562,9 @@ class _TransfersBetweenCustomerCardsDataState
                         // the amount to transfer is equal to customer card total amount *2/3 - 300. 300 for customerCard fee
                         Consumer(
                           builder: (context, ref, child) {
-                            final amount = transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                            final amount = transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+                                    transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                            .id !=
                                         null &&
                                     transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
                                         null
@@ -539,7 +576,7 @@ class _TransfersBetweenCustomerCardsDataState
                                                 issuingCustomerCardSettlementsNumbersTotal) /
                                             3 -
                                         300)
-                                    .ceil()
+                                    .round()
                                 : 0;
                             return CBText(
                               text: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
@@ -666,10 +703,10 @@ class _TransfersBetweenCustomerCardsDataState
                           OtherInfos(
                             label: 'Nombre Type',
                             value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
-                                    null /* &&
+                                        null &&
                                     transfersBetweenCustomerCardSelectedReceivingCustomerCard
                                             .id !=
-                                        null*/
+                                        null
                                 ? transfersBetweenCustomerCardSelectedReceivingCustomerCard
                                     .typeNumber
                                     .toString()
@@ -741,9 +778,15 @@ class _TransfersBetweenCustomerCardsDataState
                         Consumer(
                           builder: (context, ref, child) {
                             final settlementNumber = transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+                                    transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                            .id !=
+                                        null &&
                                     transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
                                         null &&
                                     transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                        null &&
+                                    transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                            .id !=
                                         null &&
                                     transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
                                         null
