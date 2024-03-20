@@ -1,7 +1,7 @@
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
-import 'package:communitybank/views/widgets/transferts/between_customers_accounts/customer_account_dropdown/customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_cards/customer_account_dropdown/customer_account_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -69,7 +69,7 @@ class _TransfersBetweenCustomerCardsSortOptionsState
             width: 400.0,
             menuHeigth: 500.0,
             label: 'Client',
-            providerName: 'customer-periodic-activity-customer-account',
+            providerName: 'transfer-between-customer-cards-customer-account',
             dropdownMenuEntriesLabels: customersAccountsListStream.when(
               data: (data) => [
                 CustomerAccount(

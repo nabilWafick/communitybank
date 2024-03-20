@@ -1,9 +1,9 @@
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/tooltip/tooltip.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:super_tooltip/super_tooltip.dart';
 
 final settlementsCollectionDateProvider = StateProvider<DateTime?>((ref) {
@@ -37,82 +37,14 @@ class _WidgetTestState extends ConsumerState<WidgetTest> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const CBToolTip(
+              options: [],
+            ),
             SuperTooltip(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 5.0,
-                    ),
-                    width: 120.0,
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.file_open,
-                          size: 20.0,
-                          color: CBColors.primaryColor,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        CBText(
-                          text: 'Détails',
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 5.0,
-                    ),
-                    width: 120.0,
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.edit,
-                          size: 20.0,
-                          //  color: Colors.green.shade700,
-                          color: CBColors.primaryColor,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        CBText(
-                          text: 'Éditer',
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 5.0,
-                    ),
-                    width: 120.0,
-                    child: const Row(
-                      children: [
-                        Icon(
-                          Icons.delete,
-                          size: 20.0,
-                          //  color: Colors.red.shade700,
-                          color: CBColors.primaryColor,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        CBText(
-                          text: 'Supprimer',
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ],
-                    ),
-                  ),
                   Container(
                     margin: const EdgeInsets.symmetric(
                       vertical: 5.0,

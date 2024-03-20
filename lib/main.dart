@@ -4,8 +4,6 @@ import 'package:communitybank/views/pages/home/home.page.dart';
 import 'package:communitybank/views/pages/login/login.page.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/widget.test.dart';
-//import 'package:communitybank/widget.test.dart';
-//import 'package:communitybank/widget.test.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -97,8 +95,8 @@ class CommunityBankApp extends ConsumerWidget {
           ResponsiveBreakpoint.autoScaleDown(800, name: DESKTOP),
           ResponsiveBreakpoint.autoScaleDown(1200, name: '1200'),
           ResponsiveBreakpoint.autoScaleDown(1400, name: '1400'),
-          ResponsiveBreakpoint.autoScaleDown(1700, name: 'XL'),
           ResponsiveBreakpoint.resize(1870, name: '1870'),
+          ResponsiveBreakpoint.resize(1700, name: 'XL'),
           ResponsiveBreakpoint.resize(1900, name: '2XL'),
           ResponsiveBreakpoint.resize(2000, name: '2000'),
           //  ResponsiveBreakpoint.autoScale(double.infinity, name: '4K'),
@@ -106,7 +104,8 @@ class CommunityBankApp extends ConsumerWidget {
       ),
       theme: CBThemeData.lightTheme,
       debugShowCheckedModeBanner: false,
-      home: // const WidgetTest(),
+      home:
+          // const WidgetTest(),
           //  const RegistrationPage(),
           //  const LoginPage(),
           const MainApp(),

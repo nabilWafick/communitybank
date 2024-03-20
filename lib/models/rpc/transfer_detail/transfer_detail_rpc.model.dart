@@ -1,7 +1,7 @@
 class TransferDetailRPC {
-  static const String functionName = 'transfers_details';
+  static const String functionName = 'get_transfers_details';
 
-  static const String transferId = 'id_transfer';
+  static const String transferId = 'id_transfert';
   static const String issuingCustomerCardId = 'id_carte_emettrice';
   static const String issuingCustomerCardLabel = 'libelle_carte_emettrice';
   static const String issuingCustomerCardTypeId = 'id_type_emetteur';
@@ -20,6 +20,7 @@ class TransferDetailRPC {
   static const String receivingCustomerCollector = 'charge_compte_recepteur';
   static const String receivingCustomer = 'client_recepteur';
   static const String agentId = 'id_agent';
+  static const String agent = 'agent';
   static const String validatedAt = 'date_validation';
   static const String createdAt = 'date_creation';
   static const String updatedAt = 'date_modification';

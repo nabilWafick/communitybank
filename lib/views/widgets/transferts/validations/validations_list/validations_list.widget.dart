@@ -1,16 +1,15 @@
-import 'package:communitybank/controllers/transfers/transfers.controller.dart';
+import 'package:communitybank/controllers/transfers_details/transfers_details.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/transfer/transfer.model.dart';
+import 'package:communitybank/models/data/transfer_detail/transfer_detail.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
-import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/agent/agent_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/type/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:communitybank/views/widgets/globals/tooltip/tooltip.widget.dart';
+import 'package:communitybank/views/widgets/transferts/validations/validations_sort_options/validations_sort_options.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -18,30 +17,95 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 final transfersValidationsListStreamProvider =
-    StreamProvider<List<Transfer>>((ref) async* {
+    StreamProvider<List<TransferDetail>>((ref) async* {
+  final selectedTransferCreationDate =
+      ref.watch(selectedTransferCreationDateProvider);
+
+  final selectedTransferValidationDate =
+      ref.watch(selectedTransferValidationDateProvider);
+
+  final selectedIssuingCustomerAccount = ref.watch(
+    listCustomerAccountDropdownProvider(
+      'transfers-validations-issuing-customer-account',
+    ),
+  );
+
+  final selectedReceivingCustomerAccount = ref.watch(
+    listCustomerAccountDropdownProvider(
+      'transfers-validations-receiving-customer-account',
+    ),
+  );
+
   final selectedIssuingCustomerCard = ref.watch(
     listCustomerCardDropdownProvider(
-        'transfer-between-customer-cards-issuing-card'),
+      'transfers-validations-issuing-card',
+    ),
   );
   final selectedReceivingCustomerCard = ref.watch(
     listCustomerCardDropdownProvider(
-        'transfer-between-customer-cards-receiving-card'),
+      'transfers-validations-receiving-card',
+    ),
   );
 
-  /*final selectedCustomerAccount = ref.watch(
-    listCustomerAccountDropdownProvider(
-        'transfer-between-customer-cards-customer-account'),
+  final selectedIssuingCustomerCardType = ref.watch(
+    listTypeDropdownProvider(
+      'transfers-validations-issuing-card-type',
+    ),
   );
-*/
+  final selectedReceivingCustomerCardType = ref.watch(
+    listTypeDropdownProvider(
+      'transfers-validations-receiving-card-type',
+    ),
+  );
+  final selectedIssuingCustomerCollector = ref.watch(
+    listCollectorDropdownProvider(
+        'transfers-validations-issuing-customer-collector'),
+  );
+
+  final selectedReceivingCustomerCollector = ref.watch(
+    listCollectorDropdownProvider(
+        'transfers-validations-issuing-customer-collector'),
+  );
+
   final selectedAgent = ref.watch(
-    listAgentDropdownProvider('transfer-between-customer-cards-agent'),
+    listAgentDropdownProvider('transfers-validations-agent'),
   );
 
-  yield* TransfersController.getAll(
-    issuingCustomerCardId: selectedIssuingCustomerCard.id,
-    receivingCustomerCardId: selectedReceivingCustomerCard.id,
-    agentId: selectedAgent.id,
-  );
+  yield* TransfersDetailsController.getTransfersDetails(
+    agentId: selectedAgent.id != 0 ? selectedAgent.id : null,
+    validationDate: selectedTransferCreationDate != null
+        ? FunctionsController.getFormatedTime(
+            dateTime: selectedTransferCreationDate)
+        : null,
+    creationDate: selectedTransferValidationDate != null
+        ? FunctionsController.getFormatedTime(
+            dateTime: selectedTransferValidationDate)
+        : null,
+    issuingCustomerCardId: selectedIssuingCustomerCard.id != 0
+        ? selectedIssuingCustomerCard.id
+        : null,
+    issuingCustomerCardTypeId: selectedIssuingCustomerCardType.id != 0
+        ? selectedIssuingCustomerCardType.id
+        : null,
+    issuingCustomerAccountId: selectedIssuingCustomerAccount.id != 0
+        ? selectedIssuingCustomerAccount.id
+        : null,
+    issuingCustomerCollectorId: selectedIssuingCustomerCollector.id != 0
+        ? selectedIssuingCustomerCollector.id
+        : null,
+    receivingCustomerCardId: selectedReceivingCustomerCard.id != 0
+        ? selectedReceivingCustomerCard.id
+        : null,
+    receivingCustomerCardTypeId: selectedReceivingCustomerCardType.id != 0
+        ? selectedReceivingCustomerCardType.id
+        : null,
+    receivingCustomerAccountId: selectedReceivingCustomerAccount.id != 0
+        ? selectedReceivingCustomerAccount.id
+        : null,
+    receivingCustomerCollectorId: selectedReceivingCustomerCollector.id != 0
+        ? selectedReceivingCustomerCollector.id
+        : null,
+  ).asStream();
 });
 
 class TransfersValidationsList extends ConsumerStatefulWidget {
@@ -66,10 +130,6 @@ class _TransfersValidationsListState
   Widget build(BuildContext context) {
     final transfersValidationsListStream =
         ref.watch(transfersValidationsListStreamProvider);
-    final customersAccountsListStream =
-        ref.watch(customersAccountsListStreamProvider);
-    final typesListStream = ref.watch(typesListStreamProvider);
-    final customersListStream = ref.watch(customersListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
 
@@ -79,7 +139,7 @@ class _TransfersValidationsListState
         child: transfersValidationsListStream.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 1950,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -97,11 +157,22 @@ class _TransfersValidationsListState
                 ),
               ),
               Container(
-                width: 400.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Client',
+                  text: 'Chargé de Compte Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client Émetteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -123,7 +194,29 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Carte',
+                  text: 'Type Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Chargé de Compte Récepteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client Récepteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -145,7 +238,7 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Carte',
+                  text: 'Type Récepteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -156,7 +249,18 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date d\'instance',
+                  text: 'Date de transfert',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date de validation',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -168,6 +272,17 @@ class _TransfersValidationsListState
                 alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Statut',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -194,52 +309,33 @@ class _TransfersValidationsListState
               );
             },
             rightSideItemBuilder: (BuildContext context, int index) {
-              final transfer = data[index];
+              final transferDetail = data[index];
               return Row(
                 children: [
+                  // customer collector
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: FunctionsController.truncateText(
+                        text: transferDetail.issuingCustomerCollector,
+                        maxLength: 20,
+                      ),
+                      fontSize: 12.0,
+                    ),
+                  ),
                   // customer
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 400.0,
+                    width: 300.0,
                     height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        return customersAccountsListStream.when(
-                          data: (data) {
-                            final realTimeCustomerAccountData = data.firstWhere(
-                              (customerAccount) =>
-                                  customerAccount.id ==
-                                  transfer.issuingCustomerCardId,
-                            );
-
-                            final String realTimeCustomer =
-                                customersListStream.when(
-                              data: (data) {
-                                final accountOwner =
-                                    data.firstWhere((customer) {
-                                  return customer.id ==
-                                      realTimeCustomerAccountData.customerId;
-                                });
-
-                                return '${accountOwner.name} ${accountOwner.firstnames}';
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            );
-
-                            return CBText(
-                              text: realTimeCustomer,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
-                          ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
-                        );
-                      },
+                    child: CBText(
+                      text: FunctionsController.truncateText(
+                        text: transferDetail.issuingCustomer,
+                        maxLength: 20,
+                      ),
+                      fontSize: 12.0,
                     ),
                   ),
 
@@ -248,31 +344,9 @@ class _TransfersValidationsListState
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final customersCardsListStream =
-                            ref.watch(customersCardsListStreamProvider);
-
-                        return customersCardsListStream.when(
-                          data: (data) {
-                            final realTimeCustomerCardData = data.firstWhere(
-                              (customerCard) =>
-                                  customerCard.id ==
-                                  transfer.issuingCustomerCardId,
-                            );
-                            return CBText(
-                              text: realTimeCustomerCardData.label,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
-                          ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
-                        );
-                      },
+                    child: CBText(
+                      text: transferDetail.issuingCustomerCardLabel,
+                      fontSize: 12.0,
                     ),
                   ),
 
@@ -281,79 +355,47 @@ class _TransfersValidationsListState
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final customersCardsListStream =
-                            ref.watch(customersCardsListStreamProvider);
-
-                        return customersCardsListStream.when(
-                          data: (data) {
-                            final realTimeCustomerCardData = data.firstWhere(
-                              (customerCard) =>
-                                  customerCard.id ==
-                                  transfer.issuingCustomerCardId,
-                            );
-
-                            final String realTimeType = typesListStream.when(
-                              data: (data) {
-                                final customerCardType =
-                                    data.firstWhere((type) {
-                                  return type.id ==
-                                      realTimeCustomerCardData.typeId;
-                                });
-
-                                return customerCardType.name;
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            );
-
-                            return CBText(
-                              text: realTimeType,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
-                          ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
-                        );
-                      },
+                    child: CBText(
+                      text: transferDetail.issuingCustomerCardTypeName,
+                      fontSize: 12.0,
                     ),
                   ),
 
+                  // receiving customer collector
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: FunctionsController.truncateText(
+                        text: transferDetail.receivingCustomerCollector,
+                        maxLength: 20,
+                      ),
+                      fontSize: 12.0,
+                    ),
+                  ),
+
+                  // receiving customer
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: FunctionsController.truncateText(
+                        text: transferDetail.receivingCustomer,
+                        maxLength: 20,
+                      ),
+                      fontSize: 12.0,
+                    ),
+                  ),
                   // receiving customer card
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final customersCardsListStream =
-                            ref.watch(customersCardsListStreamProvider);
-
-                        return customersCardsListStream.when(
-                          data: (data) {
-                            final realTimeCustomerCardData = data.firstWhere(
-                              (customerCard) =>
-                                  customerCard.id ==
-                                  transfer.receivingCustomerCardId,
-                            );
-                            return CBText(
-                              text: realTimeCustomerCardData.label,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
-                          ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
-                        );
-                      },
+                    child: CBText(
+                      text: transferDetail.receivingCustomerCardLabel,
+                      fontSize: 12.0,
                     ),
                   ),
 
@@ -362,53 +404,16 @@ class _TransfersValidationsListState
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final customersCardsListStream =
-                            ref.watch(customersCardsListStreamProvider);
-
-                        return customersCardsListStream.when(
-                          data: (data) {
-                            final realTimeCustomerCardData = data.firstWhere(
-                              (customerCard) =>
-                                  customerCard.id ==
-                                  transfer.receivingCustomerCardId,
-                            );
-
-                            final String realTimeType = typesListStream.when(
-                              data: (data) {
-                                final customerCardType =
-                                    data.firstWhere((type) {
-                                  return type.id ==
-                                      realTimeCustomerCardData.typeId;
-                                });
-
-                                return customerCardType.name;
-                              },
-                              error: (error, stackTrace) => '',
-                              loading: () => '',
-                            );
-
-                            return CBText(
-                              text: realTimeType,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
-                          ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
-                        );
-                      },
+                    child: CBText(
+                      text: transferDetail.receivingCustomerCardTypeName,
+                      fontSize: 12.0,
                     ),
                   ),
 
                   Consumer(
                     builder: (context, ref, child) {
                       final formatedTime = FunctionsController.getFormatedTime(
-                        dateTime: transfer.createdAt,
+                        dateTime: transferDetail.createdAt,
                       );
                       return Container(
                         alignment: Alignment.centerLeft,
@@ -416,44 +421,77 @@ class _TransfersValidationsListState
                         height: 30.0,
                         child: CBText(
                           text:
-                              '${format.format(transfer.createdAt)} $formatedTime',
+                              '${format.format(transferDetail.createdAt)} $formatedTime',
                           fontSize: 12.0,
                         ),
                       );
                     },
                   ),
 
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final formatedTime = transferDetail.validatedAt != null
+                          ? FunctionsController.getFormatedTime(
+                              dateTime: transferDetail.validatedAt!,
+                            )
+                          : '';
+                      return Container(
+                        alignment: Alignment.centerLeft,
+                        width: 300.0,
+                        height: 30.0,
+                        child: CBText(
+                          text: transferDetail.validatedAt != null
+                              ? '${format.format(transferDetail.validatedAt!)} $formatedTime'
+                              : '',
+                          fontSize: 12.0,
+                        ),
+                      );
+                    },
+                  ),
+                  // agent
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final agentListStream =
-                            ref.watch(agentsListStreamProvider);
-
-                        return agentListStream.when(
-                          data: (data) {
-                            final realTimeAgentData = data.firstWhere(
-                              (agent) => agent.id == transfer.agentId,
-                            );
-                            return CBText(
-                              text:
-                                  ' ${realTimeAgentData.name} ${realTimeAgentData.firstnames}',
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
-                          ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
-                        );
-                      },
+                    child: CBText(
+                      text: transferDetail.agent,
+                      fontSize: 12.0,
                     ),
                   ),
-                  InkWell(
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 200.0,
+                    height: 40.0,
+                    child: Card(
+                      color: transferDetail.validatedAt == null
+                          ? Colors.orange.shade700.withOpacity(.8)
+                          : transferDetail.validatedAt!.year != 1970
+                              ? Colors.green.shade700
+                              : Colors.red.shade700,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 15.0,
+                        ),
+                        child: CBText(
+                          text: transferDetail.validatedAt == null
+                              ? 'En attente'
+                              : transferDetail.validatedAt!.year != 1970
+                                  ? 'Validé'
+                                  : 'Rejeté',
+                          fontSize: 10.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          /* color: transferDetail.validatedAt == null
+                              ? Colors.orange.shade700
+                              : transferDetail.validatedAt!.year != 1970
+                                  ? Colors.green.shade700
+                                  : Colors.red.shade700,*/
+                        ),
+                      ),
+                    ),
+                  ),
+                  /*  InkWell(
                     onTap: () async {
                       /*    FunctionsController.showAlertDialog(
                         context: context,
@@ -469,7 +507,7 @@ class _TransfersValidationsListState
                       width: 150.0,
                       height: 30.0,
                       alignment: Alignment.center,
-                      child: transfer.validatedAt != null
+                      child: transferDetail.validatedAt != null
                           ? const Icon(
                               Icons.check,
                               color: Colors.green,
@@ -481,6 +519,32 @@ class _TransfersValidationsListState
                     ),
                     // showEditIcon: true,
                   ),
+                */
+
+                  Container(
+                    width: 150.0,
+                    height: 30.0,
+                    alignment: Alignment.center,
+                    child: transferDetail.validatedAt == null
+                        ? CBToolTip(
+                            options: [
+                              CBToolTipOption(
+                                icon: Icons.check,
+                                iconColor: Colors.green.shade700,
+                                name: 'Validé',
+                                onTap: () {},
+                              ),
+                              CBToolTipOption(
+                                icon: Icons.close,
+                                iconColor: Colors.red.shade700,
+                                name: 'Rejeté',
+                                onTap: () {},
+                              )
+                            ],
+                          )
+                        : const SizedBox(),
+                  ),
+
                   InkWell(
                     onTap: () async {
                       /*   await FunctionsController.showAlertDialog(
@@ -528,11 +592,11 @@ class _TransfersValidationsListState
                 ),
               ),
               Container(
-                width: 400.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Client',
+                  text: 'Client Émetteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -554,7 +618,18 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Carte',
+                  text: 'Type Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client Récepteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -576,7 +651,18 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Carte',
+                  text: 'Type Récepteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date d\'instance',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -599,6 +685,17 @@ class _TransfersValidationsListState
                 alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Statut',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -653,11 +750,11 @@ class _TransfersValidationsListState
                 ),
               ),
               Container(
-                width: 400.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Client',
+                  text: 'Client Émetteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -679,7 +776,18 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Carte',
+                  text: 'Type Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client Récepteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -701,7 +809,18 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Carte',
+                  text: 'Type Récepteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date d\'instance',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -724,6 +843,17 @@ class _TransfersValidationsListState
                 alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Agent',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Statut',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,

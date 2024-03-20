@@ -2,16 +2,16 @@ import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
-import 'package:communitybank/views/widgets/transferts/between_customers_accounts/between_customers_accounts_data/between_customers_accounts_data.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_cards/between_customer_cards_data/between_customer_cards_data.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final transfersBetweenCustomersAccountsCustomerAccountDropdownProvider =
+final transfersBetweenCustomerCardsCustomerAccountDropdownProvider =
     StateProvider.family<CustomerAccount?, String>((ref, dropdown) {
   return null;
 });
 
-class CBTransfersBetweenCustomersAccountsCustomerAccountDropdown
+class CBTransfersBetweenCustomerCardsCustomerAccountDropdown
     extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
@@ -20,7 +20,7 @@ class CBTransfersBetweenCustomersAccountsCustomerAccountDropdown
   final double? width;
   final double? menuHeigth;
 
-  const CBTransfersBetweenCustomersAccountsCustomerAccountDropdown({
+  const CBTransfersBetweenCustomerCardsCustomerAccountDropdown({
     super.key,
     this.width,
     this.menuHeigth,
@@ -31,16 +31,16 @@ class CBTransfersBetweenCustomersAccountsCustomerAccountDropdown
   });
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBTransfersBetweenCustomersAccountsCustomerAccountDropdownState();
+      _CBTransfersBetweenCustomerCardsCustomerAccountDropdownState();
 }
 
-class _CBTransfersBetweenCustomersAccountsCustomerAccountDropdownState
+class _CBTransfersBetweenCustomerCardsCustomerAccountDropdownState
     extends ConsumerState<
-        CBTransfersBetweenCustomersAccountsCustomerAccountDropdown> {
+        CBTransfersBetweenCustomerCardsCustomerAccountDropdown> {
   @override
   Widget build(BuildContext context) {
     final selectedDropdownItem = ref.watch(
-        transfersBetweenCustomersAccountsCustomerAccountDropdownProvider(
+        transfersBetweenCustomerCardsCustomerAccountDropdownProvider(
             widget.providerName));
     final customersListStream = ref.watch(customersListStreamProvider);
     return Container(
@@ -97,7 +97,7 @@ class _CBTransfersBetweenCustomersAccountsCustomerAccountDropdownState
         onSelected: (value) {
           ref
               .read(
-                transfersBetweenCustomersAccountsCustomerAccountDropdownProvider(
+                transfersBetweenCustomerCardsCustomerAccountDropdownProvider(
                   widget.providerName,
                 ).notifier,
               )

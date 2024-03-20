@@ -13,7 +13,7 @@ import 'package:communitybank/models/service_response/service_response.model.dar
 import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/transferts/between_customers_accounts/between_customer_cards_data/between_customer_cards_data.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_cards/between_customer_cards_data/between_customer_cards_data.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';

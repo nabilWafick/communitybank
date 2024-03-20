@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:communitybank/models/rpc/transfer_detail/transfer_detail_rpc.model.dart';
+import 'package:flutter/material.dart';
 
 class TransferDetail {
   final int transferId;
@@ -22,7 +23,8 @@ class TransferDetail {
   final String receivingCustomerCollector;
   final String receivingCustomer;
   final int agentId;
-  final DateTime validatedAt;
+  final String agent;
+  final DateTime? validatedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   TransferDetail({
@@ -44,6 +46,7 @@ class TransferDetail {
     required this.receivingCustomerCollector,
     required this.receivingCustomer,
     required this.agentId,
+    required this.agent,
     required this.validatedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -68,6 +71,7 @@ class TransferDetail {
     String? receivingCustomerCollector,
     String? receivingCustomer,
     int? agentId,
+    String? agent,
     DateTime? validatedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -105,6 +109,7 @@ class TransferDetail {
           receivingCustomerCollector ?? this.receivingCustomerCollector,
       receivingCustomer: receivingCustomer ?? this.receivingCustomer,
       agentId: agentId ?? this.agentId,
+      agent: agent ?? this.agent,
       validatedAt: validatedAt ?? this.validatedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -135,49 +140,82 @@ class TransferDetail {
       TransferDetailRPC.receivingCustomerCollector: receivingCustomerCollector,
       TransferDetailRPC.receivingCustomer: receivingCustomer,
       TransferDetailRPC.agentId: agentId,
-      TransferDetailRPC.validatedAt: validatedAt.millisecondsSinceEpoch,
-      'createdAt': createdAt.millisecondsSinceEpoch,
-      'updatedAt': updatedAt.millisecondsSinceEpoch,
+      TransferDetailRPC.agent: agent,
+      TransferDetailRPC.validatedAt: validatedAt?.toIso8601String(),
+      TransferDetailRPC.createdAt: createdAt.toIso8601String(),
+      TransferDetailRPC.updatedAt: updatedAt.toIso8601String(),
     };
   }
 
   factory TransferDetail.fromMap(Map<String, dynamic> map) {
+    try {
+      return TransferDetail(
+        transferId: map[TransferDetailRPC.transferId] as int,
+        issuingCustomerCardId:
+            map[TransferDetailRPC.issuingCustomerCardId] as int,
+        issuingCustomerCardLabel:
+            map[TransferDetailRPC.issuingCustomerCardLabel] as String,
+        issuingCustomerCardTypeId:
+            map[TransferDetailRPC.issuingCustomerCardTypeId] as int,
+        issuingCustomerCardTypeName:
+            map[TransferDetailRPC.issuingCustomerCardTypeName] as String,
+        issuingCustomerAccountId:
+            map[TransferDetailRPC.issuingCustomerAccountId] as int,
+        issuingCustomerCollectorId:
+            map[TransferDetailRPC.issuingCustomerCollectorId] as int,
+        issuingCustomerCollector:
+            map[TransferDetailRPC.issuingCustomerCollector] as String,
+        issuingCustomer: map[TransferDetailRPC.issuingCustomer] as String,
+        receivingCustomerCardId:
+            map[TransferDetailRPC.receivingCustomerCardId] as int,
+        receivingCustomerCardLabel:
+            map[TransferDetailRPC.receivingCustomerCardLabel] as String,
+        receivingCustomerCardTypeId:
+            map[TransferDetailRPC.receivingCustomerCardTypeId] as int,
+        receivingCustomerCardTypeName:
+            map[TransferDetailRPC.receivingCustomerCardTypeName] as String,
+        receivingCustomerAccountId:
+            map[TransferDetailRPC.receivingCustomerAccountId] as int,
+        receivingCustomerCollectorId:
+            map[TransferDetailRPC.receivingCustomerCollectorId] as int,
+        receivingCustomerCollector:
+            map[TransferDetailRPC.receivingCustomerCollector] as String,
+        receivingCustomer: map[TransferDetailRPC.receivingCustomer] as String,
+        agentId: map[TransferDetailRPC.agentId] as int,
+        agent: map[TransferDetailRPC.agent] as String,
+        validatedAt: map[TransferDetailRPC.validatedAt] != null
+            ? DateTime.parse(map[TransferDetailRPC.validatedAt])
+            : null,
+        createdAt: DateTime.parse(map[TransferDetailRPC.createdAt]),
+        updatedAt: DateTime.parse(map[TransferDetailRPC.updatedAt]),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
     return TransferDetail(
-      transferId: map[TransferDetailRPC.transferId] as int,
-      issuingCustomerCardId:
-          map[TransferDetailRPC.issuingCustomerCardId] as int,
-      issuingCustomerCardLabel:
-          map[TransferDetailRPC.issuingCustomerCardLabel] as String,
-      issuingCustomerCardTypeId:
-          map[TransferDetailRPC.issuingCustomerCardTypeId] as int,
-      issuingCustomerCardTypeName:
-          map[TransferDetailRPC.issuingCustomerCardTypeName] as String,
-      issuingCustomerAccountId:
-          map[TransferDetailRPC.issuingCustomerAccountId] as int,
-      issuingCustomerCollectorId:
-          map[TransferDetailRPC.issuingCustomerCollectorId] as int,
-      issuingCustomerCollector:
-          map[TransferDetailRPC.issuingCustomerCollector] as String,
-      issuingCustomer: map[TransferDetailRPC.issuingCustomer] as String,
-      receivingCustomerCardId:
-          map[TransferDetailRPC.receivingCustomerCardId] as int,
-      receivingCustomerCardLabel:
-          map[TransferDetailRPC.receivingCustomerCardLabel] as String,
-      receivingCustomerCardTypeId:
-          map[TransferDetailRPC.receivingCustomerCardTypeId] as int,
-      receivingCustomerCardTypeName:
-          map[TransferDetailRPC.receivingCustomerCardTypeName] as String,
-      receivingCustomerAccountId:
-          map[TransferDetailRPC.receivingCustomerAccountId] as int,
-      receivingCustomerCollectorId:
-          map[TransferDetailRPC.receivingCustomerCollectorId] as int,
-      receivingCustomerCollector:
-          map[TransferDetailRPC.receivingCustomerCollector] as String,
-      receivingCustomer: map[TransferDetailRPC.receivingCustomer] as String,
-      agentId: map[TransferDetailRPC.agentId] as int,
-      validatedAt: DateTime.parse(map[TransferDetailRPC.validatedAt]),
-      createdAt: DateTime.parse(map[TransferDetailRPC.createdAt]),
-      updatedAt: DateTime.parse(map[TransferDetailRPC.updatedAt]),
+      transferId: 0,
+      issuingCustomerCardId: 0,
+      issuingCustomerCardLabel: 'issuingCustomerCardLabel',
+      issuingCustomerCardTypeId: 0,
+      issuingCustomerCardTypeName: 'issuingCustomerCardTypeName',
+      issuingCustomerAccountId: 0,
+      issuingCustomerCollectorId: 0,
+      issuingCustomerCollector: 'issuingCustomerCollector',
+      issuingCustomer: 'issuingCustomer',
+      receivingCustomerCardId: 0,
+      receivingCustomerCardLabel: 'receivingCustomerCardLabel',
+      receivingCustomerCardTypeId: 0,
+      receivingCustomerCardTypeName: 'receivingCustomerCardTypeName',
+      receivingCustomerAccountId: 0,
+      receivingCustomerCollectorId: 0,
+      receivingCustomerCollector: 'receivingCustomerCollector',
+      receivingCustomer: 'receivingCustomer',
+      agentId: 0,
+      agent: 'agent',
+      validatedAt: null,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
   }
 
@@ -188,7 +226,7 @@ class TransferDetail {
 
   @override
   String toString() {
-    return 'TransferDetail(transferId: $transferId, issuingCustomerCardId: $issuingCustomerCardId, issuingCustomerCardLabel: $issuingCustomerCardLabel, issuingCustomerCardTypeId: $issuingCustomerCardTypeId, issuingCustomerCardTypeName: $issuingCustomerCardTypeName, issuingCustomerAccountId: $issuingCustomerAccountId, issuingCustomerCollectorId: $issuingCustomerCollectorId, issuingCustomerCollector: $issuingCustomerCollector, issuingCustomer: $issuingCustomer, receivingCustomerCardId: $receivingCustomerCardId, receivingCustomerCardLabel: $receivingCustomerCardLabel, receivingCustomerCardTypeId: $receivingCustomerCardTypeId, receivingCustomerCardTypeName: $receivingCustomerCardTypeName, receivingCustomerAccountId: $receivingCustomerAccountId, receivingCustomerCollectorId: $receivingCustomerCollectorId, receivingCustomerCollector: $receivingCustomerCollector, receivingCustomer: $receivingCustomer, agentId: $agentId, validatedAt: $validatedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'TransferDetail(transferId: $transferId, issuingCustomerCardId: $issuingCustomerCardId, issuingCustomerCardLabel: $issuingCustomerCardLabel, issuingCustomerCardTypeId: $issuingCustomerCardTypeId, issuingCustomerCardTypeName: $issuingCustomerCardTypeName, issuingCustomerAccountId: $issuingCustomerAccountId, issuingCustomerCollectorId: $issuingCustomerCollectorId, issuingCustomerCollector: $issuingCustomerCollector, issuingCustomer: $issuingCustomer, receivingCustomerCardId: $receivingCustomerCardId, receivingCustomerCardLabel: $receivingCustomerCardLabel, receivingCustomerCardTypeId: $receivingCustomerCardTypeId, receivingCustomerCardTypeName: $receivingCustomerCardTypeName, receivingCustomerAccountId: $receivingCustomerAccountId, receivingCustomerCollectorId: $receivingCustomerCollectorId, receivingCustomerCollector: $receivingCustomerCollector, receivingCustomer: $receivingCustomer, agentId: $agentId, agent: $agent, validatedAt: $validatedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -213,6 +251,7 @@ class TransferDetail {
         other.receivingCustomerCollector == receivingCustomerCollector &&
         other.receivingCustomer == receivingCustomer &&
         other.agentId == agentId &&
+        other.agent == agent &&
         other.validatedAt == validatedAt &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
@@ -238,6 +277,7 @@ class TransferDetail {
         receivingCustomerCollector.hashCode ^
         receivingCustomer.hashCode ^
         agentId.hashCode ^
+        agent.hashCode ^
         validatedAt.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;

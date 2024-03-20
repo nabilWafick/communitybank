@@ -1,6 +1,7 @@
 select
     transferts.id as id_transfert,
     transferts.id_agent,
+    CONCAT (agents.nom, ' ', agents.prenoms) AS agent,
     transferts.date_validation,
     transferts.date_creation,
     transferts.date_modification,
@@ -10,6 +11,7 @@ select
     compte_emetteur.nom_type_emetteur,
     compte_emetteur.id_compte_client_emetteur,
     compte_emetteur.id_charge_compte_emetteur,
+    compte_emetteur.charge_compte_emetteur,
     compte_emetteur.client_emetteur,
     compte_recepteur.id_carte_receptrice,
     compte_recepteur.libelle_carte_receptrice,
@@ -17,9 +19,11 @@ select
     compte_recepteur.nom_type_recepteur,
     compte_recepteur.id_compte_client_recepteur,
     compte_recepteur.id_charge_compte_recepteur,
+    compte_recepteur.charge_compte_recepteur,
     compte_recepteur.client_recepteur
 from
     transferts
+    INNER JOIN agents on transferts.id_agent = agents.id
     inner join (
         select
             cartes.id as id_carte_emettrice,

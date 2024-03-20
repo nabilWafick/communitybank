@@ -11,7 +11,7 @@ import 'package:communitybank/views/widgets/definitions/customers_cards/customer
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/elevated_button/elevated_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
-import 'package:communitybank/views/widgets/transferts/between_customers_accounts/type_dropdown/type_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_cards/type_dropdown/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
