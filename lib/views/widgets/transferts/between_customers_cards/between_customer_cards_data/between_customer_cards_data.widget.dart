@@ -838,7 +838,7 @@ class _TransfersBetweenCustomerCardsDataState
                 : "Veuillez patienter",
             onPressed: () async {
               enableTransferButton.value
-                  ? await TransferCRUDFunctions.create(
+                  ? await TransferCRUDFunctions.createBetweenCustomerCards(
                       context: context,
                       ref: ref,
                       enableTransferButton: enableTransferButton,

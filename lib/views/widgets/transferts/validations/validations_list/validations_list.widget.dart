@@ -301,7 +301,7 @@ class _TransfersValidationsListState
               return Container(
                 alignment: Alignment.center,
                 width: 200.0,
-                height: 30.0,
+                height: 40.0,
                 child: CBText(
                   text: '${index + 1}',
                   fontSize: 12.0,
@@ -316,7 +316,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: FunctionsController.truncateText(
                         text: transferDetail.issuingCustomerCollector,
@@ -329,7 +329,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: FunctionsController.truncateText(
                         text: transferDetail.issuingCustomer,
@@ -343,7 +343,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: transferDetail.issuingCustomerCardLabel,
                       fontSize: 12.0,
@@ -354,7 +354,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: transferDetail.issuingCustomerCardTypeName,
                       fontSize: 12.0,
@@ -365,7 +365,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: FunctionsController.truncateText(
                         text: transferDetail.receivingCustomerCollector,
@@ -379,7 +379,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: FunctionsController.truncateText(
                         text: transferDetail.receivingCustomer,
@@ -392,7 +392,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: transferDetail.receivingCustomerCardLabel,
                       fontSize: 12.0,
@@ -403,7 +403,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: transferDetail.receivingCustomerCardTypeName,
                       fontSize: 12.0,
@@ -418,7 +418,7 @@ class _TransfersValidationsListState
                       return Container(
                         alignment: Alignment.centerLeft,
                         width: 300.0,
-                        height: 30.0,
+                        height: 40.0,
                         child: CBText(
                           text:
                               '${format.format(transferDetail.createdAt)} $formatedTime',
@@ -438,7 +438,7 @@ class _TransfersValidationsListState
                       return Container(
                         alignment: Alignment.centerLeft,
                         width: 300.0,
-                        height: 30.0,
+                        height: 40.0,
                         child: CBText(
                           text: transferDetail.validatedAt != null
                               ? '${format.format(transferDetail.validatedAt!)} $formatedTime'
@@ -452,7 +452,7 @@ class _TransfersValidationsListState
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
-                    height: 30.0,
+                    height: 40.0,
                     child: CBText(
                       text: transferDetail.agent,
                       fontSize: 12.0,
@@ -464,7 +464,7 @@ class _TransfersValidationsListState
                     height: 40.0,
                     child: Card(
                       color: transferDetail.validatedAt == null
-                          ? Colors.orange.shade700.withOpacity(.8)
+                          ? Colors.orange.shade700 //.withOpacity(.8)
                           : transferDetail.validatedAt!.year != 1970
                               ? Colors.green.shade700
                               : Colors.red.shade700,
@@ -505,7 +505,7 @@ class _TransfersValidationsListState
                     },
                     child: Container(
                       width: 150.0,
-                      height: 30.0,
+                      height: 40.0,
                       alignment: Alignment.center,
                       child: transferDetail.validatedAt != null
                           ? const Icon(
@@ -523,7 +523,7 @@ class _TransfersValidationsListState
 
                   Container(
                     width: 150.0,
-                    height: 30.0,
+                    height: 40.0,
                     alignment: Alignment.center,
                     child: transferDetail.validatedAt == null
                         ? CBToolTip(
@@ -557,7 +557,7 @@ class _TransfersValidationsListState
                     },
                     child: Container(
                       width: 150.0,
-                      height: 30.0,
+                      height: 40.0,
                       alignment: Alignment.center,
                       child: const Icon(
                         Icons.delete_sharp,
@@ -714,7 +714,7 @@ class _TransfersValidationsListState
               return Container(
                 alignment: Alignment.center,
                 width: 200.0,
-                height: 30.0,
+                height: 40.0,
                 child: CBText(
                   text: '${index + 1}',
                   fontSize: 12.0,
@@ -872,7 +872,7 @@ class _TransfersValidationsListState
               return Container(
                 alignment: Alignment.center,
                 width: 200.0,
-                height: 30.0,
+                height: 40.0,
                 child: CBText(
                   text: '${index + 1}',
                   fontSize: 12.0,

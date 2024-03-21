@@ -11,38 +11,49 @@ import 'package:communitybank/views/widgets/definitions/customers_cards/customer
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/elevated_button/elevated_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
+import 'package:communitybank/views/widgets/transferts/between_customers_accounts/customer_account_dropdown/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/transferts/between_customers_accounts/type_dropdown/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final transfersBetweenCustomerCardsSelectedCustomerAccountProvider =
+final transfersBetweenCustomersAccountsSelectedIssuingCustomerAccountProvider =
     StateProvider<CustomerAccount?>((ref) {
   return;
 });
 
-final transfersBetweenCustomerCardsSelectedCustomerCardsProvider =
+final transfersBetweenCustomersAccountsSelectedReceivingCustomerAccountProvider =
+    StateProvider<CustomerAccount?>((ref) {
+  return;
+});
+
+final transfersBetweenCustomersAccountsSelectedIssuingCustomerCardsProvider =
     StateProvider<List<CustomerCard>>((ref) {
   return [];
 });
 
-final transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider =
+final transfersBetweenCustomersAccountsSelectedReceivingCustomerCardsProvider =
+    StateProvider<List<CustomerCard>>((ref) {
+  return [];
+});
+
+final transfersBetweenCustomersAccountsSelectedIssuingCustomerCardProvider =
     StateProvider<CustomerCard?>((ref) {
   return;
 });
 
-final transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider =
+final transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider =
     StateProvider<Type?>((ref) {
   return;
 });
 
-final transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider =
+final transfersBetweenCustomersAccountsSelectedReceivingCustomerCardProvider =
     StateProvider<CustomerCard?>((ref) {
   return;
 });
 
-final transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider =
+final transfersBetweenCustomersAccountsSelectedReceivingCustomerCardTypeProvider =
     StateProvider<Type?>((ref) {
   return;
 });
@@ -53,12 +64,12 @@ final settlementsProvider = StreamProvider<List<Settlement>>((ref) async* {
   );
 });
 
-final transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider =
+final transfersBetweenCustomersAccountIssuingCustomerCardSettlementsNumbersTotalProvider =
     StateProvider<int>((ref) {
   return 0;
 });
 
-final transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider =
+final transfersBetweenCustomersAccountReceivingCustomerCardSettlementsNumbersTotalProvider =
     StateProvider<int>((ref) {
   return 0;
 });
@@ -80,32 +91,82 @@ class _TransfersBetweenCustomersAccountsDataState
         ref.watch(customersCardsListStreamProvider);
     final typeListStream = ref.watch(typesListStreamProvider);
 
-    final transfersBetweenCustomerCardsSelectedCustomerCards =
-        ref.watch(transfersBetweenCustomerCardsSelectedCustomerCardsProvider);
-
-    final transfersBetweenCustomerCardSelectedIssuingCustomerCard = ref
-        .watch(transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider);
-
-    final transfersBetweenCustomerCardSelectedIssuingCustomerCardType =
+    final transfersBetweenCustomersAccountsSelectedIssuingCustomerCards =
         ref.watch(
-            transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider);
+            transfersBetweenCustomersAccountsSelectedIssuingCustomerCardsProvider);
 
-    final transfersBetweenCustomerCardSelectedReceivingCustomerCard = ref.watch(
-        transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider);
-
-    final transfersBetweenCustomerCardSelectedReceivingCustomerCardType =
+    final transfersBetweenCustomersAccountsSelectedReceivingCustomerCards =
         ref.watch(
-            transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider);
+            transfersBetweenCustomersAccountsSelectedReceivingCustomerCardsProvider);
+
+    final transfersBetweenCustomersAccountsSelectedIssuingCustomerCard =
+        ref.watch(
+            transfersBetweenCustomersAccountsSelectedIssuingCustomerCardProvider);
+
+    final transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType =
+        ref.watch(
+            transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider);
+
+    final transfersBetweenCustomersAccountsSelectedReceivingCustomerCard =
+        ref.watch(
+            transfersBetweenCustomersAccountsSelectedReceivingCustomerCardProvider);
+
+    final transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType =
+        ref.watch(
+            transfersBetweenCustomersAccountsSelectedReceivingCustomerCardTypeProvider);
 
     final issuingCustomerCardSettlementsNumbersTotal = ref.watch(
-      transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider,
+      transfersBetweenCustomersAccountIssuingCustomerCardSettlementsNumbersTotalProvider,
     );
     final receivingCustomerCardSettlementsNumbersTotal = ref.watch(
-      transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider,
+      transfersBetweenCustomersAccountReceivingCustomerCardSettlementsNumbersTotalProvider,
     );
 
+    // listen to issuing customer dropdown provider
     ref.listen(
-      transfersBetweenCustomerCardsSelectedCustomerAccountProvider,
+      transfersBetweenCustomersAccountsCustomerAccountDropdownProvider(
+          'transfer-between-customers-accounts-issuing-customer-account'),
+      (previous, next) {
+        Future.delayed(
+          const Duration(
+            milliseconds: 100,
+          ),
+          () {
+            ref
+                .read(
+                  transfersBetweenCustomersAccountsSelectedIssuingCustomerAccountProvider
+                      .notifier,
+                )
+                .state = next;
+          },
+        );
+      },
+    );
+
+    // listen to receiving customer dropdown provider
+    ref.listen(
+      transfersBetweenCustomersAccountsCustomerAccountDropdownProvider(
+          'transfer-between-customers-accounts-receiving-customer-account'),
+      (previous, next) {
+        Future.delayed(
+          const Duration(
+            milliseconds: 100,
+          ),
+          () {
+            ref
+                .read(
+                  transfersBetweenCustomersAccountsSelectedReceivingCustomerAccountProvider
+                      .notifier,
+                )
+                .state = next;
+          },
+        );
+      },
+    );
+
+    // issuing customer account listener
+    ref.listen(
+      transfersBetweenCustomersAccountsSelectedIssuingCustomerAccountProvider,
       (previous, next) {
         Future.delayed(
           const Duration(
@@ -115,32 +176,18 @@ class _TransfersBetweenCustomersAccountsDataState
             // reset providers for avoiding showing previous customer cards data
             ref.invalidate(
               transfersTypeDropdownProvider(
-                'transfers-between-customer-cards-issuing-card-type',
+                'transfers-between-customers-accounts-issuing-card-type',
               ),
             );
             ref.invalidate(
-              transfersTypeDropdownProvider(
-                'transfers-between-customer-cards-receiving-card-type',
-              ),
+              transfersBetweenCustomersAccountsSelectedIssuingCustomerCardProvider,
             );
             ref.invalidate(
-              transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider,
-            );
-            ref.invalidate(
-              transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider,
-            );
-            ref.invalidate(
-              transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider,
-            );
-            ref.invalidate(
-              transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider,
-            );
-            ref.invalidate(
-              transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider,
+              transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider,
             );
 
             ref.invalidate(
-              transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider,
+              transfersBetweenCustomersAccountIssuingCustomerCardSettlementsNumbersTotalProvider,
             );
 
             customersCardsListStream.when(
@@ -158,7 +205,61 @@ class _TransfersBetweenCustomersAccountsDataState
                 // update account owner cards list
                 ref
                     .read(
-                      transfersBetweenCustomerCardsSelectedCustomerCardsProvider
+                      transfersBetweenCustomersAccountsSelectedIssuingCustomerCardsProvider
+                          .notifier,
+                    )
+                    .state = customerCards;
+              },
+              error: (error, stackTrace) {},
+              loading: () {},
+            );
+          },
+        );
+      },
+    );
+
+// receiving customer account listener
+    ref.listen(
+      transfersBetweenCustomersAccountsSelectedReceivingCustomerAccountProvider,
+      (previous, next) {
+        Future.delayed(
+          const Duration(
+            milliseconds: 100,
+          ),
+          () {
+            // reset providers for avoiding showing previous customer cards data
+            ref.invalidate(
+              transfersTypeDropdownProvider(
+                'transfers-between-customers-accounts-receiving-card-type',
+              ),
+            );
+
+            ref.invalidate(
+              transfersBetweenCustomersAccountsSelectedReceivingCustomerCardProvider,
+            );
+            ref.invalidate(
+              transfersBetweenCustomersAccountsSelectedReceivingCustomerCardTypeProvider,
+            );
+            ref.invalidate(
+              transfersBetweenCustomersAccountReceivingCustomerCardSettlementsNumbersTotalProvider,
+            );
+
+            customersCardsListStream.when(
+              data: (data) {
+                final customerCards = data
+                    .where(
+                      (customerCard) =>
+                          // stored only usable customerCards
+                          customerCard.repaidAt == null &&
+                          customerCard.satisfiedAt == null &&
+                          customerCard.transferredAt == null &&
+                          next!.customerCardsIds.contains(customerCard.id),
+                    )
+                    .toList();
+                // update account owner cards list
+                ref
+                    .read(
+                      transfersBetweenCustomersAccountsSelectedReceivingCustomerCardsProvider
                           .notifier,
                     )
                     .state = customerCards;
@@ -174,7 +275,7 @@ class _TransfersBetweenCustomersAccountsDataState
     // update issuing card and type
     ref.listen(
       transfersTypeDropdownProvider(
-        'transfers-between-customer-cards-issuing-card-type',
+        'transfers-between-customers-accounts-issuing-card-type',
       ),
       (previous, next) {
         Future.delayed(
@@ -185,13 +286,14 @@ class _TransfersBetweenCustomersAccountsDataState
             // update issuingCustomerCardType
             ref
                 .read(
-                  transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider
+                  transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider
                       .notifier,
                 )
                 .state = next;
 
             final issuingCustomerCard =
-                transfersBetweenCustomerCardsSelectedCustomerCards.firstWhere(
+                transfersBetweenCustomersAccountsSelectedIssuingCustomerCards
+                    .firstWhere(
               (customerCard) => customerCard.typeId == next.id,
               orElse: () => CustomerCard(
                 label: 'Carte *',
@@ -205,7 +307,7 @@ class _TransfersBetweenCustomersAccountsDataState
             // update issuingCustomerCard
             ref
                 .read(
-                  transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider
+                  transfersBetweenCustomersAccountsSelectedIssuingCustomerCardProvider
                       .notifier,
                 )
                 .state = issuingCustomerCard;
@@ -217,7 +319,7 @@ class _TransfersBetweenCustomersAccountsDataState
     // update receiving card and type
     ref.listen(
       transfersTypeDropdownProvider(
-        'transfers-between-customer-cards-receiving-card-type',
+        'transfers-between-customers-accounts-receiving-card-type',
       ),
       (previous, next) {
         Future.delayed(
@@ -228,13 +330,14 @@ class _TransfersBetweenCustomersAccountsDataState
             // update receivingCustomerCardType
             ref
                 .read(
-                  transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider
+                  transfersBetweenCustomersAccountsSelectedReceivingCustomerCardTypeProvider
                       .notifier,
                 )
                 .state = next;
 
             final receivingCustomerCard =
-                transfersBetweenCustomerCardsSelectedCustomerCards.firstWhere(
+                transfersBetweenCustomersAccountsSelectedReceivingCustomerCards
+                    .firstWhere(
               (customerCard) => customerCard.typeId == next.id,
               orElse: () => CustomerCard(
                 label: 'Carte *',
@@ -248,7 +351,7 @@ class _TransfersBetweenCustomersAccountsDataState
             // update receivingCustomerCard
             ref
                 .read(
-                  transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider
+                  transfersBetweenCustomersAccountsSelectedReceivingCustomerCardProvider
                       .notifier,
                 )
                 .state = receivingCustomerCard;
@@ -258,7 +361,8 @@ class _TransfersBetweenCustomersAccountsDataState
     );
 
 // listening to issuing customer card
-    ref.listen(transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider,
+    ref.listen(
+        transfersBetweenCustomersAccountsSelectedIssuingCustomerCardProvider,
         (previous, next) {
       Future.delayed(
           const Duration(
@@ -276,7 +380,7 @@ class _TransfersBetweenCustomersAccountsDataState
           }
           ref
               .read(
-                transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider
+                transfersBetweenCustomersAccountIssuingCustomerCardSettlementsNumbersTotalProvider
                     .notifier,
               )
               .state = settlementsNumbersTotal;
@@ -286,7 +390,7 @@ class _TransfersBetweenCustomersAccountsDataState
 
 // listening to receiving customer card
     ref.listen(
-        transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider,
+        transfersBetweenCustomersAccountsSelectedReceivingCustomerCardProvider,
         (previous, next) {
       Future.delayed(
         const Duration(
@@ -305,7 +409,7 @@ class _TransfersBetweenCustomersAccountsDataState
             }
             ref
                 .read(
-                  transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider
+                  transfersBetweenCustomersAccountReceivingCustomerCardSettlementsNumbersTotalProvider
                       .notifier,
                 )
                 .state = settlementsNumbersTotal;
@@ -317,8 +421,10 @@ class _TransfersBetweenCustomersAccountsDataState
     // listening to settlements stream for updating setlements data for each card
     ref.listen(settlementsProvider, (previous, next) {
       // issuing customer card settlements
-      if (transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
-          transfersBetweenCustomerCardSelectedIssuingCustomerCard.id != null) {
+      if (transfersBetweenCustomersAccountsSelectedIssuingCustomerCard !=
+              null &&
+          transfersBetweenCustomersAccountsSelectedIssuingCustomerCard.id !=
+              null) {
         Future.delayed(
             const Duration(
               milliseconds: 100,
@@ -326,7 +432,7 @@ class _TransfersBetweenCustomersAccountsDataState
           final issuingCustomerCardSettlements =
               await SettlementsController.getAll(
             customerCardId:
-                transfersBetweenCustomerCardSelectedIssuingCustomerCard.id,
+                transfersBetweenCustomersAccountsSelectedIssuingCustomerCard.id,
           ).first;
 
           int settlementsNumbersTotal = 0;
@@ -335,7 +441,7 @@ class _TransfersBetweenCustomersAccountsDataState
           }
           ref
               .read(
-                transfersBetweenCustomerCardIssuingCustomerCardSettlementsNumbersTotalProvider
+                transfersBetweenCustomersAccountIssuingCustomerCardSettlementsNumbersTotalProvider
                     .notifier,
               )
               .state = settlementsNumbersTotal;
@@ -343,8 +449,9 @@ class _TransfersBetweenCustomersAccountsDataState
       }
 
 // receiving customer card settlements
-      if (transfersBetweenCustomerCardSelectedReceivingCustomerCard != null &&
-          transfersBetweenCustomerCardSelectedReceivingCustomerCard.id !=
+      if (transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
+              null &&
+          transfersBetweenCustomersAccountsSelectedReceivingCustomerCard.id !=
               null) {
         Future.delayed(
             const Duration(
@@ -353,7 +460,8 @@ class _TransfersBetweenCustomersAccountsDataState
           final receivingCustomerCardSettlements =
               await SettlementsController.getAll(
             customerCardId:
-                transfersBetweenCustomerCardSelectedReceivingCustomerCard.id,
+                transfersBetweenCustomersAccountsSelectedReceivingCustomerCard
+                    .id,
           ).first;
 
           int settlementsNumbersTotal = 0;
@@ -362,7 +470,7 @@ class _TransfersBetweenCustomersAccountsDataState
           }
           ref
               .read(
-                transfersBetweenCustomerCardReceivingCustomerCardSettlementsNumbersTotalProvider
+                transfersBetweenCustomersAccountReceivingCustomerCardSettlementsNumbersTotalProvider
                     .notifier,
               )
               .state = settlementsNumbersTotal;
@@ -415,12 +523,12 @@ class _TransfersBetweenCustomersAccountsDataState
                           builder: (context, ref, child) {
                             final issuingCustomerCardType = ref.watch(
                               transfersTypeDropdownProvider(
-                                'transfers-between-customer-cards-issuing-card-type',
+                                'transfers-between-customers-accounts-issuing-card-type',
                               ),
                             );
 
                             final issuingCustomerCard =
-                                transfersBetweenCustomerCardsSelectedCustomerCards
+                                transfersBetweenCustomersAccountsSelectedIssuingCustomerCards
                                     .firstWhere(
                               (customerCard) =>
                                   customerCard.typeId ==
@@ -444,12 +552,12 @@ class _TransfersBetweenCustomersAccountsDataState
                           width: 150,
                           menuHeigth: 300.0,
                           providerName:
-                              'transfers-between-customer-cards-issuing-card-type',
+                              'transfers-between-customers-accounts-issuing-card-type',
                           dropdownMenuEntriesLabels: typeListStream.when(
                             data: (data) => data
                                 .where(
                                   (type) =>
-                                      transfersBetweenCustomerCardsSelectedCustomerCards
+                                      transfersBetweenCustomersAccountsSelectedIssuingCustomerCards
                                           .any(
                                     (customerCard) =>
                                         customerCard.typeId == type.id,
@@ -463,7 +571,7 @@ class _TransfersBetweenCustomersAccountsDataState
                             data: (data) => data
                                 .where(
                                   (type) =>
-                                      transfersBetweenCustomerCardsSelectedCustomerCards
+                                      transfersBetweenCustomersAccountsSelectedIssuingCustomerCards
                                           .any(
                                     (customerCard) =>
                                         customerCard.typeId == type.id,
@@ -487,31 +595,31 @@ class _TransfersBetweenCustomersAccountsDataState
                         children: [
                           OtherInfos(
                             label: 'Nombre Type',
-                            value: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                            value: transfersBetweenCustomersAccountsSelectedIssuingCustomerCard !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                             .id !=
                                         null
-                                ? transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                ? transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                     .typeNumber
                                     .toString()
                                 : '',
                           ),
                           OtherInfos(
                             label: 'Mise Type',
-                            value: transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                            value: transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType
                                             .id !=
                                         null
-                                ? '${transfersBetweenCustomerCardSelectedIssuingCustomerCardType.stake.toInt()}'
+                                ? '${transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType.stake.toInt()}'
                                 : '',
                           ),
                           Consumer(
                             builder: (context, ref, child) {
                               return OtherInfos(
                                 label: 'Total Règlements',
-                                value: transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                value: transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                         null
                                     ? issuingCustomerCardSettlementsNumbersTotal
                                         .toString()
@@ -521,22 +629,22 @@ class _TransfersBetweenCustomersAccountsDataState
                           ),
                           Consumer(
                             builder: (context, ref, child) {
-                              final amount = transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                              final amount = transfersBetweenCustomersAccountsSelectedIssuingCustomerCard !=
                                           null &&
-                                      transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                      transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                           null
-                                  ? (transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                  ? (transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                               .typeNumber *
-                                          transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                          transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType
                                               .stake *
                                           issuingCustomerCardSettlementsNumbersTotal)
                                       .round()
                                   : 0;
                               return OtherInfos(
                                 label: 'Montant Réglé',
-                                value: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                                value: transfersBetweenCustomersAccountsSelectedIssuingCustomerCard !=
                                             null &&
-                                        transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                        transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                             null
                                     ? amount > 0
                                         ? '${amount}f'
@@ -562,16 +670,16 @@ class _TransfersBetweenCustomersAccountsDataState
                         // the amount to transfer is equal to customer card total amount *2/3 - 300. 300 for customerCard fee
                         Consumer(
                           builder: (context, ref, child) {
-                            final amount = transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
-                                    transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                            final amount = transfersBetweenCustomersAccountsSelectedIssuingCustomerCard != null &&
+                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                             .id !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                         null
                                 ? (2 *
-                                            (transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                            (transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                                     .typeNumber *
-                                                transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                                transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType
                                                     .stake *
                                                 issuingCustomerCardSettlementsNumbersTotal) /
                                             3 -
@@ -579,9 +687,9 @@ class _TransfersBetweenCustomersAccountsDataState
                                     .round()
                                 : 0;
                             return CBText(
-                              text: transfersBetweenCustomerCardSelectedIssuingCustomerCard !=
+                              text: transfersBetweenCustomersAccountsSelectedIssuingCustomerCard !=
                                           null &&
-                                      transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                      transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                           null
                                   ? amount > 0
                                       ? '${amount}f'
@@ -631,11 +739,11 @@ class _TransfersBetweenCustomersAccountsDataState
                           builder: (context, ref, child) {
                             final receivingCustomerCardType = ref.watch(
                               transfersTypeDropdownProvider(
-                                'transfers-between-customer-cards-receiving-card-type',
+                                'transfers-between-customers-accounts-receiving-card-type',
                               ),
                             );
                             final receivingCustomerCard =
-                                transfersBetweenCustomerCardsSelectedCustomerCards
+                                transfersBetweenCustomersAccountsSelectedReceivingCustomerCards
                                     .firstWhere(
                               (customerCard) =>
                                   customerCard.typeId ==
@@ -659,12 +767,12 @@ class _TransfersBetweenCustomersAccountsDataState
                           width: 150,
                           menuHeigth: 300.0,
                           providerName:
-                              'transfers-between-customer-cards-receiving-card-type',
+                              'transfers-between-customers-accounts-receiving-card-type',
                           dropdownMenuEntriesLabels: typeListStream.when(
                             data: (data) => data
                                 .where(
                                   (type) =>
-                                      transfersBetweenCustomerCardsSelectedCustomerCards
+                                      transfersBetweenCustomersAccountsSelectedReceivingCustomerCards
                                           .any(
                                     (customerCard) =>
                                         customerCard.typeId == type.id,
@@ -678,7 +786,7 @@ class _TransfersBetweenCustomersAccountsDataState
                             data: (data) => data
                                 .where(
                                   (type) =>
-                                      transfersBetweenCustomerCardsSelectedCustomerCards
+                                      transfersBetweenCustomersAccountsSelectedReceivingCustomerCards
                                           .any(
                                     (customerCard) =>
                                         customerCard.typeId == type.id,
@@ -702,31 +810,31 @@ class _TransfersBetweenCustomersAccountsDataState
                         children: [
                           OtherInfos(
                             label: 'Nombre Type',
-                            value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                            value: transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                    transfersBetweenCustomersAccountsSelectedReceivingCustomerCard
                                             .id !=
                                         null
-                                ? transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                ? transfersBetweenCustomersAccountsSelectedReceivingCustomerCard
                                     .typeNumber
                                     .toString()
                                 : '',
                           ),
                           OtherInfos(
                             label: 'Mise Type',
-                            value: transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                            value: transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedReceivingCustomerCardType
+                                    transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType
                                             .id !=
                                         null
-                                ? '${transfersBetweenCustomerCardSelectedReceivingCustomerCardType.stake.ceil()}'
+                                ? '${transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType.stake.ceil()}'
                                 : '',
                           ),
                           Consumer(
                             builder: (context, ref, child) {
                               return OtherInfos(
                                 label: 'Total Règlements',
-                                value: transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                value: transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType !=
                                         null
                                     ? receivingCustomerCardSettlementsNumbersTotal
                                         .toString()
@@ -736,22 +844,22 @@ class _TransfersBetweenCustomersAccountsDataState
                           ),
                           Consumer(
                             builder: (context, ref, child) {
-                              final amount = transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                              final amount = transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
                                           null &&
-                                      transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                      transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType !=
                                           null
-                                  ? (transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                  ? (transfersBetweenCustomersAccountsSelectedReceivingCustomerCard
                                               .typeNumber *
-                                          transfersBetweenCustomerCardSelectedReceivingCustomerCardType
+                                          transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType
                                               .stake *
                                           receivingCustomerCardSettlementsNumbersTotal)
                                       .ceil()
                                   : 0;
                               return OtherInfos(
                                 label: 'Montant Réglé',
-                                value: transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                value: transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
                                             null &&
-                                        transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                        transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType !=
                                             null
                                     ? amount > 0
                                         ? '${amount}f'
@@ -777,38 +885,38 @@ class _TransfersBetweenCustomersAccountsDataState
                         // the number of settlements to receive is equal to the amount to receive / receiving card type stake (round)
                         Consumer(
                           builder: (context, ref, child) {
-                            final settlementNumber = transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
-                                    transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                            final settlementNumber = transfersBetweenCustomersAccountsSelectedIssuingCustomerCard != null &&
+                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                             .id !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                    transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedReceivingCustomerCard
+                                    transfersBetweenCustomersAccountsSelectedReceivingCustomerCard
                                             .id !=
                                         null &&
-                                    transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                    transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType !=
                                         null
                                 ? ((2 *
-                                                (transfersBetweenCustomerCardSelectedIssuingCustomerCard
+                                                (transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
                                                         .typeNumber *
-                                                    transfersBetweenCustomerCardSelectedIssuingCustomerCardType
+                                                    transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType
                                                         .stake *
                                                     issuingCustomerCardSettlementsNumbersTotal) /
                                                 3 -
                                             300) /
-                                        transfersBetweenCustomerCardSelectedReceivingCustomerCardType
+                                        transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType
                                             .stake)
                                     .round()
                                 : 0;
                             return CBText(
-                              text: transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
-                                      transfersBetweenCustomerCardSelectedIssuingCustomerCardType !=
+                              text: transfersBetweenCustomersAccountsSelectedIssuingCustomerCard != null &&
+                                      transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType !=
                                           null &&
-                                      transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+                                      transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
                                           null &&
-                                      transfersBetweenCustomerCardSelectedReceivingCustomerCardType !=
+                                      transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType !=
                                           null
                                   ? settlementNumber > 0
                                       ? settlementNumber.toString()
@@ -838,7 +946,7 @@ class _TransfersBetweenCustomersAccountsDataState
                 : "Veuillez patienter",
             onPressed: () async {
               enableTransferButton.value
-                  ? await TransferCRUDFunctions.create(
+                  ? await TransferCRUDFunctions.createBetweenCustomersAccounts(
                       context: context,
                       ref: ref,
                       enableTransferButton: enableTransferButton,

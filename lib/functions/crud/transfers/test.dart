@@ -13,7 +13,6 @@ import 'package:communitybank/models/service_response/service_response.model.dar
 import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
-import 'package:communitybank/views/widgets/transferts/between_customers_accounts/between_customers_accounts_data/between_customers_accounts_data.widget.dart';
 import 'package:communitybank/views/widgets/transferts/between_customers_cards/between_customer_cards_data/between_customer_cards_data.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -155,39 +154,34 @@ class TransferCRUDFunctions {
     required WidgetRef ref,
     required ValueNotifier<bool> enableTransferButton,
   }) async {
-    final transfersBetweenCustomersAccountsSelectedIssuingCustomerCard =
-        ref.watch(
-            transfersBetweenCustomersAccountsSelectedIssuingCustomerCardProvider);
+    final transfersBetweenCustomerCardSelectedIssuingCustomerCard = ref
+        .watch(transfersBetweenCustomerCardSelectedIssuingCustomerCardProvider);
 
-    final transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType =
+    final transfersBetweenCustomerCardSelectedIssuingCustomerCardType =
         ref.watch(
-            transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider);
+            transfersBetweenCustomerCardSelectedIssuingCustomerCardTypeProvider);
 
-    final transfersBetweenCustomersAccountsSelectedReceivingCustomerCard =
-        ref.watch(
-            transfersBetweenCustomersAccountsSelectedReceivingCustomerCardProvider);
+    final transfersBetweenCustomerCardSelectedReceivingCustomerCard = ref.watch(
+        transfersBetweenCustomerCardSelectedReceivingCustomerCardProvider);
 
-    final transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType =
+    final transfersBetweenCustomerCardSelectedReceivingCustomerCardType =
         ref.watch(
-            transfersBetweenCustomersAccountsSelectedReceivingCustomerCardTypeProvider);
+            transfersBetweenCustomerCardSelectedReceivingCustomerCardTypeProvider);
 
     // checkif issuing and receiving customer cards have been selected
-    if (transfersBetweenCustomersAccountsSelectedIssuingCustomerCard != null &&
-        transfersBetweenCustomersAccountsSelectedIssuingCustomerCard.id !=
-            null &&
-        transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
-            null &&
-        transfersBetweenCustomersAccountsSelectedReceivingCustomerCard.id !=
-            null) {
+    if (transfersBetweenCustomerCardSelectedIssuingCustomerCard != null &&
+        transfersBetweenCustomerCardSelectedIssuingCustomerCard.id != null &&
+        transfersBetweenCustomerCardSelectedReceivingCustomerCard != null &&
+        transfersBetweenCustomerCardSelectedReceivingCustomerCard.id != null) {
       enableTransferButton.value = false;
       // check if issuing and receiving customers cards are differents
-      if (transfersBetweenCustomersAccountsSelectedReceivingCustomerCard !=
-          transfersBetweenCustomersAccountsSelectedIssuingCustomerCard) {
+      if (transfersBetweenCustomerCardSelectedReceivingCustomerCard !=
+          transfersBetweenCustomerCardSelectedIssuingCustomerCard) {
         // get current issuing settlements totals
         final issuingCustomerCardSettlements =
             await SettlementsController.getAll(
           customerCardId:
-              transfersBetweenCustomersAccountsSelectedIssuingCustomerCard.id,
+              transfersBetweenCustomerCardSelectedIssuingCustomerCard.id,
         ).first;
 
         int settlementsNumbersTotal = 0;
@@ -197,9 +191,9 @@ class TransferCRUDFunctions {
 
         // calculate the amount to transefered
         final issuingCustomerCardTransferedAmount = ((2 *
-                    (transfersBetweenCustomersAccountsSelectedIssuingCustomerCard
+                    (transfersBetweenCustomerCardSelectedIssuingCustomerCard
                             .typeNumber *
-                        transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType!
+                        transfersBetweenCustomerCardSelectedIssuingCustomerCardType!
                             .stake *
                         settlementsNumbersTotal) /
                     3) -
@@ -208,7 +202,7 @@ class TransferCRUDFunctions {
 
         // calculate the number of settlements to receive
         final settlementsNumberReceived = (issuingCustomerCardTransferedAmount /
-                transfersBetweenCustomersAccountsSelectedReceivingCustomerCardType!
+                transfersBetweenCustomerCardSelectedReceivingCustomerCardType!
                     .stake)
             .round();
         if (issuingCustomerCardTransferedAmount <= 0 ||
@@ -235,10 +229,9 @@ class TransferCRUDFunctions {
 
           final transfer = Transfer(
             issuingCustomerCardId:
-                transfersBetweenCustomersAccountsSelectedIssuingCustomerCard.id,
+                transfersBetweenCustomerCardSelectedIssuingCustomerCard.id,
             receivingCustomerCardId:
-                transfersBetweenCustomersAccountsSelectedReceivingCustomerCard
-                    .id,
+                transfersBetweenCustomerCardSelectedReceivingCustomerCard.id,
             agentId: agentId ?? 0,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
