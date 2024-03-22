@@ -4,19 +4,21 @@ import 'dart:convert';
 import 'package:communitybank/models/tables/transfer/transfer_table.model.dart';
 
 class Transfer {
-  int? id;
-  int issuingCustomerCardId;
-  int receivingCustomerCardId;
-  int agentId;
-  DateTime? validatedAt;
-  DateTime createdAt;
-  DateTime updatedAt;
+  final int? id;
+  final int issuingCustomerCardId;
+  final int receivingCustomerCardId;
+  final int agentId;
+  final DateTime? validatedAt;
+  final DateTime? discardedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Transfer({
     this.id,
     required this.issuingCustomerCardId,
     required this.receivingCustomerCardId,
     required this.agentId,
     this.validatedAt,
+    this.discardedAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -28,6 +30,7 @@ class Transfer {
     int? receivingCustomerCardId,
     int? agentId,
     DateTime? validatedAt,
+    DateTime? discardedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -39,6 +42,7 @@ class Transfer {
           receivingCustomerCardId ?? this.receivingCustomerCardId,
       agentId: agentId ?? this.agentId,
       validatedAt: validatedAt ?? this.validatedAt,
+      discardedAt: discardedAt ?? this.discardedAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -50,6 +54,7 @@ class Transfer {
       TransferTable.receivingCustomerCardId: receivingCustomerCardId,
       TransferTable.agentId: agentId,
       TransferTable.validatedAt: validatedAt?.toIso8601String(),
+      TransferTable.discardedAt: discardedAt?.toIso8601String(),
     };
     if (isAdding) {
       map[TransferTable.createdAt] = createdAt.toIso8601String();
@@ -68,6 +73,9 @@ class Transfer {
       validatedAt: map[TransferTable.validatedAt] != null
           ? DateTime.parse(map[TransferTable.validatedAt])
           : null,
+      discardedAt: map[TransferTable.discardedAt] != null
+          ? DateTime.parse(map[TransferTable.discardedAt])
+          : null,
       createdAt: DateTime.parse(map[TransferTable.createdAt]),
       updatedAt: DateTime.parse(map[TransferTable.updatedAt]),
     );
@@ -84,7 +92,7 @@ class Transfer {
 
   @override
   String toString() {
-    return 'Transfer(id: $id, issuingCustomerCardId: $issuingCustomerCardId, receivingCustomerCardId: $receivingCustomerCardId, agentId: $agentId, validatedAt: $validatedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Transfer(id: $id, issuingCustomerCardId: $issuingCustomerCardId, receivingCustomerCardId: $receivingCustomerCardId, agentId: $agentId, validatedAt: $validatedAt, discardedAt: $discardedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -96,6 +104,7 @@ class Transfer {
         other.receivingCustomerCardId == receivingCustomerCardId &&
         other.agentId == agentId &&
         other.validatedAt == validatedAt &&
+        other.discardedAt == discardedAt &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -107,6 +116,7 @@ class Transfer {
         receivingCustomerCardId.hashCode ^
         agentId.hashCode ^
         validatedAt.hashCode ^
+        discardedAt.hashCode ^
         createdAt.hashCode ^
         updatedAt.hashCode;
   }

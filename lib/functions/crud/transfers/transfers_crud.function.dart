@@ -159,7 +159,8 @@ class TransferCRUDFunctions {
 
     final transfersBetweenCustomersAccountsSelectedIssuingCustomerCardType =
         ref.watch(
-            transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider);
+      transfersBetweenCustomersAccountsSelectedIssuingCustomerCardTypeProvider,
+    );
 
     final transfersBetweenCustomersAccountsSelectedReceivingCustomerCard =
         ref.watch(
@@ -284,11 +285,12 @@ class TransferCRUDFunctions {
     }
   }
 
-  static Future<void> validate({
-    required BuildContext context,
-    required WidgetRef ref,
-    required Transfer transfer,
-  }) async {
+  static Future<void> validate(
+      {required BuildContext context,
+      required WidgetRef ref,
+      required Transfer transfer,
+      required ValueNotifier<bool> showConfirmationButton}) async {
+    showConfirmationButton.value = false;
     // get issuing card data (card, type, settlements)
     final issuingCustomerCard = await CustomersCardsController.getOne(
       id: transfer.issuingCustomerCardId,
@@ -377,6 +379,7 @@ class TransferCRUDFunctions {
                       response:
                           'Opération échouée \n Les règlements ont été achevé sur la carte du compte récepteur',
                     );
+                    showConfirmationButton.value = true;
 
                     FunctionsController.showAlertDialog(
                       context: context,
@@ -444,14 +447,25 @@ class TransferCRUDFunctions {
                           ref.read(responseDialogProvider.notifier).state =
                               ResponseDialogModel(
                             serviceResponse: transferUpdateStatus,
-                            response: 'Opération réussie',
+                            response:
+                                'Opération réussie \n Complément de règlements restants: $complementSettlements soit ${(issuingCustomerCard.typeNumber * issuingCustomerCardType.stake * complementSettlements).toInt()}f',
                           );
+
+                          // this, for avoiding to automatically clause sucess dialog in order to show the complement settlements
+                          ref
+                              .read(
+                                remarkSuccessResponseDialogProvider.notifier,
+                              )
+                              .state = false;
+                          showConfirmationButton.value = true;
+                          Navigator.of(context).pop();
                         } else {
                           ref.read(responseDialogProvider.notifier).state =
                               ResponseDialogModel(
                             serviceResponse: transferUpdateStatus,
                             response: 'Opération échouée',
                           );
+                          showConfirmationButton.value = true;
                         }
                         FunctionsController.showAlertDialog(
                           context: context,
@@ -466,7 +480,7 @@ class TransferCRUDFunctions {
                           response:
                               'Opération échouée \n Impossible d\'ajouter les règlements sur le compte récepteur',
                         );
-
+                        showConfirmationButton.value = true;
                         FunctionsController.showAlertDialog(
                           context: context,
                           alertDialog: const ResponseDialog(),
@@ -480,7 +494,7 @@ class TransferCRUDFunctions {
                         response:
                             'Opération échouée \n Impossible de griser la carte',
                       );
-
+                      showConfirmationButton.value = true;
                       FunctionsController.showAlertDialog(
                         context: context,
                         alertDialog: const ResponseDialog(),
@@ -540,12 +554,15 @@ class TransferCRUDFunctions {
                           serviceResponse: transferUpdateStatus,
                           response: 'Opération réussie',
                         );
+                        showConfirmationButton.value = true;
+                        Navigator.of(context).pop();
                       } else {
                         ref.read(responseDialogProvider.notifier).state =
                             ResponseDialogModel(
                           serviceResponse: transferUpdateStatus,
                           response: 'Opération échouée',
                         );
+                        showConfirmationButton.value = true;
                       }
                       FunctionsController.showAlertDialog(
                         context: context,
@@ -560,6 +577,7 @@ class TransferCRUDFunctions {
                         response:
                             'Opération échouée \n Impossible d\'ajouter les règlements sur le compte récepteur',
                       );
+                      showConfirmationButton.value = true;
 
                       FunctionsController.showAlertDialog(
                         context: context,
@@ -574,6 +592,7 @@ class TransferCRUDFunctions {
                       response:
                           'Opération échouée \n Impossible de griser la carte',
                     );
+                    showConfirmationButton.value = true;
 
                     FunctionsController.showAlertDialog(
                       context: context,
@@ -589,6 +608,7 @@ class TransferCRUDFunctions {
                   response:
                       'Opération échouée \n Le solde du compte émetteur est insuffisant',
                 );
+                showConfirmationButton.value = true;
 
                 FunctionsController.showAlertDialog(
                   context: context,
@@ -602,6 +622,7 @@ class TransferCRUDFunctions {
                 response:
                     'Opération échouée \n Le type du compte récepteur n\'a pas été trouvé',
               );
+              showConfirmationButton.value = true;
 
               FunctionsController.showAlertDialog(
                 context: context,
@@ -615,6 +636,7 @@ class TransferCRUDFunctions {
               response:
                   'Opération échouée \n La carte du compte récepteur n\'a pas été trouvée',
             );
+            showConfirmationButton.value = true;
 
             FunctionsController.showAlertDialog(
               context: context,
@@ -629,7 +651,7 @@ class TransferCRUDFunctions {
             response:
                 'Opération échouée \n Aucun règlement n\'a été fait sur la carte du compte émetteur',
           );
-
+          showConfirmationButton.value = true;
           FunctionsController.showAlertDialog(
             context: context,
             alertDialog: const ResponseDialog(),
@@ -641,7 +663,7 @@ class TransferCRUDFunctions {
           response:
               'Opération échouée \n Le type du compte émetteur n\'a pas été trouvé',
         );
-
+        showConfirmationButton.value = true;
         FunctionsController.showAlertDialog(
           context: context,
           alertDialog: const ResponseDialog(),
@@ -653,6 +675,7 @@ class TransferCRUDFunctions {
         response:
             'Opération échouée \n La carte du compte é,émetteur n\'a pas été trouvée',
       );
+      showConfirmationButton.value = true;
 
       FunctionsController.showAlertDialog(
         context: context,
@@ -665,13 +688,13 @@ class TransferCRUDFunctions {
     required BuildContext context,
     required WidgetRef ref,
     required Transfer transfer,
+    required ValueNotifier<bool> showConfirmationButton,
   }) async {
+    showConfirmationButton.value = false;
     ServiceResponse lastTransferStatus;
 
     final newTransfer = transfer.copyWith(
-      validatedAt: DateTime(
-        1970,
-      ),
+      discardedAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
 
@@ -685,11 +708,14 @@ class TransferCRUDFunctions {
         serviceResponse: lastTransferStatus,
         response: 'Opération réussie',
       );
+      showConfirmationButton.value = true;
+      Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: lastTransferStatus,
         response: 'Opération échouée',
       );
+      showConfirmationButton.value = true;
     }
     FunctionsController.showAlertDialog(
       context: context,
@@ -701,7 +727,9 @@ class TransferCRUDFunctions {
     required BuildContext context,
     required WidgetRef ref,
     required Transfer transfer,
+    required ValueNotifier<bool> showConfirmationButton,
   }) async {
+    showConfirmationButton.value = false;
     ServiceResponse transferStatus;
 
     transferStatus = await TransfersController.delete(transfer: transfer);
@@ -711,11 +739,14 @@ class TransferCRUDFunctions {
         serviceResponse: transferStatus,
         response: 'Opération réussie',
       );
+      showConfirmationButton.value = true;
+      Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: transferStatus,
         response: 'Opération échouée',
       );
+      showConfirmationButton.value = true;
     }
     FunctionsController.showAlertDialog(
       context: context,

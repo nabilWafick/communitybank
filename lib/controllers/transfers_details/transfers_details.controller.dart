@@ -4,8 +4,9 @@ import 'package:communitybank/services/transfers_details/transfers_details.servi
 class TransfersDetailsController {
   static Future<List<TransferDetail>> getTransfersDetails({
     required int? agentId,
-    required String? validationDate,
     required String? creationDate,
+    required String? validationDate,
+    required String? discardationDate,
     required int? issuingCustomerCardId,
     required int? issuingCustomerCardTypeId,
     required int? issuingCustomerAccountId,
@@ -17,8 +18,9 @@ class TransfersDetailsController {
   }) async {
     final transfersDetails = await TransfersDetailsService.getTransfersDetails(
       agentId: agentId,
-      validationDate: validationDate,
       creationDate: creationDate,
+      validationDate: validationDate,
+      discardationDate: discardationDate,
       issuingCustomerCardId: issuingCustomerCardId,
       issuingCustomerCardTypeId: issuingCustomerCardTypeId,
       issuingCustomerAccountId: issuingCustomerAccountId,

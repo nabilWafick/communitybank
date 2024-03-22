@@ -5,6 +5,8 @@ import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/settlements/settlements_crud.function.dart';
 import 'package:communitybank/models/data/collection/collection.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+
+import 'package:communitybank/models/data/type/type.model.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/cash/collections/collections.widgets.dart';
@@ -139,6 +141,7 @@ class _MultipleSettlementsAddingFormState
                       const CBText(
                         text: 'Montant Collecte Restant: ',
                         fontSize: 12.0,
+                        fontWeight: FontWeight.w500,
                       ),
                       settlementCollectionDate != null
                           ? Consumer(
@@ -208,32 +211,46 @@ class _MultipleSettlementsAddingFormState
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 20.0,
-                  ),
-                  child: CBIconButton(
-                    // limit the number of customer card settlement form to exactly the number of customer card
-                    onTap: () {
-                      if (ref
-                              .watch(multipleSettlementsAddedInputsProvider)
-                              .length <
-                          cashOperationsSelectedCustomerAccount
-                              .customerCardsIds.length) {
-                        ref
-                            .read(
-                                multipleSettlementsAddedInputsProvider.notifier)
-                            .update((state) {
-                          return {
-                            ...state,
-                            DateTime.now().millisecondsSinceEpoch: true,
-                          };
-                        });
-                      }
-                    },
-                    icon: Icons.add_circle,
-                    text: 'Ajouter une carte',
-                  ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final multipleSettlementsAddedInputs =
+                        ref.watch(multipleSettlementsAddedInputsProvider);
+                    return Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 20.0,
+                      ),
+                      child: CBIconButton(
+                        // limit the number of customer card settlement visible form to exactly the number of customer card
+                        onTap: () {
+                          int visibleInputs = 0;
+
+                          for (MapEntry multipleSettlementsAddedInputsEntry
+                              in multipleSettlementsAddedInputs.entries) {
+                            // verify if the input is visible
+                            if (multipleSettlementsAddedInputsEntry.value) {
+                              ++visibleInputs;
+                            }
+                          }
+
+                          if (visibleInputs <
+                              cashOperationsSelectedCustomerAccount
+                                  .customerCardsIds.length) {
+                            ref
+                                .read(multipleSettlementsAddedInputsProvider
+                                    .notifier)
+                                .update((state) {
+                              return {
+                                ...state,
+                                DateTime.now().millisecondsSinceEpoch: true,
+                              };
+                            });
+                          }
+                        },
+                        icon: Icons.add_circle,
+                        text: 'Ajouter une carte',
+                      ),
+                    );
+                  },
                 ),
                 Consumer(
                   builder: (context, ref, child) {
@@ -268,37 +285,103 @@ class _MultipleSettlementsAddingFormState
       ),
       actions: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 170.0,
-              child: CBElevatedButton(
-                text: 'Fermer',
-                backgroundColor: CBColors.sidebarTextColor,
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
+            Consumer(
+              builder: (context, ref, child) {
+                final multipleSettlementsSelectedTypes =
+                    ref.watch(multipleSettlementsSelectedTypesProvider);
+                final multipleSettlementsSelectedCustomerCards =
+                    ref.watch(multipleSettlementsSelectedCustomerCardsProvider);
+                final multipleSettlementsAddedInputs =
+                    ref.watch(multipleSettlementsAddedInputsProvider);
+
+                List<Type> selectedTypes = [];
+                // check if a type repeated
+                for (MapEntry multipleSettlementsSelectedTypesEntry
+                    in multipleSettlementsSelectedTypes.entries) {
+                  selectedTypes.add(
+                    multipleSettlementsSelectedTypesEntry.value,
+                  );
+                }
+
+                // store customer cards
+                List<CustomerCard> selectedCustomerCards = [];
+
+                // store the numbers of settlements
+                List<int> settlementsNumbers = [];
+
+                for (MapEntry multipleSettlementsSelectedCustomerCardsEntry
+                    in multipleSettlementsSelectedCustomerCards.entries) {
+                  selectedCustomerCards.add(
+                    multipleSettlementsSelectedCustomerCardsEntry.value,
+                  );
+                }
+
+                for (MapEntry multipleSettlementsAddedInputsEntry
+                    in multipleSettlementsAddedInputs.entries) {
+                  // verify if the input is visible
+                  if (multipleSettlementsAddedInputsEntry.value) {
+                    settlementsNumbers.add(
+                      ref.watch(
+                        multipleSettlementsSettlementNumberProvider(
+                          multipleSettlementsAddedInputsEntry.key,
+                        ),
+                      ),
+                    );
+                  }
+                }
+
+                int totalAmount = 0;
+
+                for (int i = 0; i < selectedTypes.length; ++i) {
+                  totalAmount += (selectedCustomerCards[i].typeNumber *
+                          selectedTypes[i].stake *
+                          settlementsNumbers[i])
+                      .round();
+                }
+
+                return CBText(
+                  text: 'Montant Total: ${totalAmount}f',
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                );
+              },
             ),
-            const SizedBox(
-              width: 20.0,
+            Row(
+              // mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 170.0,
+                  child: CBElevatedButton(
+                    text: 'Fermer',
+                    backgroundColor: CBColors.sidebarTextColor,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 20.0,
+                ),
+                showValidatedButton.value
+                    ? SizedBox(
+                        width: 170.0,
+                        child: CBElevatedButton(
+                          text: 'Valider',
+                          onPressed: () async {
+                            SettlementCRUDFunctions.createMultipleSettlements(
+                              context: context,
+                              formKey: formKey,
+                              ref: ref,
+                              showValidatedButton: showValidatedButton,
+                            );
+                          },
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
             ),
-            showValidatedButton.value
-                ? SizedBox(
-                    width: 170.0,
-                    child: CBElevatedButton(
-                      text: 'Valider',
-                      onPressed: () async {
-                        SettlementCRUDFunctions.createMultipleSettlements(
-                          context: context,
-                          formKey: formKey,
-                          ref: ref,
-                          showValidatedButton: showValidatedButton,
-                        );
-                      },
-                    ),
-                  )
-                : const SizedBox(),
           ],
         ),
       ],
@@ -454,7 +537,11 @@ class _CustomerCardSettlementCardState
                             // get all only customers cards types and unselected types for multiple settlements card
                             return cashOperationsSelectedCustomerAccountOwnerCustomerCards
                                 .any(
-                              (customerCard) => customerCard.typeId == type.id,
+                              (customerCard) =>
+                                  customerCard.satisfiedAt == null &&
+                                  customerCard.repaidAt == null &&
+                                  customerCard.transferredAt == null &&
+                                  customerCard.typeId == type.id,
                             );
                           } /* &&
                                     !multipleSettlementsSelectedTypes
@@ -470,6 +557,10 @@ class _CustomerCardSettlementCardState
                                       cashOperationsSelectedCustomerAccountOwnerCustomerCards
                                           .any(
                                         (customerCard) =>
+                                            customerCard.satisfiedAt == null &&
+                                            customerCard.repaidAt == null &&
+                                            customerCard.transferredAt ==
+                                                null &&
                                             customerCard.typeId == type.id,
                                       )
                                   /* &&

@@ -1,39 +1,28 @@
-import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
-import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/models/data/transfer/transfer.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ResponseDialog extends StatefulHookConsumerWidget {
-  const ResponseDialog({super.key});
+class TransferDeletionConfirmationDialog extends HookConsumerWidget {
+  final Transfer transfer;
+  final Future<void> Function({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Transfer transfer,
+    required ValueNotifier<bool> showConfirmationButton,
+  }) confirmToDelete;
 
+  const TransferDeletionConfirmationDialog({
+    super.key,
+    required this.transfer,
+    required this.confirmToDelete,
+  });
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ResponseDialogState();
-}
-
-class _ResponseDialogState extends ConsumerState<ResponseDialog> {
-  @override
-  void initState() {
-    final responseDialogData = ref.read(responseDialogProvider);
-    final remarkSuccessResponseDialog =
-        ref.read(remarkSuccessResponseDialogProvider);
-    if (responseDialogData.serviceResponse == ServiceResponse.success &&
-        remarkSuccessResponseDialog == false) {
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-      });
-    }
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final responseDialogData = ref.watch(responseDialogProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     const formCardWidth = 500.0;
+    final showConfirmationButton = useState<bool>(true);
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -55,7 +44,7 @@ class _ResponseDialogState extends ConsumerState<ResponseDialog> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const CBText(
-                      text: 'Status',
+                      text: 'Confirmation',
                       fontSize: 20.0,
                       fontWeight: FontWeight.w600,
                     ),
@@ -78,19 +67,17 @@ class _ResponseDialogState extends ConsumerState<ResponseDialog> {
                   child: Row(
                     children: [
                       Icon(
-                        Icons.info,
-                        color: responseDialogData.serviceResponse ==
-                                ServiceResponse.success
-                            ? CBColors.primaryColor
-                            : Colors.red[700],
+                        Icons.warning,
+                        color: Colors.orange[900],
                         size: 30.0,
                       ),
                       const SizedBox(
                         width: 25.0,
                       ),
-                      Flexible(
+                      const Flexible(
                         child: CBText(
-                          text: responseDialogData.response,
+                          text:
+                              'Êtes-vous sûr de vouloir supprimer ce transfert ?',
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
                           textOverflow: TextOverflow.ellipsis,
@@ -101,18 +88,42 @@ class _ResponseDialogState extends ConsumerState<ResponseDialog> {
                 )
               ],
             ),
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(top: 15.0),
-              width: 170.0,
-              child: CBElevatedButton(
-                text: 'Fermer',
-                onPressed: () {
-                  ref.read(remarkSuccessResponseDialogProvider.notifier).state =
-                      false;
-                  Navigator.of(context).pop();
-                },
-              ),
+            const SizedBox(
+              height: 15.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 170.0,
+                  child: CBElevatedButton(
+                    text: 'Fermer',
+                    backgroundColor: CBColors.sidebarTextColor,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 20.0,
+                ),
+                showConfirmationButton.value
+                    ? SizedBox(
+                        width: 170.0,
+                        child: CBElevatedButton(
+                          text: 'Confirmer',
+                          onPressed: () async {
+                            confirmToDelete(
+                              context: context,
+                              ref: ref,
+                              transfer: transfer,
+                              showConfirmationButton: showConfirmationButton,
+                            );
+                          },
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
             ),
           ],
         ),

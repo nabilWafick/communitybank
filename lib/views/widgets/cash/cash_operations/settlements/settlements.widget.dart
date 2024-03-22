@@ -6,7 +6,7 @@ import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.da
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/settlements/settlements_deletion_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update/settlement/settlement_update_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/settlement/settlement_validation_status_update_confirmation_dialog.widegt.dart';
+import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/settlement/validation_status_update_confirmation_dialog.widegt.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

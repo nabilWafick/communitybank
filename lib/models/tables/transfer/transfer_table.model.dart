@@ -6,6 +6,7 @@ class TransferTable {
   static const String receivingCustomerCardId = 'id_carte_receptrice';
   static const String agentId = 'id_agent';
   static const String validatedAt = 'date_validation';
+  static const String discardedAt = 'date_rejet';
   static const String createdAt = 'date_creation';
   static const String updatedAt = 'date_modification';
 }

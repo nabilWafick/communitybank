@@ -33,6 +33,11 @@ final selectedTransferValidationDateProvider = StateProvider<DateTime?>((ref) {
   return;
 });
 
+final selectedTransferDiscardationDateProvider =
+    StateProvider<DateTime?>((ref) {
+  return;
+});
+
 class TransfersValidationsSortOptions extends StatefulHookConsumerWidget {
   const TransfersValidationsSortOptions({super.key});
 
@@ -65,6 +70,9 @@ class _TransfersValidationsSortOptionsState
     final selectedTransferValidationDate =
         ref.watch(selectedTransferValidationDateProvider);
 
+    final selectedTransferDiscardationDate =
+        ref.watch(selectedTransferDiscardationDateProvider);
+
     final format = DateFormat.yMMMMEEEEd('fr');
     return Container(
       margin: const EdgeInsets.only(
@@ -95,7 +103,7 @@ class _TransfersValidationsSortOptionsState
             spacing: 10.0,
             children: [
               SizedBox(
-                width: 400.0,
+                width: 500.0,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,7 +137,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               SizedBox(
-                width: 400.0,
+                width: 500.0,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,8 +170,43 @@ class _TransfersValidationsSortOptionsState
                   ],
                 ),
               ),
+              SizedBox(
+                width: 500.0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CBIconButton(
+                      icon: Icons.date_range,
+                      text: 'Date de Rejet',
+                      onTap: () async {
+                        await FunctionsController.showDateTime(
+                          context: context,
+                          ref: ref,
+                          stateProvider:
+                              selectedTransferDiscardationDateProvider,
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      width: 20.0,
+                    ),
+                    Flexible(
+                      child: CBText(
+                        text: selectedTransferDiscardationDate != null
+                            ? format.format(selectedTransferDiscardationDate)
+                            : '',
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w500,
+                        textOverflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    //   const SizedBox(),
+                  ],
+                ),
+              ),
               CBListCustomerAccountDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Client Émetteur',
                 providerName: 'transfers-validations-issuing-customer-account',
@@ -197,7 +240,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListCustomerAccountDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Client Récepteur',
                 providerName:
@@ -232,7 +275,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListCollectorDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Chargé de compte Émetteur',
                 providerName:
@@ -269,7 +312,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListCollectorDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Chargé de compte Récepteur',
                 providerName:
@@ -306,7 +349,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListCustomerCardDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Carte Émettrice',
                 providerName: 'transfers-validations-issuing-card',
@@ -342,7 +385,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListCustomerCardDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Carte Réceptrice',
                 providerName: 'transfers-validations-receiving-card',
@@ -378,7 +421,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListTypeDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Type Émetteur',
                 providerName: 'transfers-validations-issuing-card-type',
@@ -414,7 +457,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListTypeDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Type Émetteur',
                 providerName: 'transfers-validations-receiving-card-type',
@@ -450,7 +493,7 @@ class _TransfersValidationsSortOptionsState
                 ),
               ),
               CBListAgentDropdown(
-                width: 300.0,
+                width: 270.0,
                 menuHeigth: 500.0,
                 label: 'Agent',
                 providerName: 'transfers-validations-agent',

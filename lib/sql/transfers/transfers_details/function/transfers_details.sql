@@ -3,6 +3,7 @@ or replace function get_transfers_details (
   agent_id bigint,
   creation_date text,
   validation_date text,
+  discardation_date text,
   issuing_customer_card_id bigint,
   issuing_customer_card_type_id bigint,
   issuing_customer_account_id bigint,
@@ -15,6 +16,7 @@ or replace function get_transfers_details (
   id_transfert bigint,
   id_agent bigint,
   date_validation timestamp with time zone,
+  date_rejet timestamp with time zone,
   date_creation timestamp with time zone,
   date_modification timestamp with time zone,
   id_carte_emettrice bigint,
@@ -112,6 +114,7 @@ FROM
       (agent_id IS NULL OR transferts.id_agent = agent_id)
       AND (creation_date IS NULL OR DATE(transferts.date_creation) = DATE(creation_date))
       AND (validation_date IS NULL OR DATE(transferts.date_validation) = DATE(validation_date))
+      AND (discardation_date IS NULL OR DATE(transferts.date_rejet) = DATE(discardation_date))
       AND (issuing_customer_card_id IS NULL OR compte_emetteur.id_carte_emettrice = issuing_customer_card_id)
       AND (issuing_customer_card_type_id  IS NULL OR compte_emetteur.id_type_emetteur = issuing_customer_card_type_id)
       AND (issuing_customer_account_id  IS NULL OR compte_emetteur.id_compte_client_emetteur = issuing_customer_account_id)

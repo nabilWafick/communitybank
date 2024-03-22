@@ -1,7 +1,13 @@
+import 'package:communitybank/controllers/transfers/transfers.controller.dart';
 import 'package:communitybank/controllers/transfers_details/transfers_details.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/functions/crud/transfers/transfers_crud.function.dart';
+import 'package:communitybank/models/data/transfer/transfer.model.dart';
 import 'package:communitybank/models/data/transfer_detail/transfer_detail.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
+import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/transfers/transfers_deletion_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/transfers/discardation_update_confirmation_dialog.widegt.dart';
+import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/transfers/validation_update_confirmation_dialog.widegt.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/agent/agent_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
@@ -23,6 +29,9 @@ final transfersValidationsListStreamProvider =
 
   final selectedTransferValidationDate =
       ref.watch(selectedTransferValidationDateProvider);
+
+  final selectedTransferDiscardationDate =
+      ref.watch(selectedTransferDiscardationDateProvider);
 
   final selectedIssuingCustomerAccount = ref.watch(
     listCustomerAccountDropdownProvider(
@@ -73,13 +82,20 @@ final transfersValidationsListStreamProvider =
 
   yield* TransfersDetailsController.getTransfersDetails(
     agentId: selectedAgent.id != 0 ? selectedAgent.id : null,
-    validationDate: selectedTransferCreationDate != null
+    validationDate: selectedTransferValidationDate != null
         ? FunctionsController.getFormatedTime(
-            dateTime: selectedTransferCreationDate)
+            dateTime: selectedTransferValidationDate,
+          )
         : null,
-    creationDate: selectedTransferValidationDate != null
+    discardationDate: selectedTransferDiscardationDate != null
         ? FunctionsController.getFormatedTime(
-            dateTime: selectedTransferValidationDate)
+            dateTime: selectedTransferDiscardationDate,
+          )
+        : null,
+    creationDate: selectedTransferCreationDate != null
+        ? FunctionsController.getFormatedTime(
+            dateTime: selectedTransferCreationDate,
+          )
         : null,
     issuingCustomerCardId: selectedIssuingCustomerCard.id != 0
         ? selectedIssuingCustomerCard.id
@@ -108,6 +124,15 @@ final transfersValidationsListStreamProvider =
   ).asStream();
 });
 
+final transfersListStreamProvider =
+    StreamProvider<List<Transfer>>((ref) async* {
+  yield* TransfersController.getAll(
+    issuingCustomerCardId: null,
+    receivingCustomerCardId: null,
+    agentId: null,
+  );
+});
+
 class TransfersValidationsList extends ConsumerStatefulWidget {
   const TransfersValidationsList({super.key});
   @override
@@ -123,15 +148,16 @@ class _TransfersValidationsListState
     initializeDateFormatting('fr');
   }
 
-  final ScrollController verticalScrollController = ScrollController();
-  final ScrollController horizontalScrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     final transfersValidationsListStream =
         ref.watch(transfersValidationsListStreamProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
+
+    ref.listen(transfersListStreamProvider, (previous, next) {
+      ref.invalidate(transfersValidationsListStreamProvider);
+    });
 
     return Expanded(
       child: Container(
@@ -260,7 +286,7 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de validation',
+                  text: 'Date de Statuation',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -280,7 +306,7 @@ class _TransfersValidationsListState
               Container(
                 width: 200.0,
                 height: 50.0,
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: const CBText(
                   text: 'Statut',
                   textAlign: TextAlign.start,
@@ -434,7 +460,11 @@ class _TransfersValidationsListState
                           ? FunctionsController.getFormatedTime(
                               dateTime: transferDetail.validatedAt!,
                             )
-                          : '';
+                          : transferDetail.discardedAt != null
+                              ? FunctionsController.getFormatedTime(
+                                  dateTime: transferDetail.discardedAt!,
+                                )
+                              : '';
                       return Container(
                         alignment: Alignment.centerLeft,
                         width: 300.0,
@@ -442,7 +472,9 @@ class _TransfersValidationsListState
                         child: CBText(
                           text: transferDetail.validatedAt != null
                               ? '${format.format(transferDetail.validatedAt!)} $formatedTime'
-                              : '',
+                              : transferDetail.discardedAt != null
+                                  ? '${format.format(transferDetail.discardedAt!)} $formatedTime'
+                                  : '',
                           fontSize: 12.0,
                         ),
                       );
@@ -459,26 +491,26 @@ class _TransfersValidationsListState
                     ),
                   ),
                   Container(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     width: 200.0,
                     height: 40.0,
                     child: Card(
-                      color: transferDetail.validatedAt == null
-                          ? Colors.orange.shade700 //.withOpacity(.8)
-                          : transferDetail.validatedAt!.year != 1970
-                              ? Colors.green.shade700
-                              : Colors.red.shade700,
+                      color: transferDetail.validatedAt != null
+                          ? Colors.green.shade700
+                          : transferDetail.discardedAt != null
+                              ? Colors.red.shade700
+                              : Colors.orange.shade700,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 10.0,
                           horizontal: 15.0,
                         ),
                         child: CBText(
-                          text: transferDetail.validatedAt == null
-                              ? 'En attente'
-                              : transferDetail.validatedAt!.year != 1970
-                                  ? 'Validé'
-                                  : 'Rejeté',
+                          text: transferDetail.validatedAt != null
+                              ? 'Validé'
+                              : transferDetail.discardedAt != null
+                                  ? 'Rejeté'
+                                  : 'En attente',
                           fontSize: 10.0,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -525,20 +557,59 @@ class _TransfersValidationsListState
                     width: 150.0,
                     height: 40.0,
                     alignment: Alignment.center,
-                    child: transferDetail.validatedAt == null
+                    child: transferDetail.validatedAt == null &&
+                            transferDetail.discardedAt == null
                         ? CBToolTip(
                             options: [
                               CBToolTipOption(
                                 icon: Icons.check,
                                 iconColor: Colors.green.shade700,
                                 name: 'Validé',
-                                onTap: () {},
+                                onTap: () async {
+                                  await FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog:
+                                        TransferValidationUpdateConfirmationDialog(
+                                      transfer: Transfer(
+                                        id: transferDetail.transferId,
+                                        issuingCustomerCardId: transferDetail
+                                            .issuingCustomerCardId,
+                                        receivingCustomerCardId: transferDetail
+                                            .receivingCustomerCardId,
+                                        agentId: transferDetail.agentId,
+                                        createdAt: transferDetail.createdAt,
+                                        updatedAt: transferDetail.updatedAt,
+                                      ),
+                                      confirmToDelete:
+                                          TransferCRUDFunctions.discard,
+                                    ),
+                                  );
+                                },
                               ),
                               CBToolTipOption(
                                 icon: Icons.close,
                                 iconColor: Colors.red.shade700,
                                 name: 'Rejeté',
-                                onTap: () {},
+                                onTap: () async {
+                                  await FunctionsController.showAlertDialog(
+                                    context: context,
+                                    alertDialog:
+                                        TransferDiscardationUpdateConfirmationDialog(
+                                      transfer: Transfer(
+                                        id: transferDetail.transferId,
+                                        issuingCustomerCardId: transferDetail
+                                            .issuingCustomerCardId,
+                                        receivingCustomerCardId: transferDetail
+                                            .receivingCustomerCardId,
+                                        agentId: transferDetail.agentId,
+                                        createdAt: transferDetail.createdAt,
+                                        updatedAt: transferDetail.updatedAt,
+                                      ),
+                                      confirmToDelete:
+                                          TransferCRUDFunctions.discard,
+                                    ),
+                                  );
+                                },
                               )
                             ],
                           )
@@ -547,13 +618,22 @@ class _TransfersValidationsListState
 
                   InkWell(
                     onTap: () async {
-                      /*   await FunctionsController.showAlertDialog(
+                      await FunctionsController.showAlertDialog(
                         context: context,
-                        alertDialog: SettlementDeletionConfirmationDialog(
-                          settlement: settlement,
-                          confirmToDelete: SettlementCRUDFunctions.delete,
+                        alertDialog: TransferDeletionConfirmationDialog(
+                          transfer: Transfer(
+                            id: transferDetail.transferId,
+                            issuingCustomerCardId:
+                                transferDetail.issuingCustomerCardId,
+                            receivingCustomerCardId:
+                                transferDetail.receivingCustomerCardId,
+                            agentId: transferDetail.agentId,
+                            createdAt: transferDetail.createdAt,
+                            updatedAt: transferDetail.updatedAt,
+                          ),
+                          confirmToDelete: TransferCRUDFunctions.delete,
                         ),
-                      );*/
+                      );
                     },
                     child: Container(
                       width: 150.0,
@@ -596,6 +676,17 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
+                  text: 'Chargé de Compte Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
                   text: 'Client Émetteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
@@ -619,6 +710,17 @@ class _TransfersValidationsListState
                 alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Type Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Chargé de Compte Récepteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -662,7 +764,7 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date d\'instance',
+                  text: 'Date de transfert',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -673,7 +775,7 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date d\'instance',
+                  text: 'Date de Statuation',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -693,7 +795,7 @@ class _TransfersValidationsListState
               Container(
                 width: 200.0,
                 height: 50.0,
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: const CBText(
                   text: 'Statut',
                   textAlign: TextAlign.start,
@@ -754,6 +856,17 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
+                  text: 'Chargé de Compte Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
                   text: 'Client Émetteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
@@ -777,6 +890,17 @@ class _TransfersValidationsListState
                 alignment: Alignment.centerLeft,
                 child: const CBText(
                   text: 'Type Émetteur',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Chargé de Compte Récepteur',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -820,7 +944,7 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date d\'instance',
+                  text: 'Date de transfert',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -831,7 +955,7 @@ class _TransfersValidationsListState
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date d\'instance',
+                  text: 'Date de Statuation',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -851,7 +975,7 @@ class _TransfersValidationsListState
               Container(
                 width: 200.0,
                 height: 50.0,
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.center,
                 child: const CBText(
                   text: 'Statut',
                   textAlign: TextAlign.start,

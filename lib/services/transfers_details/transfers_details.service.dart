@@ -5,8 +5,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class TransfersDetailsService {
   static Future<List<Map<String, dynamic>>> getTransfersDetails({
     required int? agentId,
-    required String? validationDate,
     required String? creationDate,
+    required String? validationDate,
+    required String? discardationDate,
     required int? issuingCustomerCardId,
     required int? issuingCustomerCardTypeId,
     required int? issuingCustomerAccountId,
@@ -24,6 +25,7 @@ class TransfersDetailsService {
         'agent_id': agentId,
         'creation_date': creationDate,
         'validation_date': validationDate,
+        'discardation_date': discardationDate,
         'issuing_customer_card_id': issuingCustomerCardId,
         'issuing_customer_card_type_id': issuingCustomerCardTypeId,
         'issuing_customer_account_id': issuingCustomerAccountId,

@@ -2,6 +2,7 @@ select
     transferts.id as id_transfert,
     transferts.id_agent,
     CONCAT (agents.nom, ' ', agents.prenoms) AS agent,
+    transferts.date_rejet,
     transferts.date_validation,
     transferts.date_creation,
     transferts.date_modification,

@@ -560,6 +560,9 @@ class _TransfersBetweenCustomersAccountsDataState
                                       transfersBetweenCustomersAccountsSelectedIssuingCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )
@@ -574,6 +577,9 @@ class _TransfersBetweenCustomersAccountsDataState
                                       transfersBetweenCustomersAccountsSelectedIssuingCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )
@@ -746,8 +752,11 @@ class _TransfersBetweenCustomersAccountsDataState
                                 transfersBetweenCustomersAccountsSelectedReceivingCustomerCards
                                     .firstWhere(
                               (customerCard) =>
+                                  customerCard.satisfiedAt == null &&
+                                  customerCard.repaidAt == null &&
+                                  customerCard.transferredAt == null &&
                                   customerCard.typeId ==
-                                  receivingCustomerCardType.id,
+                                      receivingCustomerCardType.id,
                               orElse: () => CustomerCard(
                                 label: 'Carte *',
                                 typeId: 1,
@@ -775,6 +784,9 @@ class _TransfersBetweenCustomersAccountsDataState
                                       transfersBetweenCustomersAccountsSelectedReceivingCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )

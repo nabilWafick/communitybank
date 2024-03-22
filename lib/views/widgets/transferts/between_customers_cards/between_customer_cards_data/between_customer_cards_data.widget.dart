@@ -452,6 +452,9 @@ class _TransfersBetweenCustomerCardsDataState
                                       transfersBetweenCustomerCardsSelectedCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )
@@ -466,6 +469,9 @@ class _TransfersBetweenCustomerCardsDataState
                                       transfersBetweenCustomerCardsSelectedCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )
@@ -667,6 +673,9 @@ class _TransfersBetweenCustomerCardsDataState
                                       transfersBetweenCustomerCardsSelectedCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )
@@ -681,6 +690,9 @@ class _TransfersBetweenCustomerCardsDataState
                                       transfersBetweenCustomerCardsSelectedCustomerCards
                                           .any(
                                     (customerCard) =>
+                                        customerCard.satisfiedAt == null &&
+                                        customerCard.repaidAt == null &&
+                                        customerCard.transferredAt == null &&
                                         customerCard.typeId == type.id,
                                   ),
                                 )

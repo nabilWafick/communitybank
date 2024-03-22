@@ -16,7 +16,7 @@ import 'package:communitybank/views/widgets/definitions/customers_categories/cus
 import 'package:communitybank/views/widgets/definitions/economical_activities/economical_activities_list/economical_activities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/localities/localities_list/localities_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/personal_status/personal_status_list/personal_status_list.widget.dart';
-import 'package:communitybank/views/widgets/forms/adding_confirmation_dialog/customers/customers.adding_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding_confirmation_dialog/customers/customers_adding_confirmation_dialog.widget.dart';
 //import 'package:communitybank/views/widgets/forms/adding_confirmation_dialog/customers/customers.adding_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/customer_category/customer_category_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/economical_activity/economical_activity_dropdown.widget.dart';

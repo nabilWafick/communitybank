@@ -285,7 +285,7 @@ class SettlementCRUDFunctions {
             // store customer cards
             List<CustomerCard> selectedCustomerCards = [];
 
-            // store the number of settlements
+            // store the numbers of settlements
             List<int> settlementsNumbers = [];
 
             for (MapEntry multipleSettlementsSelectedCustomerCardsEntry

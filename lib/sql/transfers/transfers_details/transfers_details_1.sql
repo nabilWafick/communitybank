@@ -2,6 +2,7 @@ select
     transferts.id as id_transfert,
     transferts.id_agent,
     transferts.date_validation,
+    transferts.date_rejet,
     transferts.date_creation,
     transferts.date_modification,
     compte_emetteur.id_carte_emettrice,

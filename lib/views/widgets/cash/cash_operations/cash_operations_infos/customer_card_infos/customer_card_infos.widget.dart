@@ -140,7 +140,8 @@ class _CashOperationsCustomerCardInfosState
                                         .customerCardsIds
                                         .contains(customerCard.id!) &&
                                     customerCard.satisfiedAt == null &&
-                                    customerCard.repaidAt == null,
+                                    customerCard.repaidAt == null &&
+                                    customerCard.transferredAt == null,
                               )
                               .map(
                                 (customerCard) => CustomerCardCard(

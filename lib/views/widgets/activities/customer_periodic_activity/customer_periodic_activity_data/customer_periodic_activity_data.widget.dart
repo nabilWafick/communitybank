@@ -156,28 +156,31 @@ class _CustomerPeriodicActivityDataState
               ),
               width: MediaQuery.of(context).size.width * .79,
               height: 40.0,
-              child: ActivityCustomerCardsHorizontalScroller(
-                children: customersCardsListStream.when(
-                  data: (data) => data
-                      .where((customerCard) =>
-                              selectedCustomerAccount?.customerCardsIds
-                                  .contains(
-                                customerCard.id!,
-                              ) ??
-                              false /* &&
-                            customerCard.satisfiedAt == null &&
-                            customerCard.repaidAt == null,*/
-                          )
-                      .map(
-                        (customerCard) => ActivityCustomerCardCard(
-                          customerCard: customerCard,
-                        ),
-                      )
-                      .toList(),
-                  error: (error, stackTrace) => [],
-                  loading: () => [],
-                ),
-              ),
+              child: selectedCustomerAccount != null
+                  ? ActivityCustomerCardsHorizontalScroller(
+                      children: customersCardsListStream.when(
+                        data: (data) => data
+                            .where(
+                              (customerCard) =>
+                                  customerCard.satisfiedAt == null &&
+                                  customerCard.repaidAt == null &&
+                                  customerCard.transferredAt == null &&
+                                  selectedCustomerAccount.customerCardsIds
+                                      .contains(
+                                    customerCard.id!,
+                                  ),
+                            )
+                            .map(
+                              (customerCard) => ActivityCustomerCardCard(
+                                customerCard: customerCard,
+                              ),
+                            )
+                            .toList(),
+                        error: (error, stackTrace) => [],
+                        loading: () => [],
+                      ),
+                    )
+                  : const SizedBox(),
             ),
           ],
         ),
