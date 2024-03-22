@@ -1,18 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:communitybank/controllers/agents/agents.controller.dart';
-import 'package:communitybank/controllers/forms/validators/agent/agent.validator.dart';
+import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
 import 'package:communitybank/controllers/settlements/settlements.controller.dart';
 import 'package:communitybank/controllers/transfers/transfers.controller.dart';
+import 'package:communitybank/controllers/types/types.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/models/data/agent/agent.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
 import 'package:communitybank/models/data/transfer/transfer.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/transferts/between_customers_accounts/between_customers_accounts_data/between_customers_accounts_data.widget.dart';
 import 'package:communitybank/views/widgets/transferts/between_customers_cards/between_customer_cards_data/between_customer_cards_data.widget.dart';
 import 'package:flutter/material.dart';
@@ -286,94 +284,376 @@ class TransferCRUDFunctions {
     }
   }
 
-  static Future<void> update({
+  static Future<void> validate({
     required BuildContext context,
-    required GlobalKey<FormState> formKey,
     required WidgetRef ref,
-    required Agent agent,
-    required ValueNotifier<bool> showValidatedButton,
+    required Transfer transfer,
   }) async {
-    final agentPicture = ref.watch(agentPictureProvider);
-    formKey.currentState!.save();
-    final isFormValid = formKey.currentState!.validate();
-    if (isFormValid) {
-      showValidatedButton.value = false;
-      final agentName = ref.watch(agentNameProvider);
-      final agentFirstnames = ref.watch(agentFirstnamesProvider);
-      final agentPhoneNumber = ref.watch(agentPhoneNumberProvider);
-      final agentEmail = ref.watch(agentEmailProvider);
-      final agentAddress = ref.watch(agentAddressProvider);
-      final agentRole =
-          ref.watch(formStringDropdownProvider('agent-update-role'));
+    // get issuing card data (card, type, settlements)
+    final issuingCustomerCard = await CustomersCardsController.getOne(
+      id: transfer.issuingCustomerCardId,
+    );
 
-      ServiceResponse lastAgentStatus;
+    if (issuingCustomerCard != null) {
+      // get issuingCustomerCard type
 
-      if (agentPicture == null) {
-        final newAgent = Agent(
-          name: agentName,
-          firstnames: agentFirstnames,
-          phoneNumber: agentPhoneNumber,
-          email: agentEmail,
-          address: agentAddress,
-          role: agentRole,
-          profile: agent.profile,
-          createdAt: agent.createdAt,
-          updatedAt: DateTime.now(),
-        );
+      final issuingCustomerCardType = await TypesController.getOne(
+        id: issuingCustomerCard.typeId,
+      );
 
-        lastAgentStatus = await AgentsController.update(
-          id: agent.id!,
-          agent: newAgent,
-        );
+      if (issuingCustomerCardType != null) {
+        // get issuingCustomerCard settlements
 
-        // debugPrint('new agent: $agentStatus');
-      } else {
-        String? agentRemotePath;
-        // if the Agent haven't a picture before
-        if (agent.profile == null) {
-          agentRemotePath = await AgentsController.uploadPicture(
-            agentPicturePath: agentPicture,
-          );
-        } else {
-          agentRemotePath = await AgentsController.updateUploadedPicture(
-            agentPictureLink: agent.profile!,
-            newAgentPicturePath: agentPicture,
-          );
+        final issuingCustomerCardSettlements =
+            await SettlementsController.getAll(
+          customerCardId: issuingCustomerCard.id!,
+        ).first;
+
+        // calculate issuing customer card settlements number total
+        int issuingCustomerCardSettlementsNumbersTotal = 0;
+
+        for (int i = 0; i > issuingCustomerCardSettlements.length; ++i) {
+          issuingCustomerCardSettlementsNumbersTotal +=
+              issuingCustomerCardSettlements[i].number;
         }
 
-        final newAgent = Agent(
-          name: agentName,
-          firstnames: agentFirstnames,
-          phoneNumber: agentPhoneNumber,
-          email: agentEmail,
-          address: agentAddress,
-          role: agentRole,
-          profile: '${CBConstants.supabaseStorageLink}/$agentRemotePath',
-          createdAt: agent.createdAt,
-          updatedAt: DateTime.now(),
-        );
+        if (issuingCustomerCardSettlementsNumbersTotal != 0) {
+          // get receiving card data (card, type, settlements)
 
-        lastAgentStatus = await AgentsController.update(
-          id: agent.id!,
-          agent: newAgent,
-        );
+          final receivingCustomerCard = await CustomersCardsController.getOne(
+            id: transfer.receivingCustomerCardId,
+          );
 
-        //  debugPrint('new agent: $agentStatus');
-      }
-      if (lastAgentStatus == ServiceResponse.success) {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastAgentStatus,
-          response: 'Opération réussie',
-        );
-        showValidatedButton.value = true;
-        Navigator.of(context).pop();
+          if (receivingCustomerCard != null) {
+            // get receivingCustomerCard type
+
+            final receivingCustomerCardType = await TypesController.getOne(
+              id: receivingCustomerCard.typeId,
+            );
+
+            if (receivingCustomerCardType != null) {
+              // check if the available amount is sufficient for making a transfer
+              final issuingCustomerCardTranferAmount = ((2 *
+                          (issuingCustomerCard.typeNumber *
+                              issuingCustomerCardType.stake *
+                              issuingCustomerCardSettlementsNumbersTotal) /
+                          3) -
+                      300)
+                  .round();
+
+              int settlementsToTranfer = (issuingCustomerCardTranferAmount /
+                      receivingCustomerCardType.stake)
+                  .round();
+
+              if (settlementsToTranfer > 0) {
+                // get receivingCustomerCard settlements
+                // and check if the number of settlement to add plus the
+                // existant settlement isn't greater than 372
+
+                // get receivingCustomerCard settlements
+
+                final receivingCustomerCardSettlements =
+                    await SettlementsController.getAll(
+                  customerCardId: receivingCustomerCard.id!,
+                ).first;
+
+                // calculate issuing customer card settlements number total
+                int receivingCustomerCardSettlementsNumbersTotal = 0;
+
+                for (int i = 0;
+                    i > receivingCustomerCardSettlements.length;
+                    ++i) {
+                  receivingCustomerCardSettlementsNumbersTotal +=
+                      receivingCustomerCardSettlements[i].number;
+                }
+
+                if (receivingCustomerCardSettlementsNumbersTotal +
+                        settlementsToTranfer >
+                    372) {
+                  if (receivingCustomerCardSettlementsNumbersTotal == 372) {
+                    ref.read(responseDialogProvider.notifier).state =
+                        ResponseDialogModel(
+                      serviceResponse: ServiceResponse.failed,
+                      response:
+                          'Opération échouée \n Les règlements ont été achevé sur la carte du compte récepteur',
+                    );
+
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: const ResponseDialog(),
+                    );
+                  } else {
+                    // calculate the complement
+                    final complementSettlements =
+                        receivingCustomerCardSettlementsNumbersTotal +
+                            settlementsToTranfer -
+                            372;
+
+                    // update the number of settlements to transfer
+
+                    settlementsToTranfer =
+                        settlementsToTranfer - complementSettlements;
+
+                    // start transfer process
+
+                    // update issuing card transfer date
+
+                    final issuingCustomerCardUpdateStatus =
+                        await CustomersCardsController.update(
+                      id: issuingCustomerCard.id,
+                      customerCard: issuingCustomerCard.copyWith(
+                        transferredAt: DateTime.now(),
+                      ),
+                    );
+
+                    if (issuingCustomerCardUpdateStatus ==
+                        ServiceResponse.success) {
+                      // add settelements to receiving customer card
+
+                      final prefs = await SharedPreferences.getInstance();
+                      final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+                      final receivingCustomerCardSettlementsStatus =
+                          await SettlementsController.create(
+                        settlement: Settlement(
+                          number: settlementsToTranfer,
+                          cardId: receivingCustomerCard.id,
+                          agentId: agentId ?? 0,
+                          collectionId: 0,
+                          collectedAt: DateTime.now(),
+                          createdAt: DateTime.now(),
+                          isValiated: true,
+                          updatedAt: DateTime.now(),
+                        ),
+                      );
+
+                      if (receivingCustomerCardSettlementsStatus ==
+                          ServiceResponse.success) {
+                        // update transfer validation date
+
+                        final transferUpdateStatus =
+                            await TransfersController.update(
+                          id: transfer.id!,
+                          transfer: transfer.copyWith(
+                            validatedAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                        );
+
+                        if (transferUpdateStatus == ServiceResponse.success) {
+                          ref.read(responseDialogProvider.notifier).state =
+                              ResponseDialogModel(
+                            serviceResponse: transferUpdateStatus,
+                            response: 'Opération réussie',
+                          );
+                        } else {
+                          ref.read(responseDialogProvider.notifier).state =
+                              ResponseDialogModel(
+                            serviceResponse: transferUpdateStatus,
+                            response: 'Opération échouée',
+                          );
+                        }
+                        FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog: const ResponseDialog(),
+                        );
+                      } else {
+                        // impossible to add receiving card
+                        // transferred  settlements
+                        ref.read(responseDialogProvider.notifier).state =
+                            ResponseDialogModel(
+                          serviceResponse: ServiceResponse.failed,
+                          response:
+                              'Opération échouée \n Impossible d\'ajouter les règlements sur le compte récepteur',
+                        );
+
+                        FunctionsController.showAlertDialog(
+                          context: context,
+                          alertDialog: const ResponseDialog(),
+                        );
+                      }
+                    } else {
+                      // impossible to update issuingCustomerCard
+                      ref.read(responseDialogProvider.notifier).state =
+                          ResponseDialogModel(
+                        serviceResponse: ServiceResponse.failed,
+                        response:
+                            'Opération échouée \n Impossible de griser la carte',
+                      );
+
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: const ResponseDialog(),
+                      );
+                    }
+                  }
+                } else {
+                  // make simply the transfer
+
+                  // update issuing card transfer date
+
+                  final issuingCustomerCardUpdateStatus =
+                      await CustomersCardsController.update(
+                    id: issuingCustomerCard.id,
+                    customerCard: issuingCustomerCard.copyWith(
+                      transferredAt: DateTime.now(),
+                    ),
+                  );
+
+                  if (issuingCustomerCardUpdateStatus ==
+                      ServiceResponse.success) {
+                    // add settelements to receiving customer card
+
+                    final prefs = await SharedPreferences.getInstance();
+                    final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+                    final receivingCustomerCardSettlementsStatus =
+                        await SettlementsController.create(
+                      settlement: Settlement(
+                        number: settlementsToTranfer,
+                        cardId: receivingCustomerCard.id,
+                        agentId: agentId ?? 0,
+                        collectionId: 0,
+                        collectedAt: DateTime.now(),
+                        createdAt: DateTime.now(),
+                        isValiated: true,
+                        updatedAt: DateTime.now(),
+                      ),
+                    );
+
+                    if (receivingCustomerCardSettlementsStatus ==
+                        ServiceResponse.success) {
+                      // update transfer validation date
+
+                      final transferUpdateStatus =
+                          await TransfersController.update(
+                        id: transfer.id!,
+                        transfer: transfer.copyWith(
+                          validatedAt: DateTime.now(),
+                          updatedAt: DateTime.now(),
+                        ),
+                      );
+
+                      if (transferUpdateStatus == ServiceResponse.success) {
+                        ref.read(responseDialogProvider.notifier).state =
+                            ResponseDialogModel(
+                          serviceResponse: transferUpdateStatus,
+                          response: 'Opération réussie',
+                        );
+                      } else {
+                        ref.read(responseDialogProvider.notifier).state =
+                            ResponseDialogModel(
+                          serviceResponse: transferUpdateStatus,
+                          response: 'Opération échouée',
+                        );
+                      }
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: const ResponseDialog(),
+                      );
+                    } else {
+                      // impossible to add receiving card
+                      // transferred  settlements
+                      ref.read(responseDialogProvider.notifier).state =
+                          ResponseDialogModel(
+                        serviceResponse: ServiceResponse.failed,
+                        response:
+                            'Opération échouée \n Impossible d\'ajouter les règlements sur le compte récepteur',
+                      );
+
+                      FunctionsController.showAlertDialog(
+                        context: context,
+                        alertDialog: const ResponseDialog(),
+                      );
+                    }
+                  } else {
+                    // impossible to update issuingCustomerCard
+                    ref.read(responseDialogProvider.notifier).state =
+                        ResponseDialogModel(
+                      serviceResponse: ServiceResponse.failed,
+                      response:
+                          'Opération échouée \n Impossible de griser la carte',
+                    );
+
+                    FunctionsController.showAlertDialog(
+                      context: context,
+                      alertDialog: const ResponseDialog(),
+                    );
+                  }
+                }
+              } else {
+                //  insufficient amount
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: ServiceResponse.failed,
+                  response:
+                      'Opération échouée \n Le solde du compte émetteur est insuffisant',
+                );
+
+                FunctionsController.showAlertDialog(
+                  context: context,
+                  alertDialog: const ResponseDialog(),
+                );
+              }
+            } else {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.failed,
+                response:
+                    'Opération échouée \n Le type du compte récepteur n\'a pas été trouvé',
+              );
+
+              FunctionsController.showAlertDialog(
+                context: context,
+                alertDialog: const ResponseDialog(),
+              );
+            }
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: ServiceResponse.failed,
+              response:
+                  'Opération échouée \n La carte du compte récepteur n\'a pas été trouvée',
+            );
+
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
+          }
+        } else {
+          // impossible to make a transfer any settlement is done
+          // on the issuing customer card
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response:
+                'Opération échouée \n Aucun règlement n\'a été fait sur la carte du compte émetteur',
+          );
+
+          FunctionsController.showAlertDialog(
+            context: context,
+            alertDialog: const ResponseDialog(),
+          );
+        }
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastAgentStatus,
-          response: 'Opération échouée',
+          serviceResponse: ServiceResponse.failed,
+          response:
+              'Opération échouée \n Le type du compte émetteur n\'a pas été trouvé',
         );
-        showValidatedButton.value = true;
+
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
       }
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: ServiceResponse.failed,
+        response:
+            'Opération échouée \n La carte du compte é,émetteur n\'a pas été trouvée',
+      );
+
       FunctionsController.showAlertDialog(
         context: context,
         alertDialog: const ResponseDialog(),
@@ -381,35 +661,65 @@ class TransferCRUDFunctions {
     }
   }
 
-  static Future<void> delete({
+  static Future<void> discard({
     required BuildContext context,
     required WidgetRef ref,
-    required Agent agent,
-    required ValueNotifier<bool> showConfirmationButton,
+    required Transfer transfer,
   }) async {
-    showConfirmationButton.value = false;
+    ServiceResponse lastTransferStatus;
 
-    ServiceResponse agentStatus;
+    final newTransfer = transfer.copyWith(
+      validatedAt: DateTime(
+        1970,
+      ),
+      updatedAt: DateTime.now(),
+    );
 
-    agentStatus = await AgentsController.delete(agent: agent);
+    lastTransferStatus = await TransfersController.update(
+      id: transfer.id!,
+      transfer: newTransfer,
+    );
 
-    if (agentStatus == ServiceResponse.success) {
+    if (lastTransferStatus == ServiceResponse.success) {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: agentStatus,
+        serviceResponse: lastTransferStatus,
         response: 'Opération réussie',
       );
-      Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: agentStatus,
+        serviceResponse: lastTransferStatus,
         response: 'Opération échouée',
       );
-      showConfirmationButton.value = true;
     }
     FunctionsController.showAlertDialog(
       context: context,
       alertDialog: const ResponseDialog(),
     );
-    return;
+  }
+
+  static Future<void> delete({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Transfer transfer,
+  }) async {
+    ServiceResponse transferStatus;
+
+    transferStatus = await TransfersController.delete(transfer: transfer);
+
+    if (transferStatus == ServiceResponse.success) {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: transferStatus,
+        response: 'Opération réussie',
+      );
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: transferStatus,
+        response: 'Opération échouée',
+      );
+    }
+    FunctionsController.showAlertDialog(
+      context: context,
+      alertDialog: const ResponseDialog(),
+    );
   }
 }

@@ -24,3 +24,7 @@ final responseDialogProvider = StateProvider<ResponseDialogModel>((ref) {
   return ResponseDialogModel(
       serviceResponse: ServiceResponse.waiting, response: 'Info');
 });
+
+final remarkSuccessResponseDialogProvider = StateProvider<bool>((ref) {
+  return false;
+});
