@@ -28,9 +28,13 @@ import 'package:communitybank/models/data/settlements_total/settlements_total.mo
 import 'package:communitybank/models/data/types_total/types_total.model.dart';
 import 'package:communitybank/models/data/weekly_collections/weekly_collections.model.dart';
 import 'package:communitybank/models/data/yearly_collections/yearly_collections.model.dart';
+import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/dashboard/dashboard.widgets.dart';
+import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final collectionsTotalsProvider =
     StreamProvider<List<CollectionsTotals>>((ref) async* {
@@ -107,23 +111,54 @@ final collectorsYearlyCollectionsProvider =
       .asStream();
 });
 
-class DashboardPage extends ConsumerWidget {
+final agentRoleProvider = StateProvider<String>((ref) {
+  return '';
+});
+
+class DashboardPage extends StatefulHookConsumerWidget {
   const DashboardPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return const SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      child: Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DashboardOverview(),
-          DashboardCollectionsDataView(),
-          DashboardTypesDataView(),
-          DashboardProductsDataView(),
-          DashboardProductsForecastsDataView(),
-        ],
+  ConsumerState<ConsumerStatefulWidget> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends ConsumerState<DashboardPage> {
+  @override
+  Widget build(BuildContext context) {
+    final agentRole = ref.watch(agentRoleProvider);
+
+    Future.delayed(
+      const Duration(
+        milliseconds: 100,
       ),
+      () async {
+        final prefs = await SharedPreferences.getInstance();
+        final role = prefs.getString(CBConstants.agentRolePrefKey) ?? 'USER';
+
+        ref.read(agentRoleProvider.notifier).state = role;
+      },
     );
+
+    return agentRole != 'USER' /*'ADMIN' || agentRole == 'Admin'*/
+        ? const SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DashboardOverview(),
+                DashboardCollectionsDataView(),
+                DashboardTypesDataView(),
+                DashboardProductsDataView(),
+                DashboardProductsForecastsDataView(),
+              ],
+            ),
+          )
+        : const Center(
+            child: CBText(
+              text: 'Dashboard',
+              fontSize: 25.0,
+              fontWeight: FontWeight.w500,
+            ),
+          );
   }
 }

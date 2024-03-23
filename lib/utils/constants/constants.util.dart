@@ -10,4 +10,5 @@ class CBConstants {
   static const agentNamePrefKey = 'agentName';
   static const agentFirstnamesPrefKey = 'agentFirstnames';
   static const agentEmailPrefKey = 'agentEmail';
+  static const agentRolePrefKey = 'agentRole';
 }

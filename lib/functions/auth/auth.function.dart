@@ -139,6 +139,9 @@ class AuthFunctions {
         // set the agent email
         prefs.setString(CBConstants.agentEmailPrefKey, agent.email);
 
+        // set the agent role
+        prefs.setString(CBConstants.agentRolePrefKey, agent.role);
+
         //  Navigator.of(context).push(
         //    MaterialPageRoute(
         //      builder: (context) => const MainApp(),
