@@ -198,7 +198,9 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                     width: 400.0,
                     height: 30.0,
                     child: CBText(
-                      text: format.format(settlement.collectedAt),
+                      text: settlement.collectedAt != null
+                          ? format.format(settlement.collectedAt!)
+                          : '',
                       fontSize: 12.0,
                     ),
                   ),

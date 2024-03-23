@@ -83,10 +83,7 @@ class _TransfersBetweenCustomersAccountsSortOptionsState
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
-                    ...data.where(
-                      (customerAccount) =>
-                          customerAccount.customerCardsIds.length > 1,
-                    ),
+                    ...data,
                   ],
                   error: (error, stackTrace) => [],
                   loading: () => [],
@@ -100,10 +97,7 @@ class _TransfersBetweenCustomersAccountsSortOptionsState
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
-                    ...data.where(
-                      (customerAccount) =>
-                          customerAccount.customerCardsIds.length > 1,
-                    ),
+                    ...data,
                   ],
                   error: (error, stackTrace) => [],
                   loading: () => [],
@@ -127,10 +121,7 @@ class _TransfersBetweenCustomersAccountsSortOptionsState
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
-                    ...data.where(
-                      (customerAccount) =>
-                          customerAccount.customerCardsIds.length > 1,
-                    ),
+                    ...data,
                   ],
                   error: (error, stackTrace) => [],
                   loading: () => [],
@@ -144,10 +135,7 @@ class _TransfersBetweenCustomersAccountsSortOptionsState
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
-                    ...data.where(
-                      (customerAccount) =>
-                          customerAccount.customerCardsIds.length > 1,
-                    ),
+                    ...data,
                   ],
                   error: (error, stackTrace) => [],
                   loading: () => [],

@@ -270,10 +270,9 @@ class _MultipleSettlementsAddingFormState
                       );
                     }
 
-                    return StaggeredGrid.count(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5.0,
-                      crossAxisSpacing: 5.0,
+                    return Wrap(
+                      runSpacing: 5.0,
+                      spacing: 5.0,
                       children: customerCardsSettlemenentCardsList,
                     );
                   },

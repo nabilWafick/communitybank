@@ -581,7 +581,7 @@ class _TransfersValidationsListState
                                         updatedAt: transferDetail.updatedAt,
                                       ),
                                       confirmToDelete:
-                                          TransferCRUDFunctions.discard,
+                                          TransferCRUDFunctions.validate,
                                     ),
                                   );
                                 },

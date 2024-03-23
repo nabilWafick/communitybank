@@ -285,11 +285,12 @@ class TransferCRUDFunctions {
     }
   }
 
-  static Future<void> validate(
-      {required BuildContext context,
-      required WidgetRef ref,
-      required Transfer transfer,
-      required ValueNotifier<bool> showConfirmationButton}) async {
+  static Future<void> validate({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Transfer transfer,
+    required ValueNotifier<bool> showConfirmationButton,
+  }) async {
     showConfirmationButton.value = false;
     // get issuing card data (card, type, settlements)
     final issuingCustomerCard = await CustomersCardsController.getOne(
@@ -314,7 +315,7 @@ class TransferCRUDFunctions {
         // calculate issuing customer card settlements number total
         int issuingCustomerCardSettlementsNumbersTotal = 0;
 
-        for (int i = 0; i > issuingCustomerCardSettlements.length; ++i) {
+        for (int i = 0; i < issuingCustomerCardSettlements.length; ++i) {
           issuingCustomerCardSettlementsNumbersTotal +=
               issuingCustomerCardSettlements[i].number;
         }
@@ -363,7 +364,7 @@ class TransferCRUDFunctions {
                 int receivingCustomerCardSettlementsNumbersTotal = 0;
 
                 for (int i = 0;
-                    i > receivingCustomerCardSettlements.length;
+                    i < receivingCustomerCardSettlements.length;
                     ++i) {
                   receivingCustomerCardSettlementsNumbersTotal +=
                       receivingCustomerCardSettlements[i].number;
@@ -422,8 +423,8 @@ class TransferCRUDFunctions {
                           number: settlementsToTranfer,
                           cardId: receivingCustomerCard.id,
                           agentId: agentId ?? 0,
-                          collectionId: 0,
-                          collectedAt: DateTime.now(),
+                          collectionId: null,
+                          collectedAt: null,
                           createdAt: DateTime.now(),
                           isValiated: true,
                           updatedAt: DateTime.now(),
@@ -527,8 +528,8 @@ class TransferCRUDFunctions {
                         number: settlementsToTranfer,
                         cardId: receivingCustomerCard.id,
                         agentId: agentId ?? 0,
-                        collectionId: 0,
-                        collectedAt: DateTime.now(),
+                        collectionId: null,
+                        collectedAt: null,
                         createdAt: DateTime.now(),
                         isValiated: true,
                         updatedAt: DateTime.now(),
@@ -673,7 +674,7 @@ class TransferCRUDFunctions {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: ServiceResponse.failed,
         response:
-            'Opération échouée \n La carte du compte é,émetteur n\'a pas été trouvée',
+            'Opération échouée \n La carte du compte émetteur n\'a pas été trouvée',
       );
       showConfirmationButton.value = true;
 

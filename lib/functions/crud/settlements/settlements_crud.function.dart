@@ -614,11 +614,11 @@ class SettlementCRUDFunctions {
               // check if settlement update date is the same as the previous date
               // (the collection date of the settlement before update)
 
-              if (settlement.collectedAt.year ==
+              if (settlement.collectedAt!.year ==
                       settlementCollectionDate.year &&
-                  settlement.collectedAt.month ==
+                  settlement.collectedAt!.month ==
                       settlementCollectionDate.month &&
-                  settlement.collectedAt.day == settlementCollectionDate.day) {
+                  settlement.collectedAt!.day == settlementCollectionDate.day) {
                 // check if the rest of amount of that collection  (on which we  add  the previous settlement amount ) is enough for
                 // updating the settlement
                 if ((collectorCollection.rest +
