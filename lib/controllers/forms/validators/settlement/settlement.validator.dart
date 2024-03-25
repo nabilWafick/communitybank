@@ -12,7 +12,7 @@ final settlementCollectionDateProvider = StateProvider<DateTime?>(
   },
 );
 
-class SettlementValidors {
+class SettlementValidators {
   static String? settlementNumber(String? value, WidgetRef ref) {
     final settlementNumber = ref.watch(settlementNumberProvider);
     if (settlementNumber <= 0 || settlementNumber > 372) {

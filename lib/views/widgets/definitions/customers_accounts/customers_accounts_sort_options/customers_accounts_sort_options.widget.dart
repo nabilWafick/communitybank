@@ -5,7 +5,7 @@ import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers/customers_list/customers_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts.widgets.dart';
-import 'package:communitybank/views/widgets/forms/adding/customer_account/customer_account_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/customers_accounts/customer_account_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';

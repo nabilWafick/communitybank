@@ -17,7 +17,7 @@ import 'package:communitybank/views/widgets/cash/cash_operations/cash_operations
 import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
-import 'package:communitybank/views/widgets/forms/adding/settlement/settlement_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/settlements/settlement_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';

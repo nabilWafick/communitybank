@@ -1,7 +1,7 @@
 import 'package:communitybank/controllers/forms/validators/collector/collector.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
-import 'package:communitybank/views/widgets/forms/adding/agent/agent_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/agents/agent_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';

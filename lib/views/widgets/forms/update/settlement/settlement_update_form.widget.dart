@@ -115,7 +115,7 @@ class _SettlementUpdateFormState extends ConsumerState<SettlementUpdateForm> {
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.name,
-                          validator: SettlementValidors.settlementNumber,
+                          validator: SettlementValidators.settlementNumber,
                           onChanged: SettlementOnChanged.settlementName,
                         ),
                       ),
