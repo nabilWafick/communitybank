@@ -4,15 +4,19 @@ import 'dart:math';
 
 import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
+import 'package:communitybank/controllers/stocks/stocks.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
+import 'package:communitybank/models/data/stock/stock.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/utils/constants/constants.util.dart';
 import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerCardCRUDFunctions {
   static Future<void> create({
@@ -181,45 +185,99 @@ class CustomerCardCRUDFunctions {
     showConfirmationButton.value = false;
     final cashOperationsSelectedCustomerAccount =
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
+    final accountOwnerSelectedCard = ref
+        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    final customerCardType = ref.watch(
+        cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
     final customerCardSatisfactionDate =
         ref.watch(customerCardSatisfactionDateProvider);
-    //  final customerCardRepaymentDate =
-    //      ref.watch(customerCardRepaymentDateProvider);
 
-    ServiceResponse lastCustomerCardStatus;
+    // foreach product of the type, get his last stock and substract
+    // the number of the product in the type from the last stock
 
-    final newCustomerCard = CustomerCard(
-      label: customerCard.label,
-      typeId: customerCard.typeId,
-      typeNumber: customerCard.typeNumber,
-      customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
-      //  repaidAt: customerCardRepaymentDate!, // it's not defined
-      satisfiedAt: customerCardSatisfactionDate!,
-      createdAt: customerCard.createdAt,
-      updatedAt: DateTime.now(),
-    );
+    List<ServiceResponse> allSubtractionsDoneSuccessfully = [];
 
-    lastCustomerCardStatus = await CustomersCardsController.update(
-      id: customerCard.id!,
-      customerCard: newCustomerCard,
-    );
+    for (int i = 0; i < customerCardType!.productsIds.length; i++) {
+      // get the product stock
+      final stocks = await StocksController.getAll(
+        selectedProductId: customerCard.id!,
+      ).first;
 
-    // debugPrint('new CustomerCard: $customerCardStatus');
+      // get the last product stock (Mouvement)
+      final lastStock = stocks.last;
+      // make the substraction
 
-    if (lastCustomerCardStatus == ServiceResponse.success) {
-      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: lastCustomerCardStatus,
-        response: 'Opération réussie',
+      final prefs = await SharedPreferences.getInstance();
+      final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+      final newStock = Stock(
+        productId: customerCardType.productsIds[i],
+        initialQuantity: lastStock.stockQuantity,
+        outputedQuantity: (accountOwnerSelectedCard!.typeNumber *
+            customerCardType.productsNumber[i] as int),
+        stockQuantity: lastStock.stockQuantity -
+            (accountOwnerSelectedCard.typeNumber *
+                customerCardType.productsNumber[i] as int),
+        type: StockOutputType.normal,
+        customerCardId: accountOwnerSelectedCard.id,
+        agentId: agentId ?? 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
-      showConfirmationButton.value = true;
-      Navigator.of(context).pop();
+
+      allSubtractionsDoneSuccessfully.add(
+        await StocksController.create(
+          stock: newStock,
+        ),
+      );
+    }
+
+    final successfullyDone = allSubtractionsDoneSuccessfully
+        .every((response) => response == ServiceResponse.success);
+
+    if (successfullyDone) {
+      ServiceResponse lastCustomerCardStatus;
+
+      final newCustomerCard = CustomerCard(
+        label: accountOwnerSelectedCard!.label,
+        typeId: accountOwnerSelectedCard.typeId,
+        typeNumber: accountOwnerSelectedCard.typeNumber,
+        customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
+        //  repaidAt: customerCardRepaymentDate!, // it's not defined
+        satisfiedAt: customerCardSatisfactionDate!,
+        createdAt: accountOwnerSelectedCard.createdAt,
+        updatedAt: DateTime.now(),
+      );
+
+      lastCustomerCardStatus = await CustomersCardsController.update(
+        id: customerCard.id!,
+        customerCard: newCustomerCard,
+      );
+
+      // debugPrint('new CustomerCard: $customerCardStatus');
+
+      if (lastCustomerCardStatus == ServiceResponse.success) {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: lastCustomerCardStatus,
+          response: 'Opération réussie',
+        );
+        showConfirmationButton.value = true;
+        Navigator.of(context).pop();
+      } else {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: lastCustomerCardStatus,
+          response: 'Opération échouée \n La carte n\'a pas pu être grisée',
+        );
+        showConfirmationButton.value = true;
+      }
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: lastCustomerCardStatus,
-        response: 'Opération échouée',
+        serviceResponse: ServiceResponse.failed,
+        response: 'Opération échouée \n Les stocks n\'ont pu être mis à jour',
       );
       showConfirmationButton.value = true;
     }
+
     FunctionsController.showAlertDialog(
       context: context,
       alertDialog: const ResponseDialog(),
