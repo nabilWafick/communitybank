@@ -601,7 +601,7 @@ class _CashOperationsCustomerCardInfosState
                                             );
 
                                             // if customerCard repayment date
-                                            // is setted and not null
+                                            // provider is setted and not null
                                             if (ref.watch(
                                                     customerCardRepaymentDateProvider) !=
                                                 null) {
@@ -649,7 +649,10 @@ class _CashOperationsCustomerCardInfosState
                                   value: /* customerCardRepaymentDate != null &&
                                           isRepaid */
                                       realTimeCustomerCardData.repaidAt != null
-                                          ? '${format.format(realTimeCustomerCardData.repaidAt!)}  ${realTimeCustomerCardData.repaidAt!.hour}:${realTimeCustomerCardData.repaidAt!.minute}'
+                                          ? format.format(
+                                              realTimeCustomerCardData
+                                                  .repaidAt!,
+                                            )
                                           : '',
                                 ),
                               ],
@@ -798,7 +801,7 @@ class _CashOperationsCustomerCardInfosState
                                             );
 
                                             // if customerCard satisfaction
-                                            // date is setted and not null
+                                            // date provider is setted and not null
                                             if (ref.watch(
                                                     customerCardSatisfactionDateProvider) !=
                                                 null) {
@@ -847,7 +850,10 @@ class _CashOperationsCustomerCardInfosState
                                           isRepaid */
                                       realTimeCustomerCardData.satisfiedAt !=
                                               null
-                                          ? '${format.format(realTimeCustomerCardData.satisfiedAt!)}  ${realTimeCustomerCardData.satisfiedAt!.hour}:${realTimeCustomerCardData.satisfiedAt!.minute}'
+                                          ? format.format(
+                                              realTimeCustomerCardData
+                                                  .satisfiedAt!,
+                                            )
                                           : '',
                                 ),
                               ],
