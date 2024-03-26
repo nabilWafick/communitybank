@@ -3,10 +3,17 @@ import 'package:communitybank/controllers/forms/validators/stock/stock.validator
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StockOnChanged {
-  static stockQuantity(String? value, WidgetRef ref) =>
+  static inputedQuantity(String? value, WidgetRef ref) =>
       CommonOnChangedFunction.onIntTextInputValueChanged(
         value,
         ref,
-        stockQuantityProvider,
+        inputedQuantityProvider,
+      );
+
+       static outputedQuantity(String? value, WidgetRef ref) =>
+      CommonOnChangedFunction.onIntTextInputValueChanged(
+        value,
+        ref,
+        outputedQuantityProvider,
       );
 }

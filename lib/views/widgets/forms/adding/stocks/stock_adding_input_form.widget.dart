@@ -1,31 +1,32 @@
 import 'package:communitybank/controllers/forms/on_changed/stock/stock.on_changed.dart';
 import 'package:communitybank/controllers/forms/validators/stock/stock.validator.dart';
-import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
+import 'package:communitybank/functions/crud/stocks/stock_crud.function.dart';
 import 'package:communitybank/utils/utils.dart';
 import 'package:communitybank/views/widgets/definitions/products/products_list/products_list.dart';
-import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/product/product_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class StockAddingForm extends StatefulHookConsumerWidget {
-  const StockAddingForm({super.key});
+class StockAddingInputForm extends StatefulHookConsumerWidget {
+  const StockAddingInputForm({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _StockAddingFormState();
+      _StockAddingInputFormState();
 }
 
-class _StockAddingFormState extends ConsumerState<StockAddingForm> {
+class _StockAddingInputFormState extends ConsumerState<StockAddingInputForm> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final showValidatedButton = useState<bool>(true);
     final productsListStream = ref.watch(productsListStreamProvider);
     const formCardWidth = 500.0;
+    final stockProduct =
+        ref.watch(listProductDropdownProvider('stocks-product'));
     return AlertDialog(
       contentPadding: const EdgeInsetsDirectional.symmetric(
         vertical: 20.0,
@@ -83,14 +84,28 @@ class _StockAddingFormState extends ConsumerState<StockAddingForm> {
                           width: formCardWidth / 1.16,
                           menuHeigth: 500.0,
                           label: 'Produit',
-                          providerName: 'stock-adding-product',
+                          providerName: 'stock-adding-input-product',
                           dropdownMenuEntriesLabels: productsListStream.when(
-                            data: (data) => data,
+                            data: (data) => stockProduct.id != 0
+                                ? data
+                                    .where(
+                                      (product) =>
+                                          product.id == stockProduct.id,
+                                    )
+                                    .toList()
+                                : data,
                             error: (error, stackTrace) => [],
                             loading: () => [],
                           ),
                           dropdownMenuEntriesValues: productsListStream.when(
-                            data: (data) => data,
+                            data: (data) => stockProduct.id != 0
+                                ? data
+                                    .where(
+                                      (product) =>
+                                          product.id == stockProduct.id,
+                                    )
+                                    .toList()
+                                : data,
                             error: (error, stackTrace) => [],
                             loading: () => [],
                           ),
@@ -102,13 +117,13 @@ class _StockAddingFormState extends ConsumerState<StockAddingForm> {
                         ),
                         width: formCardWidth,
                         child: const CBTextFormField(
-                          label: 'Quantité',
-                          hintText: 'Quantité',
+                          label: 'Quantité Entrée',
+                          hintText: 'Quantité Entrée',
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.number,
-                          validator: StockValidators.stockQuantity,
-                          onChanged: StockOnChanged.stockQuantity,
+                          validator: StockValidators.inputedQuantity,
+                          onChanged: StockOnChanged.inputedQuantity,
                         ),
                       ),
                     ],
@@ -140,17 +155,12 @@ class _StockAddingFormState extends ConsumerState<StockAddingForm> {
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              debugPrint(
-                                DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString(),
-                              );
-                              /*   StockCRUDFunctions.create(
+                              StockCRUDFunctions.createStockInput(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,
                                 showValidatedButton: showValidatedButton,
-                              );*/
+                              );
                             },
                           ),
                         )

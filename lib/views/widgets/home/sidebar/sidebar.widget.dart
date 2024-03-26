@@ -172,6 +172,18 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>(
         ],
         showSubOptions: true,
       ),
+      SidebarOptionModel(
+        icon: Icons.inventory_2,
+        name: 'Stocks',
+        subOptions: [
+          SidebarSubOptionModel(
+            index: 23,
+            icon: Icons.stacked_bar_chart,
+            name: 'Stocks',
+          ),
+        ],
+        showSubOptions: false,
+      ),
     ];
   },
 );

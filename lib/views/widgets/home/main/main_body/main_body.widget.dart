@@ -2,9 +2,9 @@ import 'package:communitybank/views/pages/home/activities/collector_periodic_act
 import 'package:communitybank/views/pages/home/activities/customer_periodic_activity/customer_periodic_activity.page.dart';
 import 'package:communitybank/views/pages/home/dashboard/dashboard.page.dart';
 import 'package:communitybank/views/pages/home/definitions/agents/agents.page.dart';
-import 'package:communitybank/views/pages/home/definitions/collections/collections.page.dart';
+import 'package:communitybank/views/pages/home/cash/collections/collections.page.dart';
 import 'package:communitybank/views/pages/home/definitions/customers_cards/customers_cards.page.dart';
-import 'package:communitybank/views/pages/home/definitions/cash_operations/cash_operations.page.dart';
+import 'package:communitybank/views/pages/home/cash/cash_operations/cash_operations.page.dart';
 import 'package:communitybank/views/pages/home/definitions/collectors/collectors.page.dart';
 import 'package:communitybank/views/pages/home/definitions/customers/customers.page.dart';
 import 'package:communitybank/views/pages/home/definitions/customers_accounts/customers_accounts.page.dart';
@@ -13,11 +13,12 @@ import 'package:communitybank/views/pages/home/definitions/economical_activities
 import 'package:communitybank/views/pages/home/definitions/localities/localities.page.dart';
 import 'package:communitybank/views/pages/home/definitions/personal_status/personal_status.page.dart';
 import 'package:communitybank/views/pages/home/definitions/products/products.page.dart';
-import 'package:communitybank/views/pages/home/definitions/settlements/settlements.page.dart';
+import 'package:communitybank/views/pages/home/cash/settlements/settlements.page.dart';
 import 'package:communitybank/views/pages/home/definitions/types/types.page.dart';
 import 'package:communitybank/views/pages/home/statistics/customers_products/customers_products.page.dart';
 import 'package:communitybank/views/pages/home/statistics/customers_types/customers_types.pages.dart';
 import 'package:communitybank/views/pages/home/statistics/products_forecasts/products_forecasts.page.dart';
+import 'package:communitybank/views/pages/home/stocks/stocks.page.dart';
 import 'package:communitybank/views/pages/home/transfers/between_customer_cards/between_customer_cards.page.dart';
 import 'package:communitybank/views/pages/home/transfers/between_customers_accounts/between_customers_accounts.page.dart';
 import 'package:communitybank/views/pages/home/transfers/validations/validations.page.dart';
@@ -56,6 +57,7 @@ class _MainBodyState extends ConsumerState<MainBody> {
     TransfersBetweenCustomerCardsPage(),
     TransfersBetweenCustomersAccountsPage(),
     TransfersValidationsPage(),
+    StocksPage(),
     //  EntriesPage(),
     //  FilesPage(),
     //  LogoutPage(),

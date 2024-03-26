@@ -144,3 +144,9 @@ class Stock {
         updatedAt.hashCode;
   }
 }
+
+class StockOutputType {
+  static const String manual = 'Manuelle';
+  static const String normal = 'Normalle';
+  static const String constraint = 'Contrainte';
+}

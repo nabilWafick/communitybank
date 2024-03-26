@@ -19,6 +19,8 @@ import 'package:communitybank/views/widgets/definitions/customers_cards/customer
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/settlements/settlement_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/customer_card/repayment_date/repayment_date_update_confirmation_dialog.widget.dart';
+import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/customer_card/satisfaction_date/satisfaction_date_update_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/printing_data_preview/customer_card_settlements_details/customer_card_settlements_details_printing.widget.dart';
@@ -598,28 +600,25 @@ class _CashOperationsCustomerCardInfosState
                                                   customerCardRepaymentDateProvider,
                                             );
 
-                                            // if customerCard repayment is setted and not null
+                                            // if customerCard repayment date
+                                            // is setted and not null
                                             if (ref.watch(
                                                     customerCardRepaymentDateProvider) !=
                                                 null) {
                                               // do uptate
 
-                                              await CustomerCardCRUDFunctions
-                                                  .updateRepaymentDate(
+                                              FunctionsController
+                                                  .showAlertDialog(
                                                 context: context,
-                                                ref: ref,
-                                                customerCard:
-                                                    realTimeCustomerCardData,
+                                                alertDialog:
+                                                    CustomerCardRepaymentDateUpdateConfirmationDialog(
+                                                  customerCard:
+                                                      realTimeCustomerCardData,
+                                                  confirmToDelete:
+                                                      CustomerCardCRUDFunctions
+                                                          .updateRepaymentDate,
+                                                ),
                                               );
-                                              /*
-                                                // change switch state/value
-                                                ref
-                                                    .read(
-                                                      isCustomerCardRepaidProvider
-                                                          .notifier,
-                                                    )
-                                                    .state = value;
-                                                    */
                                             }
                                           } else {
                                             ref
@@ -805,12 +804,17 @@ class _CashOperationsCustomerCardInfosState
                                                 null) {
                                               // do uptate
 
-                                              await CustomerCardCRUDFunctions
-                                                  .updateSatisfactionDate(
+                                              FunctionsController
+                                                  .showAlertDialog(
                                                 context: context,
-                                                ref: ref,
-                                                customerCard:
-                                                    realTimeCustomerCardData,
+                                                alertDialog:
+                                                    CustomerCardSatisfactionDateUpdateConfirmationDialog(
+                                                  customerCard:
+                                                      realTimeCustomerCardData,
+                                                  confirmToDelete:
+                                                      CustomerCardCRUDFunctions
+                                                          .updateSatisfactionDate,
+                                                ),
                                               );
                                             }
                                           } else {

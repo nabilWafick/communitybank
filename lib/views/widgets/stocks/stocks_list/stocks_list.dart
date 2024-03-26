@@ -1,15 +1,8 @@
-import 'package:communitybank/controllers/forms/validators/product/product.validator.dart';
 import 'package:communitybank/controllers/products/products.controller.dart';
-import 'package:communitybank/functions/common/common.function.dart';
-import 'package:communitybank/functions/crud/products/products_crud.function.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/globals/images_shower/single/single_image_shower.widget.dart';
 import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
-import 'package:communitybank/views/widgets/forms/deletion_confirmation_dialog/products/products_deletion_confirmation_dialog.widget.dart';
-import 'package:communitybank/views/widgets/forms/update/products/products_update_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/string_dropdown/string_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/globals/search_input/search_input.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -34,14 +27,14 @@ final productsListStreamProvider = StreamProvider<List<Product>>((ref) async* {
   yield* ProductsController.getAll(selectedProductPrice: selectedProductPrice);
 });
 
-class ProductsList extends StatefulHookConsumerWidget {
-  const ProductsList({super.key});
+class StocksList extends StatefulHookConsumerWidget {
+  const StocksList({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProductsListState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _StocksListState();
 }
 
-class _ProductsListState extends ConsumerState<ProductsList> {
+class _StocksListState extends ConsumerState<StocksList> {
   @override
   Widget build(BuildContext context) {
     final isSearching = ref.watch(isSearchingProvider('products'));
@@ -62,7 +55,7 @@ class _ProductsListState extends ConsumerState<ProductsList> {
         child: productsList.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width - 100,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 932,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -80,33 +73,99 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                 ),
               ),
               Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Produit',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Initiale',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Entrée',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Sortie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Stock',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
                 width: 200.0,
                 height: 50.0,
                 alignment: Alignment.center,
                 child: const CBText(
-                  text: 'Photo',
+                  text: 'Type Sortie',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Container(
-                width: 700.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: CBSearchInput(
-                  hintText: 'Nom',
-                  familyName: 'products',
-                  searchProvider: searchProvider('products'),
-                  width: MediaQuery.of(context).size.width,
-                ),
-              ),
-              Container(
-                width: 250.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Prix d\'achat',
+                  text: 'Carte',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date Mouvement',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -133,57 +192,97 @@ class _ProductsListState extends ConsumerState<ProductsList> {
               );
             },
             rightSideItemBuilder: (BuildContext context, int index) {
-              final product = data[index];
+              //   final product = data[index];
               return Row(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      product.picture != null
-                          ? FunctionsController.showAlertDialog(
-                              context: context,
-                              alertDialog: SingleImageShower(
-                                imageSource: product.picture!,
-                              ),
-                            )
-                          : () {};
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 200.0,
-                      height: 30.0,
-                      child: product.picture != null
-                          ? const Icon(
-                              Icons.photo,
-                              color: CBColors.primaryColor,
-                            )
-                          : const SizedBox(),
-                    ),
-                  ),
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 700.0,
+                    width: 300.0,
                     height: 30.0,
-                    child: CBText(
-                      text: product.name,
+                    child: const CBText(
+                      text: 'Produit',
                       fontSize: 12.0,
                     ),
                   ),
                   Container(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     width: 250.0,
                     height: 30.0,
-                    child: CBText(
-                      text: '${product.purchasePrice.ceil()} f',
+                    child: const CBText(
+                      text: 'Init. Stock',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 250.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Inp. Stock',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 250.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Out. Stock',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 250.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Tot. Stock',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: 200.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Out. Type',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Customer Card',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Author',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: const CBText(
+                      text: 'Movement Date',
                       fontSize: 12.0,
                     ),
                   ),
                   InkWell(
                     onTap: () {
-                      ref.read(productPictureProvider.notifier).state = null;
+                      /* ref.read(productPictureProvider.notifier).state = null;
                       FunctionsController.showAlertDialog(
                         context: context,
                         alertDialog: ProductUpdateForm(product: product),
-                      );
+                      );*/
                     },
                     child: Container(
                       width: 150.0,
@@ -198,13 +297,13 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                   ),
                   InkWell(
                     onTap: () async {
-                      FunctionsController.showAlertDialog(
+                      /* FunctionsController.showAlertDialog(
                         context: context,
                         alertDialog: ProductDeletionConfirmationDialog(
                           product: product,
                           confirmToDelete: ProductCRUDFunctions.delete,
                         ),
-                      );
+                      );*/
                     },
                     child: Container(
                       width: 150.0,
@@ -243,33 +342,99 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                 ),
               ),
               Container(
-                width: 200.0,
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Produit',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
                 height: 50.0,
                 alignment: Alignment.center,
                 child: const CBText(
-                  text: 'Photo',
+                  text: 'Quantité Initiale',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Entrée',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Sortie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Stock',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Sortie',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Container(
-                width: 700.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: CBSearchInput(
-                  hintText: 'Nom',
-                  familyName: 'products',
-                  searchProvider: searchProvider('products'),
-                  width: MediaQuery.of(context).size.width,
-                ),
-              ),
-              Container(
-                width: 250.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Prix d\'achat',
+                  text: 'Carte',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date Mouvement',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -324,33 +489,99 @@ class _ProductsListState extends ConsumerState<ProductsList> {
                 ),
               ),
               Container(
-                width: 200.0,
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Produit',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
                 height: 50.0,
                 alignment: Alignment.center,
                 child: const CBText(
-                  text: 'Photo',
+                  text: 'Quantité Initiale',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Entrée',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Sortie',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 250.0,
+                height: 50.0,
+                alignment: Alignment.center,
+                child: const CBText(
+                  text: 'Quantité Stock',
+                  textAlign: TextAlign.start,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 200.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Type Sortie',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Container(
-                width: 700.0,
-                height: 50.0,
-                alignment: Alignment.center,
-                child: CBSearchInput(
-                  hintText: 'Nom',
-                  familyName: 'products',
-                  searchProvider: searchProvider('products'),
-                  width: MediaQuery.of(context).size.width,
-                ),
-              ),
-              Container(
-                width: 250.0,
+                width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Prix d\'achat',
+                  text: 'Carte',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Agent',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Date Mouvement',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,

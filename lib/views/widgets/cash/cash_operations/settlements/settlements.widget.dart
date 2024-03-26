@@ -287,73 +287,88 @@ class _CashOperationsSettlementsState
                       },
                     ),
                   ),
-                  InkWell(
-                    onTap: () async {
-                      FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog:
-                            SettlementValidationStatusUpdateConfirmationDialog(
-                          settlement: settlement,
-                          confirmToDelete:
-                              SettlementCRUDFunctions.updateValidationStatus,
+                  settlement.collectedAt != null
+                      ? InkWell(
+                          onTap: () async {
+                            FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog:
+                                  SettlementValidationStatusUpdateConfirmationDialog(
+                                settlement: settlement,
+                                confirmToDelete: SettlementCRUDFunctions
+                                    .updateValidationStatus,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 150.0,
+                            height: 30.0,
+                            alignment: Alignment.center,
+                            child: settlement.isValiated
+                                ? const Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                  )
+                                : const Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                          ),
+                          // showEditIcon: true,
+                        )
+                      : const SizedBox(
+                          width: 150.0,
+                          height: 30.0,
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 150.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      child: settlement.isValiated
-                          ? const Icon(
-                              Icons.check,
-                              color: Colors.green,
-                            )
-                          : const Icon(
-                              Icons.close,
+                  settlement.collectedAt != null
+                      ? InkWell(
+                          onTap: () async {
+                            await FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog:
+                                  SettlementUpdateForm(settlement: settlement),
+                            );
+                          },
+                          child: Container(
+                            width: 150.0,
+                            height: 30.0,
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.green[500],
+                            ),
+                          ),
+                          // showEditIcon: true,
+                        )
+                      : const SizedBox(
+                          width: 150.0,
+                          height: 30.0,
+                        ),
+                  settlement.collectedAt != null
+                      ? InkWell(
+                          onTap: () async {
+                            await FunctionsController.showAlertDialog(
+                              context: context,
+                              alertDialog: SettlementDeletionConfirmationDialog(
+                                settlement: settlement,
+                                confirmToDelete: SettlementCRUDFunctions.delete,
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 150.0,
+                            height: 30.0,
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.delete_sharp,
                               color: Colors.red,
                             ),
-                    ),
-                    // showEditIcon: true,
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      await FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog:
-                            SettlementUpdateForm(settlement: settlement),
-                      );
-                    },
-                    child: Container(
-                      width: 150.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.green[500],
-                      ),
-                    ),
-                    // showEditIcon: true,
-                  ),
-                  InkWell(
-                    onTap: () async {
-                      await FunctionsController.showAlertDialog(
-                        context: context,
-                        alertDialog: SettlementDeletionConfirmationDialog(
-                          settlement: settlement,
-                          confirmToDelete: SettlementCRUDFunctions.delete,
+                          ),
+                        )
+                      : const SizedBox(
+                          width: 150.0,
+                          height: 30.0,
                         ),
-                      );
-                    },
-                    child: Container(
-                      width: 150.0,
-                      height: 30.0,
-                      alignment: Alignment.center,
-                      child: const Icon(
-                        Icons.delete_sharp,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
                 ],
               );
             },

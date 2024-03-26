@@ -8,6 +8,7 @@ import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/globals/forms_dropdowns/type/type_dropdown.widget.dart';
 import 'package:flutter/material.dart';
@@ -123,9 +124,14 @@ class CustomerCardCRUDFunctions {
     required BuildContext context,
     required WidgetRef ref,
     required CustomerCard customerCard,
+    required ValueNotifier<bool> showConfirmationButton,
   }) async {
+    showConfirmationButton.value = false;
     //  final customerCardSatisfactionDate =
     //      ref.watch(customerCardSatisfactionDateProvider);
+    final cashOperationsSelectedCustomerAccount =
+        ref.watch(cashOperationsSelectedCustomerAccountProvider);
+
     final customerCardRepaymentDate =
         ref.watch(customerCardRepaymentDateProvider);
 
@@ -136,6 +142,7 @@ class CustomerCardCRUDFunctions {
       typeId: customerCard.typeId,
       typeNumber: customerCard.typeNumber,
       repaidAt: customerCardRepaymentDate!,
+      customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
       createdAt: customerCard.createdAt,
       updatedAt: DateTime.now(),
     );
@@ -150,11 +157,14 @@ class CustomerCardCRUDFunctions {
         serviceResponse: lastCustomerCardStatus,
         response: 'Opération réussie',
       );
+      showConfirmationButton.value = true;
+      Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: lastCustomerCardStatus,
         response: 'Opération échouée',
       );
+      showConfirmationButton.value = true;
     }
     FunctionsController.showAlertDialog(
       context: context,
@@ -166,7 +176,11 @@ class CustomerCardCRUDFunctions {
     required BuildContext context,
     required WidgetRef ref,
     required CustomerCard customerCard,
+    required ValueNotifier<bool> showConfirmationButton,
   }) async {
+    showConfirmationButton.value = false;
+    final cashOperationsSelectedCustomerAccount =
+        ref.watch(cashOperationsSelectedCustomerAccountProvider);
     final customerCardSatisfactionDate =
         ref.watch(customerCardSatisfactionDateProvider);
     //  final customerCardRepaymentDate =
@@ -176,10 +190,12 @@ class CustomerCardCRUDFunctions {
 
     final newCustomerCard = CustomerCard(
       label: customerCard.label,
-      typeId: customerCard.typeId, typeNumber: customerCard.typeNumber,
-      createdAt: customerCard.createdAt,
+      typeId: customerCard.typeId,
+      typeNumber: customerCard.typeNumber,
+      customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
       //  repaidAt: customerCardRepaymentDate!, // it's not defined
       satisfiedAt: customerCardSatisfactionDate!,
+      createdAt: customerCard.createdAt,
       updatedAt: DateTime.now(),
     );
 
@@ -195,11 +211,14 @@ class CustomerCardCRUDFunctions {
         serviceResponse: lastCustomerCardStatus,
         response: 'Opération réussie',
       );
+      showConfirmationButton.value = true;
+      Navigator.of(context).pop();
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: lastCustomerCardStatus,
         response: 'Opération échouée',
       );
+      showConfirmationButton.value = true;
     }
     FunctionsController.showAlertDialog(
       context: context,
