@@ -73,7 +73,7 @@ class _StockConstrainedOutputAddingFormState
                         child: const CBText(
                           text:
                               'Tous les règlements n\'ont pas été effectués sur la carte \nFaire une sortie par contrainte',
-                          fontSize: 15.0,
+                          fontSize: 12.0,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

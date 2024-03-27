@@ -791,24 +791,24 @@ class _CashOperationsCustomerCardInfosState
                                           // total is equal to 372
                                           // on the customer card
                                           if (settlementsNumbersTotal > 0) {
-                                            if (settlementsNumbersTotal ==
-                                                372) {
-                                              //  show dataTime picker
-                                              // for setting satisfaction date
+                                            //  show dataTime picker
+                                            // for setting satisfaction date
 
-                                              await FunctionsController
-                                                  .showDateTime(
-                                                context: context,
-                                                ref: ref,
-                                                stateProvider:
-                                                    customerCardSatisfactionDateProvider,
-                                              );
+                                            await FunctionsController
+                                                .showDateTime(
+                                              context: context,
+                                              ref: ref,
+                                              stateProvider:
+                                                  customerCardSatisfactionDateProvider,
+                                            );
 
-                                              // if customerCard satisfaction
-                                              // date provider is setted and not null
-                                              if (ref.watch(
-                                                      customerCardSatisfactionDateProvider) !=
-                                                  null) {
+                                            // if customerCard satisfaction
+                                            // date provider is setted and not null
+                                            if (ref.watch(
+                                                    customerCardSatisfactionDateProvider) !=
+                                                null) {
+                                              if (settlementsNumbersTotal ==
+                                                  372) {
                                                 // do uptate
 
                                                 // check if there are sufficient
@@ -842,7 +842,7 @@ class _CashOperationsCustomerCardInfosState
                                                     serviceResponse:
                                                         ServiceResponse.failed,
                                                     response:
-                                                        'Tous les produits ne sont pas disponibles ou sont insuffisant en stock',
+                                                        'Tous les produits du type ne sont pas disponibles ou sont insuffisants en stock',
                                                   );
 
                                                   FunctionsController
@@ -852,36 +852,21 @@ class _CashOperationsCustomerCardInfosState
                                                         const ResponseDialog(),
                                                   );
                                                 }
+                                              } else {
+                                                ref.invalidate(
+                                                  stockConstrainedOuputAddedInputsProvider,
+                                                );
+
+                                                ref.invalidate(
+                                                  stockConstrainedOuputSelectedProductsProvider,
+                                                );
+                                                FunctionsController
+                                                    .showAlertDialog(
+                                                  context: context,
+                                                  alertDialog:
+                                                      const StockConstrainedOutputAddingForm(),
+                                                );
                                               }
-                                            } else {
-                                              ref.invalidate(
-                                                stockConstrainedOuputAddedInputsProvider,
-                                              );
-
-                                              ref.invalidate(
-                                                stockConstrainedOuputSelectedProductsProvider,
-                                              );
-                                              /* Future.delayed(
-                                                const Duration(
-                                                  milliseconds: 100,
-                                                ),
-                                                () {
-                                                  ref.invalidate(
-                                                    stockConstrainedOuputAddedInputsProvider,
-                                                  );
-
-                                                  ref.invalidate(
-                                                    stockConstrainedOuputSelectedProductsProvider,
-                                                  );
-                                                },
-                                              );*/
-
-                                              FunctionsController
-                                                  .showAlertDialog(
-                                                context: context,
-                                                alertDialog:
-                                                    const StockConstrainedOutputAddingForm(),
-                                              );
                                             }
                                           } else {
                                             ref

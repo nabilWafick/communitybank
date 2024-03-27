@@ -1,8 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:communitybank/controllers/customer_card/customer_card.controller.dart';
+import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/controllers/forms/validators/stock/stock.validator.dart';
 import 'package:communitybank/controllers/stocks/stocks.controller.dart';
 import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/models/data/stock/stock.model.dart';
 import 'package:communitybank/models/response_dialog/response_dialog.model.dart';
@@ -172,8 +175,19 @@ class StockCRUDFunctions {
   }) async {
     final isFormValid = formKey.currentState!.validate();
     if (isFormValid) {
+      final accountOwnerSelectedCard = ref.watch(
+        cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+      );
+
+      final cashOperationsSelectedCustomerAccount =
+          ref.watch(cashOperationsSelectedCustomerAccountProvider);
+
       final stockConstrainedOuputSelectedProducts =
           ref.watch(stockConstrainedOuputSelectedProductsProvider);
+
+      final customerCardSatisfactionDate =
+          ref.watch(customerCardSatisfactionDateProvider);
+
       if (stockConstrainedOuputSelectedProducts.isEmpty) {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
           serviceResponse: ServiceResponse.failed,
@@ -253,6 +267,128 @@ class StockCRUDFunctions {
               ++i) {
             stockConstrainedOutputProducts[i].number =
                 stockConstrainedOutputProductsNumber[i];
+          }
+
+          // check if the products are availables in stock
+
+          final areAllProductsAvailable =
+              await checkConstrainedOutputProductsStocks(
+            ref: ref,
+            products: stockConstrainedOutputProducts,
+          );
+
+          if (areAllProductsAvailable) {
+            // make substraction
+
+            // foreach product of the type, get his last stock and substract
+            // the number of the product in the type from the last stock
+
+            List<ServiceResponse> areAllSubtractionsDoneSuccessfully = [];
+
+            for (int i = 0; i < stockConstrainedOutputProducts.length; i++) {
+              // get the product stocks
+              final stocks = await StocksController.getAll(
+                selectedProductId: stockConstrainedOutputProducts[i].id,
+              ).first;
+
+              // get the last product stock (Mouvement)
+              final lastStock = stocks.last;
+
+              // make the substraction
+
+              final prefs = await SharedPreferences.getInstance();
+              final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+              final newStock = Stock(
+                productId: stockConstrainedOutputProducts[i].id!,
+                initialQuantity: lastStock.stockQuantity,
+                outputedQuantity: (accountOwnerSelectedCard!.typeNumber *
+                    stockConstrainedOutputProducts[i].number!),
+                stockQuantity: lastStock.stockQuantity -
+                    (accountOwnerSelectedCard.typeNumber *
+                        stockConstrainedOutputProducts[i].number!),
+                type: StockOutputType.normal,
+                customerCardId: accountOwnerSelectedCard.id,
+                agentId: agentId ?? 0,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              );
+
+              areAllSubtractionsDoneSuccessfully.add(
+                await StocksController.create(
+                  stock: newStock,
+                ),
+              );
+            }
+
+            final successfullyDone = areAllSubtractionsDoneSuccessfully.every(
+              (response) => response == ServiceResponse.success,
+            );
+
+            if (successfullyDone) {
+              ServiceResponse lastCustomerCardStatus;
+
+              final newCustomerCard = CustomerCard(
+                label: accountOwnerSelectedCard!.label,
+                typeId: accountOwnerSelectedCard.typeId,
+                typeNumber: accountOwnerSelectedCard.typeNumber,
+                customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
+                //  repaidAt: customerCardRepaymentDate!, // it's not defined
+                satisfiedAt: customerCardSatisfactionDate!,
+                createdAt: accountOwnerSelectedCard.createdAt,
+                updatedAt: DateTime.now(),
+              );
+
+              lastCustomerCardStatus = await CustomersCardsController.update(
+                id: accountOwnerSelectedCard.id!,
+                customerCard: newCustomerCard,
+              );
+
+              // debugPrint('new CustomerCard: $customerCardStatus');
+
+              if (lastCustomerCardStatus == ServiceResponse.success) {
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: lastCustomerCardStatus,
+                  response: 'Opération réussie',
+                );
+                showValidatedButton.value = true;
+                Navigator.of(context).pop();
+              } else {
+                ref.read(responseDialogProvider.notifier).state =
+                    ResponseDialogModel(
+                  serviceResponse: lastCustomerCardStatus,
+                  response:
+                      'Opération échouée \n La carte n\'a pas pu être grisée',
+                );
+                showValidatedButton.value = true;
+              }
+            } else {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: ServiceResponse.failed,
+                response:
+                    'Opération échouée \n Les stocks n\'ont pas pu être tous mis à jour',
+              );
+              showValidatedButton.value = true;
+            }
+
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: ServiceResponse.failed,
+              response:
+                  'Tous les produits sélectionnés ne sont pas disponibles ou sont insuffisants en stock',
+            );
+
+            FunctionsController.showAlertDialog(
+              context: context,
+              alertDialog: const ResponseDialog(),
+            );
           }
         }
       }
