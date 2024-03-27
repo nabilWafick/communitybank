@@ -2,6 +2,7 @@
 
 import 'package:communitybank/controllers/forms/validators/customer_card/customer_card.validator.dart';
 import 'package:communitybank/controllers/forms/validators/settlement/settlement.validator.dart';
+import 'package:communitybank/controllers/forms/validators/stock/stock.validator.dart';
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/functions/crud/customer_card/customer_card_crud.fuction.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
@@ -18,6 +19,7 @@ import 'package:communitybank/views/widgets/cash/cash_operations/search_options/
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards.widgets.dart';
 import 'package:communitybank/views/widgets/definitions/types/types_list/types_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/settlements/settlement_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/stocks/constrained_output/constrained_output_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/forms/response_dialog/response_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/customer_card/repayment_date/repayment_date_update_confirmation_dialog.widget.dart';
 import 'package:communitybank/views/widgets/forms/update_confirmation_dialog/customer_card/satisfaction_date/satisfaction_date_update_confirmation_dialog.widget.dart';
@@ -788,36 +790,97 @@ class _CashOperationsCustomerCardInfosState
                                           // verify if the settlement number
                                           // total is equal to 372
                                           // on the customer card
-                                          if (settlementsNumbersTotal == 372) {
-                                            //  show dataTime picker
-                                            // for setting satisfaction date
+                                          if (settlementsNumbersTotal > 0) {
+                                            if (settlementsNumbersTotal ==
+                                                372) {
+                                              //  show dataTime picker
+                                              // for setting satisfaction date
 
-                                            await FunctionsController
-                                                .showDateTime(
-                                              context: context,
-                                              ref: ref,
-                                              stateProvider:
-                                                  customerCardSatisfactionDateProvider,
-                                            );
+                                              await FunctionsController
+                                                  .showDateTime(
+                                                context: context,
+                                                ref: ref,
+                                                stateProvider:
+                                                    customerCardSatisfactionDateProvider,
+                                              );
 
-                                            // if customerCard satisfaction
-                                            // date provider is setted and not null
-                                            if (ref.watch(
-                                                    customerCardSatisfactionDateProvider) !=
-                                                null) {
-                                              // do uptate
+                                              // if customerCard satisfaction
+                                              // date provider is setted and not null
+                                              if (ref.watch(
+                                                      customerCardSatisfactionDateProvider) !=
+                                                  null) {
+                                                // do uptate
+
+                                                // check if there are sufficient
+                                                // products in stock
+
+                                                final areSufficientProductsInStock =
+                                                    await CustomerCardCRUDFunctions
+                                                        .checkCustomerCardTypeProductsStocks(
+                                                  ref: ref,
+                                                );
+
+                                                if (areSufficientProductsInStock) {
+                                                  FunctionsController
+                                                      .showAlertDialog(
+                                                    context: context,
+                                                    alertDialog:
+                                                        CustomerCardSatisfactionDateUpdateConfirmationDialog(
+                                                      customerCard:
+                                                          realTimeCustomerCardData,
+                                                      confirmToDelete:
+                                                          CustomerCardCRUDFunctions
+                                                              .updateSatisfactionDate,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  ref
+                                                      .read(
+                                                          responseDialogProvider
+                                                              .notifier)
+                                                      .state = ResponseDialogModel(
+                                                    serviceResponse:
+                                                        ServiceResponse.failed,
+                                                    response:
+                                                        'Tous les produits ne sont pas disponibles ou sont insuffisant en stock',
+                                                  );
+
+                                                  FunctionsController
+                                                      .showAlertDialog(
+                                                    context: context,
+                                                    alertDialog:
+                                                        const ResponseDialog(),
+                                                  );
+                                                }
+                                              }
+                                            } else {
+                                              ref.invalidate(
+                                                stockConstrainedOuputAddedInputsProvider,
+                                              );
+
+                                              ref.invalidate(
+                                                stockConstrainedOuputSelectedProductsProvider,
+                                              );
+                                              /* Future.delayed(
+                                                const Duration(
+                                                  milliseconds: 100,
+                                                ),
+                                                () {
+                                                  ref.invalidate(
+                                                    stockConstrainedOuputAddedInputsProvider,
+                                                  );
+
+                                                  ref.invalidate(
+                                                    stockConstrainedOuputSelectedProductsProvider,
+                                                  );
+                                                },
+                                              );*/
 
                                               FunctionsController
                                                   .showAlertDialog(
                                                 context: context,
                                                 alertDialog:
-                                                    CustomerCardSatisfactionDateUpdateConfirmationDialog(
-                                                  customerCard:
-                                                      realTimeCustomerCardData,
-                                                  confirmToDelete:
-                                                      CustomerCardCRUDFunctions
-                                                          .updateSatisfactionDate,
-                                                ),
+                                                    const StockConstrainedOutputAddingForm(),
                                               );
                                             }
                                           } else {
@@ -828,7 +891,7 @@ class _CashOperationsCustomerCardInfosState
                                               serviceResponse:
                                                   ServiceResponse.failed,
                                               response:
-                                                  'Tous les règlements de la carte n\'ont pas été effectué',
+                                                  'Aucun règlement n\'a été fait sur la carte',
                                             );
 
                                             FunctionsController.showAlertDialog(

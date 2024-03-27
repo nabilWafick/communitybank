@@ -164,7 +164,7 @@ class _CollectionAddingFormState extends ConsumerState<CollectionAddingForm> {
                             Flexible(
                               child: CBText(
                                 text: collectionDate != null
-                                    ? '${format.format(collectionDate)}  ${collectionDate.hour}:${collectionDate.minute}'
+                                    ? format.format(collectionDate)
                                     : '',
                                 fontSize: 12.5,
                                 fontWeight: FontWeight.w500,

@@ -3,17 +3,25 @@ import 'package:communitybank/controllers/forms/validators/stock/stock.validator
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StockOnChanged {
-  static inputedQuantity(String? value, WidgetRef ref) =>
+  static stockManualInputedQuantity(String? value, WidgetRef ref) =>
       CommonOnChangedFunction.onIntTextInputValueChanged(
         value,
         ref,
-        inputedQuantityProvider,
+        stockInputedQuantityProvider,
       );
 
-       static outputedQuantity(String? value, WidgetRef ref) =>
+  static stockManualOutputedQuantity(String? value, WidgetRef ref) =>
       CommonOnChangedFunction.onIntTextInputValueChanged(
         value,
         ref,
-        outputedQuantityProvider,
+        stockOutputedQuantityProvider,
+      );
+
+  static stockConstrainedOuputProductNumber(
+          String? value, int productIndex, WidgetRef ref) =>
+      CommonOnChangedFunction.onIntTextInputValueChanged(
+        value,
+        ref,
+        stockConstrainedOuputProductNumberProvider(productIndex),
       );
 }

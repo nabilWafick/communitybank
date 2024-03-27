@@ -1,3 +1,4 @@
+import 'package:communitybank/controllers/forms/validators/stock/stock.validator.dart';
 import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
@@ -5,7 +6,7 @@ import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final typeSelectedProductDropdownProvider =
+final stockConstrainedOutputSelectedProductDropdownProvider =
     StateProvider.family<Product, String>((ref, providerName) {
   return Product(
     name: '',
@@ -15,7 +16,8 @@ final typeSelectedProductDropdownProvider =
   );
 });
 
-class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
+class CBStockConstrainedOutputProductSelectionDropdown
+    extends ConsumerStatefulWidget {
   final String label;
   final String providerName;
   final List<Product> dropdownMenuEntriesLabels;
@@ -23,7 +25,7 @@ class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
   final double? width;
   final double? menuHeigth;
 
-  const CBTypeProductSelectionDropdown({
+  const CBStockConstrainedOutputProductSelectionDropdown({
     super.key,
     this.width,
     this.menuHeigth,
@@ -35,11 +37,11 @@ class CBTypeProductSelectionDropdown extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CBTypeProductSelectionDropdownState();
+      _CBStockConstrainedOutputProductSelectionDropdownState();
 }
 
-class _CBTypeProductSelectionDropdownState
-    extends ConsumerState<CBTypeProductSelectionDropdown> {
+class _CBStockConstrainedOutputProductSelectionDropdownState
+    extends ConsumerState<CBStockConstrainedOutputProductSelectionDropdown> {
   @override
   void initState() {
     Future.delayed(
@@ -49,11 +51,16 @@ class _CBTypeProductSelectionDropdownState
 // check if dropdown item is not empty so as to avoid error while setting the  the first item as the selectedItem
       if (widget.dropdownMenuEntriesValues.isNotEmpty) {
         ref
-            .read(typeSelectedProductDropdownProvider(widget.providerName)
-                .notifier)
+            .read(
+              stockConstrainedOutputSelectedProductDropdownProvider(
+                      widget.providerName)
+                  .notifier,
+            )
             .state = widget.dropdownMenuEntriesValues[0];
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
-        ref.read(typeSelectedProductsProvider.notifier).update((state) {
+        ref
+            .read(stockConstrainedOuputSelectedProductsProvider.notifier)
+            .update((state) {
           state[widget.providerName] = widget.dropdownMenuEntriesValues[0];
           return state;
         });
@@ -65,8 +72,9 @@ class _CBTypeProductSelectionDropdownState
 
   @override
   Widget build(BuildContext context) {
-    final selectedDropdownProduct =
-        ref.watch(typeSelectedProductDropdownProvider(widget.providerName));
+    final selectedDropdownProduct = ref.watch(
+        stockConstrainedOutputSelectedProductDropdownProvider(
+            widget.providerName));
 
     return DropdownMenu(
       inputDecorationTheme: const InputDecorationTheme(
@@ -124,7 +132,8 @@ class _CBTypeProductSelectionDropdownState
 
         // set the selected product
         ref
-            .read(typeSelectedProductDropdownProvider(widget.providerName)
+            .read(stockConstrainedOutputSelectedProductDropdownProvider(
+                    widget.providerName)
                 .notifier)
             .state = value!;
         // // remove the last selected product from tySelectedProducts

@@ -49,7 +49,10 @@ class TypeValidators {
   }
 
   static String? typeProductNumber(
-      String? value, int productIndex, WidgetRef ref) {
+    String? value,
+    int productIndex,
+    WidgetRef ref,
+  ) {
     if (ref.watch(typeProductNumberProvider(productIndex)) == 0) {
       return 'Entrez une valeur';
     }

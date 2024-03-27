@@ -10,15 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class StockAddingInputForm extends StatefulHookConsumerWidget {
-  const StockAddingInputForm({super.key});
+class StockOutputAddingForm extends StatefulHookConsumerWidget {
+  const StockOutputAddingForm({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _StockAddingInputFormState();
+      _StockOutputAddingFormState();
 }
 
-class _StockAddingInputFormState extends ConsumerState<StockAddingInputForm> {
+class _StockOutputAddingFormState extends ConsumerState<StockOutputAddingForm> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class _StockAddingInputFormState extends ConsumerState<StockAddingInputForm> {
                           width: formCardWidth / 1.16,
                           menuHeigth: 500.0,
                           label: 'Produit',
-                          providerName: 'stock-adding-input-product',
+                          providerName: 'stock-adding-output-product',
                           dropdownMenuEntriesLabels: productsListStream.when(
                             data: (data) => stockProduct.id != 0
                                 ? data
@@ -117,13 +117,14 @@ class _StockAddingInputFormState extends ConsumerState<StockAddingInputForm> {
                         ),
                         width: formCardWidth,
                         child: const CBTextFormField(
-                          label: 'Quantité Entrée',
-                          hintText: 'Quantité Entrée',
+                          label: 'Quantité Sortie',
+                          hintText: 'Quantité Sortie',
                           isMultilineTextForm: false,
                           obscureText: false,
                           textInputType: TextInputType.number,
-                          validator: StockValidators.inputedQuantity,
-                          onChanged: StockOnChanged.inputedQuantity,
+                          validator:
+                              StockValidators.stockManualOutputedQuantity,
+                          onChanged: StockOnChanged.stockManualOutputedQuantity,
                         ),
                       ),
                     ],
@@ -155,7 +156,7 @@ class _StockAddingInputFormState extends ConsumerState<StockAddingInputForm> {
                           child: CBElevatedButton(
                             text: 'Valider',
                             onPressed: () async {
-                              StockCRUDFunctions.createStockInput(
+                              StockCRUDFunctions.createStockOutput(
                                 context: context,
                                 formKey: formKey,
                                 ref: ref,

@@ -1,7 +1,7 @@
 import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/views/widgets/definitions/products/products.widgets.dart';
-import 'package:communitybank/views/widgets/forms/adding/stocks/stock_adding_input_form.widget.dart';
-import 'package:communitybank/views/widgets/forms/adding/stocks/stock_adding_output_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/stocks/input/input_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/forms/adding/stocks/output/output_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:communitybank/views/widgets/globals/lists_dropdowns/product/product_dropdown.widget.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +73,7 @@ class StocksSortOptions extends ConsumerWidget {
                   onTap: () {
                     FunctionsController.showAlertDialog(
                       context: context,
-                      alertDialog: const StockAddingInputForm(),
+                      alertDialog: const StockInputAddingForm(),
                     );
                   },
                 ),
@@ -83,7 +83,7 @@ class StocksSortOptions extends ConsumerWidget {
                   onTap: () {
                     FunctionsController.showAlertDialog(
                       context: context,
-                      alertDialog: const StockAddingOutputForm(),
+                      alertDialog: const StockOutputAddingForm(),
                     );
                   },
                 ),

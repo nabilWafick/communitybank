@@ -176,6 +176,51 @@ class CustomerCardCRUDFunctions {
     );
   }
 
+  static Future<bool> checkCustomerCardTypeProductsStocks({
+    required WidgetRef ref,
+  }) async {
+    final accountOwnerSelectedCard = ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+    );
+    final customerCardType = ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider,
+    );
+
+    // foreach product of the type, check if the product stock exist
+    // and is available (is sufficient for substraction)
+
+    List<bool> areAllProductsStocksAvailable = [];
+
+    for (int i = 0; i < customerCardType!.productsIds.length; i++) {
+      // get the product stocks
+      final stocks = await StocksController.getAll(
+        selectedProductId: customerCardType.productsIds[i],
+      ).first;
+
+      if (stocks.isNotEmpty) {
+        // get the last product stock (Mouvement)
+        final lastStock = stocks.last;
+
+        if (lastStock.stockQuantity -
+                (accountOwnerSelectedCard!.typeNumber *
+                    customerCardType.productsNumber[i]) >=
+            0) {
+          areAllProductsStocksAvailable.add(true);
+        } else {
+          areAllProductsStocksAvailable.add(false);
+        }
+      } else {
+        areAllProductsStocksAvailable.add(false);
+      }
+    }
+
+    final allAvailable = areAllProductsStocksAvailable.every(
+      (response) => response == true,
+    );
+
+    return allAvailable;
+  }
+
   static Future<void> updateSatisfactionDate({
     required BuildContext context,
     required WidgetRef ref,
@@ -185,26 +230,29 @@ class CustomerCardCRUDFunctions {
     showConfirmationButton.value = false;
     final cashOperationsSelectedCustomerAccount =
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
-    final accountOwnerSelectedCard = ref
-        .watch(cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
+    final accountOwnerSelectedCard = ref.watch(
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
+    );
     final customerCardType = ref.watch(
-        cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider);
+      cashOperationsSelectedCustomerAccountOwnerSelectedCardTypeProvider,
+    );
     final customerCardSatisfactionDate =
         ref.watch(customerCardSatisfactionDateProvider);
 
     // foreach product of the type, get his last stock and substract
     // the number of the product in the type from the last stock
 
-    List<ServiceResponse> allSubtractionsDoneSuccessfully = [];
+    List<ServiceResponse> areAllSubtractionsDoneSuccessfully = [];
 
     for (int i = 0; i < customerCardType!.productsIds.length; i++) {
-      // get the product stock
+      // get the product stocks
       final stocks = await StocksController.getAll(
-        selectedProductId: customerCard.id!,
+        selectedProductId: customerCardType.productsIds[i],
       ).first;
 
       // get the last product stock (Mouvement)
       final lastStock = stocks.last;
+
       // make the substraction
 
       final prefs = await SharedPreferences.getInstance();
@@ -225,15 +273,16 @@ class CustomerCardCRUDFunctions {
         updatedAt: DateTime.now(),
       );
 
-      allSubtractionsDoneSuccessfully.add(
+      areAllSubtractionsDoneSuccessfully.add(
         await StocksController.create(
           stock: newStock,
         ),
       );
     }
 
-    final successfullyDone = allSubtractionsDoneSuccessfully
-        .every((response) => response == ServiceResponse.success);
+    final successfullyDone = areAllSubtractionsDoneSuccessfully.every(
+      (response) => response == ServiceResponse.success,
+    );
 
     if (successfullyDone) {
       ServiceResponse lastCustomerCardStatus;
@@ -273,7 +322,8 @@ class CustomerCardCRUDFunctions {
     } else {
       ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
         serviceResponse: ServiceResponse.failed,
-        response: 'Opération échouée \n Les stocks n\'ont pu être mis à jour',
+        response:
+            'Opération échouée \n Les stocks n\'ont pas pu être tous mis à jour',
       );
       showConfirmationButton.value = true;
     }

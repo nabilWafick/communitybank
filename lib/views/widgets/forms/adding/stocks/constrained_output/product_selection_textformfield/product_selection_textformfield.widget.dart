@@ -6,25 +6,26 @@ import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 //import 'package:yaru_icons/yaru_icons.dart';
 
-class CBTypeProductSelectionTextFormField extends HookConsumerWidget {
+class CBStockConstrainedOutputProductSelectionTextFormField
+    extends HookConsumerWidget {
   final int inputIndex;
   final TextEditingController? textEditingController;
   final String? label;
   final String? hintText;
-  final String? initialValue;
+  // final String? initialValue;
 
   final IconData? suffixIcon;
   final TextInputType textInputType;
   final String? Function(String?, int, WidgetRef) validator;
   final void Function(String?, int, WidgetRef) onChanged;
 
-  const CBTypeProductSelectionTextFormField({
+  const CBStockConstrainedOutputProductSelectionTextFormField({
     super.key,
     required this.inputIndex,
     this.textEditingController,
     this.label,
     this.hintText,
-    this.initialValue,
+    //  this.initialValue,
     this.suffixIcon,
     required this.textInputType,
     required this.validator,
@@ -36,7 +37,7 @@ class CBTypeProductSelectionTextFormField extends HookConsumerWidget {
     final showPassword = useState<bool>(false);
     return TextFormField(
       controller: textEditingController,
-      initialValue: initialValue,
+      //  initialValue: initialValue,
       keyboardType: textInputType,
       cursorColor: CBColors.primaryColor,
       cursorHeight: 20.0,

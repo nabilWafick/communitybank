@@ -178,6 +178,7 @@ class _SettlementAddingFormState extends ConsumerState<SettlementAddingForm> {
                             const CBText(
                               text: 'Montant Collecte Restant: ',
                               fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
                             ),
                             const SizedBox(
                               width: 10.0,

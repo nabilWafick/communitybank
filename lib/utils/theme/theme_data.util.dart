@@ -150,7 +150,7 @@ class CBThemeData {
       ),
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: const EdgeInsets.symmetric(
-          vertical: 7.0,
+          vertical: 10.0,
           horizontal: 10.0,
         ),
         hintStyle: const TextStyle(
