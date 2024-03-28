@@ -1,5 +1,4 @@
 import 'package:communitybank/controllers/forms/validators/stock/stock.validator.dart';
-import 'package:communitybank/controllers/forms/validators/type/type.validator.dart';
 import 'package:communitybank/models/data/product/product.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
@@ -136,15 +135,11 @@ class _CBStockConstrainedOutputProductSelectionDropdownState
                     widget.providerName)
                 .notifier)
             .state = value!;
-        // // remove the last selected product from tySelectedProducts
-        // ref.read(typeSelectedProductsProvider.notifier).update((state) {
-        //   // since typeSelectedProducts use type selection dropdown provider as key
-        //   state.remove(widget.providerName);
-        //   return state;
-        // });
 
         // put the selected item in the selectedProduct map so as to reduce items for the remain dropdowns
-        ref.read(typeSelectedProductsProvider.notifier).update((state) {
+        ref
+            .read(stockConstrainedOuputSelectedProductsProvider.notifier)
+            .update((state) {
           state[widget.providerName] = value;
           return state;
         });

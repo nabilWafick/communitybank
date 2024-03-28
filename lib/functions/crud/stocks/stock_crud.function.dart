@@ -307,7 +307,7 @@ class StockCRUDFunctions {
                 stockQuantity: lastStock.stockQuantity -
                     (accountOwnerSelectedCard.typeNumber *
                         stockConstrainedOutputProducts[i].number!),
-                type: StockOutputType.normal,
+                type: StockOutputType.constraint,
                 customerCardId: accountOwnerSelectedCard.id,
                 agentId: agentId ?? 0,
                 createdAt: DateTime.now(),
@@ -384,6 +384,7 @@ class StockCRUDFunctions {
               response:
                   'Tous les produits sélectionnés ne sont pas disponibles ou sont insuffisants en stock',
             );
+            showValidatedButton.value = true;
 
             FunctionsController.showAlertDialog(
               context: context,
@@ -392,76 +393,6 @@ class StockCRUDFunctions {
           }
         }
       }
-      /*
-
-     
-      final product = ref.watch(
-        formProductDropdownProvider('stock-adding-output-product'),
-      );
-      final outputedQuantity = ref.watch(stockOutputedQuantityProvider);
-
-      final productStocks = await StocksController.getAll(
-        selectedProductId: product.id,
-      ).first;
-
-      final prefs = await SharedPreferences.getInstance();
-      final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
-
-      if (productStocks.isNotEmpty) {
-        if (productStocks.last.stockQuantity - outputedQuantity >= 0) {
-          final stock = Stock(
-            productId: product.id!,
-            initialQuantity: productStocks.last.stockQuantity,
-            outputedQuantity: outputedQuantity,
-            stockQuantity: productStocks.last.stockQuantity - outputedQuantity,
-            type: StockOutputType.manual,
-            agentId: agentId ?? 0,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-
-          final stockOutputStatus = await StocksController.create(
-            stock: stock,
-          );
-
-          if (stockOutputStatus == ServiceResponse.success) {
-            ref.read(responseDialogProvider.notifier).state =
-                ResponseDialogModel(
-              serviceResponse: stockOutputStatus,
-              response: 'Opération réussie',
-            );
-            showValidatedButton.value = true;
-            Navigator.of(context).pop();
-          } else {
-            ref.read(responseDialogProvider.notifier).state =
-                ResponseDialogModel(
-              serviceResponse: stockOutputStatus,
-              response: 'Opération échouée',
-            );
-            showValidatedButton.value = true;
-          }
-        } else {
-          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-            serviceResponse: ServiceResponse.failed,
-            response:
-                'Opération échouée \n Le stock de ce produit est insuffisant',
-          );
-          showValidatedButton.value = true;
-        }
-      } else {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: ServiceResponse.failed,
-          response:
-              'Opération échouée \n Le produit n\'est pas disponible en stock',
-        );
-        showValidatedButton.value = true;
-      }
-      FunctionsController.showAlertDialog(
-        context: context,
-        alertDialog: const ResponseDialog(),
-      );
-   
-   */
     }
   }
 

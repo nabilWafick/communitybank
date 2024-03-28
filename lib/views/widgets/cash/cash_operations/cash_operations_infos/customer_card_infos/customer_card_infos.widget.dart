@@ -860,6 +860,7 @@ class _CashOperationsCustomerCardInfosState
                                                 ref.invalidate(
                                                   stockConstrainedOuputSelectedProductsProvider,
                                                 );
+
                                                 FunctionsController
                                                     .showAlertDialog(
                                                   context: context,

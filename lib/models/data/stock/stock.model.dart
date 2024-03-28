@@ -147,6 +147,6 @@ class Stock {
 
 class StockOutputType {
   static const String manual = 'Manuelle';
-  static const String normal = 'Normalle';
+  static const String normal = 'Normale';
   static const String constraint = 'Contrainte';
 }
