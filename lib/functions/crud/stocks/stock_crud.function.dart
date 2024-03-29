@@ -437,4 +437,313 @@ class StockCRUDFunctions {
 
     return allAvailable;
   }
+
+  static Future<void> updateStockOutput({
+    required BuildContext context,
+    required GlobalKey<FormState> formKey,
+    required WidgetRef ref,
+    required Stock stock,
+    required ValueNotifier<bool> showValidatedButton,
+  }) async {
+    formKey.currentState!.save();
+    final isFormValid = formKey.currentState!.validate();
+    if (isFormValid) {
+      showValidatedButton.value = false;
+      final product = ref.watch(
+        formProductDropdownProvider('stock-update-output-product'),
+      );
+      final outputedQuantity = ref.watch(stockOutputedQuantityProvider);
+
+      final productStocks = await StocksController.getAll(
+        selectedProductId: product.id,
+      ).first;
+
+      final prefs = await SharedPreferences.getInstance();
+      final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+      if (productStocks.isNotEmpty) {
+        // check if the stock movement is the last inserted and is manual
+        if (productStocks.last.id == stock.id &&
+            stock.type == StockOutputType.manual) {
+          // check if new outputed quantity can be substract
+          // from (current stock quantity + the last outputed quantity)
+          if (productStocks.last.stockQuantity +
+                  stock.outputedQuantity! -
+                  outputedQuantity >=
+              0) {
+            final lastStock = Stock(
+              productId: stock.productId,
+              initialQuantity:
+                  productStocks.last.stockQuantity + stock.outputedQuantity!,
+              outputedQuantity: outputedQuantity,
+              stockQuantity: productStocks.last.stockQuantity +
+                  stock.outputedQuantity! -
+                  outputedQuantity,
+              type: StockOutputType.manual,
+              agentId: agentId ?? 0,
+              createdAt: stock.createdAt,
+              updatedAt: DateTime.now(),
+            );
+
+            final stockOutputStatus = await StocksController.update(
+              id: stock.id!,
+              stock: lastStock,
+            );
+
+            if (stockOutputStatus == ServiceResponse.success) {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: stockOutputStatus,
+                response: 'Opération réussie',
+              );
+              showValidatedButton.value = true;
+              Navigator.of(context).pop();
+            } else {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: stockOutputStatus,
+                response: 'Opération échouée',
+              );
+              showValidatedButton.value = true;
+            }
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: ServiceResponse.failed,
+              response:
+                  'Opération échouée \n Le stock de ce produit est insuffisant',
+            );
+            showValidatedButton.value = true;
+          }
+        } else {
+          // the stock to modify is not the last
+          // That's is impossible to update
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response: 'Opération échouée \n Cette sortie ne peut être modifiée',
+          );
+          showValidatedButton.value = true;
+        }
+      } else {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: ServiceResponse.failed,
+          response:
+              'Opération échouée \n Le produit n\'est pas disponible en stock',
+        );
+        showValidatedButton.value = true;
+      }
+      FunctionsController.showAlertDialog(
+        context: context,
+        alertDialog: const ResponseDialog(),
+      );
+    }
+  }
+
+  static Future<void> deleteStockOutput({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Stock stock,
+    required ValueNotifier<bool> showConfirmationButton,
+  }) async {
+    showConfirmationButton.value = false;
+
+    final productStocks = await StocksController.getAll(
+      selectedProductId: stock.productId,
+    ).first;
+
+    if (productStocks.isNotEmpty) {
+      // check if the stock movement is the last inserted and is manual
+      if (productStocks.last.id == stock.id &&
+          stock.type == StockOutputType.manual) {
+        final stockOutputStatus = await StocksController.delete(stock: stock);
+
+        if (stockOutputStatus == ServiceResponse.success) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: stockOutputStatus,
+            response: 'Opération réussie',
+          );
+          showConfirmationButton.value = true;
+          Navigator.of(context).pop();
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: stockOutputStatus,
+            response: 'Opération échouée',
+          );
+          showConfirmationButton.value = true;
+        }
+      } else {
+        // the stock to modify is not the last
+        // That's is impossible to update
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: ServiceResponse.failed,
+          response: 'Opération échouée \n Cette sortie ne peut être supprimée',
+        );
+        showConfirmationButton.value = true;
+      }
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: ServiceResponse.failed,
+        response:
+            'Opération échouée \n Le produit n\'est pas disponible en stock',
+      );
+      showConfirmationButton.value = true;
+    }
+    FunctionsController.showAlertDialog(
+      context: context,
+      alertDialog: const ResponseDialog(),
+    );
+  }
+
+  static Future<void> updateStockInput({
+    required BuildContext context,
+    required GlobalKey<FormState> formKey,
+    required WidgetRef ref,
+    required Stock stock,
+    required ValueNotifier<bool> showValidatedButton,
+  }) async {
+    formKey.currentState!.save();
+    final isFormValid = formKey.currentState!.validate();
+    if (isFormValid) {
+      showValidatedButton.value = false;
+      final product = ref.watch(
+        formProductDropdownProvider('stock-update-input-product'),
+      );
+      final inputedQuantity = ref.watch(stockInputedQuantityProvider);
+
+      final productStocks = await StocksController.getAll(
+        selectedProductId: product.id,
+      ).first;
+
+      final prefs = await SharedPreferences.getInstance();
+      final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+      if (productStocks.isNotEmpty) {
+        // check if the stock movement is the last inserted
+        if (productStocks.last.id == stock.id) {
+          // check if new outputed quantity can be substract
+          // from (current stock quantity + the last outputed quantity)
+          if (productStocks.last.stockQuantity -
+                  stock.inputedQuantity! +
+                  inputedQuantity >=
+              0) {
+            final lastStock = Stock(
+              productId: stock.productId,
+              initialQuantity:
+                  productStocks.last.stockQuantity - stock.inputedQuantity!,
+              inputedQuantity: inputedQuantity,
+              stockQuantity: productStocks.last.stockQuantity -
+                  stock.inputedQuantity! +
+                  inputedQuantity,
+              agentId: agentId ?? 0,
+              createdAt: stock.createdAt,
+              updatedAt: DateTime.now(),
+            );
+
+            final stockInputStatus = await StocksController.update(
+              id: stock.id!,
+              stock: lastStock,
+            );
+
+            if (stockInputStatus == ServiceResponse.success) {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: stockInputStatus,
+                response: 'Opération réussie',
+              );
+              showValidatedButton.value = true;
+              Navigator.of(context).pop();
+            } else {
+              ref.read(responseDialogProvider.notifier).state =
+                  ResponseDialogModel(
+                serviceResponse: stockInputStatus,
+                response: 'Opération échouée',
+              );
+              showValidatedButton.value = true;
+            }
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: ServiceResponse.failed,
+              response:
+                  'Opération échouée \n Le stock de ce produit est insuffisant',
+            );
+            showValidatedButton.value = true;
+          }
+        } else {
+          // the stock to modify is not the last
+          // That's is impossible to update
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response: 'Opération échouée \n Cette entrée ne peut être modifiée',
+          );
+          showValidatedButton.value = true;
+        }
+      } else {
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: ServiceResponse.failed,
+          response:
+              'Opération échouée \n Le produit n\'est pas disponible en stock',
+        );
+        showValidatedButton.value = true;
+      }
+      FunctionsController.showAlertDialog(
+        context: context,
+        alertDialog: const ResponseDialog(),
+      );
+    }
+  }
+
+  static Future<void> deleteStockInput({
+    required BuildContext context,
+    required WidgetRef ref,
+    required Stock stock,
+    required ValueNotifier<bool> showConfirmationButton,
+  }) async {
+    showConfirmationButton.value = false;
+
+    final productStocks = await StocksController.getAll(
+      selectedProductId: stock.productId,
+    ).first;
+
+    if (productStocks.isNotEmpty) {
+      // check if the stock movement is the last inserted
+      if (productStocks.last.id == stock.id) {
+        final stockInputStatus = await StocksController.delete(stock: stock);
+
+        if (stockInputStatus == ServiceResponse.success) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: stockInputStatus,
+            response: 'Opération réussie',
+          );
+          showConfirmationButton.value = true;
+          Navigator.of(context).pop();
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: stockInputStatus,
+            response: 'Opération échouée',
+          );
+          showConfirmationButton.value = true;
+        }
+      } else {
+        // the stock to modify is not the last
+        // That's is impossible to update
+        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+          serviceResponse: ServiceResponse.failed,
+          response: 'Opération échouée \n Cette entrée ne peut être supprimée',
+        );
+        showConfirmationButton.value = true;
+      }
+    } else {
+      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+        serviceResponse: ServiceResponse.failed,
+        response:
+            'Opération échouée \n Le produit n\'est pas disponible en stock',
+      );
+      showConfirmationButton.value = true;
+    }
+    FunctionsController.showAlertDialog(
+      context: context,
+      alertDialog: const ResponseDialog(),
+    );
+  }
 }
