@@ -59,6 +59,7 @@ class Collector {
     };
     if (!isAdding) {
       map[CollectorTable.createdAt] = createdAt.toIso8601String();
+      map[CollectorTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

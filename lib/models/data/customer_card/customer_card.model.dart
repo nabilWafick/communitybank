@@ -55,6 +55,7 @@ class CustomerCard {
   Map<String, dynamic> toMap({required bool isAdding}) {
     // hide creation and update date for avoiding time hacking
     // by unsetting the system datetime
+
     final map = {
       CustomerCardTable.label: label,
       CustomerCardTable.typeId: typeId,
@@ -67,6 +68,7 @@ class CustomerCard {
 
     if (!isAdding) {
       map[CustomerCardTable.createdAt] = createdAt.toIso8601String();
+      map[CustomerCardTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

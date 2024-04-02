@@ -75,10 +75,11 @@ class CustomerCardRepaymentDateUpdateConfirmationDialog
                       const SizedBox(
                         width: 25.0,
                       ),
-                      const Flexible(
+                      Flexible(
                         child: CBText(
-                          text:
-                              'Êtes-vous sûr de vouloir repayer cette carte ?',
+                          text: customerCard.repaidAt == null
+                              ? 'Êtes-vous sûr de vouloir repayer cette carte ?'
+                              : 'Êtes-vous sûr de vouloir annuler le repaiement de cette carte ?',
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
                           textOverflow: TextOverflow.ellipsis,

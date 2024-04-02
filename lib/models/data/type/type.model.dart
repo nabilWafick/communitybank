@@ -55,6 +55,7 @@ class Type {
     };
     if (!isAdding) {
       map[TypeTable.createdAt] = createdAt.toIso8601String();
+      map[TypeTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

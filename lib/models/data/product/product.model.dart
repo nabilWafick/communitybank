@@ -51,6 +51,7 @@ class Product {
 
     if (!isAdding) {
       map[ProductTable.createdAt] = createdAt.toIso8601String();
+      map[ProductTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

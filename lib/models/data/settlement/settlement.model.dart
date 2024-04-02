@@ -63,6 +63,7 @@ class Settlement {
     };
     if (!isAdding) {
       map[SettlementTable.createdAt] = createdAt.toIso8601String();
+      map[SettlementTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

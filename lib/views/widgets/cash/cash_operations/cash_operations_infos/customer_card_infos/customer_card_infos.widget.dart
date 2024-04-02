@@ -49,32 +49,6 @@ class _CashOperationsCustomerCardInfosState
   @override
   void initState() {
     initializeDateFormatting('fr');
-    /*
-    Future.delayed(const Duration(milliseconds: 100), () {
-      final cashOperationsSelectedCustomerAccountOwnerSelectedCard = ref.watch(
-          cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider);
-
-      ref.read(isCustomerCardSatisfiedProvider.notifier).state =
-          cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
-              ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                      .satisfiedAt !=
-                  null
-              : false;
-
-      ref.read(isCustomerCardRepaidProvider.notifier).state =
-          cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
-              ? cashOperationsSelectedCustomerAccountOwnerSelectedCard
-                      .repaidAt !=
-                  null
-              : false;
-
-      ref.read(customerCardSatisfactionDateProvider.notifier).state =
-          cashOperationsSelectedCustomerAccountOwnerSelectedCard?.satisfiedAt;
-
-      ref.read(customerCardRepaymentDateProvider.notifier).state =
-          cashOperationsSelectedCustomerAccountOwnerSelectedCard?.repaidAt;
-    });
-   */
     super.initState();
   }
 
@@ -101,6 +75,8 @@ class _CashOperationsCustomerCardInfosState
     final settlementsNumbersTotal = ref.watch(settlementsNumbersTotalProvider);
 
     final format = DateFormat.yMMMMEEEEd('fr');
+
+    final showAllCustomerCards = ref.watch(showAllCustomerCardsProvider);
 
     return Container(
       padding: const EdgeInsets.all(15.0),
@@ -139,13 +115,18 @@ class _CashOperationsCustomerCardInfosState
                       : customersCardsListStream.when(
                           data: (data) => data
                               .where(
-                                (customerCard) =>
-                                    cashOperationsSelectedCustomerAccount
-                                        .customerCardsIds
-                                        .contains(customerCard.id!) &&
-                                    customerCard.satisfiedAt == null &&
-                                    customerCard.repaidAt == null &&
-                                    customerCard.transferredAt == null,
+                                (customerCard) {
+                                  return showAllCustomerCards
+                                      ? cashOperationsSelectedCustomerAccount
+                                          .customerCardsIds
+                                          .contains(customerCard.id!)
+                                      : cashOperationsSelectedCustomerAccount
+                                              .customerCardsIds
+                                              .contains(customerCard.id!) &&
+                                          customerCard.satisfiedAt == null &&
+                                          customerCard.repaidAt == null &&
+                                          customerCard.transferredAt == null;
+                                },
                               )
                               .map(
                                 (customerCard) => CustomerCardCard(
@@ -156,29 +137,6 @@ class _CashOperationsCustomerCardInfosState
                           error: (error, stackTrace) => [],
                           loading: () => [],
                         ),
-/*
-                      cashOperationsSelectedCustomerAccountOwnerCustomerCards
-                          .map(
-                    (customerCard) {
-                      return customerCard.satisfiedAt == null &&
-                              customerCard.repaidAt == null
-                          ? CustomerCardCard(
-                              customerCard: customersCardsListStream.when(
-                                data: (data) {
-                                  return data.firstWhere(
-                                    (customerCardData) =>
-                                        customerCardData.id == customerCard.id,
-                                  );
-                                },
-                                error: (error, stackTrace) => customerCard,
-                                loading: () => customerCard,
-                              ),
-                            )
-                          : const SizedBox();
-                    },
-                  ).toList(),
-
-                  */
                 ),
               ),
             ],
@@ -575,10 +533,11 @@ class _CashOperationsCustomerCardInfosState
                                         realTimeCustomerCardData.repaidAt !=
                                             null,
                                     title: const CBText(
-                                      text: 'Remboursé',
+                                      text: 'Remboursée',
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    hoverColor: Colors.transparent,
                                     onChanged: (value) async {
                                       // if the customerCard isn't satisfied
                                       if (/*isSatisfied == false &&
@@ -640,7 +599,17 @@ class _CashOperationsCustomerCardInfosState
                                             );
                                           }
                                         } else {
-                                          // admin update
+                                          FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog:
+                                                CustomerCardRepaymentDateUpdateConfirmationDialog(
+                                              customerCard:
+                                                  realTimeCustomerCardData,
+                                              confirmToDelete:
+                                                  CustomerCardCRUDFunctions
+                                                      .updateRepaymentDate,
+                                            ),
+                                          );
                                         }
                                       }
                                     },
@@ -673,10 +642,11 @@ class _CashOperationsCustomerCardInfosState
                                   splashRadius: .0,
                                   value: false,
                                   title: const CBText(
-                                    text: 'Remboursé',
+                                    text: 'Remboursée',
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  hoverColor: Colors.transparent,
                                   onChanged: (value) async {},
                                 ),
                               ),
@@ -699,10 +669,11 @@ class _CashOperationsCustomerCardInfosState
                                   splashRadius: .0,
                                   value: false,
                                   title: const CBText(
-                                    text: 'Remboursé',
+                                    text: 'Remboursée',
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  hoverColor: Colors.transparent,
                                   onChanged: (value) async {},
                                 ),
                               ),
@@ -728,10 +699,11 @@ class _CashOperationsCustomerCardInfosState
                             splashRadius: .0,
                             value: false,
                             title: const CBText(
-                              text: 'Remboursé',
+                              text: 'Remboursée',
                               fontSize: 12.0,
                               fontWeight: FontWeight.w500,
                             ),
+                            hoverColor: Colors.transparent,
                             onChanged: (value) async {},
                           ),
                         ),
@@ -774,10 +746,11 @@ class _CashOperationsCustomerCardInfosState
                                         realTimeCustomerCardData.satisfiedAt !=
                                             null,
                                     title: const CBText(
-                                      text: 'Satisfait',
+                                      text: 'Satisfaite',
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.w500,
                                     ),
+                                    hoverColor: Colors.transparent,
                                     onChanged: (value) async {
                                       // if the customerCard isn't repaid
                                       if (/*isSatisfied == false &&
@@ -888,6 +861,18 @@ class _CashOperationsCustomerCardInfosState
                                           }
                                         } else {
                                           // admin update
+
+                                          FunctionsController.showAlertDialog(
+                                            context: context,
+                                            alertDialog:
+                                                CustomerCardSatisfactionDateUpdateConfirmationDialog(
+                                              customerCard:
+                                                  realTimeCustomerCardData,
+                                              confirmToDelete:
+                                                  CustomerCardCRUDFunctions
+                                                      .updateSatisfactionDate,
+                                            ),
+                                          );
                                         }
                                       }
                                     },
@@ -921,10 +906,11 @@ class _CashOperationsCustomerCardInfosState
                                   splashRadius: .0,
                                   value: false,
                                   title: const CBText(
-                                    text: 'Satisfait',
+                                    text: 'Satisfaite',
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  hoverColor: Colors.transparent,
                                   onChanged: (value) async {},
                                 ),
                               ),
@@ -947,10 +933,11 @@ class _CashOperationsCustomerCardInfosState
                                   splashRadius: .0,
                                   value: false,
                                   title: const CBText(
-                                    text: 'Satisfait',
+                                    text: 'Satisfaite',
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  hoverColor: Colors.transparent,
                                   onChanged: (value) async {},
                                 ),
                               ),
@@ -976,15 +963,163 @@ class _CashOperationsCustomerCardInfosState
                             splashRadius: .0,
                             value: false,
                             title: const CBText(
-                              text: 'Satisfait',
+                              text: 'Satisfaite',
                               fontSize: 12.0,
                               fontWeight: FontWeight.w500,
                             ),
+                            hoverColor: Colors.transparent,
                             onChanged: (value) async {},
                           ),
                         ),
                         const CustomerCardDateData(
                           label: 'Date de Satisfaction',
+                          value: '',
+                        ),
+                      ],
+                    ),
+              cashOperationsSelectedCustomerAccountOwnerSelectedCard != null
+                  ? Consumer(
+                      builder: (context, ref, child) {
+                        return customersCardsListStream.when(
+                          data: (data) {
+                            final realTimeCustomerCardData = data.firstWhere(
+                              (customerCardData) =>
+                                  customerCardData.id ==
+                                  cashOperationsSelectedCustomerAccountOwnerSelectedCard
+                                      .id,
+                              orElse: () => CustomerCard(
+                                label: 'Carte *',
+                                typeId: 1,
+                                typeNumber: 1,
+                                createdAt: DateTime.now(),
+                                updatedAt: DateTime.now(),
+                              ),
+                            );
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 250.0,
+                                  child: SwitchListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: .0,
+                                      vertical: .0,
+                                    ),
+                                    splashRadius: .0,
+                                    // isRepaid && && customerCardRepaymentDate != null
+                                    // because, update switch state only after verify that
+                                    // the date have be setted properly and isn't null
+                                    // don't work,
+                                    value: /*isRepaid &&
+                                        customerCardRepaymentDate != null,
+                                        */
+                                        realTimeCustomerCardData
+                                                .transferredAt !=
+                                            null,
+                                    title: const CBText(
+                                      text: 'Transférée',
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    hoverColor: Colors.transparent,
+                                    onChanged: (value) async {},
+                                  ),
+                                ),
+                                CustomerCardDateData(
+                                  label: 'Date de Transfert',
+                                  value:
+                                      realTimeCustomerCardData.transferredAt !=
+                                              null
+                                          ? format.format(
+                                              realTimeCustomerCardData
+                                                  .transferredAt!,
+                                            )
+                                          : '',
+                                ),
+                              ],
+                            );
+                          },
+                          error: (error, stackTrace) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 250.0,
+                                child: SwitchListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: .0,
+                                    vertical: .0,
+                                  ),
+                                  splashRadius: .0,
+                                  value: false,
+                                  title: const CBText(
+                                    text: 'Transférée',
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  hoverColor: Colors.transparent,
+                                  onChanged: (value) async {},
+                                ),
+                              ),
+                              const CustomerCardDateData(
+                                label: 'Date de Transfert',
+                                value: '',
+                              ),
+                            ],
+                          ),
+                          loading: () => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 250.0,
+                                child: SwitchListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: .0,
+                                    vertical: .0,
+                                  ),
+                                  splashRadius: .0,
+                                  value: false,
+                                  title: const CBText(
+                                    text: 'Transférée',
+                                    fontSize: 12.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  hoverColor: Colors.transparent,
+                                  onChanged: (value) async {},
+                                ),
+                              ),
+                              const CustomerCardDateData(
+                                label: 'Date de Transfert',
+                                value: '',
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 250.0,
+                          child: SwitchListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: .0,
+                              vertical: .0,
+                            ),
+                            splashRadius: .0,
+                            value: false,
+                            title: const CBText(
+                              text: 'Transférée',
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            hoverColor: Colors.transparent,
+                            onChanged: (value) async {},
+                          ),
+                        ),
+                        const CustomerCardDateData(
+                          label: 'Date de Transfert',
                           value: '',
                         ),
                       ],

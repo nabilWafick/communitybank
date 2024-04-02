@@ -49,6 +49,7 @@ class StockCRUDFunctions {
           initialQuantity: productStocks.last.stockQuantity,
           inputedQuantity: inputedQuantity,
           stockQuantity: productStocks.last.stockQuantity + inputedQuantity,
+          type: StockInputType.manual,
           agentId: agentId ?? 0,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -59,6 +60,7 @@ class StockCRUDFunctions {
           initialQuantity: 0,
           inputedQuantity: inputedQuantity,
           stockQuantity: inputedQuantity,
+          type: StockInputType.manual,
           agentId: agentId ?? 0,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -237,7 +239,7 @@ class StockCRUDFunctions {
           showValidatedButton.value = true;
           ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
             serviceResponse: ServiceResponse.failed,
-            response: 'Répétition de produit dans le type',
+            response: 'Répétition de produit',
           );
           FunctionsController.showAlertDialog(
             context: context,
@@ -280,7 +282,7 @@ class StockCRUDFunctions {
           if (areAllProductsAvailable) {
             // make substraction
 
-            // foreach product of the type, get his last stock and substract
+            // foreach product selected, get his last stock and substract
             // the number of the product in the type from the last stock
 
             List<ServiceResponse> areAllSubtractionsDoneSuccessfully = [];

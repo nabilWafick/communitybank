@@ -56,6 +56,7 @@ class Collection {
 
     if (!isAdding) {
       map[CollectionTable.createdAt] = createdAt.toIso8601String();
+      map[CollectionTable.updatedAt] = updatedAt.toIso8601String();
     }
     return map;
   }

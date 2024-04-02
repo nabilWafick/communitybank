@@ -131,25 +131,30 @@ class CustomerCardCRUDFunctions {
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
-    //  final customerCardSatisfactionDate =
-    //      ref.watch(customerCardSatisfactionDateProvider);
-    final cashOperationsSelectedCustomerAccount =
-        ref.watch(cashOperationsSelectedCustomerAccountProvider);
-
-    final customerCardRepaymentDate =
-        ref.watch(customerCardRepaymentDateProvider);
 
     ServiceResponse lastCustomerCardStatus;
 
-    final newCustomerCard = CustomerCard(
-      label: customerCard.label,
-      typeId: customerCard.typeId,
-      typeNumber: customerCard.typeNumber,
-      repaidAt: customerCardRepaymentDate!,
-      customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
-      createdAt: customerCard.createdAt,
-      updatedAt: DateTime.now(),
-    );
+    CustomerCard newCustomerCard;
+
+    if (customerCard.repaidAt == null) {
+      final customerCardRepaymentDate =
+          ref.watch(customerCardRepaymentDateProvider);
+
+      newCustomerCard = customerCard.copyWith(
+        repaidAt: customerCardRepaymentDate!,
+        updatedAt: DateTime.now(),
+      );
+    } else {
+      newCustomerCard = CustomerCard(
+        label: customerCard.label,
+        customerAccountId: customerCard.customerAccountId,
+        typeId: customerCard.typeId,
+        typeNumber: customerCard.typeNumber,
+        repaidAt: null,
+        createdAt: customerCard.createdAt,
+        updatedAt: DateTime.now(),
+      );
+    }
 
     lastCustomerCardStatus = await CustomersCardsController.update(
       id: customerCard.id!,
@@ -228,8 +233,10 @@ class CustomerCardCRUDFunctions {
     required ValueNotifier<bool> showConfirmationButton,
   }) async {
     showConfirmationButton.value = false;
+
     final cashOperationsSelectedCustomerAccount =
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
+
     final accountOwnerSelectedCard = ref.watch(
       cashOperationsSelectedCustomerAccountOwnerSelectedCardProvider,
     );
@@ -239,99 +246,336 @@ class CustomerCardCRUDFunctions {
     final customerCardSatisfactionDate =
         ref.watch(customerCardSatisfactionDateProvider);
 
-    // foreach product of the type, get his last stock and substract
-    // the number of the product in the type from the last stock
+    if (customerCard.satisfiedAt == null) {
+      // foreach product of the type, get his last stock and substract
+      // the number of the product in the type from the last stock
 
-    List<ServiceResponse> areAllSubtractionsDoneSuccessfully = [];
+      List<ServiceResponse> areAllSubtractionsDoneSuccessfully = [];
 
-    for (int i = 0; i < customerCardType!.productsIds.length; i++) {
-      // get the product stocks
-      final stocks = await StocksController.getAll(
-        selectedProductId: customerCardType.productsIds[i],
-      ).first;
+      // before call this function, we previously check if all the product are
+      // in the stock and are sufficient
 
-      // get the last product stock (Mouvement)
-      final lastStock = stocks.last;
+      for (int i = 0; i < customerCardType!.productsIds.length; i++) {
+        // get the product stocks
+        final stocks = await StocksController.getAll(
+          selectedProductId: customerCardType.productsIds[i],
+        ).first;
 
-      // make the substraction
+        // get the last product stock (Mouvement)
+        final lastStock = stocks.last;
 
-      final prefs = await SharedPreferences.getInstance();
-      final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+        // make the substraction
 
-      final newStock = Stock(
-        productId: customerCardType.productsIds[i],
-        initialQuantity: lastStock.stockQuantity,
-        outputedQuantity: (accountOwnerSelectedCard!.typeNumber *
-            customerCardType.productsNumber[i] as int),
-        stockQuantity: lastStock.stockQuantity -
-            (accountOwnerSelectedCard.typeNumber *
-                customerCardType.productsNumber[i] as int),
-        type: StockOutputType.normal,
-        customerCardId: accountOwnerSelectedCard.id,
-        agentId: agentId ?? 0,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
+        final prefs = await SharedPreferences.getInstance();
+        final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
 
-      areAllSubtractionsDoneSuccessfully.add(
-        await StocksController.create(
-          stock: newStock,
-        ),
-      );
-    }
-
-    final successfullyDone = areAllSubtractionsDoneSuccessfully.every(
-      (response) => response == ServiceResponse.success,
-    );
-
-    if (successfullyDone) {
-      ServiceResponse lastCustomerCardStatus;
-
-      final newCustomerCard = CustomerCard(
-        label: accountOwnerSelectedCard!.label,
-        typeId: accountOwnerSelectedCard.typeId,
-        typeNumber: accountOwnerSelectedCard.typeNumber,
-        customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
-        //  repaidAt: customerCardRepaymentDate!, // it's not defined
-        satisfiedAt: customerCardSatisfactionDate!,
-        createdAt: accountOwnerSelectedCard.createdAt,
-        updatedAt: DateTime.now(),
-      );
-
-      lastCustomerCardStatus = await CustomersCardsController.update(
-        id: customerCard.id!,
-        customerCard: newCustomerCard,
-      );
-
-      // debugPrint('new CustomerCard: $customerCardStatus');
-
-      if (lastCustomerCardStatus == ServiceResponse.success) {
-        ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerCardStatus,
-          response: 'Opération réussie',
+        final newStock = Stock(
+          productId: customerCardType.productsIds[i],
+          initialQuantity: lastStock.stockQuantity,
+          outputedQuantity: (accountOwnerSelectedCard!.typeNumber *
+              customerCardType.productsNumber[i] as int),
+          stockQuantity: lastStock.stockQuantity -
+              (accountOwnerSelectedCard.typeNumber *
+                  customerCardType.productsNumber[i] as int),
+          type: StockOutputType.normal,
+          customerCardId: accountOwnerSelectedCard.id,
+          agentId: agentId ?? 0,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
         );
-        showConfirmationButton.value = true;
-        Navigator.of(context).pop();
+
+        areAllSubtractionsDoneSuccessfully.add(
+          await StocksController.create(
+            stock: newStock,
+          ),
+        );
+      }
+
+      final successfullyDone = areAllSubtractionsDoneSuccessfully.every(
+        (response) => response == ServiceResponse.success,
+      );
+
+      if (successfullyDone) {
+        ServiceResponse lastCustomerCardStatus;
+
+        final newCustomerCard = CustomerCard(
+          label: accountOwnerSelectedCard!.label,
+          typeId: accountOwnerSelectedCard.typeId,
+          typeNumber: accountOwnerSelectedCard.typeNumber,
+          customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
+          //  repaidAt: customerCardRepaymentDate!, // it's not defined
+          satisfiedAt: customerCardSatisfactionDate!,
+          createdAt: accountOwnerSelectedCard.createdAt,
+          updatedAt: DateTime.now(),
+        );
+
+        lastCustomerCardStatus = await CustomersCardsController.update(
+          id: customerCard.id!,
+          customerCard: newCustomerCard,
+        );
+
+        // debugPrint('new CustomerCard: $customerCardStatus');
+
+        if (lastCustomerCardStatus == ServiceResponse.success) {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: lastCustomerCardStatus,
+            response: 'Opération réussie',
+          );
+          showConfirmationButton.value = true;
+          Navigator.of(context).pop();
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: lastCustomerCardStatus,
+            response: 'Opération échouée \n La carte n\'a pas pu être grisée',
+          );
+          showConfirmationButton.value = true;
+        }
       } else {
         ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-          serviceResponse: lastCustomerCardStatus,
-          response: 'Opération échouée \n La carte n\'a pas pu être grisée',
+          serviceResponse: ServiceResponse.failed,
+          response:
+              'Opération échouée \n Les stocks n\'ont pas pu être tous mis à jour',
         );
         showConfirmationButton.value = true;
       }
-    } else {
-      ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
-        serviceResponse: ServiceResponse.failed,
-        response:
-            'Opération échouée \n Les stocks n\'ont pas pu être tous mis à jour',
-      );
-      showConfirmationButton.value = true;
-    }
 
-    FunctionsController.showAlertDialog(
-      context: context,
-      alertDialog: const ResponseDialog(),
-    );
+      FunctionsController.showAlertDialog(
+        context: context,
+        alertDialog: const ResponseDialog(),
+      );
+    } else {
+      // check if it is not a constrained output
+
+      // get all constrained output done at customerCard.createdAt
+
+      final constrainedOutputs =
+          await StocksController.getAllConstrainedOutputStock(
+        selectedProductId: null,
+        selectedType: StockOutputType.constraint,
+        outputedAt: customerCard.satisfiedAt,
+      ).first;
+
+      if (constrainedOutputs.any(
+            (output) => output.customerCardId == accountOwnerSelectedCard!.id,
+          ) ==
+          false) {
+        // it is not constrained output
+
+        // foreach product of the type, get his last stock and return
+        // the number of the product in the type to the last stock
+
+        List<ServiceResponse> areAllRetrocessionsDoneSuccessfully = [];
+
+        for (int i = 0; i < customerCardType!.productsIds.length; i++) {
+          // get the product stocks
+          final stocks = await StocksController.getAll(
+            selectedProductId: customerCardType.productsIds[i],
+          ).first;
+
+          Stock newStock;
+
+          if (stocks.isNotEmpty) {
+            // get the last product stock (Mouvement)
+            final lastStock = stocks.last;
+
+            // make the retrocession
+
+            final prefs = await SharedPreferences.getInstance();
+            final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+            newStock = Stock(
+              productId: customerCardType.productsIds[i],
+              initialQuantity: lastStock.stockQuantity,
+              inputedQuantity: (accountOwnerSelectedCard!.typeNumber *
+                  customerCardType.productsNumber[i] as int),
+              stockQuantity: lastStock.stockQuantity +
+                  (accountOwnerSelectedCard.typeNumber *
+                      customerCardType.productsNumber[i] as int),
+              type: StockInputType.retrocession,
+              customerCardId: accountOwnerSelectedCard.id,
+              agentId: agentId ?? 0,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            );
+          } else {
+            final prefs = await SharedPreferences.getInstance();
+            final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+            newStock = Stock(
+              productId: customerCardType.productsIds[i],
+              initialQuantity: 0,
+              inputedQuantity: (accountOwnerSelectedCard!.typeNumber *
+                  customerCardType.productsNumber[i] as int),
+              stockQuantity: (accountOwnerSelectedCard.typeNumber *
+                  customerCardType.productsNumber[i] as int),
+              type: StockInputType.retrocession,
+              customerCardId: accountOwnerSelectedCard.id,
+              agentId: agentId ?? 0,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            );
+          }
+
+          areAllRetrocessionsDoneSuccessfully.add(
+            await StocksController.create(
+              stock: newStock,
+            ),
+          );
+        }
+
+        final successfullyDone = areAllRetrocessionsDoneSuccessfully.every(
+          (response) => response == ServiceResponse.success,
+        );
+
+        if (successfullyDone) {
+          ServiceResponse lastCustomerCardStatus;
+
+          final newCustomerCard = CustomerCard(
+            label: accountOwnerSelectedCard!.label,
+            typeId: accountOwnerSelectedCard.typeId,
+            typeNumber: accountOwnerSelectedCard.typeNumber,
+            customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
+            //  repaidAt: customerCardRepaymentDate!, // it's not defined
+            satisfiedAt: null,
+            createdAt: accountOwnerSelectedCard.createdAt,
+            updatedAt: DateTime.now(),
+          );
+
+          lastCustomerCardStatus = await CustomersCardsController.update(
+            id: customerCard.id!,
+            customerCard: newCustomerCard,
+          );
+
+          // debugPrint('new CustomerCard: $customerCardStatus');
+
+          if (lastCustomerCardStatus == ServiceResponse.success) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: lastCustomerCardStatus,
+              response: 'Opération réussie',
+            );
+            showConfirmationButton.value = true;
+            Navigator.of(context).pop();
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: lastCustomerCardStatus,
+              response:
+                  'Opération échouée \n La carte n\'a pas pu être actualisée',
+            );
+            showConfirmationButton.value = true;
+          }
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response:
+                'Opération échouée \n Les stocks n\'ont pas pu être tous mis à jour',
+          );
+          showConfirmationButton.value = true;
+        }
+
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
+      } else {
+        // it is a constrained output
+
+        // foreach product of the constrainedOutputs list,
+        // get his last stock and return
+        // the number of the product outputed to the last stock
+
+        List<ServiceResponse> areAllRetrocessionsDoneSuccessfully = [];
+
+        for (int i = 0; i < constrainedOutputs.length; i++) {
+          // get the product stocks
+          final stocks = await StocksController.getAll(
+            selectedProductId: constrainedOutputs[i].productId,
+          ).first;
+
+          // get the last product stock (Mouvement)
+          final lastStock = stocks.last;
+
+          // make the retrocession
+
+          final prefs = await SharedPreferences.getInstance();
+          final agentId = prefs.getInt(CBConstants.agentIdPrefKey);
+
+          final newStock = Stock(
+            productId: constrainedOutputs[i].productId,
+            initialQuantity: lastStock.stockQuantity,
+            inputedQuantity: constrainedOutputs[i].outputedQuantity,
+            stockQuantity: lastStock.stockQuantity +
+                constrainedOutputs[i].outputedQuantity!,
+            type: StockInputType.retrocession,
+            customerCardId: accountOwnerSelectedCard!.id,
+            agentId: agentId ?? 0,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          );
+
+          areAllRetrocessionsDoneSuccessfully.add(
+            await StocksController.create(
+              stock: newStock,
+            ),
+          );
+        }
+
+        final successfullyDone = areAllRetrocessionsDoneSuccessfully.every(
+          (response) => response == ServiceResponse.success,
+        );
+
+        if (successfullyDone) {
+          ServiceResponse lastCustomerCardStatus;
+
+          final newCustomerCard = CustomerCard(
+            label: accountOwnerSelectedCard!.label,
+            typeId: accountOwnerSelectedCard.typeId,
+            typeNumber: accountOwnerSelectedCard.typeNumber,
+            customerAccountId: cashOperationsSelectedCustomerAccount!.id!,
+            //  repaidAt: customerCardRepaymentDate!, // it's not defined
+            satisfiedAt: null,
+            createdAt: accountOwnerSelectedCard.createdAt,
+            updatedAt: DateTime.now(),
+          );
+
+          lastCustomerCardStatus = await CustomersCardsController.update(
+            id: customerCard.id!,
+            customerCard: newCustomerCard,
+          );
+
+          if (lastCustomerCardStatus == ServiceResponse.success) {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: lastCustomerCardStatus,
+              response: 'Opération réussie',
+            );
+            showConfirmationButton.value = true;
+            Navigator.of(context).pop();
+          } else {
+            ref.read(responseDialogProvider.notifier).state =
+                ResponseDialogModel(
+              serviceResponse: lastCustomerCardStatus,
+              response:
+                  'Opération échouée \n La carte n\'a pas pu être actualisée',
+            );
+            showConfirmationButton.value = true;
+          }
+        } else {
+          ref.read(responseDialogProvider.notifier).state = ResponseDialogModel(
+            serviceResponse: ServiceResponse.failed,
+            response:
+                'Opération échouée \n Les stocks n\'ont pas pu être tous mis à jour',
+          );
+          showConfirmationButton.value = true;
+        }
+
+        FunctionsController.showAlertDialog(
+          context: context,
+          alertDialog: const ResponseDialog(),
+        );
+      }
+    }
   }
 
   static Future<void> delete({

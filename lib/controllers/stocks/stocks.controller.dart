@@ -41,6 +41,44 @@ class StocksController {
     yield* stocksListStream;
   }
 
+  static Stream<List<Stock>> getAllConstrainedOutputStock({
+    required int? selectedProductId,
+    required String? selectedType,
+    required DateTime? outputedAt,
+  }) async* {
+    final stocksMapListStream = StocksService.getAllConstrainedOutputStock(
+      selectedProductId: selectedProductId,
+      selectedType: selectedType,
+    );
+
+    Stream<List<Stock>> stocksListStream =
+        // yield all Stocks data or an empty list
+        stocksMapListStream.map(
+      (stocksMapList) => stocksMapList.map(
+        (stockMap) {
+          return Stock.fromMap(stockMap);
+        },
+      ).toList(),
+    );
+
+    if (outputedAt != null) {
+      stocksListStream = stocksListStream.map(
+        (stockList) => stockList
+            .where(
+              (stock) =>
+                  stock.createdAt.year == outputedAt.year &&
+                  stock.createdAt.month == outputedAt.month &&
+                  stock.createdAt.day == outputedAt.day,
+            )
+            .toList(),
+      );
+    }
+
+    //.asBroadcastStream();
+
+    yield* stocksListStream;
+  }
+
   static Future<ServiceResponse> update({
     required int id,
     required Stock stock,

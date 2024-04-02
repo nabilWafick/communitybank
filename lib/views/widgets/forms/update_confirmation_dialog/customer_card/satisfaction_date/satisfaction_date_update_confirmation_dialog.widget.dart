@@ -75,10 +75,11 @@ class CustomerCardSatisfactionDateUpdateConfirmationDialog
                       const SizedBox(
                         width: 25.0,
                       ),
-                      const Flexible(
+                      Flexible(
                         child: CBText(
-                          text:
-                              'Êtes-vous sûr de vouloir satisfaire cette carte ?',
+                          text: customerCard.satisfiedAt == null
+                              ? 'Êtes-vous sûr de vouloir satisfaire cette carte ?'
+                              : 'Êtes-vous sûr de vouloir annuler la satisfaction cette carte ?',
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
                           textOverflow: TextOverflow.ellipsis,

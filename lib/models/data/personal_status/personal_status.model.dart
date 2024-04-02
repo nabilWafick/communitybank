@@ -38,6 +38,7 @@ class PersonalStatus {
 
     if (!isAdding) {
       map[PersonalStatusTable.createdAt] = createdAt.toIso8601String();
+      map[PersonalStatusTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

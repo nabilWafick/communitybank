@@ -78,6 +78,45 @@ class StocksService {
     }
   }
 
+  static Stream<List<Map<String, dynamic>>> getAllConstrainedOutputStock({
+    required int? selectedProductId,
+    required String? selectedType,
+  }) async* {
+    final supabase = Supabase.instance.client;
+
+    try {
+      // listen to Stocks table change and return a stream of all Stocks data
+
+      var query = supabase
+          .from(StockTable.tableName)
+          .stream(primaryKey: [StockTable.id]).order(
+        StockTable.id,
+        ascending: true,
+      );
+
+      // filter le list and return only Stocks which purchase prices are equal to selectedStockPrice
+      if (selectedProductId != 0 && selectedProductId != null) {
+        query.eq(
+          StockTable.productId,
+          selectedProductId,
+        );
+      }
+
+      if (selectedType != null) {
+        query.eq(
+          StockTable.type,
+          selectedType,
+        );
+      }
+
+      // return the result as stream
+      yield* query.asBroadcastStream();
+    } catch (error) {
+      debugPrint(error.toString());
+      yield [];
+    }
+  }
+
   static Future<Map<String, dynamic>?> update({
     required int id,
     required Stock stock,

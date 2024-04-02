@@ -68,6 +68,7 @@ class Agent {
 
     if (!isAdding) {
       map[AgentTable.createdAt] = createdAt.toIso8601String();
+      map[AgentTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

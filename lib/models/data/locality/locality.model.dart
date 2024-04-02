@@ -37,6 +37,7 @@ class Locality {
     };
     if (!isAdding) {
       map[LocalityTable.createdAt] = createdAt.toIso8601String();
+      map[LocalityTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

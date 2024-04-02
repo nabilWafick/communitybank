@@ -1,3 +1,4 @@
+import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/customers_category/customers_category.model.dart';
 import 'package:communitybank/models/data/economical_activity/economical_activity.model.dart';
 import 'package:communitybank/models/data/locality/locality.model.dart';
@@ -257,21 +258,39 @@ class CashOperationsCustomerInfos extends ConsumerWidget {
 
     // listening to customers cards list stream provider (data update)
     // for updating in real time the cash operations selected customer card
-
     ref.listen(customersCardsListStreamProvider, (previous, next) {
-      //  debugPrint('new data');
-
-      //  debugPrint('customer card list stream listener');
-
       Future.delayed(const Duration(milliseconds: 100), () {
         if (cashOperationsSelectedCustomerAccountOwnerSelectedCard != null) {
           //  debugPrint('new data after selected card check');
-          final realTimeCustomerCard = next.when(
-            data: (data) => data.firstWhere(
-              (customerCard) =>
-                  customerCard.id ==
-                  cashOperationsSelectedCustomerAccountOwnerSelectedCard.id,
-            ),
+          CustomerCard realTimeCustomerCard = next.when(
+            data: (data) {
+              final accountOwnerCards = data
+                  .where(
+                    (customerCard) =>
+                        customerCard.customerAccountId ==
+                        cashOperationsSelectedCustomerAccount!.id,
+                  )
+                  .toList();
+
+              CustomerCard rtlCustomerCard = accountOwnerCards.firstWhere(
+                (customerCard) =>
+                    customerCard.id ==
+                    cashOperationsSelectedCustomerAccountOwnerSelectedCard.id,
+              );
+
+              if (rtlCustomerCard.repaidAt != null ||
+                  rtlCustomerCard.satisfiedAt != null ||
+                  rtlCustomerCard.transferredAt != null) {
+                rtlCustomerCard = accountOwnerCards.firstWhere(
+                  (customerCard) =>
+                      customerCard.repaidAt == null &&
+                      customerCard.satisfiedAt == null &&
+                      customerCard.transferredAt == null,
+                );
+              }
+
+              return rtlCustomerCard;
+            },
             error: (error, stackTrace) =>
                 cashOperationsSelectedCustomerAccountOwnerSelectedCard,
             loading: () =>

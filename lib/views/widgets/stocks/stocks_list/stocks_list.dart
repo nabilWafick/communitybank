@@ -57,7 +57,6 @@ final stocksListStreamProvider = StreamProvider<List<Stock>>((ref) async* {
 
 class StocksList extends StatefulHookConsumerWidget {
   const StocksList({super.key});
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _StocksListState();
 }
@@ -85,7 +84,7 @@ class _StocksListState extends ConsumerState<StocksList> {
         child: stocksDetailsListStream.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
-            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 932,
+            rightHandSideColumnWidth: MediaQuery.of(context).size.width + 1132,
             itemCount: data.length,
             isFixedHeader: true,
             leftHandSideColBackgroundColor: CBColors.backgroundColor,
@@ -160,9 +159,20 @@ class _StocksListState extends ConsumerState<StocksList> {
               Container(
                 width: 200.0,
                 height: 50.0,
-                alignment: Alignment.center,
+                alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Sortie',
+                  text: 'Type Mouvement',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -271,11 +281,20 @@ class _StocksListState extends ConsumerState<StocksList> {
                     ),
                   ),
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerLeft,
                     width: 200.0,
                     height: 30.0,
                     child: CBText(
                       text: stockDetail.type ?? '',
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 300.0,
+                    height: 30.0,
+                    child: CBText(
+                      text: stockDetail.customer ?? '',
                       fontSize: 12.0,
                     ),
                   ),
@@ -498,7 +517,18 @@ class _StocksListState extends ConsumerState<StocksList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Sortie',
+                  text: 'Type Mouvement',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -645,7 +675,18 @@ class _StocksListState extends ConsumerState<StocksList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Type Sortie',
+                  text: 'Type Mouvement',
+                  textAlign: TextAlign.center,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Container(
+                width: 300.0,
+                height: 50.0,
+                alignment: Alignment.centerLeft,
+                child: const CBText(
+                  text: 'Client',
                   textAlign: TextAlign.center,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,

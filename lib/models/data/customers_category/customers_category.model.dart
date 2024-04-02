@@ -38,6 +38,7 @@ class CustomerCategory {
     };
     if (!isAdding) {
       map[CustomerCardTable.createdAt] = createdAt.toIso8601String();
+      map[CustomerCardTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

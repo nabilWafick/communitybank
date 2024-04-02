@@ -12,6 +12,7 @@ import 'package:communitybank/views/widgets/cash/cash_operations/search_options/
 import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/multiple_settlements/multiple_setllements_adding_form.widget.dart';
+import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,6 +65,11 @@ final isRefreshingProvider = StateProvider<bool>((ref) {
   return true;
 });
 
+// for showing | hiding repaid, satisfied, transfered  customer card
+final showAllCustomerCardsProvider = StateProvider<bool>((ref) {
+  return false;
+});
+
 class CashOperationsSearchOptions extends ConsumerWidget {
   const CashOperationsSearchOptions({super.key});
 
@@ -75,6 +81,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
         ref.watch(customersCardsWithOwnerListStreamProvider);
     final cashOperationsSelectedCustomerAccount =
         ref.watch(cashOperationsSelectedCustomerAccountProvider);
+    final showAllCustomerCards = ref.watch(showAllCustomerCardsProvider);
 
     return Container(
       margin: const EdgeInsets.symmetric(
@@ -82,7 +89,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
       ),
       width: double.maxFinite,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CBIconButton(
             icon: Icons.refresh,
@@ -131,7 +138,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
             },
           ),
           CBCashOperationsSearchOptionsCustomerAccountDropdown(
-            width: 400.0,
+            width: 300.0,
             menuHeigth: 500.0,
             label: 'Compte Client',
             providerName: 'cash-operations-search-options-customer-account',
@@ -147,7 +154,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
             ),
           ),
           CBCashOperationsSearchOptionsCustumerCardDropdown(
-            width: 220.0,
+            width: 200.0,
             menuHeigth: 500.0,
             label: 'Carte',
             providerName: 'cash-operations-search-options-customer-card',
@@ -200,6 +207,24 @@ class CashOperationsSearchOptions extends ConsumerWidget {
                   },
                 )
               : const SizedBox(),
+          SizedBox(
+            width: 220.0,
+            child: CheckboxListTile(
+              value: showAllCustomerCards,
+              title: const CBText(
+                text: 'Toutes les cartes',
+                fontSize: 12,
+              ),
+              hoverColor: Colors.transparent,
+              onChanged: (value) {
+                ref
+                    .read(
+                      showAllCustomerCardsProvider.notifier,
+                    )
+                    .state = value!;
+              },
+            ),
+          ),
         ],
       ),
     );

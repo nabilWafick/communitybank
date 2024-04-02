@@ -108,6 +108,12 @@ class _CBCashOperationsSearchOptionsCustomerAccountDropdownState
               .state = value;
 
           ref.read(isRefreshingProvider.notifier).state = false;
+
+          ref
+              .read(
+                showAllCustomerCardsProvider.notifier,
+              )
+              .state = false;
         },
       ),
     );

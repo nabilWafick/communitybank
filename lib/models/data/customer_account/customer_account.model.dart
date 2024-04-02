@@ -49,6 +49,7 @@ class CustomerAccount {
 
     if (!isAdding) {
       map[CustomerAccountTable.createdAt] = createdAt.toIso8601String();
+      map[CustomerAccountTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

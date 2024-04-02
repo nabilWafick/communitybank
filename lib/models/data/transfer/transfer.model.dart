@@ -58,6 +58,7 @@ class Transfer {
     };
     if (isAdding) {
       map[TransferTable.createdAt] = createdAt.toIso8601String();
+      map[TransferTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

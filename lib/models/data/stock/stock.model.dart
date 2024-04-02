@@ -71,6 +71,7 @@ class Stock {
     };
     if (!isAdding) {
       map[StockTable.createdAt] = createdAt.toIso8601String();
+      map[StockTable.updatedAt] = updatedAt.toIso8601String();
     }
     return map;
   }
@@ -143,6 +144,11 @@ class Stock {
         createdAt.hashCode ^
         updatedAt.hashCode;
   }
+}
+
+class StockInputType {
+  static const String manual = 'Manuelle';
+  static const String retrocession = 'Rétrocession';
 }
 
 class StockOutputType {

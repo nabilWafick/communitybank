@@ -96,6 +96,7 @@ class Customer {
 
     if (!isAdding) {
       map[CustomerTable.createdAt] = createdAt.toIso8601String();
+      map[CustomerTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;

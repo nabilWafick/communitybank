@@ -37,6 +37,7 @@ class EconomicalActivity {
     };
     if (!isAdding) {
       map[EconomicalActivityTable.createdAt] = createdAt.toIso8601String();
+      map[EconomicalActivityTable.updatedAt] = updatedAt.toIso8601String();
     }
 
     return map;
