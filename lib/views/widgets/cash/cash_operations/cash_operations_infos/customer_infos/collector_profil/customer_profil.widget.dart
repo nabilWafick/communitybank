@@ -1,3 +1,4 @@
+import 'package:communitybank/functions/common/common.function.dart';
 import 'package:communitybank/models/data/collector/collector.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
 import 'package:communitybank/views/widgets/definitions/collectors/collectors_list/collectors_list.widget.dart';
@@ -61,8 +62,11 @@ class CashOperationsCollectorProfil extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CBText(
-                            text:
-                                '${realTimeCollectorData.name} ${realTimeCollectorData.firstnames}',
+                            text: FunctionsController.truncateText(
+                              text:
+                                  '${realTimeCollectorData.name} ${realTimeCollectorData.firstnames}',
+                              maxLength: 15,
+                            ),
                             fontWeight: FontWeight.w500,
                             fontSize: 11.0,
                           ),

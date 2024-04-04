@@ -43,7 +43,7 @@ class FunctionsController {
       initialDate: DateTime.now(),
       locale: const Locale('fr', 'FR'),
       firstDate: DateTime(2010),
-      lastDate: DateTime(20100),
+      lastDate: DateTime(20500),
       confirmText: 'Valider',
       cancelText: 'Annuler',
     );

@@ -1,49 +1,62 @@
-import 'package:communitybank/controllers/settlements/settlements.controller.dart';
-import 'package:communitybank/models/data/settlement/settlement.model.dart';
+import 'package:communitybank/controllers/satisfied_customers_cards/satisfied_customers_cards.controller.dart';
+import 'package:communitybank/functions/common/common.function.dart';
+import 'package:communitybank/models/data/satisfied_customers_cards/satisfied_customers_cards.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/definitions/agents/agents.widgets.dart';
-import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
-import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_card/customer_card_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/activities/satisfied_customers_cards/satisfied_customers_cards.widgets.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/collector/collector_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/customer_account/customer_account_dropdown.widget.dart';
+import 'package:communitybank/views/widgets/globals/lists_dropdowns/type/type_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
 
-/*final searchedSettlementsListProvider =
-    StreamProvider<List<Settlement>>((ref) async* {
-   String searchedCustumerollector = ref.watch(searchProvider('settlements'));
-  ref.listen(searchProvider('settlements'), (previous, next) {
-    if (previous != next && next != '' && next.trim() != '') {
-      ref.read(isSearchingProvider('settlements').notifier).state = true;
-    } else {
-      ref.read(isSearchingProvider('settlements').notifier).state = false;
-    }
-  });
-  yield* SettlementsController.getAll(customerCardId: null);
-  // searchCollector(name: searchedcollector).asStream();
+final satisfiedCustomersCardsListStreamProvider =
+    StreamProvider<List<SatisfiedCustomersCards>>((ref) async* {
+  final satisfiedCustomersCardsBeginDate =
+      ref.watch(satisfiedCustomersCardsBeginDateProvider);
+  final satisfiedCustomersCardsEndDate =
+      ref.watch(satisfiedCustomersCardsEndDateProvider);
+  final selectedCollector = ref.watch(
+    listCollectorDropdownProvider('satisfied-customers-cards-collector'),
+  );
+  final selectedCustomerAccount = ref.watch(
+    listCustomerAccountDropdownProvider(
+        'satisfied-customers-cards-customer-account'),
+  );
+  final selectedCustomerCardType = ref.watch(
+    listTypeDropdownProvider('satisfied-customers-cards-type'),
+  );
+  yield* SatisfiedCustomersCardsController.getSatisfiedCustomersCards(
+    beginDate: satisfiedCustomersCardsBeginDate != null
+        ? FunctionsController.getSQLFormatDate(
+            dateTime: satisfiedCustomersCardsBeginDate,
+          )
+        : null,
+    endDate: satisfiedCustomersCardsEndDate != null
+        ? FunctionsController.getSQLFormatDate(
+            dateTime: satisfiedCustomersCardsEndDate,
+          )
+        : null,
+    collectorId: selectedCollector.id != 0 ? selectedCollector.id : null,
+    customerAccountId:
+        selectedCustomerAccount.id != 0 ? selectedCustomerAccount.id : null,
+    customerCardId: null,
+    typeId:
+        selectedCustomerCardType.id != 0 ? selectedCustomerCardType.id : null,
+  ).asStream();
 });
 
-*/
-final settlementsListStreamProvider =
-    StreamProvider<List<Settlement>>((ref) async* {
-  final selectedCustomerCard = ref.watch(
-    listCustomerCardDropdownProvider('settlements-card'),
-  );
-  yield* SettlementsController.getAll(
-    customerCardId: selectedCustomerCard.id,
-  );
-});
-
-class SettlementsList extends ConsumerStatefulWidget {
-  const SettlementsList({super.key});
+class SatisfiedCustomersCardsData extends ConsumerStatefulWidget {
+  const SatisfiedCustomersCardsData({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _SettlementsListState();
+      _SatisfiedCustomersCardsDataState();
 }
 
-class _SettlementsListState extends ConsumerState<SettlementsList> {
+class _SatisfiedCustomersCardsDataState
+    extends ConsumerState<SatisfiedCustomersCardsData> {
   @override
   void initState() {
     super.initState();
@@ -55,14 +68,15 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
 
   @override
   Widget build(BuildContext context) {
-    final settlementsListStream = ref.watch(settlementsListStreamProvider);
+    final satisfiedCustomersCardsDataStream =
+        ref.watch(satisfiedCustomersCardsListStreamProvider);
 
-    final format = DateFormat.yMMMMEEEEd('fr');
+    // final format = DateFormat.yMMMMEEEEd('fr');
 
     return Expanded(
       child: Container(
         alignment: Alignment.center,
-        child: settlementsListStream.when(
+        child: satisfiedCustomersCardsDataStream.when(
           data: (data) => HorizontalDataTable(
             leftHandSideColumnWidth: 100,
             rightHandSideColumnWidth: MediaQuery.of(context).size.width + 100,
@@ -83,22 +97,17 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 ),
               ),
               Container(
-                width: 300.0,
+                width: 200.0,
                 height: 50.0,
-                alignment: Alignment.centerLeft,
-                child: const CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                alignment: Alignment.center,
+                child: const SizedBox(),
               ),
               Container(
                 width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Mise',
+                  text: 'Chargé de compte',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -109,7 +118,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de collecte',
+                  text: 'Clients',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -120,7 +129,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de saisie',
+                  text: 'Cartes',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -131,7 +140,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Agent',
+                  text: 'Types',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -150,68 +159,87 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
               );
             },
             rightSideItemBuilder: (BuildContext context, int index) {
-              final settlement = data[index];
+              final satisfiedCustomersCards = data[index];
               return Row(
                 children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      width: 200.0,
+                      height: 30.0,
+                      alignment: Alignment.center,
+                      child: const Icon(
+                        Icons.aspect_ratio,
+                        color: CBColors.primaryColor,
+                      ),
+                    ),
+                  ),
                   Container(
                     alignment: Alignment.centerLeft,
                     width: 300.0,
                     height: 30.0,
+                    child: CBText(
+                      text: satisfiedCustomersCards.collector,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: 400.0,
+                    height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final customersCardsListStream =
-                            ref.watch(customersCardsListStreamProvider);
-
-                        return customersCardsListStream.when(
-                          data: (data) {
-                            final realTimeCustomerCardData = data.firstWhere(
-                              (customerCard) =>
-                                  customerCard.id == settlement.cardId,
-                            );
-                            return CBText(
-                              text: realTimeCustomerCardData.label,
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
+                        String customers = '';
+                        for (int i = 0;
+                            i < satisfiedCustomersCards.customers.length;
+                            i++) {
+                          if (customers.isEmpty) {
+                            customers = satisfiedCustomersCards.customers[i];
+                          } else {
+                            customers =
+                                '$customers, ${satisfiedCustomersCards.customers[i]}';
+                          }
+                        }
+                        return CBText(
+                          text: FunctionsController.truncateText(
+                            text: customers,
+                            maxLength: 30,
                           ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
+                          fontSize: 12.0,
+                          textAlign: TextAlign.center,
                         );
                       },
                     ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
-                    width: 300.0,
-                    height: 30.0,
-                    child: CBText(
-                      text: settlement.number.toString(),
-                      fontSize: 12.0,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
                     width: 400.0,
                     height: 30.0,
-                    child: CBText(
-                      text: settlement.collectedAt != null
-                          ? format.format(settlement.collectedAt!)
-                          : '',
-                      fontSize: 12.0,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: 400.0,
-                    height: 30.0,
-                    child: CBText(
-                      text:
-                          '${format.format(settlement.createdAt)} ${settlement.createdAt.hour}:${settlement.createdAt.minute}',
-                      fontSize: 12.0,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        String customersCardsLabels = '';
+                        for (int i = 0;
+                            i <
+                                satisfiedCustomersCards
+                                    .customersCardsLabels.length;
+                            i++) {
+                          if (customersCardsLabels.isEmpty) {
+                            customersCardsLabels =
+                                satisfiedCustomersCards.customersCardsLabels[i];
+                          } else {
+                            customersCardsLabels =
+                                '$customersCardsLabels, ${satisfiedCustomersCards.customersCardsLabels[i]}';
+                          }
+                        }
+                        return CBText(
+                          text: FunctionsController.truncateText(
+                            text: customersCardsLabels,
+                            maxLength: 30,
+                          ),
+                          fontSize: 12.0,
+                          textAlign: TextAlign.center,
+                        );
+                      },
                     ),
                   ),
                   Container(
@@ -220,26 +248,24 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                     height: 30.0,
                     child: Consumer(
                       builder: (context, ref, child) {
-                        final agentListStream =
-                            ref.watch(agentsListStreamProvider);
-
-                        return agentListStream.when(
-                          data: (data) {
-                            final realTimeAgentData = data.firstWhere(
-                              (agent) => agent.id == settlement.agentId,
-                            );
-                            return CBText(
-                              text:
-                                  ' ${realTimeAgentData.name} ${realTimeAgentData.firstnames}',
-                              fontSize: 12.0,
-                            );
-                          },
-                          error: (error, stackTrace) => const CBText(
-                            text: '',
+                        String typesNames = '';
+                        for (int i = 0;
+                            i < satisfiedCustomersCards.typesNames.length;
+                            i++) {
+                          if (typesNames.isEmpty) {
+                            typesNames = satisfiedCustomersCards.typesNames[i];
+                          } else {
+                            typesNames =
+                                '$typesNames, ${satisfiedCustomersCards.typesNames[i]}';
+                          }
+                        }
+                        return CBText(
+                          text: FunctionsController.truncateText(
+                            text: typesNames,
+                            maxLength: 30,
                           ),
-                          loading: () => const CBText(
-                            text: '',
-                          ),
+                          fontSize: 12.0,
+                          textAlign: TextAlign.center,
                         );
                       },
                     ),
@@ -271,22 +297,17 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 ),
               ),
               Container(
-                width: 300.0,
+                width: 200.0,
                 height: 50.0,
                 alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                child: const SizedBox(),
               ),
               Container(
                 width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Mise',
+                  text: 'Chargé de compte',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -297,7 +318,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de collecte',
+                  text: 'Clients',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -308,7 +329,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de saisie',
+                  text: 'Cartes',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -319,7 +340,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Agent',
+                  text: 'Types',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -366,22 +387,17 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 ),
               ),
               Container(
-                width: 300.0,
+                width: 200.0,
                 height: 50.0,
                 alignment: Alignment.center,
-                child: const CBText(
-                  text: 'Carte',
-                  textAlign: TextAlign.start,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                ),
+                child: const SizedBox(),
               ),
               Container(
                 width: 300.0,
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Mise',
+                  text: 'Chargé de compte',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -392,7 +408,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de collecte',
+                  text: 'Clients',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -403,7 +419,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Date de saisie',
+                  text: 'Cartes',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,
@@ -414,7 +430,7 @@ class _SettlementsListState extends ConsumerState<SettlementsList> {
                 height: 50.0,
                 alignment: Alignment.centerLeft,
                 child: const CBText(
-                  text: 'Agent',
+                  text: 'Types',
                   textAlign: TextAlign.start,
                   fontSize: 12.0,
                   fontWeight: FontWeight.w500,

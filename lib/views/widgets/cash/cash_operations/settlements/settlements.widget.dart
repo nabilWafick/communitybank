@@ -234,7 +234,7 @@ class _CashOperationsSettlementsState
                     width: 300.0,
                     height: 30.0,
                     child: CBText(
-                      text: settlement.collectedAt != null
+                      text: settlement.collectionId != null
                           ? format.format(settlement.collectedAt!)
                           : '',
                       fontSize: 12.0,
@@ -287,7 +287,7 @@ class _CashOperationsSettlementsState
                       },
                     ),
                   ),
-                  settlement.collectedAt != null
+                  settlement.collectionId != null
                       ? InkWell(
                           onTap: () async {
                             FunctionsController.showAlertDialog(
@@ -320,7 +320,7 @@ class _CashOperationsSettlementsState
                           width: 150.0,
                           height: 30.0,
                         ),
-                  settlement.collectedAt != null
+                  settlement.collectionId != null
                       ? InkWell(
                           onTap: () async {
                             await FunctionsController.showAlertDialog(
@@ -344,7 +344,7 @@ class _CashOperationsSettlementsState
                           width: 150.0,
                           height: 30.0,
                         ),
-                  settlement.collectedAt != null
+                  settlement.collectionId != null
                       ? InkWell(
                           onTap: () async {
                             await FunctionsController.showAlertDialog(

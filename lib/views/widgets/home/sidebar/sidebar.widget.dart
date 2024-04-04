@@ -125,6 +125,11 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>(
             icon: Icons.analytics,
             name: 'Chargé de Compte',
           ),
+          SidebarSubOptionModel(
+            index: 17,
+            icon: Icons.analytics,
+            name: 'Cartes Satisfaites',
+          ),
         ],
         showSubOptions: true,
       ),
@@ -133,17 +138,17 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>(
         name: 'Statistiques',
         subOptions: [
           SidebarSubOptionModel(
-            index: 17,
+            index: 18,
             icon: Icons.stacked_line_chart,
             name: 'Types',
           ),
           SidebarSubOptionModel(
-            index: 18,
+            index: 19,
             icon: Icons.stacked_line_chart,
             name: 'Produits',
           ),
           SidebarSubOptionModel(
-            index: 19,
+            index: 20,
             icon: Icons.query_stats,
             name: 'Prévisions',
           ),
@@ -155,17 +160,17 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>(
         name: 'Transferts',
         subOptions: [
           SidebarSubOptionModel(
-            index: 20,
+            index: 21,
             icon: Icons.swap_vert,
             name: 'Entre Cartes',
           ),
           SidebarSubOptionModel(
-            index: 21,
+            index: 22,
             icon: Icons.swap_vert,
             name: 'Entre Comptes',
           ),
           SidebarSubOptionModel(
-            index: 22,
+            index: 23,
             icon: Icons.published_with_changes,
             name: 'Validations',
           ),
@@ -177,7 +182,7 @@ final sidebarOptionsProvider = Provider<List<SidebarOptionModel>>(
         name: 'Stocks',
         subOptions: [
           SidebarSubOptionModel(
-            index: 23,
+            index: 24,
             icon: Icons.stacked_bar_chart,
             name: 'Stocks',
           ),

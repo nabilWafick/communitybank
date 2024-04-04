@@ -1,5 +1,6 @@
 import 'package:communitybank/views/pages/home/activities/collector_periodic_activity/collector_periodic_activity.page.dart';
 import 'package:communitybank/views/pages/home/activities/customer_periodic_activity/customer_periodic_activity.page.dart';
+import 'package:communitybank/views/pages/home/activities/satisfied_customers_cards/satisfied_customers_cards.page.dart';
 import 'package:communitybank/views/pages/home/dashboard/dashboard.page.dart';
 import 'package:communitybank/views/pages/home/definitions/agents/agents.page.dart';
 import 'package:communitybank/views/pages/home/cash/collections/collections.page.dart';
@@ -51,6 +52,7 @@ class _MainBodyState extends ConsumerState<MainBody> {
     SettlementsPage(),
     CustomerPeriodicActivityPage(),
     CollectorPeriodicActivityPage(),
+    SatisfiedCustomersCardsPage(),
     CustomersTypesPage(),
     CustomersProductsPage(),
     ProductsForecastsPage(),
