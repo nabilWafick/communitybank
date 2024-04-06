@@ -1,4 +1,5 @@
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
+import 'package:communitybank/models/data/customer_account_detail/customer_account_detail.model.dart';
 import 'package:communitybank/models/service_response/service_response.model.dart';
 import 'package:communitybank/services/customers_accounts/customer_account.service.dart';
 
@@ -68,17 +69,21 @@ class CustomersAccountsController {
     yield* customerAccountsListStream;
   }
 
-/*
-  static Future<List<CustomerAccount>> searchCustomerAccount({required String name}) async {
-    final searchedCustomerAccounts = await CustomersAccountsService.searchCustomerAccount(name: name);
+  static Future<List<CustomerAccountDetail>> searchCustomerAccount({
+    required String? name,
+  }) async {
+    final searchedCustomerAccounts =
+        await CustomersAccountsService.searchCustomerAccount(
+      name: name,
+    );
 
     return searchedCustomerAccounts
         .map(
-          (customerAccountMap) => CustomerAccount.fromMap(customerAccountMap),
+          (customerAccountMap) =>
+              CustomerAccountDetail.fromMap(customerAccountMap),
         )
         .toList();
   }
-  */
 
   static Future<ServiceResponse> update(
       {required int id, required CustomerAccount customerAccount}) async {

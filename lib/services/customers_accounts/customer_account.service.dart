@@ -85,22 +85,19 @@ class CustomersAccountsService {
     }
   }
 
-/*
   static Future<List<Map<String, dynamic>>> searchCustomerAccount(
-      {required String name}) async {
+      {required String? name}) async {
     List<Map<String, dynamic>>? response;
     final supabase = Supabase.instance.client;
 
     try {
       // get all CustomerAccounts which name contain "name"
-      response = await supabase
-              .from(CustomerAccountTable.tableName)
-              .select<List<Map<String, dynamic>>>()
-              .ilike(CustomerAccountTable.name, '%$name%')
-
-          //.or(filters)
-          // .ilike(CustomerAccountTable.firstnames, '%$name%');
-          ;
+      response = await supabase.rpc(
+        'get_searched_customers_accounts',
+        params: {
+          'name': name,
+        },
+      ).select<List<Map<String, dynamic>>>();
 
       // return the result data
       return response;
@@ -110,7 +107,6 @@ class CustomersAccountsService {
 
     return [];
   }
-*/
 
   static Future<Map<String, dynamic>?> update(
       {required int id, required CustomerAccount customerAccount}) async {

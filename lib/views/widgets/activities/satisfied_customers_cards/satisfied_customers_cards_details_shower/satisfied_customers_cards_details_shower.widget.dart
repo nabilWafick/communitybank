@@ -148,7 +148,7 @@ class _SatisfiedCustomersCardsDetailsShowerState
                                     Container(
                                       width: 200.0,
                                       height: 50.0,
-                                      alignment: Alignment.center,
+                                      alignment: Alignment.centerLeft,
                                       child: const CBText(
                                         text: 'Statut',
                                         textAlign: TextAlign.center,
@@ -159,7 +159,7 @@ class _SatisfiedCustomersCardsDetailsShowerState
                                     Container(
                                       width: 300.0,
                                       height: 50.0,
-                                      alignment: Alignment.center,
+                                      alignment: Alignment.centerLeft,
                                       child: const CBText(
                                         text: 'Date',
                                         textAlign: TextAlign.start,
@@ -231,7 +231,7 @@ class _SatisfiedCustomersCardsDetailsShowerState
                                         Container(
                                           width: 200.0,
                                           height: 30.0,
-                                          alignment: Alignment.center,
+                                          alignment: Alignment.centerLeft,
                                           child: Consumer(
                                             builder: (context, ref, child) {
                                               String customerCardStatus = '';
@@ -268,7 +268,7 @@ class _SatisfiedCustomersCardsDetailsShowerState
                                         Container(
                                           width: 300.0,
                                           height: 30.0,
-                                          alignment: Alignment.center,
+                                          alignment: Alignment.centerLeft,
                                           child: Consumer(
                                             builder: (context, ref, child) {
                                               DateTime?

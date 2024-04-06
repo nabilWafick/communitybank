@@ -21,20 +21,23 @@ class TransfersDetailsService {
     final supabase = Supabase.instance.client;
 
     try {
-      response = await supabase.rpc(TransferDetailRPC.functionName, params: {
-        'agent_id': agentId,
-        'creation_date': creationDate,
-        'validation_date': validationDate,
-        'discardation_date': discardationDate,
-        'issuing_customer_card_id': issuingCustomerCardId,
-        'issuing_customer_card_type_id': issuingCustomerCardTypeId,
-        'issuing_customer_account_id': issuingCustomerAccountId,
-        'issuing_customer_collector_id': issuingCustomerCollectorId,
-        'receiving_customer_card_id': receivingCustomerCardId,
-        'receiving_customer_card_type_id': receivingCustomerCardTypeId,
-        'receiving_customer_account_id': receivingCustomerAccountId,
-        'receiving_customer_collector_id': receivingCustomerCollectorId,
-      }).select<List<Map<String, dynamic>>>();
+      response = await supabase.rpc(
+        TransferDetailRPC.functionName,
+        params: {
+          'agent_id': agentId,
+          'creation_date': creationDate,
+          'validation_date': validationDate,
+          'discardation_date': discardationDate,
+          'issuing_customer_card_id': issuingCustomerCardId,
+          'issuing_customer_card_type_id': issuingCustomerCardTypeId,
+          'issuing_customer_account_id': issuingCustomerAccountId,
+          'issuing_customer_collector_id': issuingCustomerCollectorId,
+          'receiving_customer_card_id': receivingCustomerCardId,
+          'receiving_customer_card_type_id': receivingCustomerCardTypeId,
+          'receiving_customer_account_id': receivingCustomerAccountId,
+          'receiving_customer_collector_id': receivingCustomerCollectorId,
+        },
+      ).select<List<Map<String, dynamic>>>();
       // return the result data
 
       // debugPrint('transfers data: $response');

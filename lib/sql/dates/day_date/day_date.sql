@@ -15,4 +15,4 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT get_day_date(1) AS date_jour;
+--SELECT get_day_date(1) AS date_jour;
