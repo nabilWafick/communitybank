@@ -7,16 +7,16 @@ import 'package:communitybank/models/data/customer/customer.model.dart';
 import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_card/customer_card.model.dart';
 import 'package:communitybank/models/data/settlement/settlement.model.dart';
-import 'package:communitybank/views/widgets/cash/cash_operations/search_options/custumer_account_dropdown/customer_account_dropdown.widget.dart';
+import 'package:communitybank/models/data/type/type.model.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/customer_account_search_input/customer_account_search_input.widget.dart';
 import 'package:communitybank/views/widgets/cash/cash_operations/search_options/customer_card_dropdown/customer_card_dropdown.widget.dart';
-import 'package:communitybank/views/widgets/definitions/customers_accounts/customers_accounts_list/customers_accounts_list.widget.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/custumer_account_dropdown/customer_account_dropdown.widget.dart';
 import 'package:communitybank/views/widgets/definitions/customers_cards/customers_cards_list/customers_cards_list.widget.dart';
 import 'package:communitybank/views/widgets/forms/adding/multiple_settlements/multiple_setllements_adding_form.widget.dart';
 import 'package:communitybank/views/widgets/globals/global.widgets.dart';
 import 'package:communitybank/views/widgets/globals/icon_button/icon_button.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:communitybank/models/data/type/type.model.dart';
 
 final cashOperationsSelectedCustomerAccountProvider =
     StateProvider<CustomerAccount?>((ref) {
@@ -75,8 +75,8 @@ class CashOperationsSearchOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final custumersAccountsOwners =
-        ref.watch(customersAccountsListStreamProvider);
+    // final custumersAccountsOwners =
+    //     ref.watch(customersAccountsListStreamProvider);
     final customersCardsWithOwners =
         ref.watch(customersCardsWithOwnerListStreamProvider);
     final cashOperationsSelectedCustomerAccount =
@@ -137,22 +137,7 @@ class CashOperationsSearchOptions extends ConsumerWidget {
                   cashOperationsSelectedCustomerAccountOwnerSelectedCardSettlementsProvider);
             },
           ),
-          CBCashOperationsSearchOptionsCustomerAccountDropdown(
-            width: 300.0,
-            menuHeigth: 500.0,
-            label: 'Compte Client',
-            providerName: 'cash-operations-search-options-customer-account',
-            dropdownMenuEntriesLabels: custumersAccountsOwners.when(
-              data: (data) => data,
-              error: (error, stackTrace) => [],
-              loading: () => [],
-            ),
-            dropdownMenuEntriesValues: custumersAccountsOwners.when(
-              data: (data) => data,
-              error: (error, stackTrace) => [],
-              loading: () => [],
-            ),
-          ),
+          const CBCashOperationsCustomerAccountSearchInput(),
           CBCashOperationsSearchOptionsCustumerCardDropdown(
             width: 200.0,
             menuHeigth: 500.0,

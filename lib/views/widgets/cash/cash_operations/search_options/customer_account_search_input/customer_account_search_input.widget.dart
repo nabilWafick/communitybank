@@ -1,69 +1,11 @@
 import 'package:communitybank/controllers/customer_account/customer_account.controller.dart';
+import 'package:communitybank/models/data/customer_account/customer_account.model.dart';
 import 'package:communitybank/models/data/customer_account_detail/customer_account_detail.model.dart';
 import 'package:communitybank/utils/colors/colors.util.dart';
-import 'package:communitybank/views/widgets/globals/global.widgets.dart';
+import 'package:communitybank/views/widgets/cash/cash_operations/search_options/search_options.widget.dart';
+import 'package:communitybank/views/widgets/globals/text/text.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/date_symbol_data_local.dart';
-
-class WidgetTest extends StatefulHookConsumerWidget {
-  const WidgetTest({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _WidgetTestState();
-}
-
-class _WidgetTestState extends ConsumerState<WidgetTest> {
-  @override
-  void initState() {
-    super.initState();
-    initializeDateFormatting('fr');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    //  final heigth = MediaQuery.of(context).size.height;
-    //  final width = MediaQuery.of(context).size.width;
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const CustomerAccountSearchInput(),
-            const CBText(
-              text: 'Test',
-              fontSize: 12.0,
-              fontWeight: FontWeight.w500,
-            ),
-            Tooltip(
-              message: 'Message',
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.0,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-              margin: const EdgeInsets.symmetric(horizontal: 16.0),
-              verticalOffset: 20,
-              preferBelow: true,
-              showDuration: const Duration(seconds: 2),
-              child: const Icon(
-                Icons.info,
-                color: CBColors.primaryColor,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 final searchedCustomersAccountsDetailsProvider =
     StateProvider<List<CustomerAccountDetail>>((ref) {
@@ -75,16 +17,19 @@ final selectedCustomerAccountDetailProvider =
   return;
 });
 
-class CustomerAccountSearchInput extends StatefulHookConsumerWidget {
-  const CustomerAccountSearchInput({super.key});
+class CBCashOperationsCustomerAccountSearchInput
+    extends StatefulHookConsumerWidget {
+  const CBCashOperationsCustomerAccountSearchInput({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CustomerAccountSearchInputState();
+      _CBCashOperationsCustomerAccountSearchInputState();
 }
 
-class _CustomerAccountSearchInputState
-    extends ConsumerState<CustomerAccountSearchInput> {
+class _CBCashOperationsCustomerAccountSearchInputState
+    extends ConsumerState<CBCashOperationsCustomerAccountSearchInput> {
   final focusNode = FocusNode();
   final layerLink = LayerLink();
   late TextEditingController controller;
@@ -158,15 +103,31 @@ class _CustomerAccountSearchInputState
           ),
           () {
             controller.text = next!.customer;
-            // focusNode.unfocus();
-            // hideOverlay();
+            // update the provider
+            ref
+                .read(cashOperationsSelectedCustomerAccountProvider.notifier)
+                .state = CustomerAccount(
+              customerId: next.customerId,
+              collectorId: next.collectorId,
+              customerCardsIds: next.cardsIds,
+              createdAt: next.createdAt,
+              updatedAt: next.updatedAt,
+            );
+
+            ref.read(isRefreshingProvider.notifier).state = false;
+
+            ref
+                .read(
+                  showAllCustomerCardsProvider.notifier,
+                )
+                .state = false;
           },
         );
       },
     );
 
     return SizedBox(
-      width: 400.0,
+      width: 300.0,
       child: Column(
         children: [
           CompositedTransformTarget(
@@ -179,7 +140,7 @@ class _CustomerAccountSearchInputState
               decoration: InputDecoration(
                 label: const CBText(
                   text: 'Client',
-                  fontSize: 12.0,
+                  fontSize: 10.0,
                 ),
                 hintText: 'Client',
                 suffixIcon: IconButton(
@@ -205,6 +166,7 @@ class _CustomerAccountSearchInputState
                     await CustomersAccountsController.searchCustomerAccount(
                   name: value.trim(),
                 );
+
                 hideOverlay();
                 showOverlay();
               },
@@ -239,45 +201,49 @@ class _SearchedCustomersAccountsOverlayState
   Widget build(BuildContext context) {
     final searchedCustomersAccounts =
         ref.watch(searchedCustomersAccountsDetailsProvider);
-    return Card(
-      //  shape: const BeveledRectangleBorder(),
-      elevation: 5.0,
-      margin: const EdgeInsets.all(.0),
-      color: CBColors.backgroundColor,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: widget.width,
-          maxHeight: 400.0,
-        ),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: searchedCustomersAccounts
-                .map(
-                  (customerAccountData) => ListTile(
-                    onTap: () {
-                      ref
-                          .read(selectedCustomerAccountDetailProvider.notifier)
-                          .state = customerAccountData;
-                      widget.focusNode.unfocus();
-                      widget.hideOverlay();
-                    },
-                    title: Container(
-                      padding: const EdgeInsets.only(
-                        left: 10.0,
-                      ),
-                      child: CBText(
-                        text: customerAccountData.customer,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      ),
-    );
+    return searchedCustomersAccounts.isNotEmpty
+        ? Card(
+            //  shape: const BeveledRectangleBorder(),
+            elevation: 5.0,
+            margin: const EdgeInsets.all(.0),
+            color: CBColors.backgroundColor,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: widget.width,
+                maxHeight: 500.0,
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: searchedCustomersAccounts
+                      .map(
+                        (customerAccountData) => ListTile(
+                          onTap: () {
+                            ref
+                                .read(selectedCustomerAccountDetailProvider
+                                    .notifier)
+                                .state = customerAccountData;
+
+                            widget.focusNode.unfocus();
+                            widget.hideOverlay();
+                          },
+                          title: Container(
+                            padding: const EdgeInsets.only(
+                              left: 10.0,
+                            ),
+                            child: CBText(
+                              text: customerAccountData.customer,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
+          )
+        : const SizedBox();
   }
 }
