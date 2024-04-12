@@ -58,22 +58,28 @@ class _CBCashOperationsCustomerAccountSearchInputState
     final size = renderBox.size;
 
     entry = OverlayEntry(
-      builder: (context) => CompositedTransformFollower(
-        link: layerLink,
-        showWhenUnlinked: false,
-        offset: Offset(
-          0,
-          size.height + 3,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SearchedCustomersAccountsOverlay(
-              width: size.width,
-              focusNode: focusNode,
-              hideOverlay: hideOverlay,
-            ),
-          ],
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          hideOverlay();
+        },
+        child: CompositedTransformFollower(
+          link: layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(
+            0,
+            size.height + 3,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SearchedCustomersAccountsOverlay(
+                width: size.width,
+                focusNode: focusNode,
+                hideOverlay: hideOverlay,
+              ),
+            ],
+          ),
         ),
       ),
     );
